@@ -1,0 +1,19 @@
+/* The picker holds a stack rather than a row of controls, so it
+   sets its own padding inside the panel. */
+.design-font-control-panel {
+  padding: var(--space-2);
+}
+
+/* The family names and the trigger's sample, each drawn in the
+   face it stands for. */
+.design-font-control-sample-sans {
+  font-family: var(--font-sans);
+}
+
+.design-font-control-sample-serif {
+  font-family: var(--font-serif);
+}
+
+.design-font-control-sample-mono {
+  font-family: var(--font-mono);
+}

@@ -1,7 +1,29 @@
 /* Scoped under the renderer wrapper so the modifiers outweigh the
    elements' own base typography classes */
+.design-renderer-element .design-element-text-family-serif {
+  font-family: var(--font-serif);
+}
+
+.design-renderer-element .design-element-text-family-mono {
+  font-family: var(--font-mono);
+}
+
 .design-renderer-element .design-element-text-italic {
   font-style: italic;
+}
+
+/* The decorations, drawn together where both are set */
+.design-renderer-element .design-element-text-underline {
+  text-decoration-line: underline;
+}
+
+.design-renderer-element .design-element-text-strikethrough {
+  text-decoration-line: line-through;
+}
+
+.design-renderer-element
+  .design-element-text-underline.design-element-text-strikethrough {
+  text-decoration-line: underline line-through;
 }
 
 /* The alignments other than the left edge, which the elements are

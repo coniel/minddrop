@@ -11,4 +11,9 @@ describe('resolveTextLineRowSpan', () => {
     // 20px at 1.4 is 28px, exactly seven units
     expect(resolveTextLineRowSpan(20)).toBe(7);
   });
+
+  it('resolves at the line height given', () => {
+    // 20px at 1 is 20px, exactly five units
+    expect(resolveTextLineRowSpan(20, 1)).toBe(5);
+  });
 });

@@ -7,6 +7,7 @@ import {
   ElementContentFit,
   ElementHeightMode,
   ElementWidthMode,
+  FontFamily,
   FontWeight,
 } from './types';
 
@@ -132,6 +133,11 @@ export const ElementContentFits: ElementContentFit[] = [
 ];
 
 /**
+ * The families text elements can be set in, in display order.
+ */
+export const FontFamilies: FontFamily[] = ['sans', 'serif', 'mono'];
+
+/**
  * The weights text elements can be set in, from the lightest to
  * the heaviest.
  */
@@ -159,9 +165,28 @@ export const MinFontSize = 6;
 export const MaxFontSize = 200;
 
 /**
- * The height of a line of text as a multiple of its font size.
+ * The conventional line heights as multiples of the font size,
+ * offered as a ladder ahead of an arbitrary one.
  */
-export const TextLineHeight = 1.4;
+export const LineHeights: number[] = [1, 1.2, 1.4, 1.5, 1.65, 1.75, 2, 2.5];
+
+/**
+ * The height of a line of text as a multiple of its font size
+ * until one is picked.
+ */
+export const DefaultLineHeight = 1.4;
+
+/**
+ * The smallest and largest line heights text can be set at, as
+ * multiples of the font size.
+ */
+export const MinLineHeight = 0.8;
+export const MaxLineHeight = 3;
+
+/**
+ * The amount a line height steps by when nudged.
+ */
+export const LineHeightStep = 0.05;
 
 /**
  * The colour text elements are drawn in until one is picked: the

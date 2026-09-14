@@ -13,9 +13,25 @@ export function resolveTextSettingsClass(
 ): string {
   const classes: string[] = [];
 
+  // Text set in a family other than sans, which the elements are
+  // already set in.
+  if (element.fontFamily && element.fontFamily !== 'sans') {
+    classes.push(`design-element-text-family-${element.fontFamily}`);
+  }
+
   // Italic text
   if (element.italic) {
     classes.push('design-element-text-italic');
+  }
+
+  // Underlined text
+  if (element.underline) {
+    classes.push('design-element-text-underline');
+  }
+
+  // Struck through text
+  if (element.strikethrough) {
+    classes.push('design-element-text-strikethrough');
   }
 
   // Text lined up on an edge other than the left one

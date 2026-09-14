@@ -2175,10 +2175,22 @@ declare module 'i18next' {
               extraBold: string;
               black: string;
             };
+            fontFamily: {
+              label: string;
+              sans: string;
+              serif: string;
+              mono: string;
+            };
+            textStyle: string;
+            underline: string;
+            strikethrough: string;
             fontSize: {
               label: string;
-              custom: string;
             };
+            lineHeight: {
+              label: string;
+            };
+            custom: string;
             verticalAlign: {
               label: string;
               top: string;

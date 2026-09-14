@@ -20,6 +20,11 @@ export type ElementCornerRadius = 'none' | 'sm' | 'md' | 'lg' | 'full';
 export type FontWeight = 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
 
 /**
+ * A family text is set in, each one of the theme's content stacks.
+ */
+export type FontFamily = 'sans' | 'serif' | 'mono';
+
+/**
  * The edge text lines up on, its centre, or both edges at once.
  */
 export type TextAlign = 'left' | 'center' | 'right' | 'justify';
@@ -48,10 +53,21 @@ export interface ElementColor {
 
 export interface TextSettings {
   /**
+   * The family the text is set in. Absent means sans.
+   */
+  fontFamily?: FontFamily;
+
+  /**
    * The size the text is set at, in pixels. Absent means the size
    * the element's type renders at by default.
    */
   fontSize?: number;
+
+  /**
+   * The height of a line of the text as a multiple of its font
+   * size. Absent means the default line height.
+   */
+  lineHeight?: number;
 
   /**
    * The weight the text renders at. Absent means the weight the
@@ -80,6 +96,16 @@ export interface TextSettings {
    * Whether the text renders italic.
    */
   italic?: boolean;
+
+  /**
+   * Whether the text is underlined.
+   */
+  underline?: boolean;
+
+  /**
+   * Whether the text is struck through.
+   */
+  strikethrough?: boolean;
 }
 
 export interface BackgroundSettings {

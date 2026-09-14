@@ -362,6 +362,7 @@ describe('DesignElementControls', () => {
       fontWeight: 500,
     });
 
+    openMenu('Font');
     fireEvent.click(screen.getByLabelText('Italic'));
 
     expect(changedElement(iconDesignElement.id)).toMatchObject({

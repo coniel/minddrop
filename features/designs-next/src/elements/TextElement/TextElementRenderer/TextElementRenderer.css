@@ -1,6 +1,8 @@
 /* The block's box, laid out as a column so the text can sit
    against either edge or in its middle. Text past the box is
-   clipped, which is what a fit holding the block's height means. */
+   clipped, which is what a fit holding the block's height means.
+   Set in the content sans rather than the interface font it would
+   inherit, the family modifiers swapping it for the others. */
 .design-text-element {
   flex: 1;
   min-width: 0;
@@ -8,4 +10,5 @@
   flex-direction: column;
   overflow: hidden;
   overflow-wrap: break-word;
+  font-family: var(--font-sans);
 }

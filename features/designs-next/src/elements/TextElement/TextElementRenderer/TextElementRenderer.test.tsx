@@ -81,6 +81,24 @@ describe('TextElementRenderer', () => {
     });
   });
 
+  it('sets the text at its line height', () => {
+    render(
+      <TextElementRenderer element={{ ...textElement, lineHeight: 1.2 }} />,
+    );
+
+    expect(screen.getByText('A longer piece of body text.')).toHaveStyle({
+      lineHeight: '1.2',
+    });
+  });
+
+  it('sets the text at the default line height without one', () => {
+    render(<TextElementRenderer element={textElement} />);
+
+    expect(screen.getByText('A longer piece of body text.')).toHaveStyle({
+      lineHeight: '1.4',
+    });
+  });
+
   it('sits the text against the edge it is aligned to', () => {
     render(
       <TextElementRenderer

@@ -10,6 +10,17 @@ describe('resolveElementLineRowSpan', () => {
     ).toBe(7);
   });
 
+  it('resolves the rows a line needs at the element line height', () => {
+    // 20px text at 1 needs five units a line
+    expect(
+      resolveElementLineRowSpan({
+        ...bodyDesignElement,
+        fontSize: 20,
+        lineHeight: 1,
+      }),
+    ).toBe(5);
+  });
+
   it('resolves at the default size without one', () => {
     // 14px text needs five units a line
     expect(resolveElementLineRowSpan(bodyDesignElement)).toBe(5);

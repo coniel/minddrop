@@ -7,10 +7,32 @@ describe('resolveTextSettingsClass', () => {
     expect(resolveTextSettingsClass(titleDesignElement)).toBe('');
   });
 
+  it('resolves the family modifier', () => {
+    expect(
+      resolveTextSettingsClass({ ...titleDesignElement, fontFamily: 'mono' }),
+    ).toBe('design-element-text-family-mono');
+  });
+
+  it('leaves sans text unmodified', () => {
+    expect(
+      resolveTextSettingsClass({ ...titleDesignElement, fontFamily: 'sans' }),
+    ).toBe('');
+  });
+
   it('resolves the italic modifier', () => {
     expect(
       resolveTextSettingsClass({ ...titleDesignElement, italic: true }),
     ).toBe('design-element-text-italic');
+  });
+
+  it('resolves the decoration modifiers', () => {
+    expect(
+      resolveTextSettingsClass({
+        ...titleDesignElement,
+        underline: true,
+        strikethrough: true,
+      }),
+    ).toBe('design-element-text-underline design-element-text-strikethrough');
   });
 
   it('resolves the alignment modifier', () => {

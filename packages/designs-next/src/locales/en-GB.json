@@ -63,10 +63,22 @@
         "extraBold": "Extra bold",
         "black": "Black"
       },
-      "fontSize": {
-        "label": "Font size",
-        "custom": "Custom size"
+      "fontFamily": {
+        "label": "Font",
+        "sans": "Sans",
+        "serif": "Serif",
+        "mono": "Mono"
       },
+      "textStyle": "Style",
+      "underline": "Underline",
+      "strikethrough": "Strikethrough",
+      "fontSize": {
+        "label": "Font size"
+      },
+      "lineHeight": {
+        "label": "Line height"
+      },
+      "custom": "Custom",
       "verticalAlign": {
         "label": "Vertical align",
         "top": "Top",

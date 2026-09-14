@@ -27,10 +27,10 @@ export const TextElementRenderer: React.FC<DesignElementProps<TextElement>> = ({
     resolveTextSettingsClass(element),
   );
 
-  // The size, weight and colour the text is set in
+  // The size, line height, weight and colour the text is set in
   const style: React.CSSProperties = {
     fontSize: element.fontSize ?? Designs.constants.DefaultFontSize,
-    lineHeight: Designs.constants.TextLineHeight,
+    lineHeight: element.lineHeight ?? Designs.constants.DefaultLineHeight,
     fontWeight: element.fontWeight,
     color: resolveElementColor(element.textColor),
   };
