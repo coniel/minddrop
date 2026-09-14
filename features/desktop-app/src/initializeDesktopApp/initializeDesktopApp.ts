@@ -29,7 +29,10 @@ import { Spaces } from '@minddrop/spaces';
 import { Tags } from '@minddrop/tags';
 import { initializeEntityGroupsUi } from '@minddrop/ui-entity-groups';
 import { Icons } from '@minddrop/ui-icons';
-import { initializeInputModalityTracking } from '@minddrop/ui-primitives';
+import {
+  initializeInputModalityTracking,
+  initializePointerDownRecovery,
+} from '@minddrop/ui-primitives';
 import { Workspaces } from '@minddrop/workspaces';
 import { AppUiState } from '../AppUiState';
 import { initializeWorkspaceCleanup } from '../initializeWorkspaceCleanup';
@@ -70,6 +73,9 @@ export function initializeDesktopApp(): Promise<void> {
 async function runInitialization(): Promise<void> {
   // Track whether the user is navigating by keyboard or pointer
   initializeInputModalityTracking();
+
+  // Restore the pointerdown withheld from the press after a drag
+  initializePointerDownRecovery();
 
   // Register the content icon sets, which load on first use
   Icons.initialize();

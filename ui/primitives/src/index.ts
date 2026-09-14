@@ -21,6 +21,7 @@ export * from './NumberField';
 export * from './Heading';
 export * from './Icon';
 export * from './initializeInputModalityTracking';
+export * from './initializePointerDownRecovery';
 export * from './IconButton';
 export * from './IconPicker';
 export * from './NameForm';
