@@ -1,5 +1,6 @@
 export {
   handleSearchInitialize,
+  handleSearchUnload,
   handleSearchFullText,
   handleSearchSync,
   handleSearchDatabaseSync,

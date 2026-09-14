@@ -2,7 +2,7 @@ import type { FullTextSearchResult } from '@minddrop/search';
 import { Search } from '@minddrop/search';
 
 /**
- * RPC handler for initializing MiniSearch for a workspace.
+ * RPC handler for initializing the search index for a workspace.
  * SQL initialization is handled separately by the databases
  * package.
  */
@@ -14,7 +14,16 @@ export async function handleSearchInitialize(params: {
 }
 
 /**
- * RPC handler for full-text fuzzy search via MiniSearch.
+ * RPC handler for dropping a workspace's search index.
+ */
+export async function handleSearchUnload(params: {
+  workspaceId: string;
+}): Promise<void> {
+  Search.handleSearchUnload(params);
+}
+
+/**
+ * RPC handler for full-text fuzzy search.
  */
 export async function handleSearchFullText(params: {
   workspaceId: string;
@@ -26,7 +35,7 @@ export async function handleSearchFullText(params: {
 }
 
 /**
- * RPC handler for incremental MiniSearch sync after entry
+ * RPC handler for incremental search index sync after entry
  * changes. SQL sync is handled by the databases package.
  */
 export async function handleSearchSync(params: {
@@ -39,7 +48,7 @@ export async function handleSearchSync(params: {
 }
 
 /**
- * RPC handler for syncing database metadata to MiniSearch.
+ * RPC handler for syncing database metadata to the search index.
  * SQL sync is handled by the databases package.
  */
 export async function handleSearchDatabaseSync(params: {
@@ -52,7 +61,7 @@ export async function handleSearchDatabaseSync(params: {
 
 /**
  * RPC handler for re-indexing all entries in a database
- * in the MiniSearch index.
+ * in the search index.
  */
 export async function handleSearchReindexDatabase(params: {
   workspaceId: string;

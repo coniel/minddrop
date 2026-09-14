@@ -11,6 +11,7 @@ export function registerSearchAdapterRpc(rpc: WebviewRpcClient): void {
       rpc.request.searchFullText({ workspaceId, query, limit, databaseId }),
 
     searchInitialize: (params) => rpc.request.searchInitialize(params),
+    searchUnload: (params) => rpc.request.searchUnload(params),
 
     searchSync: (params) => rpc.request.searchSync(params),
 

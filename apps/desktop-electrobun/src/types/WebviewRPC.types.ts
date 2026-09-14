@@ -219,6 +219,10 @@ export type WebviewRPC = {
         };
         response: void;
       };
+      searchUnload: {
+        params: { workspaceId: string };
+        response: void;
+      };
       searchFullText: {
         params: {
           workspaceId: string;

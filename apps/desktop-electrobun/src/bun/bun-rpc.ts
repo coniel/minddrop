@@ -14,6 +14,7 @@ import {
   handleSearchInitialize,
   handleSearchReindexDatabase,
   handleSearchSync,
+  handleSearchUnload,
 } from './search';
 import { httpServer } from './server';
 import {
@@ -60,6 +61,7 @@ export function createWebviewRPC() {
         databasesBackgroundSync: handleDatabasesBackgroundSync,
         // Search RPC handlers
         searchInitialize: handleSearchInitialize,
+        searchUnload: handleSearchUnload,
         searchFullText: handleSearchFullText,
         searchSync: handleSearchSync,
         searchDatabaseSync: handleSearchDatabaseSync,
