@@ -1,6 +1,7 @@
 import { Field } from '@base-ui/react/field';
 import React from 'react';
 import { TranslationKey } from '@minddrop/i18n';
+import type { TextSize } from '../../Text';
 import { FieldDescription } from '../FieldDescription';
 import { FieldError } from '../FieldError';
 import { FieldLabel } from '../FieldLabel';
@@ -54,6 +55,12 @@ export interface TextFieldProps
   stringLabel?: string;
 
   /*
+   * Size of the label text.
+   * @default 'sm'
+   */
+  labelSize?: TextSize;
+
+  /*
    * Helper text displayed below the input.
    * Hidden when error is present.
    * Can be an i18n key.
@@ -100,6 +107,7 @@ export const TextField = React.forwardRef<HTMLDivElement, TextFieldProps>(
       stringError,
       label,
       stringLabel,
+      labelSize,
       leading,
       onChange,
       onKeyDown,
@@ -127,7 +135,11 @@ export const TextField = React.forwardRef<HTMLDivElement, TextFieldProps>(
         {...other}
       >
         {(label || stringLabel) && (
-          <FieldLabel label={label} stringLabel={stringLabel} />
+          <FieldLabel
+            size={labelSize}
+            label={label}
+            stringLabel={stringLabel}
+          />
         )}
 
         <TextInput

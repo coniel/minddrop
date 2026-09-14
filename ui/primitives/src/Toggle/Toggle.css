@@ -117,6 +117,7 @@
   color: var(--text-muted);
 
   &.toggle-text,
+  &.toggle-square,
   .icon {
     color: var(--text-subtle);
   }
@@ -126,6 +127,7 @@
     transition: none;
 
     &.toggle-text,
+    &.toggle-square,
     .icon {
       color: var(--text-regular);
     }
@@ -136,6 +138,7 @@
     background-color: var(--surface-accent-active);
 
     &.toggle-text,
+    &.toggle-square,
     .icon {
       color: var(--text-regular);
     }
@@ -150,6 +153,7 @@
   background-color: var(--surface-subtle);
 
   &.toggle-text,
+  &.toggle-square,
   .icon {
     color: var(--text-subtle);
   }
@@ -159,6 +163,7 @@
     transition: none;
 
     &.toggle-text,
+    &.toggle-square,
     .icon {
       color: var(--text-regular);
     }
@@ -169,6 +174,7 @@
     background-color: var(--surface-accent-active);
 
     &.toggle-text,
+    &.toggle-square,
     .icon {
       color: var(--text-regular);
     }
@@ -183,6 +189,7 @@
   border-color: var(--border-default);
 
   &.toggle-text,
+  &.toggle-square,
   .icon {
     color: var(--text-subtle);
   }
@@ -193,6 +200,7 @@
     transition: none;
 
     &.toggle-text,
+    &.toggle-square,
     .icon {
       color: var(--text-regular);
     }
@@ -203,6 +211,7 @@
     background-color: var(--surface-accent-hover);
 
     &.toggle-text,
+    &.toggle-square,
     .icon {
       color: var(--text-regular);
     }
@@ -219,6 +228,7 @@
   box-shadow: var(--shadow-raised);
 
   &.toggle-text,
+  &.toggle-square,
   .icon {
     color: var(--text-subtle);
   }
@@ -229,6 +239,7 @@
     transition: none;
 
     &.toggle-text,
+    &.toggle-square,
     .icon {
       color: var(--text-regular);
     }
@@ -240,6 +251,7 @@
     box-shadow: none;
 
     &.toggle-text,
+    &.toggle-square,
     .icon {
       color: var(--text-regular);
     }
@@ -254,12 +266,14 @@
   &.toggle-variant-ghost,
   &.toggle-variant-subtle {
     &.toggle-text,
+    &.toggle-square,
     .icon {
       color: var(--text-primary-muted);
     }
 
     &:hover {
       &.toggle-text,
+      &.toggle-square,
       .icon {
         color: var(--text-primary);
       }
@@ -269,6 +283,7 @@
       background-color: var(--surface-primary-active);
 
       &.toggle-text,
+      &.toggle-square,
       .icon {
         color: var(--text-primary);
       }

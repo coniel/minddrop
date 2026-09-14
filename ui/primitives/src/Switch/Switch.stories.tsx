@@ -119,6 +119,34 @@ export const SwitchStories = () => {
           </StoryItem>
         </StoryRow>
       </StorySection>
+      <StorySection
+        title="Label sizes"
+        description="Matches the Text size scale. Default is 'sm'."
+      >
+        <StoryRow>
+          <StoryItem label="xs">
+            <SwitchField
+              labelSize="xs"
+              stringLabel="Auto-save"
+              defaultChecked
+            />
+          </StoryItem>
+          <StoryItem label="sm">
+            <SwitchField
+              labelSize="sm"
+              stringLabel="Auto-save"
+              defaultChecked
+            />
+          </StoryItem>
+          <StoryItem label="base">
+            <SwitchField
+              labelSize="base"
+              stringLabel="Auto-save"
+              defaultChecked
+            />
+          </StoryItem>
+        </StoryRow>
+      </StorySection>
     </Story>
   );
 };

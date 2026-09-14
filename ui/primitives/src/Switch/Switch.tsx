@@ -2,7 +2,7 @@ import { Field } from '@base-ui/react/field';
 import { Switch as SwitchPrimitive } from '@base-ui/react/switch';
 import React from 'react';
 import { TranslationKey } from '@minddrop/i18n';
-import { TextColor } from '../Text';
+import { TextColor, TextSize } from '../Text';
 import { FieldDescription, FieldLabel } from '../fields';
 import { propsToClass } from '../utils';
 import './Switch.css';
@@ -87,6 +87,12 @@ export interface SwitchFieldProps extends SwitchProps {
   stringLabel?: string;
 
   /*
+   * Size of the label text.
+   * @default 'sm'
+   */
+  labelSize?: TextSize;
+
+  /*
    * Helper text displayed below the label.
    * Can be an i18n key.
    */
@@ -110,6 +116,7 @@ export const SwitchField = React.forwardRef<HTMLDivElement, SwitchFieldProps>(
     {
       label,
       stringLabel,
+      labelSize,
       description,
       stringDescription,
       descriptionColor,
@@ -124,7 +131,11 @@ export const SwitchField = React.forwardRef<HTMLDivElement, SwitchFieldProps>(
           <div className="switch-field-header">
             <Switch size={size} {...switchProps} />
             {(label || stringLabel) && (
-              <FieldLabel label={label} stringLabel={stringLabel} />
+              <FieldLabel
+                size={labelSize}
+                label={label}
+                stringLabel={stringLabel}
+              />
             )}
           </div>
           {(description || stringDescription) && (

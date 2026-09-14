@@ -22,8 +22,8 @@ export interface ToggleProps {
   children?: React.ReactNode;
 
   /*
-   * Sizes a toggle drawing its own content as an icon toggle,
-   * square rather than padded around its content.
+   * Sizes and colours a toggle drawing its own content as an icon
+   * toggle, square rather than padded around its content.
    */
   square?: boolean;
 
@@ -129,6 +129,7 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
           size,
           color,
           text: isText,
+          square,
           className,
         })}
       >

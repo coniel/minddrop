@@ -185,6 +185,40 @@ export const DateFieldStories = () => (
         </StoryItem>
       </StoryRow>
     </StorySection>
+    <StorySection
+      title="Label sizes"
+      description="Matches the Text size scale. Default is 'sm'."
+    >
+      <StoryRow>
+        <StoryItem label="xs">
+          <div style={{ width: 240 }}>
+            <DateField
+              labelSize="xs"
+              stringLabel="Date"
+              stringPlaceholder="Pick a date..."
+            />
+          </div>
+        </StoryItem>
+        <StoryItem label="sm">
+          <div style={{ width: 240 }}>
+            <DateField
+              labelSize="sm"
+              stringLabel="Date"
+              stringPlaceholder="Pick a date..."
+            />
+          </div>
+        </StoryItem>
+        <StoryItem label="base">
+          <div style={{ width: 240 }}>
+            <DateField
+              labelSize="base"
+              stringLabel="Date"
+              stringPlaceholder="Pick a date..."
+            />
+          </div>
+        </StoryItem>
+      </StoryRow>
+    </StorySection>
   </Story>
 );
 

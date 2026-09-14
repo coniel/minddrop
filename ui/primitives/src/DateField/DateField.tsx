@@ -1,5 +1,6 @@
 import React from 'react';
 import { TranslationKey } from '@minddrop/i18n';
+import type { TextSize } from '../Text';
 import { FieldDescription } from '../fields/FieldDescription';
 import { FieldError } from '../fields/FieldError';
 import { FieldLabel } from '../fields/FieldLabel';
@@ -45,6 +46,12 @@ export interface DateFieldProps
   stringLabel?: string;
 
   /*
+   * Size of the label text.
+   * @default 'sm'
+   */
+  labelSize?: TextSize;
+
+  /*
    * Plain string placeholder used as-is without i18n translation.
    * Takes priority over `placeholder`.
    */
@@ -88,6 +95,7 @@ export const DateField = React.forwardRef<HTMLDivElement, DateFieldProps>(
       className,
       label,
       stringLabel,
+      labelSize,
       description,
       stringDescription,
       error,
@@ -115,7 +123,11 @@ export const DateField = React.forwardRef<HTMLDivElement, DateFieldProps>(
         invalid={!!error || !!stringError}
       >
         {(label || stringLabel) && (
-          <FieldLabel label={label} stringLabel={stringLabel} />
+          <FieldLabel
+            size={labelSize}
+            label={label}
+            stringLabel={stringLabel}
+          />
         )}
 
         <DateInput

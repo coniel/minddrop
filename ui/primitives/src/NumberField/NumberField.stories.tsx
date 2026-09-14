@@ -144,6 +144,40 @@ export const NumberFieldStories = () => {
           </StoryItem>
         </StoryRow>
       </StorySection>
+      <StorySection
+        title="Label sizes"
+        description="Matches the Text size scale. Default is 'sm'."
+      >
+        <StoryRow>
+          <StoryItem label="xs">
+            <div style={{ width: 160 }}>
+              <NumberField
+                labelSize="xs"
+                stringLabel="Quantity"
+                defaultValue={42}
+              />
+            </div>
+          </StoryItem>
+          <StoryItem label="sm">
+            <div style={{ width: 160 }}>
+              <NumberField
+                labelSize="sm"
+                stringLabel="Quantity"
+                defaultValue={42}
+              />
+            </div>
+          </StoryItem>
+          <StoryItem label="base">
+            <div style={{ width: 160 }}>
+              <NumberField
+                labelSize="base"
+                stringLabel="Quantity"
+                defaultValue={42}
+              />
+            </div>
+          </StoryItem>
+        </StoryRow>
+      </StorySection>
 
       {/* --------------------------------------------------------
           MIN / MAX

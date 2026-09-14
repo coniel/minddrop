@@ -170,6 +170,40 @@ export const TextFieldStories = () => (
         </StoryItem>
       </StoryRow>
     </StorySection>
+    <StorySection
+      title="Label sizes"
+      description="Matches the Text size scale. Default is 'sm'."
+    >
+      <StoryRow>
+        <StoryItem label="xs">
+          <div style={{ width: 240 }}>
+            <TextField
+              labelSize="xs"
+              stringLabel="Name"
+              stringPlaceholder="Enter a name..."
+            />
+          </div>
+        </StoryItem>
+        <StoryItem label="sm">
+          <div style={{ width: 240 }}>
+            <TextField
+              labelSize="sm"
+              stringLabel="Name"
+              stringPlaceholder="Enter a name..."
+            />
+          </div>
+        </StoryItem>
+        <StoryItem label="base">
+          <div style={{ width: 240 }}>
+            <TextField
+              labelSize="base"
+              stringLabel="Name"
+              stringPlaceholder="Enter a name..."
+            />
+          </div>
+        </StoryItem>
+      </StoryRow>
+    </StorySection>
 
     {/* --------------------------------------------------------
         VALIDATION
