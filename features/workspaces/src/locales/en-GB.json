@@ -22,7 +22,7 @@
         "description": "Deletes the folder and its contents",
         "confirmation": {
           "title": "Delete workspace",
-          "message": "This workspace's folder and everything in it will be deleted from your computer.",
+          "message": "This workspace's folder and everything in it will be moved to the trash.",
           "confirm": "Delete"
         }
       }

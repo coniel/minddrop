@@ -12,10 +12,11 @@ describe('deleteWorkspace', () => {
 
   afterEach(cleanup);
 
-  it('deletes the workspace directory', async () => {
+  it('moves the workspace directory to the system trash', async () => {
     await deleteWorkspace(workspace_1.id);
 
     expect(MockFs.exists(workspace_1.path)).toBe(false);
+    expect(MockFs.existsInTrash(workspace_1.path)).toBe(true);
   });
 
   it('removes the workspace from the store', async () => {
