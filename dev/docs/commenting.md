@@ -398,6 +398,11 @@ already names is the same reach:
 This applies to test names as much as to comments, since they are read
 as sentences.
 
+**Write "ID" in capitals.** It is an initialism, so a comment says "the
+entry's ID" and "resolved by ID". The lowercase form is reserved for
+referring to an actual `id` parameter, property or variable by name, in
+backticks.
+
 No em dashes in comments.
 
 ## Syntax
