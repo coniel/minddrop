@@ -68,6 +68,7 @@ export const WorkspaceOptionsMenuContent: React.FC<
       title: 'workspaces.actions.delete.confirmation.title',
       message: 'workspaces.actions.delete.confirmation.message',
       confirmLabel: 'workspaces.actions.delete.confirmation.confirm',
+      danger: true,
       onConfirm: () => {
         Workspaces.delete(workspace.id);
       },
