@@ -8,6 +8,7 @@ export * from './DesignPropertiesProvider';
 export * from './DesignPropertyPicker';
 export * from './DesignRenderer';
 export * from './TextContentControls';
+export * from './useElementProperty';
 export * from './useElementValue';
 export * from './utils/resolveElementColor';
 export * from './utils/resolveTextSettingsClass';

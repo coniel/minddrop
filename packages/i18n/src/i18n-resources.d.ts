@@ -2312,6 +2312,9 @@ declare module 'i18next' {
             box: {
               label: string;
             };
+            editor: {
+              label: string;
+            };
             heading: {
               label: string;
               placeholder: string;

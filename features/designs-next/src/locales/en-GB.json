@@ -1,6 +1,9 @@
 {
   "designsNext": {
     "elements": {
+      "editor": {
+        "label": "Editor"
+      },
       "heading": {
         "label": "Heading",
         "placeholder": "Heading"

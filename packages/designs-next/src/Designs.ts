@@ -1,5 +1,6 @@
 import {
   CardAspectRatios,
+  DefaultDesignColumns,
   DefaultFontSize,
   DefaultLineHeight,
   DefaultTextColor,
@@ -45,6 +46,7 @@ export const constants = {
   Icon: DesignsIcon,
   TypeIcons: DesignTypeIcons,
   UnitPixelSize,
+  DefaultColumns: DefaultDesignColumns,
   MinRows: MinDesignRows,
   MaxRows: MaxDesignRows,
   CardAspectRatios,

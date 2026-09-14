@@ -849,6 +849,9 @@ importers:
       '@minddrop/designs-next':
         specifier: workspace:*
         version: link:../../packages/designs-next
+      '@minddrop/feature-markdown-editor':
+        specifier: workspace:*
+        version: link:../markdown-editor
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n

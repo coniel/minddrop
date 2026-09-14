@@ -3,6 +3,8 @@ import { DesignElementConfigs } from '@minddrop/designs-next';
 import {
   BoxElementConfig,
   BoxElementType,
+  EditorElementConfig,
+  EditorElementType,
   HeadingElementConfig,
   HeadingElementType,
   TextElementConfig,
@@ -18,6 +20,9 @@ describe('initializeDesignsNextFeature', () => {
     initializeDesignsNextFeature();
 
     expect(DesignElementConfigs.get(BoxElementType)).toBe(BoxElementConfig);
+    expect(DesignElementConfigs.get(EditorElementType)).toBe(
+      EditorElementConfig,
+    );
     expect(DesignElementConfigs.get(HeadingElementType)).toBe(
       HeadingElementConfig,
     );
