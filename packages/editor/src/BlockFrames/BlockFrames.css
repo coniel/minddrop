@@ -10,7 +10,8 @@
      against so that they sit beside the text rather than the middle
      of a wrapped block */
   --block-frame-line-height: calc(
-    var(--font-size-md) * var(--line-height-normal)
+    var(--editor-font-size, var(--font-size-md)) *
+      var(--editor-line-height, var(--line-height-normal))
   );
 }
 
@@ -58,12 +59,12 @@
    LIST MARKERS
    --------------------------------------------------------------- */
 
+/* Markers inherit the editor's text styles, so they stay level
+   with the text they mark. */
 .block-frame-bullet,
 .block-frame-number,
 .block-frame-task-checkbox {
   height: var(--block-frame-line-height);
-  font-size: var(--font-size-md);
-  line-height: var(--line-height-normal);
   color: var(--text-muted);
 }
 
@@ -100,6 +101,6 @@
   width: auto;
   height: var(--block-frame-line-height);
   font-family: var(--font-mono);
-  font-size: var(--font-size-sm);
+  font-size: 0.8125em;
   color: var(--text-subtle);
 }

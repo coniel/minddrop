@@ -10,13 +10,20 @@
   min-height: 0;
 }
 
+/* The text styles the editor renders its content in. Set the
+   --editor-* properties on any ancestor to change them. Unset, the
+   theme tokens apply. Every block sizes against this base, headings
+   and code included. */
 .editor {
   display: flex;
   flex-direction: column;
   row-gap: var(--space-2);
   cursor: text;
   outline: none;
-  font-family: var(--font-sans);
+  font-family: var(--editor-font-family, var(--font-sans));
+  font-size: var(--editor-font-size, var(--font-size-md));
+  line-height: var(--editor-line-height, var(--line-height-normal));
+  font-weight: var(--editor-font-weight, var(--font-weight-regular));
 }
 
 /* Declared on every block rather than only the selected ones, so

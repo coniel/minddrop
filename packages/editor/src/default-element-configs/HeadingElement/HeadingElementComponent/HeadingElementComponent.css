@@ -1,19 +1,23 @@
+/* Headings are multiples of the size the editor renders in rather
+   than steps of the interface scale, so an editor rendered larger
+   or smaller keeps its proportions. The multiples are the scale's
+   2xl, xl and md steps against its md base. */
 .heading-1-element {
-  font-size: var(--font-size-2xl);
+  font-size: 1.5em;
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-tight);
   padding-top: var(--space-5);
 }
 
 .heading-2-element {
-  font-size: var(--font-size-xl);
+  font-size: 1.25em;
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-tight);
   padding-top: var(--space-4);
 }
 
 .heading-3-element {
-  font-size: var(--font-size-md);
+  font-size: 1em;
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
   padding-top: var(--space-4);

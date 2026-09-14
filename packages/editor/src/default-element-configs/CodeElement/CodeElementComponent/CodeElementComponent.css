@@ -4,7 +4,7 @@
   border-radius: var(--radius-md);
   background-color: var(--surface-subtle);
   font-family: var(--font-mono);
-  font-size: var(--font-size-sm);
+  font-size: 0.8125em;
 }
 
 /* Sits over the block's first line, which the source is padded

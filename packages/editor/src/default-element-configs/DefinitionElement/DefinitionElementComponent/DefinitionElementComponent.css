@@ -1,6 +1,6 @@
 .definition-element {
   font-family: var(--font-mono);
-  font-size: var(--font-size-sm);
+  font-size: 0.8125em;
   color: var(--text-subtle);
 }
 

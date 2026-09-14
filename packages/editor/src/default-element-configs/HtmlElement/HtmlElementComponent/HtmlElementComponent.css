@@ -9,6 +9,6 @@
   white-space: pre-wrap;
   word-break: break-word;
   font-family: var(--font-mono);
-  font-size: var(--font-size-sm);
+  font-size: 0.8125em;
   color: var(--text-muted);
 }

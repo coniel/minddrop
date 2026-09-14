@@ -1,7 +1,6 @@
 import React from 'react';
-import { ElementPlaceholderText } from '../../../ElementPlaceholderText';
-import { BlockElementProps } from '../../../types';
-import './ParagraphElementComponent.css';
+import { ElementPlaceholderText } from '../../ElementPlaceholderText';
+import { BlockElementProps } from '../../types';
 
 export const ParagraphElementComponent: React.FC<BlockElementProps> = ({
   children,

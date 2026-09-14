@@ -4,14 +4,14 @@
   border-radius: var(--radius-md);
   background-color: var(--surface-subtle);
   font-family: var(--font-mono);
-  font-size: var(--font-size-sm);
+  font-size: 0.8125em;
 }
 
 .math-element-label {
   display: block;
   user-select: none;
   font-family: var(--font-sans);
-  font-size: var(--font-size-xs);
+  font-size: 0.9em;
   color: var(--text-subtle);
 }
 
