@@ -31,6 +31,7 @@ import { Icons } from '@minddrop/ui-icons';
 import { initializeInputModalityTracking } from '@minddrop/ui-primitives';
 import { Workspaces } from '@minddrop/workspaces';
 import { AppUiState } from '../AppUiState';
+import { initializeWorkspaceCleanup } from '../initializeWorkspaceCleanup';
 import { initializeWorkspaceWatchers } from '../initializeWorkspaceWatchers';
 import { locales } from '../locales';
 import { initializeDataViewTypes } from './initializeDataViewTypes';
@@ -160,4 +161,7 @@ async function runInitialization(): Promise<void> {
   // Watch the loaded workspaces' directories for changes made outside
   // the app. Started last so that it cannot race the initial load.
   initializeWorkspaceWatchers();
+
+  // Release removed workspaces' connections and data directories
+  initializeWorkspaceCleanup();
 }
