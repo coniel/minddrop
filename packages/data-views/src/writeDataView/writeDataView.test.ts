@@ -42,7 +42,7 @@ describe('writeDataView', () => {
 
   it('creates the Views directory if it does not exist', async () => {
     // Remove the data views directory
-    MockFs.removeDir(resolveViewsDirPath());
+    MockFs.removeDir(resolveViewsDirPath(), { recursive: true });
 
     await writeDataView(dataView_gallery_1.id);
 

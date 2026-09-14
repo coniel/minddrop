@@ -66,7 +66,7 @@ describe('loadWorkspaceDesigns', () => {
   it('dispatches a designs loaded event when there are no designs', async () =>
     new Promise<void>((done) => {
       // Remove the designs directory, as in a fresh workspace
-      MockFs.removeDir(resolveDesignsDirPath());
+      MockFs.removeDir(resolveDesignsDirPath(), { recursive: true });
 
       Events.addListener(DesignsLoadedEvent, 'test', (payload) => {
         expect(payload).toEqual([]);

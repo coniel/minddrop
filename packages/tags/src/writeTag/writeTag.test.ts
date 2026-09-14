@@ -15,7 +15,7 @@ describe('writeTag', () => {
 
   it('creates the tags directory if it does not exist', async () => {
     // Remove the tags directory
-    MockFs.removeDir(resolveTagsDirPath());
+    MockFs.removeDir(resolveTagsDirPath(), { recursive: true });
 
     await writeTag(tag_1.id);
 

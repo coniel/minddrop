@@ -17,7 +17,7 @@ describe('writeQuery', () => {
 
   it('creates the queries directory if it does not exist', async () => {
     // Remove the queries directory
-    MockFs.removeDir(resolveQueriesDirPath());
+    MockFs.removeDir(resolveQueriesDirPath(), { recursive: true });
 
     await writeQuery(query_1.id);
 

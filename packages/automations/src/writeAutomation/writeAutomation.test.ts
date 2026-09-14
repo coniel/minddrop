@@ -34,7 +34,7 @@ describe('writeAutomation', () => {
 
   it('creates the automations directory if it does not exist', async () => {
     // Remove the automations directory
-    MockFs.removeDir(resolveAutomationsDirPath());
+    MockFs.removeDir(resolveAutomationsDirPath(), { recursive: true });
 
     await writeAutomation(automation_1.id);
 

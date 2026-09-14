@@ -35,6 +35,7 @@ describe('writeConfig', () => {
       Fs.parentDirPath(
         resolveDatabaseConfigFilePath(databaseDirPath(objectDatabase)),
       ),
+      { recursive: true },
     );
 
     await writeDatabaseConfig(objectDatabase.id);
@@ -52,6 +53,7 @@ describe('writeConfig', () => {
       Fs.parentDirPath(
         resolveDatabaseConfigFilePath(databaseDirPath(objectDatabase)),
       ),
+      { recursive: true },
     );
 
     // Both writes see the directory missing and create it

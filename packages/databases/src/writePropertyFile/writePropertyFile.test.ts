@@ -60,6 +60,7 @@ describe('writePropertyFile', () => {
           databaseDirPath(commonStorageDatabase),
           commonStorageDatabase.propertyFilesDir!,
         ),
+        { recursive: true },
       );
 
       await writePropertyFile(commonStorageEntry1.id, imagePropertyName, file);
@@ -101,6 +102,7 @@ describe('writePropertyFile', () => {
           databaseDirPath(propertyStorageDatabase),
           imagePropertyName,
         ),
+        { recursive: true },
       );
 
       await writePropertyFile(
@@ -139,6 +141,7 @@ describe('writePropertyFile', () => {
       // Remove the entry directory
       MockFs.removeDir(
         Fs.parentDirPath(databaseEntryFilePath(entryStorageEntry1)),
+        { recursive: true },
       );
 
       await expect(async () =>

@@ -70,7 +70,7 @@ describe('initializeDatabasesBackend', () => {
     expect(indexedRecords(collectionDatabase.id).length).toBeGreaterThan(0);
 
     // Delete the database directory while the app is closed
-    MockFs.removeDir(databaseDirPath(collectionDatabase));
+    MockFs.removeDir(databaseDirPath(collectionDatabase), { recursive: true });
 
     // Launch again onto the index the first launch left behind
     const result = await initializeDatabasesBackend(workspace_1.id, parentDir);

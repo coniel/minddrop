@@ -52,6 +52,7 @@ describe('writeDatabaseEntryTemplate', () => {
         databaseDirPath(entryTemplatesDatabase),
         entryTemplate1.id,
       ),
+      { recursive: true },
     );
 
     await writeDatabaseEntryTemplate(entryTemplate1.id);

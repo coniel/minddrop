@@ -21,7 +21,7 @@ describe('writeSpace', () => {
 
   it("creates the space's bundle directory if it does not exist", async () => {
     // Remove the spaces directory
-    MockFs.removeDir(resolveSpacesDirPath());
+    MockFs.removeDir(resolveSpacesDirPath(), { recursive: true });
 
     await writeSpace(space_1.id);
 

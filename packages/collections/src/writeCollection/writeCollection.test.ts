@@ -34,7 +34,7 @@ describe('writeCollection', () => {
 
   it('creates the collections directory if it does not exist', async () => {
     // Remove the collections directory
-    MockFs.removeDir(resolveCollectionsDirPath());
+    MockFs.removeDir(resolveCollectionsDirPath(), { recursive: true });
 
     await writeCollection(collection_1.id);
 

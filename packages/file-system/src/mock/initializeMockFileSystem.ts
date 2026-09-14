@@ -20,6 +20,7 @@ import { mockAddFileEntry } from './mockAddFileEntry';
 import { mockCopyFile } from './mockCopyFile';
 import { mockExists } from './mockExists';
 import { mockGetFileEntry } from './mockGetFileEntry';
+import { mockRemoveDirEntry } from './mockRemoveDirEntry';
 import { mockRemoveFileEntry } from './mockRemoveFileEntry';
 import { printFileTree } from './printFileTree';
 
@@ -103,7 +104,7 @@ export function initializeMockFileSystem(
       return results;
     },
     removeDir: async (path, options) =>
-      mockRemoveFileEntry(root, getFullPath(path, options)),
+      mockRemoveDirEntry(root, getFullPath(path, options), options?.recursive),
     removeFile: async (path, options) => {
       mockRemoveFileEntry(root, getFullPath(path, options));
       delete textFileContents[path];
@@ -415,7 +416,7 @@ export function initializeMockFileSystem(
     removeFile: (path, options) =>
       mockRemoveFileEntry(root, getFullPath(path, options)),
     removeDir: (path, options) =>
-      mockRemoveFileEntry(root, getFullPath(path, options)),
+      mockRemoveDirEntry(root, getFullPath(path, options), options?.recursive),
     downloadFile: (_, path, options) => {
       const fullPath = getFullPath(path, options);
 

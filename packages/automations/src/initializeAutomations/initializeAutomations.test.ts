@@ -19,7 +19,7 @@ describe('initializeAutomations', () => {
 
   it('creates the automations directory if it does not exist', async () => {
     // Remove the automations directory
-    MockFs.removeDir(resolveAutomationsDirPath());
+    MockFs.removeDir(resolveAutomationsDirPath(), { recursive: true });
 
     await initializeAutomations();
 

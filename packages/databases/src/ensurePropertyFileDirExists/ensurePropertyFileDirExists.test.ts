@@ -60,7 +60,7 @@ describe('ensurePropertyFileDirExists', () => {
     const commonDirPath = `${databaseDirPath(commonStorageDatabase)}/${commonStorageDatabase.propertyFilesDir}`;
 
     // Remove the common directory created by the fixtures
-    MockFs.removeDir(commonDirPath);
+    MockFs.removeDir(commonDirPath, { recursive: true });
 
     await ensurePropertyFileDirExists(commonStorageEntry1.id, 'Image');
 
