@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { VerticalAlign } from '@minddrop/designs-next';
+import { bodyDesignElement } from '@minddrop/designs-next/test-utils';
 import { fireEvent, render, screen } from '@minddrop/test-utils';
 import { FloatingToolbar } from '@minddrop/ui-primitives';
 import { cleanup } from '../../test-utils';
@@ -24,9 +25,9 @@ function renderMenu(value: VerticalAlign = 'top') {
   render(
     <FloatingToolbar visible>
       <VerticalAlignMenu
-        value={value}
-        onValueChange={(verticalAlign) => {
-          changedAlign = verticalAlign;
+        element={{ ...bodyDesignElement, verticalAlign: value }}
+        onChange={({ verticalAlign }) => {
+          changedAlign = verticalAlign ?? null;
         }}
       />
     </FloatingToolbar>,

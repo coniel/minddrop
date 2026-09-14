@@ -1,9 +1,10 @@
-import { useTranslation } from '@minddrop/i18n';
+import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import {
   PropertiesSchema,
   PropertySchema,
   PropertyType,
 } from '@minddrop/properties';
+import { UiIconName } from '@minddrop/ui-icons';
 import {
   DropdownMenu,
   DropdownMenuSeparator,
@@ -39,6 +40,17 @@ export interface DesignPropertyPickerProps {
   suggestedTypes?: PropertyType[];
 
   /**
+   * The icon the trigger carries. Defaults to the property icon.
+   */
+  icon?: UiIconName;
+
+  /**
+   * i18n key of the trigger's label. Defaults to the property
+   * label.
+   */
+  label?: TranslationKey;
+
+  /**
    * Callback fired with the picked property's name, or undefined
    * when the None option is picked.
    */
@@ -63,6 +75,8 @@ export const DesignPropertyPicker: React.FC<DesignPropertyPickerProps> = ({
   value,
   types,
   suggestedTypes = [],
+  icon = PropertyIcon,
+  label = 'designsNext.property.label',
   onValueChange,
 }) => {
   const { t } = useTranslation();
@@ -106,12 +120,13 @@ export const DesignPropertyPicker: React.FC<DesignPropertyPickerProps> = ({
       trigger={
         <ToolbarIconButton
           variant="subtle"
-          icon={PropertyIcon}
-          label="designsNext.property.label"
+          icon={icon}
+          label={label}
+          highlighted={Boolean(picked)}
           tooltip={{
             side: 'right',
             sideOffset: BlockControlOffset,
-            title: 'designsNext.property.label',
+            title: label,
             // The picked property's name stands in for the
             // description, which says what a property is for.
             description: picked

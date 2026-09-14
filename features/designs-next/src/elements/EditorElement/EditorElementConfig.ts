@@ -1,8 +1,11 @@
 import { DesignElementConfig, Designs } from '@minddrop/designs-next';
+import { EditorTitleElementType } from '../EditorTitleElement';
 import { EditorElement } from './EditorElement.types';
 import { EditorElementRenderer } from './EditorElementRenderer';
 
 export const EditorElementType = 'editor';
+
+export const EditorTitleSlot = 'title';
 
 // The height a new editor element takes, in grid units
 const DefaultRowSpan = 60;
@@ -21,5 +24,19 @@ export const EditorElementConfig: DesignElementConfig<EditorElement> = {
   defaultColumnSpan: Designs.constants.DefaultColumns,
   defaultRowSpan: DefaultRowSpan,
   defaultContentFit: 'grow',
-  settingGroups: ['text'],
+  settingControls: [
+    'font',
+    'font-size',
+    'line-height',
+    'font-weight',
+    'text-align',
+    'text-color',
+  ],
+  slots: [
+    {
+      name: EditorTitleSlot,
+      label: 'designsNext.elements.editorTitle.label',
+      elementType: EditorTitleElementType,
+    },
+  ],
 };

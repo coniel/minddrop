@@ -17,20 +17,20 @@ export interface ElementProperty {
 
 /**
  * Returns the schema and value of the property an element maps to.
- * Returns undefined when the element maps to no property, or when
- * the provided properties do not include it.
+ * Returns undefined without an element, when it maps to no
+ * property, or when the provided properties do not include it.
  *
  * @param element - The design element.
  * @returns The mapped property, or undefined.
  */
 export function useElementProperty(
-  element: DesignElement,
+  element: DesignElement | undefined,
 ): ElementProperty | undefined {
   // Read the provided property schemas and values
   const { properties, values } = useContext(DesignPropertiesContext);
 
   // Check the element maps to a property
-  if (!element.property) {
+  if (!element?.property) {
     return undefined;
   }
 

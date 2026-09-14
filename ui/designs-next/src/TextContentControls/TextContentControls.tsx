@@ -35,6 +35,7 @@ export const TextContentControls: React.FC<
         variant="subtle"
         icon="pencil"
         label="designsNext.content.label"
+        highlighted={Boolean(element.content)}
         tooltip={{
           side: 'right',
           sideOffset: BlockControlOffset,

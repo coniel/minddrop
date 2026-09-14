@@ -2315,6 +2315,9 @@ declare module 'i18next' {
             editor: {
               label: string;
             };
+            editorTitle: {
+              label: string;
+            };
             heading: {
               label: string;
               placeholder: string;

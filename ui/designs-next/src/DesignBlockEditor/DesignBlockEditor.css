@@ -25,10 +25,16 @@
 
 /* The selection ring sits inside the block, leaving the grid lines
    around it visible, and stays two screen pixels wide within a
-   zoomed canvas */
-.design-block-editor-element-selected {
+   zoomed canvas. Drawn as an overlay so it rides above the blocks
+   the selected one holds. */
+.design-block-editor-element-selected::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
   box-shadow: inset 0 0 0 calc(2px / var(--ui-canvas-zoom, 1))
-    var(--border-strong);
+    var(--border-primary);
 }
 
 .design-block-editor-element-dragging {
@@ -166,4 +172,24 @@
   width: 8px;
   height: 8px;
   cursor: nwse-resize;
+}
+
+/* A block filling one of another block's slots, held against its top
+   edge at its full width. It takes its place from the block holding
+   it, so its height is the only thing dragged. */
+.design-block-editor-slot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  /* A couple of ramp steps above the block holding it, so it reads
+     as part of that block rather than as a block of its own */
+  background-color: var(--accent-500);
+  border-radius: var(--radius-xs);
+  touch-action: none;
+}
+
+.design-block-editor-slot-selected {
+  box-shadow: inset 0 0 0 calc(2px / var(--ui-canvas-zoom, 1))
+    var(--border-primary);
 }

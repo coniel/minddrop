@@ -16,5 +16,5 @@ export const BoxElementConfig: DesignElementConfig<BoxElement> = {
   component: BoxElementRenderer,
   defaultColumnSpan: 12,
   defaultRowSpan: 8,
-  settingGroups: ['background'],
+  settingControls: ['background', 'corner-radius'],
 };

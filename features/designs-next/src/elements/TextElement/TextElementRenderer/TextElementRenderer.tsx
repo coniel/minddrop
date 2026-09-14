@@ -1,12 +1,21 @@
-import { DesignElementProps, Designs } from '@minddrop/designs-next';
 import {
-  resolveElementColor,
-  resolveTextSettingsClass,
+  DesignElementProps,
+  DesignElementSettings,
+  Designs,
+} from '@minddrop/designs-next';
+import {
+  resolveElementStyle,
   useElementValue,
 } from '@minddrop/ui-designs-next';
-import { joinClasses } from '@minddrop/ui-primitives';
 import { TextElement } from '../TextElement.types';
 import './TextElementRenderer.css';
+
+// The type body text is set in without settings of its own
+const TextDefaults: DesignElementSettings = {
+  fontFamily: 'sans',
+  fontSize: Designs.constants.DefaultFontSize,
+  lineHeight: Designs.constants.DefaultLineHeight,
+};
 
 /**
  * Renders a text element as wrapping text at its own size, weight
@@ -21,22 +30,11 @@ export const TextElementRenderer: React.FC<DesignElementProps<TextElement>> = ({
 }) => {
   const propertyValue = useElementValue(element);
 
-  // The text settings modifier classes
-  const className = joinClasses(
-    'design-text-element',
-    resolveTextSettingsClass(element),
-  );
-
-  // The size, line height, weight and colour the text is set in
-  const style: React.CSSProperties = {
-    fontSize: element.fontSize ?? Designs.constants.DefaultFontSize,
-    lineHeight: element.lineHeight ?? Designs.constants.DefaultLineHeight,
-    fontWeight: element.fontWeight,
-    color: resolveElementColor(element.textColor),
-  };
+  // Resolve the text settings into the styles they render as
+  const style = resolveElementStyle(element, TextDefaults);
 
   return (
-    <div className={className} style={style}>
+    <div className="design-text-element" style={style}>
       {propertyValue ?? element.content}
     </div>
   );

@@ -1,5 +1,9 @@
 import { DesignElement } from '../types';
-import { TestElementType } from './element-configs.fixtures';
+import {
+  TestElementType,
+  TestSlotElementType,
+  TestSlotName,
+} from './element-configs.fixtures';
 
 // Column and row counts of the fixture card
 export const cardColumns = 48;
@@ -48,6 +52,22 @@ export const bodyDesignElement: DesignElement = {
   rowSpan: 10,
   widthMode: 'fluid',
   contentFit: 'grow',
+};
+
+// The body, holding a caption in its slot
+export const slottedDesignElement: DesignElement = {
+  ...bodyDesignElement,
+  id: 'element_slotted',
+};
+
+// Caption filling the body's slot
+export const captionSlotElement: DesignElement = {
+  ...bodyDesignElement,
+  id: 'element_caption',
+  type: TestSlotElementType,
+  rowSpan: 4,
+  parent: slottedDesignElement.id,
+  slot: TestSlotName,
 };
 
 export const designElements = [

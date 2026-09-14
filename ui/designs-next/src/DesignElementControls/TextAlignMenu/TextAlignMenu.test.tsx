@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { TextAlign } from '@minddrop/designs-next';
+import { bodyDesignElement } from '@minddrop/designs-next/test-utils';
 import { fireEvent, render, screen } from '@minddrop/test-utils';
 import { FloatingToolbar } from '@minddrop/ui-primitives';
 import { cleanup } from '../../test-utils';
@@ -24,9 +25,9 @@ function renderMenu(value: TextAlign = 'left') {
   render(
     <FloatingToolbar visible>
       <TextAlignMenu
-        value={value}
-        onValueChange={(textAlign) => {
-          changedAlign = textAlign;
+        element={{ ...bodyDesignElement, textAlign: value }}
+        onChange={({ textAlign }) => {
+          changedAlign = textAlign ?? null;
         }}
       />
     </FloatingToolbar>,

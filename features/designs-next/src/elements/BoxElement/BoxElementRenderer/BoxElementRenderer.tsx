@@ -1,7 +1,16 @@
-import { DesignElementProps } from '@minddrop/designs-next';
-import { joinClasses } from '@minddrop/ui-primitives';
+import {
+  DesignElementProps,
+  DesignElementSettings,
+} from '@minddrop/designs-next';
+import { resolveElementStyle } from '@minddrop/ui-designs-next';
 import { BoxElement } from '../BoxElement.types';
 import './BoxElementRenderer.css';
+
+// The surface a box is drawn on without settings of its own
+const BoxDefaults: DesignElementSettings = {
+  background: 'subtle',
+  cornerRadius: 'sm',
+};
 
 /**
  * Renders the decorative box element as a surface block styled by
@@ -10,12 +19,8 @@ import './BoxElementRenderer.css';
 export const BoxElementRenderer: React.FC<DesignElementProps<BoxElement>> = ({
   element,
 }) => {
-  // The background settings modifier classes
-  const className = joinClasses(
-    'design-box-element',
-    `design-box-element-background-${element.background ?? 'subtle'}`,
-    `design-box-element-radius-${element.cornerRadius ?? 'sm'}`,
-  );
+  // Resolve the background settings into the styles they render as
+  const style = resolveElementStyle(element, BoxDefaults);
 
-  return <div className={className} />;
+  return <div className="design-box-element" style={style} />;
 };

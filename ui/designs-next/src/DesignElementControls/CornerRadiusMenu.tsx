@@ -1,22 +1,15 @@
-import { ElementCornerRadius } from '@minddrop/designs-next';
+import {
+  DesignElement,
+  DesignElementSettingControlProps,
+  DesignElementSettings,
+  ElementCornerRadius,
+} from '@minddrop/designs-next';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import {
   RadioToggleHoverMenu,
   RadioToggleHoverMenuOption,
 } from '@minddrop/ui-primitives';
 import { CornerRadiusGlyph } from './CornerRadiusGlyph';
-
-export interface CornerRadiusMenuProps {
-  /**
-   * The element's corner radius.
-   */
-  radius: ElementCornerRadius;
-
-  /**
-   * Callback fired with the chosen radius.
-   */
-  onRadiusChange: (radius: ElementCornerRadius) => void;
-}
 
 interface CornerRadiusOption {
   /**
@@ -43,11 +36,18 @@ const CornerRadiusOptions: CornerRadiusOption[] = [
  * Renders the corner radius choices as a hover menu, each drawing
  * the corner it sets rather than naming its size.
  */
-export const CornerRadiusMenu: React.FC<CornerRadiusMenuProps> = ({
-  radius,
-  onRadiusChange,
-}) => {
+export const CornerRadiusMenu: React.FC<
+  DesignElementSettingControlProps<DesignElement & DesignElementSettings>
+> = ({ element, onChange }) => {
   const { t } = useTranslation();
+
+  // The element's corner radius, the small one by default
+  const radius = element.cornerRadius ?? 'sm';
+
+  // Applies the chosen radius
+  function handleRadiusChange(cornerRadius: ElementCornerRadius) {
+    onChange({ cornerRadius });
+  }
 
   // The radii as menu options, drawing their own corners
   const options: RadioToggleHoverMenuOption<ElementCornerRadius>[] =
@@ -63,7 +63,7 @@ export const CornerRadiusMenu: React.FC<CornerRadiusMenuProps> = ({
       options={options}
       value={radius}
       label={t('designsNext.settings.cornerRadius.label')}
-      onValueChange={onRadiusChange}
+      onValueChange={handleRadiusChange}
     />
   );
 };

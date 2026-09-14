@@ -57,12 +57,12 @@ describe('TextElementRenderer', () => {
     ).toBeInTheDocument();
   });
 
-  it('applies the text settings modifier classes', () => {
+  it('applies the text settings as styles', () => {
     render(<TextElementRenderer element={{ ...textElement, italic: true }} />);
 
-    expect(screen.getByText('A longer piece of body text.')).toHaveClass(
-      'design-element-text-italic',
-    );
+    expect(screen.getByText('A longer piece of body text.')).toHaveStyle({
+      fontStyle: 'italic',
+    });
   });
 
   it('sets the text at its size', () => {
@@ -106,9 +106,9 @@ describe('TextElementRenderer', () => {
       />,
     );
 
-    expect(screen.getByText('A longer piece of body text.')).toHaveClass(
-      'design-element-text-vertical-align-bottom',
-    );
+    expect(screen.getByText('A longer piece of body text.')).toHaveStyle({
+      justifyContent: 'flex-end',
+    });
   });
 
   it('sets the text in the weight it is given', () => {

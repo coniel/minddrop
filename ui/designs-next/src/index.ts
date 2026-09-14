@@ -11,4 +11,4 @@ export * from './TextContentControls';
 export * from './useElementProperty';
 export * from './useElementValue';
 export * from './utils/resolveElementColor';
-export * from './utils/resolveTextSettingsClass';
+export * from './utils/resolveElementStyle';

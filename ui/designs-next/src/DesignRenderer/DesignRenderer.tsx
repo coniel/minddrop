@@ -56,6 +56,10 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
   // otherwise.
   const renderWidth = width ?? measuredWidth;
 
+  // The design's own elements, which it lays out. An element held
+  // by another is placed and rendered by it.
+  const blocks = Designs.resolveChildElements(design.elements);
+
   // Aspect-locked designs take their height from the render width
   const aspectRatio = design.aspectRatio
     ? Designs.resolveAspectRatioValue(design.aspectRatio)
@@ -67,7 +71,7 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
   // heights, driving row-laid-out designs only.
   const rowLayout = design.aspectRatio
     ? null
-    : Designs.resolveRowLayout(design.elements, design.rows, measuredHeights);
+    : Designs.resolveRowLayout(blocks, design.rows, measuredHeights);
 
   // Measure the container's width when no explicit width is given
   useEffect(() => {
@@ -141,7 +145,7 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
       >
         {/* Array order doubles as paint order, later elements layer on top */}
         {renderWidth !== null &&
-          design.elements.map((element) => {
+          blocks.map((element) => {
             // Look up the element's renderer, skipping unregistered types
             const ElementComponent = DesignElementConfigs.get(
               element.type,
@@ -155,7 +159,7 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
             // Resolve the element's pixel rect at the render width
             const rect = Designs.resolveElementRect(
               element,
-              design.elements,
+              blocks,
               design.columns,
               renderWidth,
             );
@@ -188,7 +192,13 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
                   ),
                 }}
               >
-                <ElementComponent element={element} />
+                <ElementComponent
+                  element={element}
+                  childElements={Designs.resolveChildElements(
+                    design.elements,
+                    element.id,
+                  )}
+                />
               </div>
             );
           })}

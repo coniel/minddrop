@@ -1,22 +1,15 @@
-import { TextAlign } from '@minddrop/designs-next';
+import {
+  DesignElement,
+  DesignElementSettingControlProps,
+  DesignElementSettings,
+  TextAlign,
+} from '@minddrop/designs-next';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/ui-icons';
 import {
   RadioToggleHoverMenu,
   RadioToggleHoverMenuOption,
 } from '@minddrop/ui-primitives';
-
-export interface TextAlignMenuProps {
-  /**
-   * The alignment the text is set in.
-   */
-  value: TextAlign;
-
-  /**
-   * Callback fired with the chosen alignment.
-   */
-  onValueChange: (textAlign: TextAlign) => void;
-}
 
 interface TextAlignOption {
   /**
@@ -63,11 +56,18 @@ const TextAlignOptions: TextAlignOption[] = [
  * Renders the picker for the edge text lines up on as the hover
  * menu the pins use, each option drawing its alignment.
  */
-export const TextAlignMenu: React.FC<TextAlignMenuProps> = ({
-  value,
-  onValueChange,
-}) => {
+export const TextAlignMenu: React.FC<
+  DesignElementSettingControlProps<DesignElement & DesignElementSettings>
+> = ({ element, onChange }) => {
   const { t } = useTranslation();
+
+  // The edge the text lines up on, the left one by default
+  const value = element.textAlign ?? 'left';
+
+  // Applies the chosen alignment
+  function handleValueChange(textAlign: TextAlign) {
+    onChange({ textAlign });
+  }
 
   // The alignments as menu options
   const options: RadioToggleHoverMenuOption<TextAlign>[] = TextAlignOptions.map(
@@ -84,7 +84,7 @@ export const TextAlignMenu: React.FC<TextAlignMenuProps> = ({
       options={options}
       value={value}
       label={t('designsNext.settings.textAlign.label')}
-      onValueChange={onValueChange}
+      onValueChange={handleValueChange}
     />
   );
 };

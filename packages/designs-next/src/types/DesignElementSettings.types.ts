@@ -1,12 +1,21 @@
 import { ColorLevel, ContentColor } from '@minddrop/ui-theme';
 
 /**
- * A semantic setting group an element's menu can show. Groups are
- * provided by the system; an element's config lists the ones its
- * menu renders. Element-specific settings live on the element type
+ * A setting control an element's block controls can show. Controls
+ * are provided by the system; an element's config lists the ones it
+ * offers. Element-specific settings live on the element type
  * itself, configured through its own settings controls.
  */
-export type DesignElementSettingGroup = 'text' | 'background';
+export type DesignElementSettingControl =
+  | 'font'
+  | 'font-size'
+  | 'line-height'
+  | 'font-weight'
+  | 'text-align'
+  | 'vertical-align'
+  | 'text-color'
+  | 'background'
+  | 'corner-radius';
 
 export type ElementBackground = 'subtle' | 'accent' | 'solid-accent';
 

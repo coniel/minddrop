@@ -10,8 +10,25 @@ import {
 import { DesignElementContentControlsProps } from './DesignElementContentControls.types';
 import { DesignElementGroup } from './DesignElementGroup.types';
 import { DesignElementComponent } from './DesignElementProps.types';
-import { DesignElementSettingGroup } from './DesignElementSettings.types';
-import { DesignElementSettingsControlsProps } from './DesignElementSettingsControls.types';
+import { DesignElementSettingControlComponent } from './DesignElementSettingControl.types';
+import { DesignElementSettingControl } from './DesignElementSettings.types';
+
+export interface DesignElementSlotConfig {
+  /**
+   * The slot's name, which the child filling it carries.
+   */
+  name: string;
+
+  /**
+   * i18n key of the label on the toggle filling the slot.
+   */
+  label: TranslationKey;
+
+  /**
+   * The type of element the slot holds.
+   */
+  elementType: string;
+}
 
 export interface DesignElementConfig<
   TElement extends DesignElement = DesignElement,
@@ -32,14 +49,16 @@ export interface DesignElementConfig<
   icon: UiIconName;
 
   /**
-   * The palette group the element is listed under.
+   * The palette group the element is listed under. Omitted for
+   * element types which only fill a slot, which are not insertable.
    */
-  group: DesignElementGroup;
+  group?: DesignElementGroup;
 
   /**
-   * The component rendering the element.
+   * The component rendering the element. Omitted for element types
+   * whose parent renders them.
    */
-  component: DesignElementComponent<TElement>;
+  component?: DesignElementComponent<TElement>;
 
   /**
    * The property types the element can render the value of, offered
@@ -66,6 +85,12 @@ export interface DesignElementConfig<
    * Number of columns a newly inserted element spans.
    */
   defaultColumnSpan: number;
+
+  /**
+   * The slots the element places children in, which its own
+   * renderer draws. Omitted for elements which hold no children.
+   */
+  slots?: DesignElementSlotConfig[];
 
   /**
    * Number of rows a newly inserted element spans.
@@ -98,20 +123,15 @@ export interface DesignElementConfig<
   resolveDefaults?: () => Partial<TElement>;
 
   /**
-   * The system setting groups the block controls show for the
-   * element, in display order. Omitted for elements without system
-   * settings.
+   * The controls the block controls show for the element, in
+   * display order: the system controls by name, and the element
+   * type's own as components of their own. Omitted for elements
+   * with no settings.
    */
-  settingGroups?: DesignElementSettingGroup[];
-
-  /**
-   * Controls for the element's own settings, rendered in the block
-   * controls' settings section ahead of the system setting groups.
-   * Omitted for elements without element-specific settings.
-   */
-  settingsControls?: ComponentType<
-    DesignElementSettingsControlsProps<TElement>
-  >;
+  settingControls?: (
+    | DesignElementSettingControl
+    | DesignElementSettingControlComponent<TElement>
+  )[];
 
   /**
    * Resolves the element's minimum height in grid units, acting as

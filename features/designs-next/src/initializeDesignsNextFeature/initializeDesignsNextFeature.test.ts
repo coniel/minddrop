@@ -5,6 +5,8 @@ import {
   BoxElementType,
   EditorElementConfig,
   EditorElementType,
+  EditorTitleElementConfig,
+  EditorTitleElementType,
   HeadingElementConfig,
   HeadingElementType,
   TextElementConfig,
@@ -22,6 +24,9 @@ describe('initializeDesignsNextFeature', () => {
     expect(DesignElementConfigs.get(BoxElementType)).toBe(BoxElementConfig);
     expect(DesignElementConfigs.get(EditorElementType)).toBe(
       EditorElementConfig,
+    );
+    expect(DesignElementConfigs.get(EditorTitleElementType)).toBe(
+      EditorTitleElementConfig,
     );
     expect(DesignElementConfigs.get(HeadingElementType)).toBe(
       HeadingElementConfig,

@@ -1,24 +1,16 @@
-import { Designs, FontWeight } from '@minddrop/designs-next';
+import {
+  DesignElement,
+  DesignElementSettingControlProps,
+  DesignElementSettings,
+  Designs,
+  FontWeight,
+} from '@minddrop/designs-next';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import {
   RadioToggleHoverMenu,
   RadioToggleHoverMenuOption,
 } from '@minddrop/ui-primitives';
 import './FontWeightMenu.css';
-
-export interface FontWeightMenuProps {
-  /**
-   * The weight the text is set in, or undefined when it is left at
-   * the element's own.
-   */
-  value?: FontWeight;
-
-  /**
-   * Callback fired with the chosen weight, or undefined when the
-   * default option is chosen.
-   */
-  onValueChange: (fontWeight: FontWeight | undefined) => void;
-}
 
 // The value of the option leaving the weight to the element
 const DefaultValue = 'default';
@@ -45,11 +37,13 @@ const FontWeightLabels: Record<FontWeight, TranslationKey> = {
  * menu the pins use: each weight an A drawn in it, numbered
  * beneath.
  */
-export const FontWeightMenu: React.FC<FontWeightMenuProps> = ({
-  value,
-  onValueChange,
-}) => {
+export const FontWeightMenu: React.FC<
+  DesignElementSettingControlProps<DesignElement & DesignElementSettings>
+> = ({ element, onChange }) => {
   const { t } = useTranslation();
+
+  // The weight the text is set in, absent at the element's own
+  const value = element.fontWeight;
 
   // The default option, followed by the scale
   const options: RadioToggleHoverMenuOption[] = [
@@ -69,11 +63,12 @@ export const FontWeightMenu: React.FC<FontWeightMenuProps> = ({
 
   // Applies the chosen weight, the default option clearing it
   function handleValueChange(chosenValue: string) {
-    onValueChange(
-      chosenValue === DefaultValue
-        ? undefined
-        : (Number(chosenValue) as FontWeight),
-    );
+    onChange({
+      fontWeight:
+        chosenValue === DefaultValue
+          ? undefined
+          : (Number(chosenValue) as FontWeight),
+    });
   }
 
   // Builds a weight's option: an A drawn in the weight, numbered

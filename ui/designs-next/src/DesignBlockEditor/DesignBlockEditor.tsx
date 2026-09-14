@@ -9,7 +9,7 @@ import {
 import { usePopupDismissPress } from '@minddrop/ui-primitives';
 import { clamp, useDeleteKey, useModKeyHeld } from '@minddrop/utils';
 import { DesignElementInsertMenu } from '../DesignElementInsertMenu';
-import { resolveElementClass } from '../utils';
+import { resolveElementClass, resolveSlotClass } from '../utils';
 import { SizeLabel } from './SizeLabel';
 import './DesignBlockEditor.css';
 
@@ -208,6 +208,10 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
   const [insertMenuOpen, setInsertMenuOpen] = useState(false);
   const [hoveredPoint, setHoveredPoint] = useState<GridPoint | null>(null);
   const modKeyHeld = useModKeyHeld(true);
+
+  // The blocks the grid lays out. Elements held by another element
+  // are placed by it, so the grid never sees them.
+  const blocks = Designs.resolveChildElements(elements);
   const wasDismissingPopup = usePopupDismissPress();
 
   // The grid comes in front of the blocks while the mod key is held,
@@ -381,7 +385,7 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
 
   // Remove the selected element on Delete or Backspace
   useDeleteKey(() => {
-    onElementsChange(elements.filter((element) => element.id !== selectedId));
+    onElementsChange(Designs.removeElement(elements, selectedId!));
     onSelectionChange(null);
   }, selectedId !== null);
 
@@ -391,7 +395,7 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     elementId: string,
     mode: ElementDragMode,
   ) {
-    const element = elements.find((current) => current.id === elementId);
+    const element = blocks.find((current) => current.id === elementId);
 
     if (!element) {
       return;
@@ -486,6 +490,17 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     onDragEnd?.();
   }
 
+  // Selects a slot block, holding the press at it so the block
+  // holding it does not take the press as a move.
+  function handleSlotPointerDown(
+    event: React.PointerEvent<HTMLDivElement>,
+    slotId: string,
+  ) {
+    event.preventDefault();
+    event.stopPropagation();
+    onSelectionChange(slotId);
+  }
+
   // Begins a surface height drag
   function handleSurfacePointerDown(event: React.PointerEvent<HTMLDivElement>) {
     event.preventDefault();
@@ -510,9 +525,9 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
       return;
     }
 
-    // The lowest element bottom edge, keeping every element inside
-    // the design.
-    const contentBottom = elements.reduce(
+    // The lowest block bottom edge, keeping every block inside the
+    // design.
+    const contentBottom = blocks.reduce(
       (bottom, element) => Math.max(bottom, element.row + element.rowSpan),
       0,
     );
@@ -726,7 +741,7 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
       onClick={handleGridClick}
       onContextMenu={handleGridContextMenu}
     >
-      {elements.map((element) => (
+      {blocks.map((element) => (
         <div
           key={element.id}
           data-element-id={element.id}
@@ -747,6 +762,17 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
         >
+          {/** Slot blocks, drawn beneath the block's own handles so
+           * its top edge stays draggable across them **/}
+          {Designs.resolveChildElements(elements, element.id).map((child) => (
+            <div
+              key={child.id}
+              className={resolveSlotClass(child.id, selectedId)}
+              style={{ height: child.rowSpan * unitSize }}
+              onPointerDown={(event) => handleSlotPointerDown(event, child.id)}
+            />
+          ))}
+
           {ResizeHandles.map((mode) => (
             <div
               key={mode}

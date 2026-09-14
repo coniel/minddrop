@@ -76,6 +76,22 @@ export function validateDesignElement(
     return false;
   }
 
+  // The parent must be a typed element entity ID when present
+  if (
+    element.parent !== undefined &&
+    !isEntityId(element.parent as string, 'element')
+  ) {
+    return false;
+  }
+
+  // The slot must be a non-empty name when present
+  if (
+    element.slot !== undefined &&
+    (typeof element.slot !== 'string' || element.slot.length === 0)
+  ) {
+    return false;
+  }
+
   return true;
 }
 

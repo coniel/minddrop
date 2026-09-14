@@ -1,9 +1,10 @@
 import {
   DesignElement,
   DesignElementConfigs,
-  DesignElementSettingGroup,
+  DesignElementSettingControl,
+  DesignElementSettingControlComponent,
   DesignElementSettings,
-  DesignElementSettingsControlsProps,
+  DesignElementSlotConfig,
   Designs,
   ElementContentFit,
   ElementHeightMode,
@@ -25,8 +26,15 @@ import {
   ToolbarSeparator,
 } from '@minddrop/ui-primitives';
 import { DesignPropertyPicker } from '../DesignPropertyPicker';
-import { BackgroundSettingsGroup } from './BackgroundSettingsGroup';
-import { TextSettingsGroup } from './TextSettingsGroup';
+import { BackgroundMenu } from './BackgroundMenu';
+import { CornerRadiusMenu } from './CornerRadiusMenu';
+import { FontControl } from './FontControl';
+import { FontSizeControl } from './FontSizeControl';
+import { FontWeightMenu } from './FontWeightMenu';
+import { LineHeightControl } from './LineHeightControl';
+import { TextAlignMenu } from './TextAlignMenu';
+import { TextColorControl } from './TextColorControl';
+import { VerticalAlignMenu } from './VerticalAlignMenu';
 import './DesignElementControls.css';
 
 export interface DesignElementControlsProps {
@@ -109,6 +117,22 @@ interface ElementModeOption<Mode extends string> {
    */
   side?: ElementSide;
 }
+
+// The system setting controls keyed by the name a config declares
+const SettingControlComponents: Record<
+  DesignElementSettingControl,
+  DesignElementSettingControlComponent<DesignElement & DesignElementSettings>
+> = {
+  font: FontControl,
+  'font-size': FontSizeControl,
+  'line-height': LineHeightControl,
+  'font-weight': FontWeightMenu,
+  'text-align': TextAlignMenu,
+  'vertical-align': VerticalAlignMenu,
+  'text-color': TextColorControl,
+  background: BackgroundMenu,
+  'corner-radius': CornerRadiusMenu,
+};
 
 const pinLabelKey = createI18nKeyBuilder('designsNext.pin.label.');
 const edgePinKey = createI18nKeyBuilder('designsNext.pin.edge.');
@@ -195,17 +219,6 @@ const ContentFitOptions: ElementModeOption<ElementContentFit>[] = [
   },
 ];
 
-// The system setting group components keyed by group name
-const SettingGroupComponents: Record<
-  DesignElementSettingGroup,
-  React.FC<
-    DesignElementSettingsControlsProps<DesignElement & DesignElementSettings>
-  >
-> = {
-  text: TextSettingsGroup,
-  background: BackgroundSettingsGroup,
-};
-
 /**
  * Renders the selected block's toolbar, which comes and goes with
  * the selection: nothing renders while nothing is selected.
@@ -256,8 +269,15 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
 
   // The element type's settings controls and system setting groups
   const config = DesignElementConfigs.get(element.type, false);
-  const SettingsControls = config?.settingsControls;
-  const settingGroups = config?.settingGroups;
+  const settingControls = config?.settingControls;
+
+  // Whether the element sits on the design's grid rather than being
+  // held in another element's slot.
+  const onGrid = element.parent === undefined;
+
+  // The elements laid out alongside it, which its pins hold it
+  // against.
+  const siblings = Designs.resolveChildElements(elements, element.parent);
 
   // A square element keeps its unit size on both axes, so it takes
   // a pin on each and fits its content on neither.
@@ -268,6 +288,12 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
   const ContentControls = config?.contentControls;
   const propertyTypes = properties ? config?.propertyTypes : undefined;
 
+  // Whether the controls carry a content and a settings section
+  const hasContent = Boolean(
+    propertyTypes || ContentControls || (properties && config?.slots?.length),
+  );
+  const hasSettings = Boolean(settingControls?.length);
+
   // Applies a change to the element
   function updateElement(
     data: Partial<
@@ -277,11 +303,45 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
       >
     >,
   ) {
-    onElementsChange(
-      elements.map((current) =>
-        current.id === element.id ? { ...current, ...data } : current,
-      ),
-    );
+    onElementsChange(Designs.updateElement(elements, element.id, data));
+  }
+
+  // Maps the element filling a slot to a property, filling the slot
+  // when it is empty and emptying it when the property is cleared.
+  function changeSlotProperty(
+    slot: DesignElementSlotConfig,
+    property: string | undefined,
+  ) {
+    const child = Designs.resolveSlotElement(elements, element.id, slot.name);
+
+    // Empty the slot, a slot with no property being one the element
+    // does not render.
+    if (!property) {
+      onElementsChange(
+        child ? Designs.removeElement(elements, child.id) : elements,
+      );
+
+      return;
+    }
+
+    // Remap the element already filling it
+    if (child) {
+      onElementsChange(Designs.updateElement(elements, child.id, { property }));
+
+      return;
+    }
+
+    // Fill it with a new element of the slot's type, held by this
+    // one in that slot.
+    onElementsChange([
+      ...elements,
+      {
+        ...Designs.createElement(slot.elementType),
+        parent: element.id,
+        slot: slot.name,
+        property,
+      },
+    ]);
   }
 
   // Changes the property the element takes its content from
@@ -314,6 +374,21 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
   function handleSettingsChange(settings: Record<string, unknown>) {
     // The element with the settings applied
     const updated = { ...element, ...settings };
+
+    // An element held in a slot takes its place from the element
+    // holding it, so the change applies to it alone. Its block
+    // follows its type size, standing in for what the element
+    // holding it renders.
+    if (!onGrid) {
+      onElementsChange(
+        Designs.updateElement(elements, element.id, {
+          ...settings,
+          rowSpan: config?.resolveMinRowSpan?.(updated) ?? element.rowSpan,
+        }),
+      );
+
+      return;
+    }
 
     // Apply the change, resolving the height constraints before and
     // after it so line-based elements keep their line count.
@@ -362,7 +437,7 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
       return option.description;
     }
 
-    if (Designs.hasNeighbourOnSide(element, elements, option.side)) {
+    if (Designs.hasNeighbourOnSide(element, siblings, option.side)) {
       return elementPinKey(option.side);
     }
 
@@ -399,15 +474,18 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
 
   return (
     <>
-      <RadioToggleHoverMenu<ElementWidthMode>
-        options={resolveModeOptions(
-          resolveAvailableModeOptions(WidthModeOptions),
-        )}
-        value={element.widthMode}
-        label={t('designsNext.widthMode.label')}
-        onValueChange={handleWidthModeChange}
-      />
-      {aspectLocked && (
+      {/** Sizing controls, which describe a place on the grid **/}
+      {onGrid && (
+        <RadioToggleHoverMenu<ElementWidthMode>
+          options={resolveModeOptions(
+            resolveAvailableModeOptions(WidthModeOptions),
+          )}
+          value={element.widthMode}
+          label={t('designsNext.widthMode.label')}
+          onValueChange={handleWidthModeChange}
+        />
+      )}
+      {onGrid && aspectLocked && (
         <RadioToggleHoverMenu<ElementHeightMode>
           options={resolveModeOptions(
             resolveAvailableModeOptions(HeightModeOptions),
@@ -417,7 +495,7 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
           onValueChange={handleHeightModeChange}
         />
       )}
-      {!aspectLocked && !square && (
+      {onGrid && !aspectLocked && !square && (
         <RadioToggleHoverMenu<ElementContentFit>
           options={resolveModeOptions(ContentFitOptions)}
           value={element.contentFit ?? 'fixed'}
@@ -425,7 +503,7 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
           onValueChange={handleContentFitChange}
         />
       )}
-      {(propertyTypes || ContentControls) && <ToolbarSeparator />}
+      {onGrid && hasContent && <ToolbarSeparator />}
       {propertyTypes && properties && (
         <DesignPropertyPicker
           properties={properties}
@@ -441,27 +519,87 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
           onContentChange={handleContentChange}
         />
       )}
-      {(SettingsControls || (settingGroups && settingGroups.length > 0)) && (
-        <ToolbarSeparator />
-      )}
-      {SettingsControls && (
-        <SettingsControls
-          element={element}
-          onSettingsChange={handleSettingsChange}
-        />
-      )}
-      {settingGroups?.map((group) => {
-        const SettingGroup = SettingGroupComponents[group];
+      {properties &&
+        config?.slots?.map((slot) => (
+          <SlotPropertyPicker
+            key={slot.name}
+            slot={slot}
+            properties={properties}
+            value={
+              Designs.resolveSlotElement(elements, element.id, slot.name)
+                ?.property
+            }
+            onValueChange={(property) => changeSlotProperty(slot, property)}
+          />
+        ))}
+      {(onGrid || hasContent) && hasSettings && <ToolbarSeparator />}
+      {settingControls?.map((control, index) => {
+        // A declared name resolves to its system control, anything
+        // else is the element type's own.
+        const SettingControl =
+          typeof control === 'string'
+            ? SettingControlComponents[control]
+            : control;
 
         return (
-          <SettingGroup
-            key={group}
+          <SettingControl
+            key={typeof control === 'string' ? control : index}
             element={element}
-            onSettingsChange={handleSettingsChange}
+            onChange={handleSettingsChange}
           />
         );
       })}
     </>
+  );
+};
+
+interface SlotPropertyPickerProps {
+  /**
+   * The slot the picked property fills.
+   */
+  slot: DesignElementSlotConfig;
+
+  /**
+   * The properties the slot's element can map to.
+   */
+  properties: PropertiesSchema;
+
+  /**
+   * The name of the property the slot's element maps to, or
+   * undefined while the slot is empty.
+   */
+  value?: string;
+
+  /**
+   * Callback fired with the picked property's name, or undefined
+   * when the None option is picked.
+   */
+  onValueChange: (property: string | undefined) => void;
+}
+
+/**
+ * Renders the picker for the property a slot's element maps to,
+ * carrying the slot's own label and its element type's icon.
+ */
+const SlotPropertyPicker: React.FC<SlotPropertyPickerProps> = ({
+  slot,
+  properties,
+  value,
+  onValueChange,
+}) => {
+  // The slot's element type, whose property types it offers
+  const config = DesignElementConfigs.get(slot.elementType, false);
+
+  return (
+    <DesignPropertyPicker
+      properties={properties}
+      value={value}
+      types={config?.propertyTypes ?? []}
+      suggestedTypes={config?.suggestedPropertyTypes}
+      icon={config?.icon}
+      label={slot.label}
+      onValueChange={onValueChange}
+    />
   );
 };
 

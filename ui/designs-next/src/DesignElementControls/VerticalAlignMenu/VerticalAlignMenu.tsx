@@ -1,22 +1,15 @@
-import { VerticalAlign } from '@minddrop/designs-next';
+import {
+  DesignElement,
+  DesignElementSettingControlProps,
+  DesignElementSettings,
+  VerticalAlign,
+} from '@minddrop/designs-next';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/ui-icons';
 import {
   RadioToggleHoverMenu,
   RadioToggleHoverMenuOption,
 } from '@minddrop/ui-primitives';
-
-export interface VerticalAlignMenuProps {
-  /**
-   * The edge of its block the text sits against.
-   */
-  value: VerticalAlign;
-
-  /**
-   * Callback fired with the chosen alignment.
-   */
-  onValueChange: (verticalAlign: VerticalAlign) => void;
-}
 
 interface VerticalAlignOption {
   /**
@@ -59,11 +52,19 @@ const VerticalAlignOptions: VerticalAlignOption[] = [
  * as the hover menu the pins use, each option drawing its
  * alignment.
  */
-export const VerticalAlignMenu: React.FC<VerticalAlignMenuProps> = ({
-  value,
-  onValueChange,
-}) => {
+export const VerticalAlignMenu: React.FC<
+  DesignElementSettingControlProps<DesignElement & DesignElementSettings>
+> = ({ element, onChange }) => {
   const { t } = useTranslation();
+
+  // The edge of its block the text sits against, the top one by
+  // default.
+  const value = element.verticalAlign ?? 'top';
+
+  // Applies the chosen alignment
+  function handleValueChange(verticalAlign: VerticalAlign) {
+    onChange({ verticalAlign });
+  }
 
   // The alignments as menu options
   const options: RadioToggleHoverMenuOption<VerticalAlign>[] =
@@ -79,7 +80,7 @@ export const VerticalAlignMenu: React.FC<VerticalAlignMenuProps> = ({
       options={options}
       value={value}
       label={t('designsNext.settings.verticalAlign.label')}
-      onValueChange={onValueChange}
+      onValueChange={handleValueChange}
     />
   );
 };

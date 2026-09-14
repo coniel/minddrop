@@ -4,6 +4,9 @@
       "editor": {
         "label": "Editor"
       },
+      "editorTitle": {
+        "label": "Title"
+      },
       "heading": {
         "label": "Heading",
         "placeholder": "Heading"

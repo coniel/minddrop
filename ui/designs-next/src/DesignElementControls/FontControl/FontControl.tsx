@@ -1,4 +1,11 @@
-import { Designs, FontFamily, TextSettings } from '@minddrop/designs-next';
+import {
+  DesignElement,
+  DesignElementSettingControlProps,
+  DesignElementSettings,
+  Designs,
+  FontFamily,
+  TextSettings,
+} from '@minddrop/designs-next';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import {
   Group,
@@ -19,33 +26,6 @@ export type FontSettings = Pick<
   'fontFamily' | 'italic' | 'underline' | 'strikethrough'
 >;
 
-export interface FontControlProps {
-  /**
-   * The family the text is set in.
-   */
-  fontFamily: FontFamily;
-
-  /**
-   * Whether the text renders italic.
-   */
-  italic: boolean;
-
-  /**
-   * Whether the text is underlined.
-   */
-  underline: boolean;
-
-  /**
-   * Whether the text is struck through.
-   */
-  strikethrough: boolean;
-
-  /**
-   * Callback fired with the changed settings.
-   */
-  onSettingsChange: (settings: FontSettings) => void;
-}
-
 // The name of each family
 const FontFamilyLabels: Record<FontFamily, TranslationKey> = {
   sans: 'designsNext.settings.fontFamily.sans',
@@ -58,18 +38,20 @@ const FontFamilyLabels: Record<FontFamily, TranslationKey> = {
  * the toolbar: the family options and the italic, underline and
  * strikethrough toggles.
  */
-export const FontControl: React.FC<FontControlProps> = ({
-  fontFamily,
-  italic,
-  underline,
-  strikethrough,
-  onSettingsChange,
-}) => {
+export const FontControl: React.FC<
+  DesignElementSettingControlProps<DesignElement & DesignElementSettings>
+> = ({ element, onChange }) => {
   const { t } = useTranslation();
+
+  // The family the text is set in, the content sans by default
+  const fontFamily = element.fontFamily ?? 'sans';
+  const italic = Boolean(element.italic);
+  const underline = Boolean(element.underline);
+  const strikethrough = Boolean(element.strikethrough);
 
   // Sets the family the text is set in
   function handleFontFamilyChange(chosenFamily: FontFamily) {
-    onSettingsChange({ fontFamily: chosenFamily });
+    onChange({ fontFamily: chosenFamily });
   }
 
   return (
@@ -109,9 +91,7 @@ export const FontControl: React.FC<FontControlProps> = ({
               icon="italic"
               label={t('designsNext.settings.italic')}
               pressed={italic}
-              onPressedChange={(pressed) =>
-                onSettingsChange({ italic: pressed })
-              }
+              onPressedChange={(pressed) => onChange({ italic: pressed })}
               tooltip={{ title: 'designsNext.settings.italic' }}
             />
             <Toggle
@@ -119,9 +99,7 @@ export const FontControl: React.FC<FontControlProps> = ({
               icon="underline"
               label={t('designsNext.settings.underline')}
               pressed={underline}
-              onPressedChange={(pressed) =>
-                onSettingsChange({ underline: pressed })
-              }
+              onPressedChange={(pressed) => onChange({ underline: pressed })}
               tooltip={{ title: 'designsNext.settings.underline' }}
             />
             <Toggle
@@ -130,7 +108,7 @@ export const FontControl: React.FC<FontControlProps> = ({
               label={t('designsNext.settings.strikethrough')}
               pressed={strikethrough}
               onPressedChange={(pressed) =>
-                onSettingsChange({ strikethrough: pressed })
+                onChange({ strikethrough: pressed })
               }
               tooltip={{ title: 'designsNext.settings.strikethrough' }}
             />

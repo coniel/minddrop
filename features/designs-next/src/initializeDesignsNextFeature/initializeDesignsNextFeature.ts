@@ -3,6 +3,7 @@ import { I18n } from '@minddrop/i18n';
 import {
   BoxElementConfig,
   EditorElementConfig,
+  EditorTitleElementConfig,
   HeadingElementConfig,
   TextElementConfig,
 } from '../elements';
@@ -19,6 +20,7 @@ export function initializeDesignsNextFeature(): void {
   // Register the built-in element configs
   DesignElementConfigs.register(BoxElementConfig);
   DesignElementConfigs.register(EditorElementConfig);
+  DesignElementConfigs.register(EditorTitleElementConfig);
   DesignElementConfigs.register(HeadingElementConfig);
   DesignElementConfigs.register(TextElementConfig);
 }

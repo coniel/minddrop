@@ -67,6 +67,19 @@ export interface DesignElement {
   property?: string;
 
   /**
+   * The ID of the element holding this one. Absent for an element
+   * sitting on the design's own grid.
+   */
+  parent?: DesignElementId;
+
+  /**
+   * The name of the slot the element fills in its parent, which
+   * decides where the parent places it. Absent for an element its
+   * parent lays out rather than places.
+   */
+  slot?: string;
+
+  /**
    * How the element's width behaves when the card resizes: fluid
    * elements scale with the card, fixed elements keep their unit
    * width and stay pinned to the given card edge, or hold their place

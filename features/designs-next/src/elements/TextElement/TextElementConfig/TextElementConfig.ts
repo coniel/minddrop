@@ -30,7 +30,15 @@ export const TextElementConfig: DesignElementConfig<TextElement> = {
     DefaultLines,
   defaultContentFit: 'grow',
   resolveDefaults: resolvePlaceholderText,
-  settingGroups: ['text'],
+  settingControls: [
+    'font',
+    'font-size',
+    'line-height',
+    'font-weight',
+    'text-align',
+    'vertical-align',
+    'text-color',
+  ],
   resolveMinRowSpan: resolveElementLineRowSpan,
 };
 

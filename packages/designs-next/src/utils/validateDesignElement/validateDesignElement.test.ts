@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { coverDesignElement } from '../../test-utils';
+import { captionSlotElement, coverDesignElement } from '../../test-utils';
 import { validateDesignElement } from './validateDesignElement';
 
 describe('validateDesignElement', () => {
@@ -83,6 +83,22 @@ describe('validateDesignElement', () => {
       false,
     );
     expect(validateDesignElement({ ...coverDesignElement, property: 3 })).toBe(
+      false,
+    );
+  });
+
+  it("accepts an element held in another element's slot", () => {
+    expect(validateDesignElement(captionSlotElement)).toBe(true);
+  });
+
+  it('rejects an untyped parent ID', () => {
+    expect(
+      validateDesignElement({ ...captionSlotElement, parent: 'body' }),
+    ).toBe(false);
+  });
+
+  it('rejects an empty slot name', () => {
+    expect(validateDesignElement({ ...captionSlotElement, slot: '' })).toBe(
       false,
     );
   });

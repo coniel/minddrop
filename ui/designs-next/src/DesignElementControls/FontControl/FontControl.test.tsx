@@ -1,11 +1,13 @@
 import { afterEach, describe, expect, it } from 'vitest';
+import { TextSettings } from '@minddrop/designs-next';
+import { bodyDesignElement } from '@minddrop/designs-next/test-utils';
 import { fireEvent, render, screen } from '@minddrop/test-utils';
 import { FloatingToolbar } from '@minddrop/ui-primitives';
 import { cleanup } from '../../test-utils';
-import { FontControl, FontSettings } from './FontControl';
+import { FontControl } from './FontControl';
 
 // The settings passed to the most recent change callback
-let changedSettings: FontSettings | null;
+let changedSettings: Partial<TextSettings> | null;
 
 /**
  * Renders the control with a recording change callback and opens
@@ -15,17 +17,14 @@ let changedSettings: FontSettings | null;
  *
  * @param settings - The settings the text is set in.
  */
-function renderControl(settings: Partial<FontSettings> = {}) {
+function renderControl(settings: Partial<TextSettings> = {}) {
   changedSettings = null;
 
   render(
     <FloatingToolbar visible>
       <FontControl
-        fontFamily={settings.fontFamily ?? 'sans'}
-        italic={Boolean(settings.italic)}
-        underline={Boolean(settings.underline)}
-        strikethrough={Boolean(settings.strikethrough)}
-        onSettingsChange={(changed) => {
+        element={{ ...bodyDesignElement, ...settings }}
+        onChange={(changed) => {
           changedSettings = changed;
         }}
       />

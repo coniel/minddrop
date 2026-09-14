@@ -2,9 +2,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DesignElement } from '@minddrop/designs-next';
 import { DesignElementConfigs } from '@minddrop/designs-next';
 import {
+  captionSlotElement,
   cardColumns,
   cardRows,
   designElements,
+  slottedDesignElement,
   titleDesignElement,
 } from '@minddrop/designs-next/test-utils';
 import {
@@ -40,12 +42,17 @@ let dragEnds: number;
  *
  * @param selectedId - The controlled selection.
  * @param resizable - Whether to make the surface height adjustable.
+ * @param elements - The elements to edit.
  * @returns The render container.
  */
-function renderEditor(selectedId: string | null = null, resizable = false) {
+function renderEditor(
+  selectedId: string | null = null,
+  resizable = false,
+  elements: DesignElement[] = designElements,
+) {
   const { container } = render(
     <DesignBlockEditor
-      elements={designElements}
+      elements={elements}
       columns={cardColumns}
       rows={cardRows}
       snap={2}
@@ -1047,5 +1054,37 @@ describe('DesignBlockEditor', () => {
     fireEvent.pointerMove(title, { clientX: 40, clientY: 0 });
 
     expect(changedElements).toBeNull();
+  });
+
+  it("draws a block filling another block's slot", () => {
+    const container = renderEditor(null, false, [
+      slottedDesignElement,
+      captionSlotElement,
+    ]);
+
+    const slot = container.querySelector<HTMLElement>(
+      '.design-block-editor-slot',
+    );
+
+    // Drawn inside the block holding it rather than on the grid
+    expect(
+      container.querySelectorAll('.design-block-editor-element'),
+    ).toHaveLength(1);
+    expect(slot).toHaveStyle({
+      height: `${captionSlotElement.rowSpan * 10}px`,
+    });
+  });
+
+  it('selects a slot block on a press, leaving the block holding it', () => {
+    const container = renderEditor(null, false, [
+      slottedDesignElement,
+      captionSlotElement,
+    ]);
+
+    fireEvent.pointerDown(
+      container.querySelector('.design-block-editor-slot')!,
+    );
+
+    expect(selectedElementId).toBe(captionSlotElement.id);
   });
 });

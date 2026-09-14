@@ -32,7 +32,15 @@ export const HeadingElementConfig: DesignElementConfig<HeadingElement> = {
   defaultColumnSpan: 48,
   defaultRowSpan: Designs.resolveTextLineRowSpan(DefaultHeadingFontSize),
   resolveDefaults: resolveHeadingDefaults,
-  settingGroups: ['text'],
+  settingControls: [
+    'font',
+    'font-size',
+    'line-height',
+    'font-weight',
+    'text-align',
+    'vertical-align',
+    'text-color',
+  ],
   resolveMinRowSpan: resolveElementLineRowSpan,
 };
 

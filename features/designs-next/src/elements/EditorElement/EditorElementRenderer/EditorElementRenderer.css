@@ -1,19 +1,6 @@
-/* The block's box, and the document's scroll area. It fills a block
-   held to a height. It sizes to the document in a block which
-   follows its content. So only an overflowing document scrolls. The
-   family is read off the text settings classes, since the editor
-   takes its family from the custom property rather than from the
-   wrapper. */
+/* The block's box, and the document's scroll area: only a document
+   overflowing its block scrolls. */
 .design-editor-element {
   flex: 1;
   min-width: 0;
-  --editor-font-family: var(--font-sans);
-}
-
-.design-editor-element.design-element-text-family-serif {
-  --editor-font-family: var(--font-serif);
-}
-
-.design-editor-element.design-element-text-family-mono {
-  --editor-font-family: var(--font-mono);
 }

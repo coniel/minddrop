@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { FontWeight } from '@minddrop/designs-next';
+import { bodyDesignElement } from '@minddrop/designs-next/test-utils';
 import { fireEvent, render, screen, within } from '@minddrop/test-utils';
 import { FloatingToolbar } from '@minddrop/ui-primitives';
 import { cleanup } from '../../test-utils';
@@ -35,8 +36,8 @@ function renderMenu(value?: FontWeight) {
   render(
     <FloatingToolbar visible>
       <FontWeightMenu
-        value={value}
-        onValueChange={(fontWeight) => {
+        element={{ ...bodyDesignElement, fontWeight: value }}
+        onChange={({ fontWeight }) => {
           changedWeight = fontWeight;
         }}
       />

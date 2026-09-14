@@ -8,6 +8,12 @@ export interface DesignElementProps<
    * The design element to render.
    */
   element: TElement;
+
+  /**
+   * The elements it holds, which it places and renders itself.
+   * Absent for an element holding none.
+   */
+  childElements?: DesignElement[];
 }
 
 export type DesignElementComponent<
