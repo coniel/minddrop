@@ -30,6 +30,22 @@ export function debouncedPersist(workspaceId: string): void {
 }
 
 /**
+ * Cancels a workspace's pending debounced persist, if any.
+ *
+ * @param workspaceId - The workspace whose persist to cancel.
+ */
+export function cancelDebouncedPersist(workspaceId: string): void {
+  const timer = persistTimers.get(workspaceId);
+
+  if (!timer) {
+    return;
+  }
+
+  clearTimeout(timer);
+  persistTimers.delete(workspaceId);
+}
+
+/**
  * Cancels all pending debounced persists. Intended for test
  * cleanup so no persist fires after the test's SQL database
  * has been closed.

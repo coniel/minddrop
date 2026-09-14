@@ -26,6 +26,7 @@ describe('searchSyncBatch', () => {
     registerSearchAdapter({
       searchFullText: async () => [],
       searchInitialize: async () => undefined,
+      searchUnload: async () => undefined,
       searchSync: async (params) => {
         syncCalls.push(params);
       },

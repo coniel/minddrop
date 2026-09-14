@@ -102,6 +102,15 @@ export function queueDatabaseReindex(
 }
 
 /**
+ * Drops a workspace's buffered changes without syncing them.
+ *
+ * @param workspaceId - The workspace whose changes to drop.
+ */
+export function discardSearchSyncBatch(workspaceId: string): void {
+  batches.delete(workspaceId);
+}
+
+/**
  * Immediately sends all buffered changes to the search
  * adapter, cancelling the pending flush.
  */

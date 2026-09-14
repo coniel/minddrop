@@ -13,7 +13,7 @@ export interface SearchAdapter {
   ): Promise<FullTextSearchResult[]>;
 
   /**
-   * Initializes the MiniSearch index for a workspace.
+   * Initializes the search index for a workspace.
    * Forces a full rebuild if the SQL schema changed,
    * otherwise loads from the persisted index.
    */
@@ -23,7 +23,13 @@ export interface SearchAdapter {
   }): Promise<void>;
 
   /**
-   * Incrementally syncs entry changes to the MiniSearch
+   * Drops a workspace's search index on the backend,
+   * cancelling any pending persist of it.
+   */
+  searchUnload(params: { workspaceId: string }): Promise<void>;
+
+  /**
+   * Incrementally syncs entry changes to the search
    * index on the backend.
    */
   searchSync(params: {
@@ -34,7 +40,7 @@ export interface SearchAdapter {
   }): Promise<void>;
 
   /**
-   * Syncs database metadata changes to the MiniSearch
+   * Syncs database metadata changes to the search
    * index on the backend.
    */
   searchDatabaseSync(params: {
@@ -44,7 +50,7 @@ export interface SearchAdapter {
   }): Promise<void>;
 
   /**
-   * Triggers a MiniSearch re-index of all entries in a
+   * Triggers a re-index of all entries in a
    * database. Used after property schema changes.
    */
   searchReindexDatabase(params: {

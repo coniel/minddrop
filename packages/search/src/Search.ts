@@ -2,6 +2,8 @@ export { registerSearchAdapter as registerAdapter } from './SearchAdapter';
 export type { SearchAdapter } from './SearchAdapter';
 export { initializeSearch as initialize } from './initializeSearch';
 export { loadWorkspaceSearch as loadWorkspace } from './loadWorkspaceSearch';
+export { unloadWorkspaceSearch as unloadWorkspace } from './unloadWorkspaceSearch';
+export { handleSearchUnload } from './handleSearchUnload';
 export { initializeSearchSync as initializeSync } from './initializeSearchSync';
 export { searchFullText as fullText } from './searchFullText';
 export { handleSearchInitialize } from './handleSearchInitialize';
