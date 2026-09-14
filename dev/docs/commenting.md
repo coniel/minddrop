@@ -185,13 +185,29 @@ if (!(await Fs.exists(toDirPath))) {
 }
 ```
 
-**Comments on declarations are the exception.** A constant or a
-module-level variable has no action, so describe what the value is.
+**A declaration which only names a value is the exception.** A
+constant or a module-level variable does nothing, so describe what
+the value is.
 
 ```ts
 // The append in flight for each subject, keyed by its history
 // directory path.
 const appendsInFlight = new Map<string, Promise<unknown>>();
+```
+
+A declaration which builds its value does do something, so it takes
+the ordinary verb-first comment. The test is whether the line works
+for its value: reading it, resolving it, formatting it, mapping it.
+Most locals in a function body are this, not the case above.
+
+```ts
+// BAD, names the value where the line resolves one
+// The text settings modifier classes
+const className = joinClasses(rootClass, resolveTextSettingsClass(element));
+
+// GOOD
+// Resolve the text settings into modifier classes
+const className = joinClasses(rootClass, resolveTextSettingsClass(element));
 ```
 
 ## What not to comment
