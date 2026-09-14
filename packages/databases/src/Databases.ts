@@ -142,6 +142,8 @@ export { useDatabase as use, useDatabases as useAll } from './DatabasesStore';
 export { useDatabasesFromEntries as useFromEntries } from './useDatabasesFromEntries';
 export { resolveSortableEntryProperties as sortableProperties } from './utils';
 export { useSortableEntryProperties as useSortableProperties } from './useSortableEntryProperties';
+export { resolveFilterableEntryProperties as filterableProperties } from './utils';
+export { useFilterableEntryProperties as useFilterableProperties } from './useFilterableEntryProperties';
 export { writeDatabaseConfig as writeConfig } from './writeDatabaseConfig';
 export {
   convertEntryToSqlRecord,

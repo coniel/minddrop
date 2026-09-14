@@ -14,6 +14,7 @@ import {
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
+import { Filters } from '@minddrop/filters';
 import { initializeI18n } from '@minddrop/i18n';
 import { ItemReferences } from '@minddrop/item-references';
 import {
@@ -25,6 +26,7 @@ import { DatabaseEntrySerializersRegistry } from '../DatabaseEntrySerializersReg
 import { DatabasesStore } from '../DatabasesStore';
 import { clearEntryFocusRequest } from '../EntryFocusRequestStore';
 import { clearContentCaptureRegistry } from '../contentCaptureRegistry';
+import { registerDatabaseEntryFilterAdapter } from '../registerDatabaseEntryFilterAdapter';
 import {
   matchDatabaseEntryReference,
   matchDatabaseReference,
@@ -66,6 +68,9 @@ export function setup(options?: SetupDatabaseFixturesOptions) {
     match: matchDatabaseReference,
   });
 
+  // Register the entry filter adapter, as initializeDatabases does
+  registerDatabaseEntryFilterAdapter();
+
   // Mock the current date
   vi.useFakeTimers();
   vi.setSystemTime(mockDate);
@@ -92,6 +97,8 @@ export async function cleanup(): Promise<void> {
   DatabaseEntriesStore.clear();
   DatabaseEntrySerializersRegistry.clear();
   Collections.Store.clear();
+
+  Filters.unregisterAdapter('database-entry');
 
   // Unregister the item reference adapters
   ItemReferences.unregisterAdapter('database-entry');

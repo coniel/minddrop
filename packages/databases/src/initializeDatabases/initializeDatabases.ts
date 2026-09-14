@@ -3,6 +3,7 @@ import { loadCoreSerializers } from '../DatabaseEntrySerializers';
 import { initializeDatabaseAutomations } from '../initializeDatabaseAutomations';
 import { initializeDatabaseEventHandlers } from '../initializeDatabaseEventHandlers';
 import { initializeDatabaseTemplates } from '../initializeDatabaseTemplates';
+import { registerDatabaseEntryFilterAdapter } from '../registerDatabaseEntryFilterAdapter';
 import {
   matchDatabaseEntryReference,
   matchDatabaseReference,
@@ -32,6 +33,9 @@ export function initializeDatabases(): void {
     serialize: serializeDatabaseReference,
     match: matchDatabaseReference,
   });
+
+  // Register the entry filter adapter
+  registerDatabaseEntryFilterAdapter();
 
   // Register event handlers
   initializeDatabaseEventHandlers();

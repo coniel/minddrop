@@ -57,6 +57,7 @@ export {
 export { requestEntryFocus as requestFocus } from './requestEntryFocus';
 export { useEntryFocusRequest as useFocusRequest } from './EntryFocusRequestStore';
 export { resolveEntryPropertyFilePath as propertyFilePath } from './utils';
+export { resolveEntryIcon as resolveIcon } from './utils';
 export { isEntryTitleTaken as isTitleTaken } from './utils';
 export { isGloballyUniqueEntryTitle as isGloballyUniqueTitle } from './utils';
 export { findDatabaseEntryByReference as findByReference } from './utils';
@@ -68,8 +69,6 @@ export { entryPropertyValues as propertyValues } from './utils';
 export { getAllDatabaseEntries as getAll } from './getAllDatabaseEntries';
 export { getTaggedDatabaseEntries as getTagged } from './getTaggedDatabaseEntries';
 export { getNewestDatabaseEntries as getNewest } from './utils';
-export { filterDatabaseEntries as filter } from './utils';
-export { filterDatabaseEntryIds as filterIds } from './utils';
 export { sortDatabaseEntries as sort } from './utils';
 export { sortDatabaseEntryIds as sortIds } from './utils';
 export { getRecentDatabaseEntries as getRecent } from './utils';
