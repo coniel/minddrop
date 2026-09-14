@@ -23,6 +23,7 @@
   "dependencies": {
     "@minddrop/events": "workspace:*",
     "@minddrop/file-system": "workspace:*",
+    "@minddrop/filters": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/item-references": "workspace:*",
     "@minddrop/properties": "workspace:*",

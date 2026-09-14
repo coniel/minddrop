@@ -13,6 +13,7 @@ export function resolveRelativeDate(
   preset: PropertyFilterRelativeDatePreset,
   now: Date = new Date(),
 ): Date {
+  // Copy the reference date
   const date = new Date(now);
 
   // Shift the date by the preset's offset

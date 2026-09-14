@@ -1,0 +1,57 @@
+{
+  "filters": {
+    "operators": {
+      "equals": "is equal to",
+      "not-equals": "is not equal to",
+      "contains": "contains",
+      "not-contains": "does not contain",
+      "contains-any": "contains any of",
+      "contains-all": "contains all of",
+      "contains-none": "contains none of",
+      "starts-with": "starts with",
+      "ends-with": "ends with",
+      "greater-than": "is greater than",
+      "greater-than-or-equal": "is at least",
+      "less-than": "is less than",
+      "less-than-or-equal": "is at most",
+      "is": "is",
+      "is-not": "is not",
+      "is-before": "is before",
+      "is-after": "is after",
+      "is-on-or-before": "is on or before",
+      "is-on-or-after": "is on or after",
+      "is-true": "is on",
+      "is-false": "is off",
+      "is-empty": "is empty",
+      "is-not-empty": "is not empty"
+    },
+    "dates": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "tomorrow": "Tomorrow",
+      "one-week-ago": "One week ago",
+      "one-week-from-now": "One week from now",
+      "one-month-ago": "One month ago",
+      "one-month-from-now": "One month from now",
+      "last-days": "Last N days",
+      "next-days": "Next N days",
+      "custom": "Custom date",
+      "lastDays": "last {{count}} days",
+      "nextDays": "next {{count}} days"
+    },
+    "fields": {
+      "operator": "Operator",
+      "value": "Value",
+      "searchOptions": "Search options",
+      "noMatchingOptions": "No matching options",
+      "selectItems": "Select items",
+      "searchItems": "Search items",
+      "noMatchingItems": "No matching items"
+    },
+    "menu": {
+      "label": "Filter",
+      "add": "Add filter",
+      "remove": "Remove filter"
+    }
+  }
+}

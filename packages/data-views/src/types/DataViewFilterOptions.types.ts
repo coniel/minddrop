@@ -1,4 +1,4 @@
-import { PropertyFilter } from '@minddrop/properties';
+import { PropertyFilter } from '@minddrop/filters';
 
 /**
  * Filter options available on every data view type, merged into

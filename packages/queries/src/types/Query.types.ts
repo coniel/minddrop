@@ -1,8 +1,5 @@
-import {
-  PropertyFilterOperator,
-  PropertyFilterValue,
-  PropertyType,
-} from '@minddrop/properties';
+import { PropertyFilterOperator, PropertyFilterValue } from '@minddrop/filters';
+import { PropertyType } from '@minddrop/properties';
 import { EntityId } from '@minddrop/utils';
 
 export type QueryId = EntityId<'query'>;

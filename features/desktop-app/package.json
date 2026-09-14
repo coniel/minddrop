@@ -55,6 +55,7 @@
     "@minddrop/feature-views": "workspace:*",
     "@minddrop/feature-workspaces": "workspace:*",
     "@minddrop/file-system": "workspace:*",
+    "@minddrop/filters": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/properties": "workspace:*",
     "@minddrop/queries": "workspace:*",

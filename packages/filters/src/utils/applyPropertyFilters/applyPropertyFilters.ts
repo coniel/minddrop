@@ -1,4 +1,5 @@
-import { PropertyFilter, PropertyValue } from '../../types';
+import { PropertyValue } from '@minddrop/properties';
+import { PropertyFilter } from '../../types';
 import { matchesPropertyFilter } from '../matchesPropertyFilter';
 
 /**
@@ -25,6 +26,7 @@ export function applyPropertyFilters<TItem>(
     return items;
   }
 
+  // Keep the items matching every filter
   return items.filter((item) =>
     filters.every((filter) =>
       matchesPropertyFilter(resolveValue(item, filter), filter, now),

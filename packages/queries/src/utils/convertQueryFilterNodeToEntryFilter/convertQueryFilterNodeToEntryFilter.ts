@@ -1,5 +1,7 @@
 import { EntryFilter, EntryFilterGroup } from '@minddrop/databases';
-import { PropertyFilters, PropertyType } from '@minddrop/properties';
+import { Filters } from '@minddrop/filters';
+import { PropertyType } from '@minddrop/properties';
+import { toArray } from '@minddrop/utils';
 import { QueryFilterNode } from '../../types';
 
 /**
@@ -18,7 +20,7 @@ export function convertQueryFilterNodeToEntryFilter(
   node: QueryFilterNode,
 ): EntryFilter | EntryFilterGroup | null {
   // Skip nodes that are not fully configured
-  if (!PropertyFilters.isComplete(node)) {
+  if (!Filters.isComplete(node)) {
     return null;
   }
 
@@ -108,11 +110,11 @@ function convertDateFilter(
   propertyType: PropertyType,
 ): EntryFilter | EntryFilterGroup | null {
   // The value must be a date value object
-  if (!PropertyFilters.isDateValue(node.value)) {
+  if (!Filters.isDateValue(node.value)) {
     return null;
   }
 
-  const { start, end } = PropertyFilters.resolveDateRange(node.value);
+  const { start, end } = Filters.resolveDateRange(node.value);
   const base = { property: node.property, propertyType };
 
   switch (node.operator) {
@@ -216,19 +218,33 @@ function groupEntryFilters(
 function convertSelectFilter(
   node: QueryFilterNode,
   propertyType: PropertyType,
-): EntryFilter | null {
-  if (typeof node.value !== 'string') {
+): EntryFilter | EntryFilterGroup | null {
+  // Collect the picked options
+  const picked = toArray(node.value).filter(
+    (value): value is string => typeof value === 'string',
+  );
+
+  if (picked.length === 0) {
     return null;
   }
 
+  // The fields shared by every membership test
   const base = { property: node.property, propertyType };
 
+  // Positive operators match any of the picked options
   if (node.operator === 'is' || node.operator === 'contains') {
-    return { ...base, operator: 'has-value', value: node.value };
+    return groupEntryFilters(
+      'or',
+      picked.map((value) => ({ ...base, operator: 'has-value', value })),
+    );
   }
 
+  // Negative operators match none of the picked options
   if (node.operator === 'is-not' || node.operator === 'not-contains') {
-    return { ...base, operator: 'not-has-value', value: node.value };
+    return groupEntryFilters(
+      'and',
+      picked.map((value) => ({ ...base, operator: 'not-has-value', value })),
+    );
   }
 
   return null;

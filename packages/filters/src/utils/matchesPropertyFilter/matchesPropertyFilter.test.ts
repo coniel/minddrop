@@ -296,6 +296,28 @@ describe('matchesPropertyFilter', () => {
         }),
       ).toBe(true);
     });
+
+    it('matches any of several picked options', () => {
+      const anyOf: PropertyFilter = {
+        ...selectFilter,
+        value: ['Todo', 'Done'],
+      };
+
+      expect(matchesPropertyFilter('Todo', anyOf)).toBe(true);
+      expect(matchesPropertyFilter('Archived', anyOf)).toBe(false);
+      expect(
+        matchesPropertyFilter('Todo', { ...anyOf, operator: 'is-not' }),
+      ).toBe(false);
+      expect(
+        matchesPropertyFilter('Archived', { ...anyOf, operator: 'is-not' }),
+      ).toBe(true);
+    });
+
+    it('never matches an empty pick', () => {
+      expect(
+        matchesPropertyFilter('Done', { ...selectFilter, value: [] }),
+      ).toBe(false);
+    });
   });
 
   describe('list', () => {

@@ -5,12 +5,10 @@ import {
 import { resolveRelativeDate } from '../resolveRelativeDate';
 
 /**
- * Resolves a filter date value to the local-day epoch
- * millisecond range it covers, from the start of the first day
- * (inclusive) to the start of the day after the last
- * (exclusive). Single day values cover their day; relative
- * ranges span the given number of days counted from the
- * current day, which is always included.
+ * Resolves a filter date value to the epoch millisecond range of
+ * the local days it covers. The start is inclusive and the end
+ * exclusive. Relative ranges count from the current day, which is
+ * always included.
  *
  * @param value - The date value to resolve.
  * @param now - The reference date for relative values, defaults to the current time.
@@ -26,6 +24,7 @@ export function resolvePropertyFilterDateRange(
     return resolveRelativeRange(value.days, value.direction, now);
   }
 
+  // The start of the target day
   let dayStart: Date;
 
   // Resolve the target day from the preset or absolute date
@@ -36,9 +35,10 @@ export function resolvePropertyFilterDateRange(
     dayStart.setHours(0, 0, 0, 0);
   }
 
-  // The range ends at the start of the following day
+  // End the range at the start of the following day
   const dayEnd = new Date(dayStart);
 
+  // Advance to the next day
   dayEnd.setDate(dayEnd.getDate() + 1);
 
   return { start: dayStart.getTime(), end: dayEnd.getTime() };
@@ -60,8 +60,10 @@ function resolveRelativeRange(
   // The start of the reference date's day
   const dayStart = new Date(now);
 
+  // Truncate to the start of the day
   dayStart.setHours(0, 0, 0, 0);
 
+  // Start both bounds at that day
   const start = new Date(dayStart);
   const end = new Date(dayStart);
 

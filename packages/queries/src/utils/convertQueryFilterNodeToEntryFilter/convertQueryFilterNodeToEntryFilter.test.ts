@@ -102,6 +102,33 @@ describe('convertQueryFilterNodeToEntryFilter', () => {
     });
   });
 
+  it('converts select any-of comparisons to OR membership groups', () => {
+    expect(
+      convertQueryFilterNodeToEntryFilter({
+        ...textNode,
+        propertyType: 'select',
+        operator: 'is',
+        value: ['Todo', 'Done'],
+      }),
+    ).toEqual({
+      combinator: 'or',
+      filters: [
+        {
+          property: 'Content',
+          propertyType: 'select',
+          operator: 'has-value',
+          value: 'Todo',
+        },
+        {
+          property: 'Content',
+          propertyType: 'select',
+          operator: 'has-value',
+          value: 'Done',
+        },
+      ],
+    });
+  });
+
   it('converts tag any-of comparisons to OR membership groups', () => {
     expect(
       convertQueryFilterNodeToEntryFilter({

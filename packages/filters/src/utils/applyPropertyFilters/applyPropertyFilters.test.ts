@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { PropertyFilter, PropertyMap } from '../../types';
+import { PropertyMap } from '@minddrop/properties';
+import { PropertyFilter } from '../../types';
 import { applyPropertyFilters } from './applyPropertyFilters';
 
 const done: PropertyMap = { Status: 'Done', Priority: 1 };

@@ -270,44 +270,9 @@ declare module 'i18next' {
             name: string;
             description: string;
           };
-          filters: {
-            operators: {
-              equals: string;
-              'not-equals': string;
-              contains: string;
-              'not-contains': string;
-              'contains-any': string;
-              'contains-all': string;
-              'contains-none': string;
-              'starts-with': string;
-              'ends-with': string;
-              'greater-than': string;
-              'greater-than-or-equal': string;
-              'less-than': string;
-              'less-than-or-equal': string;
-              is: string;
-              'is-not': string;
-              'is-before': string;
-              'is-after': string;
-              'is-on-or-before': string;
-              'is-on-or-after': string;
-              'is-true': string;
-              'is-false': string;
-              'is-empty': string;
-              'is-not-empty': string;
-            };
-            dates: {
-              today: string;
-              yesterday: string;
-              tomorrow: string;
-              'one-week-ago': string;
-              'one-week-from-now': string;
-              'one-month-ago': string;
-              'one-month-from-now': string;
-              'last-days': string;
-              'next-days': string;
-              custom: string;
-            };
+          picker: {
+            search: string;
+            noMatching: string;
           };
         };
         databases: {
@@ -1712,9 +1677,6 @@ declare module 'i18next' {
           editor: {
             namePlaceholder: string;
             selectProperty: string;
-            selectOperator: string;
-            selectValue: string;
-            valuePlaceholder: string;
             ascending: string;
             descending: string;
             propertyMismatch: string;
@@ -2311,6 +2273,61 @@ declare module 'i18next' {
             label: string;
             description: string;
             textPlaceholder: string;
+          };
+        };
+        filters: {
+          operators: {
+            equals: string;
+            'not-equals': string;
+            contains: string;
+            'not-contains': string;
+            'contains-any': string;
+            'contains-all': string;
+            'contains-none': string;
+            'starts-with': string;
+            'ends-with': string;
+            'greater-than': string;
+            'greater-than-or-equal': string;
+            'less-than': string;
+            'less-than-or-equal': string;
+            is: string;
+            'is-not': string;
+            'is-before': string;
+            'is-after': string;
+            'is-on-or-before': string;
+            'is-on-or-after': string;
+            'is-true': string;
+            'is-false': string;
+            'is-empty': string;
+            'is-not-empty': string;
+          };
+          dates: {
+            today: string;
+            yesterday: string;
+            tomorrow: string;
+            'one-week-ago': string;
+            'one-week-from-now': string;
+            'one-month-ago': string;
+            'one-month-from-now': string;
+            'last-days': string;
+            'next-days': string;
+            custom: string;
+            lastDays: string;
+            nextDays: string;
+          };
+          fields: {
+            operator: string;
+            value: string;
+            searchOptions: string;
+            noMatchingOptions: string;
+            selectItems: string;
+            searchItems: string;
+            noMatchingItems: string;
+          };
+          menu: {
+            label: string;
+            add: string;
+            remove: string;
           };
         };
         onboarding: {

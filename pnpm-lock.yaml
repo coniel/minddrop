@@ -591,6 +591,9 @@ importers:
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../../packages/file-system
+      '@minddrop/filters':
+        specifier: workspace:*
+        version: link:../../packages/filters
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
@@ -976,6 +979,9 @@ importers:
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../../packages/file-system
+      '@minddrop/filters':
+        specifier: workspace:*
+        version: link:../../packages/filters
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
@@ -1266,6 +1272,9 @@ importers:
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../../packages/file-system
+      '@minddrop/filters':
+        specifier: workspace:*
+        version: link:../../packages/filters
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
@@ -1287,6 +1296,9 @@ importers:
       '@minddrop/ui-components':
         specifier: workspace:*
         version: link:../../ui/components
+      '@minddrop/ui-filters':
+        specifier: workspace:*
+        version: link:../../ui/filters
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
@@ -1799,6 +1811,9 @@ importers:
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../file-system
+      '@minddrop/filters':
+        specifier: workspace:*
+        version: link:../filters
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../i18n
@@ -1857,6 +1872,9 @@ importers:
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../file-system
+      '@minddrop/filters':
+        specifier: workspace:*
+        version: link:../filters
       '@minddrop/history':
         specifier: workspace:*
         version: link:../history
@@ -2253,6 +2271,37 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  packages/filters:
+    dependencies:
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../i18n
+      '@minddrop/properties':
+        specifier: workspace:*
+        version: link:../properties
+      '@minddrop/stores':
+        specifier: workspace:*
+        version: link:../stores
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../utils
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.5
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   packages/history:
     dependencies:
       '@minddrop/file-system':
@@ -2419,6 +2468,9 @@ importers:
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../file-system
+      '@minddrop/filters':
+        specifier: workspace:*
+        version: link:../filters
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../i18n
@@ -3078,15 +3130,24 @@ importers:
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../../packages/file-system
+      '@minddrop/filters':
+        specifier: workspace:*
+        version: link:../../packages/filters
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@minddrop/properties':
+        specifier: workspace:*
+        version: link:../../packages/properties
       '@minddrop/queries':
         specifier: workspace:*
         version: link:../../packages/queries
       '@minddrop/ui-drag-and-drop':
         specifier: workspace:*
         version: link:../drag-and-drop
+      '@minddrop/ui-filters':
+        specifier: workspace:*
+        version: link:../filters
       '@minddrop/ui-icons':
         specifier: workspace:*
         version: link:../icons
@@ -3306,6 +3367,61 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  ui/filters:
+    dependencies:
+      '@minddrop/filters':
+        specifier: workspace:*
+        version: link:../../packages/filters
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      '@minddrop/properties':
+        specifier: workspace:*
+        version: link:../../packages/properties
+      '@minddrop/ui-primitives':
+        specifier: workspace:*
+        version: link:../primitives
+      '@minddrop/ui-properties':
+        specifier: workspace:*
+        version: link:../properties
+      '@minddrop/ui-tags':
+        specifier: workspace:*
+        version: link:../tags
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../../packages/events
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../../packages/file-system
+      '@minddrop/tags':
+        specifier: workspace:*
+        version: link:../../packages/tags
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
+      '@minddrop/workspaces':
+        specifier: workspace:*
+        version: link:../../packages/workspaces
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.5
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   ui/icons:
     dependencies:
       '@minddrop/ui-theme':
@@ -3370,6 +3486,40 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.5
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  ui/properties:
+    dependencies:
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      '@minddrop/properties':
+        specifier: workspace:*
+        version: link:../../packages/properties
+      '@minddrop/ui-primitives':
+        specifier: workspace:*
+        version: link:../primitives
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../../packages/events
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils

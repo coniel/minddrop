@@ -1,4 +1,4 @@
-import { PropertyType } from './Properties.types';
+import { PropertyType } from '@minddrop/properties';
 
 export type PropertyFilterTextOperator =
   | 'equals'
@@ -96,8 +96,7 @@ export interface PropertyFilter {
   property: string;
 
   /**
-   * The filtered property's type, which decides how the
-   * comparison runs and where the value comes from.
+   * The filtered property's type.
    */
   propertyType: PropertyType;
 

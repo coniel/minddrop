@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
+import { SelectPropertySchema } from '@minddrop/properties';
 import {
   MULTISELECT_PROPERTY_FILTER_OPERATORS,
   PROPERTY_FILTER_OPERATORS_BY_PROPERTY_TYPE,
 } from '../../constants';
-import { SelectPropertySchema } from '../../schemas';
 import { resolvePropertyFilterOperators } from './resolvePropertyFilterOperators';
 
 // A single choice select property

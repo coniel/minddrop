@@ -19,6 +19,7 @@ import { initializeTagsFeature } from '@minddrop/feature-tags';
 import { initializeViewsFeature } from '@minddrop/feature-views';
 import { initializeWorkspacesFeature } from '@minddrop/feature-workspaces';
 import { Fs } from '@minddrop/file-system';
+import { Filters } from '@minddrop/filters';
 import { I18n, initializeI18n } from '@minddrop/i18n';
 import { Properties } from '@minddrop/properties';
 import { Queries } from '@minddrop/queries';
@@ -74,6 +75,7 @@ async function runInitialization(): Promise<void> {
   // Register desktop app translations
   I18n.registerTranslations(locales);
   Properties.initialize();
+  Filters.initialize();
 
   // Register search translations
   initializeSearch();
