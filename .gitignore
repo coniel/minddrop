@@ -39,3 +39,7 @@ yarn-error.log*
 # dev review manifests and plans
 dev/changes/
 dev/plans/
+
+# Hutch-owned Electrobun toolchain and projected devkit
+.hutch
+.cottontail-tmp

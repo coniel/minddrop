@@ -17,6 +17,7 @@ export default {
       // dir the bundle can resolve from.
       '../../node_modules/@img': 'node_modules/@img',
     },
+    mainProcess: 'bun',
     bun: {
       entrypoint: 'src/bun/index.ts',
     },

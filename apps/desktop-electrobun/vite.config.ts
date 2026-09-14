@@ -3,11 +3,10 @@ import { execSync } from 'node:child_process';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
+import { electrobunViteAliases } from './.hutch/devkit/api/config/electrobun-vite';
 
-const viewsDir = resolve(
-  dirname(fileURLToPath(import.meta.url)),
-  'src/mainview',
-);
+const appDir = dirname(fileURLToPath(import.meta.url));
+const viewsDir = resolve(appDir, 'src/mainview');
 
 // Exposed to the front end as import.meta.env.VITE_APP_REVISION, which
 // it logs on start up so that the running code is identifiable.
@@ -16,6 +15,11 @@ process.env.VITE_APP_REVISION = resolveRevision();
 export default defineConfig({
   plugins: [react()],
   root: viewsDir,
+  resolve: {
+    // Vite has its own resolver and does not see the devkit aliases
+    // Hutch injects into Electrobun's own bundles.
+    alias: electrobunViteAliases(resolve(appDir, '.hutch/devkit')),
+  },
   build: {
     outDir: '../../dist',
     emptyOutDir: true,

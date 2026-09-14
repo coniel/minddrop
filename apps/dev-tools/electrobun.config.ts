@@ -11,6 +11,7 @@ export default {
       'dist/index.html': 'views/mainview/index.html',
       'dist/assets': 'views/mainview/assets',
     },
+    mainProcess: 'bun',
     bun: {
       entrypoint: 'src/bun/index.ts',
     },

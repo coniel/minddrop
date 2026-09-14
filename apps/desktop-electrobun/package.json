@@ -27,7 +27,7 @@
     "@minddrop/ui-theme": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "@minddrop/workspaces": "workspace:*",
-    "electrobun": "1.18.1",
+    "electrobun": "2.0.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "sharp": "^0.35.3"

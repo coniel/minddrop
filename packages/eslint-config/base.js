@@ -58,6 +58,6 @@ export const config = [
   },
   eslintPluginPrettierRecommended,
   {
-    ignores: ['dist/**', 'build/**', '*.min.*'],
+    ignores: ['dist/**', 'build/**', '.hutch/**', '*.min.*'],
   },
 ];
