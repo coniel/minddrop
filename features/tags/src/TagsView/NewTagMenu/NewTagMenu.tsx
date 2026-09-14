@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
-import { TagGroup, TagGroups } from '@minddrop/tags';
+import { EntityGroup } from '@minddrop/entity-groups';
+import { TagGroups } from '@minddrop/tags';
 import {
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -19,7 +20,7 @@ export interface NewTagMenuProps {
   /**
    * The tag groups a new tag can be created into.
    */
-  groups: TagGroup[];
+  groups: EntityGroup[];
 
   /**
    * Callback fired with the group name when the new group naming
@@ -41,10 +42,10 @@ export const NewTagMenu: React.FC<NewTagMenuProps> = ({
   const addButtonRef = useRef<HTMLButtonElement>(null);
   const [namingGroup, setNamingGroup] = useState(false);
   const [creatingTag, setCreatingTag] = useState(false);
-  const [tagGroup, setTagGroup] = useState<TagGroup | undefined>(undefined);
+  const [tagGroup, setTagGroup] = useState<EntityGroup | undefined>(undefined);
 
   // Open the new tag form, preselecting the given group
-  function handleCreateTag(group?: TagGroup) {
+  function handleCreateTag(group?: EntityGroup) {
     setTagGroup(group);
     setCreatingTag(true);
   }

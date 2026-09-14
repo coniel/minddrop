@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { createObjectStore } from '@minddrop/stores';
 import { Tag } from './types';
 
@@ -17,17 +16,10 @@ export const useTag = (id: string): Tag | null => {
 };
 
 /**
- * Retrieves all tags, optionally limited to a tag group.
+ * Retrieves all tags.
  *
- * @param group - The ID of the tag group to limit the tags to.
  * @returns An array of tags.
  */
-export const useTags = (group?: string): Tag[] => {
-  const tags = TagsStore.useAllItemsArray();
-
-  // Limit the tags to the group when one is given
-  return useMemo(
-    () => (group ? tags.filter((tag) => tag.group === group) : tags),
-    [tags, group],
-  );
+export const useTags = (): Tag[] => {
+  return TagsStore.useAllItemsArray();
 };

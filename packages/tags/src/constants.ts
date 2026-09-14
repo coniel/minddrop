@@ -5,8 +5,12 @@ import type { UiIconName } from '@minddrop/ui-icons';
  */
 export const TagEntityType = 'tag';
 
+/**
+ * The entity group type tag groups are registered as.
+ */
+export const TagGroupsType = 'tag-groups';
+
 export const TagsDirName = 'tags';
-export const TagGroupsDirName = 'tag-groups';
 export const TagFileExtension = 'json';
 
 /**

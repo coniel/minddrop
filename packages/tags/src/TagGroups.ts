@@ -1,40 +1,40 @@
-import { TagGroupsIcon } from './constants';
-import { TagGroupNotFoundError } from './errors';
-import {
-  TagGroupCreatedEvent,
-  TagGroupDeletedEvent,
-  TagGroupUpdatedEvent,
-  TagGroupsLoadedEvent,
-} from './events';
+import { EntityGroups } from '@minddrop/entity-groups';
+import { TagGroupsIcon, TagGroupsType } from './constants';
 
-// Const-asserted so the names keep their literal types, which key
-// the event data registry.
-export const events = {
-  Created: TagGroupCreatedEvent,
-  Updated: TagGroupUpdatedEvent,
-  Deleted: TagGroupDeletedEvent,
-  Loaded: TagGroupsLoadedEvent,
-} as const;
+// Tag groups are entity groups, so their events and errors are the
+// generic ones: a listener filters on the group's type.
+export const events: typeof EntityGroups.events = EntityGroups.events;
 
-export const errors = {
-  NotFound: TagGroupNotFoundError,
-};
+export const errors: typeof EntityGroups.errors = EntityGroups.errors;
 
 export const constants = {
+  Type: TagGroupsType,
   Icon: TagGroupsIcon,
 };
 
-export { createTagGroup as create } from './createTagGroup';
-export { updateTagGroup as update } from './updateTagGroup';
-export { deleteTagGroup as delete } from './deleteTagGroup';
-export { getTagGroup as get } from './getTagGroup';
-export { getAllTagGroups as getAll } from './getAllTagGroups';
-export { getGroupTags as getTags } from './getGroupTags';
-export { writeTagGroup as write } from './writeTagGroup';
-export { readTagGroup as read } from './readTagGroup';
-export { loadTagGroups as load } from './loadTagGroups';
-export {
-  TagGroupsStore as Store,
-  useTagGroup as use,
-  useTagGroups as useAll,
-} from './TagGroupsStore';
+// The entity groups API bound to the tag groups type
+const facade = EntityGroups.createFacade(TagGroupsType);
+
+export const {
+  create,
+  get,
+  getAll,
+  getForItem,
+  update,
+  reorder,
+  addItem,
+  moveItem,
+  removeItem,
+  reorderItems,
+  use,
+  useAll,
+  useForItem,
+} = facade;
+
+// A reserved word cannot be destructured into a binding of its own
+// name, so the deletion is exported by renaming.
+const { delete: deleteTagGroup } = facade;
+
+export { deleteTagGroup as delete };
+
+export { getGroupTags as getTags, useGroupTags as useTags } from './tag-groups';

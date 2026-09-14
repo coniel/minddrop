@@ -1,7 +1,8 @@
 import { DatabaseEntries } from '@minddrop/databases';
+import { EntityGroup } from '@minddrop/entity-groups';
 import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
-import { Tag, TagGroup, TagGroups, Tags } from '@minddrop/tags';
+import { Tag, TagGroups, Tags } from '@minddrop/tags';
 import {
   Icon,
   MenuContents,
@@ -16,12 +17,14 @@ import { ContentColors } from '@minddrop/ui-theme';
  *
  * @param tag - The tag the menu's actions apply to.
  * @param groups - The tag groups offered by the group submenu.
+ * @param groupId - The ID of the group holding the tag, or null when it is ungrouped.
  * @param onRename - Callback fired when the rename action is selected.
  * @returns The menu contents.
  */
 export function buildTagMenu(
   tag: Tag,
-  groups: TagGroup[],
+  groups: EntityGroup[],
+  groupId: string | null,
   onRename: () => void,
 ): MenuContents {
   return [
@@ -41,7 +44,7 @@ export function buildTagMenu(
       type: 'menu-item',
       icon: TagGroups.constants.Icon,
       label: 'tags.actions.group',
-      submenu: buildGroupSubmenu(tag, groups),
+      submenu: buildGroupSubmenu(tag, groups, groupId),
     },
     { type: 'menu-separator' },
     {
@@ -69,26 +72,39 @@ function buildColorSubmenu(tag: Tag): SubmenuContents {
 
 /**
  * Builds the group selection submenu, checking the tag's current
- * group.
+ * group. Adding the tag to a group takes it out of the one holding
+ * it.
  */
-function buildGroupSubmenu(tag: Tag, groups: TagGroup[]): SubmenuContents {
+function buildGroupSubmenu(
+  tag: Tag,
+  groups: EntityGroup[],
+  groupId: string | null,
+): SubmenuContents {
   return [
     {
       type: 'menu-item',
       label: 'tags.details.groupNone',
-      trailingIcon: !tag.group ? <Icon name="check" /> : undefined,
-      onSelect: () => Tags.update(tag.id, { group: null }),
+      trailingIcon: !groupId ? <Icon name="check" /> : undefined,
+      onSelect: () => ungroupTag(tag, groupId),
     },
     ...groups.map(
       (group): MenuItemConfig => ({
         type: 'menu-item',
         stringLabel: group.name,
-        trailingIcon:
-          tag.group === group.id ? <Icon name="check" /> : undefined,
-        onSelect: () => Tags.update(tag.id, { group: group.id }),
+        trailingIcon: groupId === group.id ? <Icon name="check" /> : undefined,
+        onSelect: () => TagGroups.addItem(group.id, tag.id),
       }),
     ),
   ];
+}
+
+/**
+ * Removes the tag from the group holding it, if any.
+ */
+function ungroupTag(tag: Tag, groupId: string | null) {
+  if (groupId) {
+    TagGroups.removeItem(groupId, tag.id);
+  }
 }
 
 /**

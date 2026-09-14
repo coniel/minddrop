@@ -106,7 +106,9 @@ describe('<TagsView />', () => {
 
     // The tag should be created in the group
     await waitFor(() => {
-      expect(Tags.getByName('Urgent').group).toBe(tagGroup_1.id);
+      expect(TagGroups.get(tagGroup_1.id).items).toEqual([
+        Tags.getByName('Urgent').id,
+      ]);
     });
   });
 });

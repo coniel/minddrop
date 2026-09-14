@@ -1,16 +1,22 @@
+import { EntityGroupDeletedEventData } from '@minddrop/entity-groups';
 import { TagsPropertySchema } from '@minddrop/properties';
-import { TagGroupDeletedEventData } from '@minddrop/tags';
+import { TagGroups } from '@minddrop/tags';
 import { getAllDatabases } from '../../getAllDatabases';
 import { updateDatabaseProperty } from '../../updateDatabaseProperty';
 
 /**
- * Called when a tag group is deleted. Clears the group limit from
- * tags properties restricted to the deleted group, making every
- * tag selectable again.
+ * Called when an entity group is deleted. Clears the group limit
+ * from tags properties restricted to a deleted tag group, making
+ * every tag selectable again.
  */
 export async function onTagGroupDeleted(
-  data: TagGroupDeletedEventData,
+  data: EntityGroupDeletedEventData,
 ): Promise<void> {
+  // Only tag groups limit tags properties
+  if (data.type !== TagGroups.constants.Type) {
+    return;
+  }
+
   // Clear matching group limits database by database
   for (const database of getAllDatabases()) {
     // The database's tags properties limited to the deleted group

@@ -5,7 +5,6 @@ import { entityId } from '@minddrop/utils';
 import { TagsStore } from '../TagsStore';
 import { DefaultTagIcon, TagEntityType } from '../constants';
 import { TagCreatedEvent } from '../events';
-import { getTagGroup } from '../getTagGroup';
 import { Tag } from '../types';
 import { resolveNextTagColor, validateTagName } from '../utils';
 import { writeTag } from '../writeTag';
@@ -27,13 +26,9 @@ import { writeTag } from '../writeTag';
 export async function createTag(
   name: string,
   color?: ContentColor,
-  group?: string,
 ): Promise<Tag> {
   // Validate and trim the tag name
   const validatedName = validateTagName(name);
-
-  // Validate that the group exists when assigning one
-  const tagGroup = group ? getTagGroup(group) : null;
 
   // The tag's color, defaulting to the next one in the rotation
   const tagColor = color || resolveNextTagColor();
@@ -48,11 +43,6 @@ export async function createTag(
     color: tagColor,
     icon: Icons.applyColor(DefaultTagIcon, tagColor),
   };
-
-  // Assign the group when given
-  if (tagGroup) {
-    tag.group = tagGroup.id;
-  }
 
   // Add the tag to the store
   TagsStore.set(tag);

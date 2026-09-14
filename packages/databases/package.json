@@ -26,6 +26,7 @@
     "@minddrop/data-views": "workspace:*",
     "@minddrop/designs": "workspace:*",
     "@minddrop/designs-next": "workspace:*",
+    "@minddrop/entity-groups": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/filters": "workspace:*",

@@ -64,9 +64,15 @@ describe('onTagGroupDeleted', () => {
     });
   });
 
+  it('ignores groups of another type', async () => {
+    await onTagGroupDeleted({ ...tagGroup_1, type: 'other-groups' });
+
+    expect(DatabasesStore).toHaveItem(tagsDatabase.id, tagsDatabase);
+  });
+
   it('ignores databases without matching group limits', async () => {
     // Delete a group no property is limited to
-    await onTagGroupDeleted({ ...tagGroup_1, id: 'tag-group_unused' });
+    await onTagGroupDeleted({ ...tagGroup_1, id: 'entity-group_unused' });
 
     // The database should be unchanged
     expect(DatabasesStore).toHaveItem(tagsDatabase.id, tagsDatabase);

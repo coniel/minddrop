@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { TagGroup, TagGroups, Tags } from '@minddrop/tags';
+import { EntityGroup } from '@minddrop/entity-groups';
+import { TagGroups, Tags } from '@minddrop/tags';
 import { Icons } from '@minddrop/ui-icons';
 import {
   Button,
@@ -43,7 +44,7 @@ export interface NewTagPopoverProps {
   /**
    * The group the new tag is assigned to by default.
    */
-  defaultGroup?: TagGroup;
+  defaultGroup?: EntityGroup;
 }
 
 /**
@@ -119,11 +120,16 @@ export const NewTagPopover: React.FC<NewTagPopoverProps> = ({
     const group = groups.find((candidate) => candidate.id === groupId);
 
     try {
-      const tag = await Tags.create(trimmedName, color, group?.id);
+      const tag = await Tags.create(trimmedName, color);
 
       // Persist the staged icon when customized
       if (icon !== Tags.constants.EntityDefaultIcon) {
         await Tags.update(tag.id, { icon });
+      }
+
+      // File the tag under the staged group
+      if (group) {
+        await TagGroups.addItem(group.id, tag.id);
       }
 
       onOpenChange(false);

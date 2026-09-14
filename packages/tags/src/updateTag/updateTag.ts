@@ -3,7 +3,6 @@ import { Icons } from '@minddrop/ui-icons';
 import { TagsStore } from '../TagsStore';
 import { TagRenamedEvent, TagUpdatedEvent } from '../events';
 import { getTag } from '../getTag';
-import { getTagGroup } from '../getTagGroup';
 import { Tag, UpdateTagData } from '../types';
 import { validateTagName } from '../utils';
 import { writeTag } from '../writeTag';
@@ -29,8 +28,7 @@ export async function updateTag(
   // Get the tag
   const tag = getTag(tagId);
 
-  // Split the group assignment from the plain field updates
-  const { group, ...update } = data;
+  const update = { ...data };
 
   // Validate and trim the new name when renaming
   if (typeof update.name === 'string') {
@@ -43,17 +41,6 @@ export async function updateTag(
     ...update,
     lastModified: new Date(),
   };
-
-  // Assign the group when given, validating that it exists
-  if (group) {
-    getTagGroup(group);
-    updatedTag.group = group;
-  }
-
-  // Clear the group when explicitly unset
-  if (group === null) {
-    delete updatedTag.group;
-  }
 
   // Keep the icon and color in sync: an updated icon carries its
   // color to the tag, an updated color recolors the icon.

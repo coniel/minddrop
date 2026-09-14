@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { Tags } from '@minddrop/tags';
+import { TagGroups, Tags } from '@minddrop/tags';
 import { TagFixtures, TagGroupFixtures } from '@minddrop/tags/test-utils';
 import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';
@@ -122,7 +122,8 @@ describe('<TagsSelectField />', () => {
 
   it('limits options to the group when one is set', async () => {
     // Add a tag in the group
-    await Tags.create('Grouped', undefined, tagGroup_1.id);
+    const grouped = await Tags.create('Grouped');
+    await TagGroups.addItem(tagGroup_1.id, grouped.id);
 
     render(
       <TagsSelectField value={[]} onChange={() => {}} group={tagGroup_1.id} />,
@@ -155,7 +156,9 @@ describe('<TagsSelectField />', () => {
 
     // The tag should be created in the group
     await waitFor(() => {
-      expect(Tags.getByName('Urgent').group).toBe(tagGroup_1.id);
+      expect(TagGroups.get(tagGroup_1.id).items).toEqual([
+        Tags.getByName('Urgent').id,
+      ]);
     });
   });
 });

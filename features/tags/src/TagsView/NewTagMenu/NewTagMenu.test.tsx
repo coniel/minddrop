@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { Tags } from '@minddrop/tags';
+import { TagGroups, Tags } from '@minddrop/tags';
 import { TagGroupFixtures } from '@minddrop/tags/test-utils';
 import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
 import { cleanup, setup } from '../../test-utils';
@@ -48,7 +48,9 @@ describe('<NewTagMenu />', () => {
 
     // The tag should be created in the picked group
     await waitFor(() => {
-      expect(Tags.getByName('Urgent').group).toBe(tagGroup_1.id);
+      expect(TagGroups.get(tagGroup_1.id).items).toEqual([
+        Tags.getByName('Urgent').id,
+      ]);
     });
   });
 });

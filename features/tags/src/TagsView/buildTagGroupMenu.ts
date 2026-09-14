@@ -1,5 +1,6 @@
+import { EntityGroup } from '@minddrop/entity-groups';
 import { Events } from '@minddrop/events';
-import { TagGroup, TagGroups } from '@minddrop/tags';
+import { TagGroups } from '@minddrop/tags';
 import { MenuContents } from '@minddrop/ui-primitives';
 
 export interface TagGroupMenuCallbacks {
@@ -23,7 +24,7 @@ export interface TagGroupMenuCallbacks {
  * @returns The menu contents.
  */
 export function buildTagGroupMenu(
-  group: TagGroup,
+  group: EntityGroup,
   callbacks: TagGroupMenuCallbacks,
 ): MenuContents {
   return [
@@ -54,7 +55,7 @@ export function buildTagGroupMenu(
  * Opens a delete confirmation noting that the group's tags become
  * ungrouped, deleting it on confirm.
  */
-function confirmDeleteTagGroup(group: TagGroup) {
+function confirmDeleteTagGroup(group: EntityGroup) {
   Events.dispatch(Events.events.OpenConfirmationDialog, {
     title: 'tags.actions.deleteGroup.confirmation.title',
     message: 'tags.actions.deleteGroup.confirmation.message',

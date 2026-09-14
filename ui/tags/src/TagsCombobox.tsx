@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
-import { Tag, Tags } from '@minddrop/tags';
+import { Tag, TagGroups, Tags } from '@minddrop/tags';
 import {
   Combobox,
   ComboboxOption,
@@ -77,8 +77,9 @@ export const TagsCombobox: React.FC<TagsComboboxProps> = ({
   // The current search query, controlled to drive create-on-type
   const [query, setQuery] = useState('');
   const tags = Tags.useAll();
+  const groupTags = TagGroups.useTags(group ?? '');
   // The selectable tags, limited to the group when one is set
-  const selectableTags = Tags.useAll(group);
+  const selectableTags = group ? groupTags : tags;
 
   // The selectable tags as options, alphabetical
   const options = useMemo<ComboboxOption[]>(
@@ -129,8 +130,9 @@ export const TagsCombobox: React.FC<TagsComboboxProps> = ({
           return option;
         }
 
-        // Look up selected tags outside the group limit, so their
-        // chips keep the tag color.
+        // A selected tag outside the group limit, picked before the
+        // limit was set or moved out of the group since, is not
+        // among the options, so it is looked up among every tag.
         const tag = tags.find((candidate) => candidate.name === name);
 
         // Fall back to a default color chip for unknown names
@@ -159,7 +161,12 @@ export const TagsCombobox: React.FC<TagsComboboxProps> = ({
 
     // Create the queried tag and append it to the value
     if (picked.some((option) => option.value === CreateOptionValue)) {
-      const tag = await Tags.create(trimmedQuery, undefined, group);
+      const tag = await Tags.create(trimmedQuery);
+
+      // File the tag under the group the field is limited to
+      if (group) {
+        await TagGroups.addItem(group, tag.id);
+      }
 
       onChange([...names, tag.name]);
 

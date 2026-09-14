@@ -1,8 +1,10 @@
+import { EntityGroups } from '@minddrop/entity-groups';
 import { MockFileSystem } from '@minddrop/file-system';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
-import { TagGroupsStore } from '../TagGroupsStore';
 import { TagsStore } from '../TagsStore';
-import { resolveTagGroupsDirPath, resolveTagsDirPath } from '../utils';
+import { TagGroupsType } from '../constants';
+import { tagGroupsTypeConfig } from '../tagGroupsTypeConfig';
+import { resolveTagsDirPath } from '../utils';
 import { getTagGroupFiles, tagGroups } from './tag-groups.fixtures';
 import { getTagFiles, tags } from './tags.fixtures';
 
@@ -24,11 +26,12 @@ export function setupTagFixtures(
     loadTagGroupFiles: true,
   },
 ) {
-  // Create the tags and tag groups directories
+  // Create the tags directory
   MockFs.createDir(resolveTagsDirPath(workspace_1.path), { recursive: true });
-  MockFs.createDir(resolveTagGroupsDirPath(workspace_1.path), {
-    recursive: true,
-  });
+
+  // Register the tag groups type, which the tag group functions
+  // look up.
+  EntityGroups.registerType(tagGroupsTypeConfig);
 
   if (options.loadTags !== false) {
     // Load tags into the store
@@ -41,17 +44,19 @@ export function setupTagFixtures(
   }
 
   if (options.loadTagGroups !== false) {
-    // Load tag groups into the store
-    TagGroupsStore.load(tagGroups);
+    // Load tag groups into the entity groups store
+    EntityGroups.Store.load([{ type: TagGroupsType, groups: tagGroups }]);
   }
 
   if (options.loadTagGroupFiles !== false) {
-    // Load tag group files into the mock file system
+    // Load the tag groups file into the mock file system
     MockFs.addFiles(getTagGroupFiles());
   }
 }
 
 export function cleanupTagFixtures() {
   TagsStore.clear();
-  TagGroupsStore.clear();
+
+  // Drops the type's groups along with the type
+  EntityGroups.unregisterType(TagGroupsType);
 }

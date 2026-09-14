@@ -1,6 +1,5 @@
 import { ContentColor } from '@minddrop/ui-theme';
 import { EntityId } from '@minddrop/utils';
-import { TagGroupId } from './TagGroup.types';
 
 export type TagId = EntityId<'tag'>;
 
@@ -28,12 +27,6 @@ export interface Tag {
   icon: string;
 
   /**
-   * The ID of the group the tag belongs to. Absent for ungrouped
-   * tags.
-   */
-  group?: TagGroupId;
-
-  /**
    * The date the tag was created.
    */
   created: Date;
@@ -44,10 +37,4 @@ export interface Tag {
   lastModified: Date;
 }
 
-export type UpdateTagData = Partial<Pick<Tag, 'name' | 'color' | 'icon'>> & {
-  /**
-   * The ID of the group to assign the tag to, or null to ungroup
-   * it.
-   */
-  group?: TagGroupId | null;
-};
+export type UpdateTagData = Partial<Pick<Tag, 'name' | 'color' | 'icon'>>;

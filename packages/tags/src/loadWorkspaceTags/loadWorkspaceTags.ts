@@ -1,14 +1,11 @@
 import { Workspace } from '@minddrop/workspaces';
-import { loadTagGroups } from '../loadTagGroups';
 import { loadTags } from '../loadTags';
 
 /**
- * Loads a workspace's tags and tag groups into the workspace's
- * store records.
+ * Loads a workspace's tags into the store.
  *
- * @param workspace - The workspace whose tags to load.
+ * @param workspace - The workspace to load the tags of.
  */
 export async function loadWorkspaceTags(workspace: Workspace): Promise<void> {
   await loadTags(workspace);
-  await loadTagGroups(workspace);
 }
