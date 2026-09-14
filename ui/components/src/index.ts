@@ -1,6 +1,7 @@
 export * from './AddCollectionEntryButton';
 export * from './CollectionSelectionSubmenu';
 export * from './DataSourceCombobox';
+export * from './EntitySearchMenu';
 export * from './Image';
 export * from './ImageViewer';
 export * from './ListPanelView';

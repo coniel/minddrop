@@ -44,4 +44,5 @@ export {
 } from './SpacesStore';
 export { updateSpace as update } from './updateSpace';
 export { initializeSpaces as initialize } from './initializeSpaces';
+export { getRecentSpaces as getRecent } from './utils';
 export { loadWorkspaceSpaces as loadWorkspace } from './loadWorkspaceSpaces';

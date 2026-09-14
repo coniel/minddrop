@@ -1,4 +1,8 @@
-import { CollectionsIcon, DefaultCollectionIcon } from './constants';
+import {
+  CollectionEntityType,
+  CollectionsIcon,
+  DefaultCollectionIcon,
+} from './constants';
 import { CollectionNotFoundError } from './errors';
 import {
   CollectionCreatedEvent,
@@ -21,6 +25,7 @@ export const errors = {
 };
 
 export const constants = {
+  EntityType: CollectionEntityType,
   Icon: CollectionsIcon,
   EntityDefaultIcon: DefaultCollectionIcon,
 };
@@ -41,6 +46,7 @@ export {
 export { updateCollection as update } from './updateCollection';
 export { addCollectionItems as addItems } from './addCollectionItems';
 export { searchCollections as search } from './utils';
+export { getRecentCollections as getRecent } from './utils';
 export { removeCollectionItems as removeItems } from './removeCollectionItems';
 export { initializeCollections as initialize } from './initializeCollections';
 export { loadWorkspaceCollections as loadWorkspace } from './loadWorkspaceCollections';

@@ -390,7 +390,9 @@ declare module 'i18next' {
             };
           };
           labels: {
+            database: string;
             databases: string;
+            entries: string;
           };
           form: {
             labels: {
@@ -2051,6 +2053,51 @@ declare module 'i18next' {
             };
           };
         };
+        spaces: {
+          labels: {
+            space: string;
+            spaces: string;
+          };
+          actions: {
+            new: string;
+          };
+          list: {
+            searchPlaceholder: string;
+            empty: string;
+            noResults: string;
+          };
+          details: {
+            noSelection: string;
+          };
+          view: {
+            notFound: string;
+            actions: {
+              edit: string;
+              exitEditMode: string;
+            };
+          };
+          templates: {
+            blank: {
+              name: string;
+              description: string;
+            };
+          };
+          form: {
+            labels: {
+              templates: string;
+            };
+            name: {
+              label: string;
+              placeholder: string;
+            };
+            icon: {
+              label: string;
+            };
+            actions: {
+              create: string;
+            };
+          };
+        };
         tags: {
           labels: {
             tag: string;
@@ -2454,6 +2501,22 @@ declare module 'i18next' {
           labels: {
             library: string;
           };
+          sidebar: {
+            create: {
+              label: string;
+              searchPlaceholder: string;
+              entryTemplate: string;
+            };
+          };
+          sidebarGroups: {
+            actions: {
+              addItem: string;
+            };
+            picker: {
+              searchPlaceholder: string;
+              empty: string;
+            };
+          };
         };
         search: {
           open: string;
@@ -2515,50 +2578,6 @@ declare module 'i18next' {
           errors: {
             notAWorkspace: string;
             unknown: string;
-          };
-        };
-        spaces: {
-          labels: {
-            spaces: string;
-          };
-          actions: {
-            new: string;
-          };
-          list: {
-            searchPlaceholder: string;
-            empty: string;
-            noResults: string;
-          };
-          details: {
-            noSelection: string;
-          };
-          view: {
-            notFound: string;
-            actions: {
-              edit: string;
-              exitEditMode: string;
-            };
-          };
-          templates: {
-            blank: {
-              name: string;
-              description: string;
-            };
-          };
-          form: {
-            labels: {
-              templates: string;
-            };
-            name: {
-              label: string;
-              placeholder: string;
-            };
-            icon: {
-              label: string;
-            };
-            actions: {
-              create: string;
-            };
           };
         };
         designsStudio: {
@@ -3306,11 +3325,21 @@ declare module 'i18next' {
         };
         entityGroups: {
           labels: {
+            group: string;
             newGroup: string;
+            empty: string;
           };
           actions: {
             rename: string;
             delete: string;
+          };
+          item: {
+            remove: string;
+            move: string;
+            add: string;
+          };
+          gap: {
+            drop: string;
           };
           name: {
             placeholder: string;

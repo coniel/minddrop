@@ -75,5 +75,6 @@ export * from './resolveDatabaseEntryPath';
 export * from './serializeDatabase';
 export * from './serializeDatabaseEntryTemplate';
 export * from './matchesEntryFocusRequest';
+export * from './getRecentDatabases';
 export * from './resolveEntryMetadataValue';
 export * from './resolveEntryPropertyValue';

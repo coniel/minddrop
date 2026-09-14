@@ -57,3 +57,4 @@ export {
   useDataViewsOfType as useOfType,
   useDataSourceDataViews,
 } from './DataViewsStore';
+export { getRecentDataViews as getRecent } from './utils';

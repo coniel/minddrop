@@ -28,6 +28,8 @@
     "@minddrop/file-system": "workspace:*",
     "@minddrop/queries": "workspace:*",
     "@minddrop/selection": "workspace:*",
+    "@minddrop/spaces": "workspace:*",
+    "@minddrop/tags": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/ui-databases": "workspace:*",

@@ -7,3 +7,4 @@ export * from './resolveNextTagColor';
 export * from './resolveUniqueTagName';
 export * from './validateTagName';
 export * from './validateTagGroupName';
+export * from './getRecentTags';

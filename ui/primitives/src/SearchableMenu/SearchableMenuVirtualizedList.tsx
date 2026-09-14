@@ -65,6 +65,7 @@ export const SearchableMenuVirtualizedList: React.FC<
         stringDescription={props.stringDescription}
         icon={props.icon}
         contentIcon={props.contentIcon}
+        trailingIcon={props.trailingIcon}
         active={itemNavigationProps.highlighted}
       />
     );

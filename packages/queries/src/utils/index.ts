@@ -13,3 +13,4 @@ export * from './getQueryCollectionReferences';
 export * from './getQueryDatabases';
 export * from './getQueryReferencedQueryIds';
 export * from './searchQueries';
+export * from './getRecentQueries';

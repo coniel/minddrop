@@ -131,6 +131,7 @@ export { removeDatabaseProperty as removeProperty } from './removeDatabaseProper
 export { renameDatabase as rename } from './renameDatabase';
 export { renameDatabasePropertyOption as renamePropertyOption } from './renameDatabasePropertyOption';
 export { searchDatabases as search } from './utils';
+export { getRecentDatabases as getRecent } from './utils';
 export { updateDatabase as update } from './updateDatabase';
 export { getDatabaseDefaults as getDefaults } from './getDatabaseDefaults';
 export { setDatabaseDefault as setDefault } from './setDatabaseDefault';

@@ -3,11 +3,19 @@ import {
   cleanupCollectionFixtures,
   setupCollectionFixtures,
 } from '@minddrop/collections/test-utils';
+import { DataViews } from '@minddrop/data-views';
+import { DataViewFixtures } from '@minddrop/data-views/test-utils';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { initializeI18n } from '@minddrop/i18n';
+import { Queries } from '@minddrop/queries';
+import { QueryFixtures } from '@minddrop/queries/test-utils';
+import { Spaces } from '@minddrop/spaces';
+import { SpaceFixtures } from '@minddrop/spaces/test-utils';
+import { Tags } from '@minddrop/tags';
+import { TagFixtures } from '@minddrop/tags/test-utils';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
 import {
   cleanupWorkspaceFixtures,
@@ -29,6 +37,12 @@ export function setup() {
 
   // Load collection fixtures into the store and mock file system
   setupCollectionFixtures(MockFs);
+
+  // Load the other entities the entity search lists
+  DataViews.Store.load(DataViewFixtures.dataViews);
+  Spaces.Store.load(SpaceFixtures.spaces);
+  Queries.Store.load(QueryFixtures.queries);
+  Tags.Store.load(TagFixtures.tags);
 }
 
 export async function cleanup(): Promise<void> {
@@ -40,6 +54,10 @@ export async function cleanup(): Promise<void> {
 
   DatabaseFixtures.cleanup();
   cleanupCollectionFixtures();
+  DataViews.Store.clear();
+  Spaces.Store.clear();
+  Queries.Store.clear();
+  Tags.Store.clear();
   await Events.tests.cleanup();
   vi.clearAllMocks();
   cleanupWorkspaceFixtures();

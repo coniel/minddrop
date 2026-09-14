@@ -3,7 +3,7 @@ import { Icons } from '@minddrop/ui-icons';
 import { ContentColor } from '@minddrop/ui-theme';
 import { entityId } from '@minddrop/utils';
 import { TagsStore } from '../TagsStore';
-import { DefaultTagIcon } from '../constants';
+import { DefaultTagIcon, TagEntityType } from '../constants';
 import { TagCreatedEvent } from '../events';
 import { getTagGroup } from '../getTagGroup';
 import { Tag } from '../types';
@@ -41,7 +41,7 @@ export async function createTag(
   // Generate the tag object, with the default icon in the tag's
   // color.
   const tag: Tag = {
-    id: entityId('tag'),
+    id: entityId(TagEntityType),
     created: new Date(),
     lastModified: new Date(),
     name: validatedName,

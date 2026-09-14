@@ -1,4 +1,4 @@
-import { DefaultQueryIcon, QueriesIcon } from './constants';
+import { DefaultQueryIcon, QueriesIcon, QueryEntityType } from './constants';
 import { QueryNotFoundError } from './errors';
 import {
   QueriesLoadedEvent,
@@ -21,6 +21,7 @@ export const errors = {
 };
 
 export const constants = {
+  EntityType: QueryEntityType,
   Icon: QueriesIcon,
   EntityDefaultIcon: DefaultQueryIcon,
 };
@@ -54,3 +55,4 @@ export { useQueryResults as useResults } from './useQueryResults';
 export { useQueryNodeResults as useNodeResults } from './useQueryNodeResults';
 export { getQueryNodeCounts as getNodeCounts } from './getQueryNodeCounts';
 export { useQueryNodeCounts as useNodeCounts } from './useQueryNodeCounts';
+export { getRecentQueries as getRecent } from './utils';

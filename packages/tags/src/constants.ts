@@ -1,5 +1,10 @@
 import type { UiIconName } from '@minddrop/ui-icons';
 
+/**
+ * The entity type of tags, prefixing their IDs.
+ */
+export const TagEntityType = 'tag';
+
 export const TagsDirName = 'tags';
 export const TagGroupsDirName = 'tag-groups';
 export const TagFileExtension = 'json';

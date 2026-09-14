@@ -1,4 +1,4 @@
-import { DefaultTagIcon, TagsIcon } from './constants';
+import { DefaultTagIcon, TagEntityType, TagsIcon } from './constants';
 import { TagNotFoundError } from './errors';
 import {
   OpenTagsViewEvent,
@@ -25,6 +25,7 @@ export const errors = {
 };
 
 export const constants = {
+  EntityType: TagEntityType,
   Icon: TagsIcon,
   EntityDefaultIcon: DefaultTagIcon,
 };
@@ -50,3 +51,4 @@ export {
 export { loadTags as load } from './loadTags';
 export { loadWorkspaceTags as loadWorkspace } from './loadWorkspaceTags';
 export { initializeTags as initialize } from './initializeTags';
+export { getRecentTags as getRecent } from './utils';

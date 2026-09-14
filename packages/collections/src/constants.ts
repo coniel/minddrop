@@ -1,5 +1,10 @@
 import type { UiIconName } from '@minddrop/ui-icons';
 
+/**
+ * The entity type of collections, prefixing their IDs.
+ */
+export const CollectionEntityType = 'collection';
+
 export const CollectionsDirName = 'collections';
 export const CollectionFileExtension = 'json';
 

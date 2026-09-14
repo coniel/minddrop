@@ -49,6 +49,7 @@ export const SearchableMenuItem: FC<SearchableMenuItemProps> = (props) => {
     stringDescription,
     icon,
     contentIcon,
+    trailingIcon,
     disabled,
     children,
   } = props;
@@ -78,6 +79,7 @@ export const SearchableMenuItem: FC<SearchableMenuItemProps> = (props) => {
 
   return (
     <MenuItem
+      data-menu-item={id}
       ref={navProps?.ref}
       onMouseMove={navProps?.onMouseMove}
       onMouseLeave={navProps?.onMouseLeave}
@@ -88,6 +90,7 @@ export const SearchableMenuItem: FC<SearchableMenuItemProps> = (props) => {
       stringDescription={stringDescription}
       icon={icon}
       contentIcon={contentIcon}
+      trailingIcon={trailingIcon}
       disabled={disabled}
       active={navProps?.highlighted}
     >

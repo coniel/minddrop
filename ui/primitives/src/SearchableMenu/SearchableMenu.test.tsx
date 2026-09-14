@@ -66,6 +66,27 @@ describe('SearchableMenu', () => {
     });
   });
 
+  it('keeps an item trailing content when listing it from the registry', async () => {
+    render(
+      <SearchableMenu>
+        <SearchableMenuItem
+          stringLabel="Apple"
+          trailingIcon={<span>picked</span>}
+          onSelect={vi.fn()}
+        />
+        <SearchableMenuItem stringLabel="Banana" onSelect={vi.fn()} />
+      </SearchableMenu>,
+    );
+
+    // Searching hands the rendering of the items to the menu, which
+    // rebuilds them from what they registered.
+    await search('App');
+
+    // The menu keeps a hidden copy of every item for registration,
+    // so the listed one is the copy under test
+    await waitFor(() => expect(listedItems('picked')).toHaveLength(1));
+  });
+
   it('closes the whole menu when a submenu item is selected', async () => {
     render(
       <DropdownMenu trigger={<button>Open</button>}>

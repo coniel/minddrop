@@ -1,5 +1,10 @@
 import type { UiIconName } from '@minddrop/ui-icons';
 
+/**
+ * The entity type of queries, prefixing their IDs.
+ */
+export const QueryEntityType = 'query';
+
 export const QueriesDirName = 'queries';
 export const QueryFileExtension = 'json';
 

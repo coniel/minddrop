@@ -5,6 +5,7 @@ import { QueriesStore } from '../QueriesStore';
 import {
   DEFAULT_RESULTS_NODE_POSITION,
   DEFAULT_SOURCE_NODE_POSITION,
+  QueryEntityType,
 } from '../constants';
 import { QueryCreatedEvent } from '../events';
 import { Query } from '../types';
@@ -23,7 +24,7 @@ import { writeQuery } from '../writeQuery';
 export async function createQuery(name?: string): Promise<Query> {
   // Generate the query object
   const query: Query = {
-    id: entityId('query'),
+    id: entityId(QueryEntityType),
     created: new Date(),
     lastModified: new Date(),
     name: name || i18n.t('queries.labels.query'),

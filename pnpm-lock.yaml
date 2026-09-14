@@ -542,6 +542,9 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
       '@minddrop/ui-components':
         specifier: workspace:*
         version: link:../../ui/components
@@ -1021,6 +1024,9 @@ importers:
       '@minddrop/ui-drag-and-drop':
         specifier: workspace:*
         version: link:../../ui/drag-and-drop
+      '@minddrop/ui-entity-groups':
+        specifier: workspace:*
+        version: link:../../ui/entity-groups
       '@minddrop/ui-icons':
         specifier: workspace:*
         version: link:../../ui/icons
@@ -1639,6 +1645,9 @@ importers:
 
   packages/app:
     dependencies:
+      '@minddrop/collections':
+        specifier: workspace:*
+        version: link:../collections
       '@minddrop/data-views':
         specifier: workspace:*
         version: link:../data-views
@@ -1654,12 +1663,18 @@ importers:
       '@minddrop/item-references':
         specifier: workspace:*
         version: link:../item-references
+      '@minddrop/queries':
+        specifier: workspace:*
+        version: link:../queries
       '@minddrop/spaces':
         specifier: workspace:*
         version: link:../spaces
       '@minddrop/stores':
         specifier: workspace:*
         version: link:../stores
+      '@minddrop/tags':
+        specifier: workspace:*
+        version: link:../tags
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
@@ -3072,6 +3087,12 @@ importers:
       '@minddrop/selection':
         specifier: workspace:*
         version: link:../../packages/selection
+      '@minddrop/spaces':
+        specifier: workspace:*
+        version: link:../../packages/spaces
+      '@minddrop/tags':
+        specifier: workspace:*
+        version: link:../../packages/tags
       '@minddrop/ui-databases':
         specifier: workspace:*
         version: link:../databases
@@ -3332,9 +3353,6 @@ importers:
       '@minddrop/selection':
         specifier: workspace:*
         version: link:../../packages/selection
-      '@minddrop/ui-components':
-        specifier: workspace:*
-        version: link:../components
       '@minddrop/ui-drag-and-drop':
         specifier: workspace:*
         version: link:../drag-and-drop
