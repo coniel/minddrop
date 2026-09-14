@@ -1,10 +1,9 @@
 import { useMemo } from 'react';
-import { createI18nKeyBuilder } from '@minddrop/i18n';
 import {
+  Filters,
   PropertyFilterOperator,
   PropertyFilterValue,
-  PropertyFilters,
-} from '@minddrop/properties';
+} from '@minddrop/filters';
 import {
   Queries,
   Query,
@@ -17,10 +16,13 @@ import {
   CanvasNodeConnection,
   CanvasPoint,
 } from '@minddrop/ui-canvas';
+import {
+  PropertyFilterOperatorSelect,
+  PropertyFilterValueInput,
+} from '@minddrop/ui-filters';
 import { Select, Stack } from '@minddrop/ui-primitives';
 import { QueryNodeMismatchWarning } from '../QueryNodeMismatchWarning';
 import { QueryNodeShell } from '../QueryNodeShell';
-import { QueryNodeValueInput } from '../QueryNodeValueInput';
 import { getQueryUpstreamProperties } from '../utils';
 
 export interface QueryFilterNodeCardProps {
@@ -62,13 +64,9 @@ export interface QueryFilterNodeCardProps {
   ): CanvasConnectionDragTarget | null;
 }
 
-// Builds operator label translation keys
-const operatorI18nKey = createI18nKeyBuilder('properties.filters.operators.');
-
 /**
  * Renders a filter node with property, operator and value
- * inputs. Selectable properties come from the databases
- * upstream of the node.
+ * inputs.
  */
 export const QueryFilterNodeCard: React.FC<QueryFilterNodeCardProps> = ({
   query,
@@ -95,26 +93,17 @@ export const QueryFilterNodeCard: React.FC<QueryFilterNodeCardProps> = ({
     value: property.name,
   }));
 
-  // Operators available for the selected property's type
-  const operators = propertySchema
-    ? PropertyFilters.resolveOperators(propertySchema)
-    : [];
-
-  const operatorOptions = operators.map((operator) => ({
-    label: operatorI18nKey(operator),
-    value: operator,
-  }));
-
-  // Persist a property change, resetting the operator to the
-  // new property type's first operator and clearing the value.
+  // Persist a property change
   function handlePropertyChange(propertyName: string): void {
+    // Find the picked property and its operators
     const property = properties.find(
       (propertyOption) => propertyOption.name === propertyName,
     );
     const propertyOperators = property
-      ? PropertyFilters.resolveOperators(property)
+      ? Filters.resolveOperators(property)
       : [];
 
+    // Persist the property with its first operator and no value
     Queries.update(query.id, {
       nodes: Queries.updateNode<QueryFilterNode>(query.nodes, node.id, {
         property: propertyName,
@@ -131,7 +120,7 @@ export const QueryFilterNodeCard: React.FC<QueryFilterNodeCardProps> = ({
     Queries.update(query.id, {
       nodes: Queries.updateNode<QueryFilterNode>(query.nodes, node.id, {
         operator,
-        value: PropertyFilters.constants.ValueLessOperators.has(operator)
+        value: Filters.constants.ValueLessOperators.has(operator)
           ? undefined
           : node.value,
       }),
@@ -174,17 +163,16 @@ export const QueryFilterNodeCard: React.FC<QueryFilterNodeCardProps> = ({
 
         {/* Operator picker for the selected property */}
         {propertySchema && (
-          <Select<PropertyFilterOperator>
-            placeholder="queries.editor.selectOperator"
-            options={operatorOptions}
-            value={node.operator || undefined}
+          <PropertyFilterOperatorSelect
+            property={propertySchema}
+            value={node.operator}
             onValueChange={handleOperatorChange}
           />
         )}
 
         {/* Value input for the selected operator */}
         {propertySchema && (
-          <QueryNodeValueInput
+          <PropertyFilterValueInput
             key={node.property}
             property={propertySchema}
             operator={node.operator}

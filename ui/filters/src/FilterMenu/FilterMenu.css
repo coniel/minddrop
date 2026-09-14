@@ -1,0 +1,12 @@
+.filter-menu {
+  max-width: 20rem;
+}
+
+.filter-menu-editor,
+.filter-item-editor {
+  padding: var(--space-2);
+}
+
+.filter-editor-heading {
+  padding-inline: var(--space-1);
+}

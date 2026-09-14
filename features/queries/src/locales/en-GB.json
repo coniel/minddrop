@@ -17,9 +17,6 @@
     "editor": {
       "namePlaceholder": "Query name",
       "selectProperty": "Property",
-      "selectOperator": "Operator",
-      "selectValue": "Value",
-      "valuePlaceholder": "Value",
       "ascending": "Ascending",
       "descending": "Descending",
       "propertyMismatch": "An input does not contain this property",

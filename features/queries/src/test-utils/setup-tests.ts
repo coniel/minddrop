@@ -8,6 +8,7 @@ import {
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
+import { Filters } from '@minddrop/filters';
 import { I18n, initializeI18n } from '@minddrop/i18n';
 import { Properties } from '@minddrop/properties';
 import {
@@ -27,6 +28,7 @@ initializeI18n();
 // the property filter translations the operator labels use.
 I18n.registerTranslations(locales);
 Properties.initialize();
+Filters.initialize();
 
 export const MockFs = initializeMockFileSystem();
 

@@ -84,8 +84,8 @@ describe('<QueryFilterNodeCard />', () => {
     render(<QueryFilterNodeCard query={query_1} node={filterNode} />);
 
     // Pick a different operator
-    await user.click(screen.getByText('Contains'));
-    await user.click(screen.getByRole('option', { name: 'Starts with' }));
+    await user.click(screen.getByText('contains'));
+    await user.click(screen.getByRole('option', { name: 'starts with' }));
 
     // The node's operator updates in the store, keeping the value
     await waitFor(() => {
