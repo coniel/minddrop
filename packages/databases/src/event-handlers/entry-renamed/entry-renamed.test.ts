@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Collections } from '@minddrop/collections';
-import { DataViews } from '@minddrop/data-views';
+import { ContentViews } from '@minddrop/content-views';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { Events } from '@minddrop/events';
 import { History } from '@minddrop/history';
@@ -233,7 +233,7 @@ describe('onRenameEntry', () => {
     };
 
     // Create a virtual view for a collection property
-    DataViews.createVirtual({
+    ContentViews.createVirtual({
       id: viewId,
       type: 'board',
       dataSource,
@@ -250,7 +250,7 @@ describe('onRenameEntry', () => {
     });
 
     // The view should still exist unchanged
-    const view = DataViews.get(viewId);
+    const view = ContentViews.get(viewId);
 
     expect(view.dataSource).toEqual(dataSource);
   });

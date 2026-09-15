@@ -14,7 +14,7 @@ If you want to build a feature, build it as an extension. The extensions system 
 
 You will need [Bun](https://bun.com) and [pnpm](https://pnpm.io). Install the workspace once from the repository root with `pnpm install`, then run the desktop app with `pnpm --filter @minddrop/desktop-2 dev`.
 
-The [README](README.md) describes how the monorepo is divided. The short version: `packages/` holds core logic with no UI, `features/` holds the React interface for each core package, `ui/` holds shared building blocks, and `data-views/` holds the view types entries are displayed in.
+The [README](README.md) describes how the monorepo is divided. The short version: `packages/` holds core logic with no UI, `features/` holds the React interface for each core package, `ui/` holds shared building blocks, and `content-views/` holds the view types entries are displayed in.
 
 ## Where code goes
 

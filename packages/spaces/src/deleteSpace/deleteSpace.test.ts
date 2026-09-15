@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DataViews } from '@minddrop/data-views';
-import { DataViewFixtures } from '@minddrop/data-views/test-utils';
+import { ContentViews } from '@minddrop/content-views';
+import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { Designs } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { Events } from '@minddrop/events';
@@ -10,18 +10,18 @@ import { MockFs, cleanup, setup, space_1 } from '../test-utils';
 import { resolveSpaceBundleDirPath, resolveSpaceMediaDirPath } from '../utils';
 import { deleteSpace } from './deleteSpace';
 
-const { element_data_view_1 } = DesignFixtures;
-const { dataView_gallery_1 } = DataViewFixtures;
+const { element_content_view_1 } = DesignFixtures;
+const { contentView_gallery_1 } = ContentViewFixtures;
 
 /**
- * Loads a data view and embeds it in the space's layout through a
- * data view element, as a space with an embedded view would be.
+ * Loads a content view and embeds it in the space's layout through a
+ * content view element, as a space with an embedded view would be.
  */
-function embedDataViewInSpace(): void {
-  // The data view is an ordinary persisted view, not owned by the
+function embedContentViewInSpace(): void {
+  // The content view is an ordinary persisted view, not owned by the
   // space.
-  DataViews.Store.load([dataView_gallery_1]);
-  MockFs.addFiles([DataViews.resolveFilePath(dataView_gallery_1.id)]);
+  ContentViews.Store.load([contentView_gallery_1]);
+  MockFs.addFiles([ContentViews.resolveFilePath(contentView_gallery_1.id)]);
 
   const layout = space_1.design.layouts[0];
 
@@ -35,7 +35,7 @@ function embedDataViewInSpace(): void {
           tree: {
             ...layout.tree,
             children: [
-              { ...element_data_view_1, content: dataView_gallery_1.id },
+              { ...element_content_view_1, content: contentView_gallery_1.id },
             ],
           },
         },
@@ -61,16 +61,16 @@ describe('deleteSpace', () => {
     expect(Designs.Store).not.toHaveItem(space_1.design.id);
   });
 
-  it('leaves the data views embedded in the space layouts in place', async () => {
-    embedDataViewInSpace();
+  it('leaves the content views embedded in the space layouts in place', async () => {
+    embedContentViewInSpace();
 
     await deleteSpace(space_1.id);
 
-    // Embedded data views are first-class persisted views, so they
+    // Embedded content views are first-class persisted views, so they
     // outlive the space until the user is asked what to do with them.
-    expect(DataViews.Store).toHaveItem(dataView_gallery_1.id);
+    expect(ContentViews.Store).toHaveItem(contentView_gallery_1.id);
     expect(
-      MockFs.exists(DataViews.resolveFilePath(dataView_gallery_1.id)),
+      MockFs.exists(ContentViews.resolveFilePath(contentView_gallery_1.id)),
     ).toBe(true);
   });
 

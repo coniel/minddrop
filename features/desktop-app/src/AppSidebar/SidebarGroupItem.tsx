@@ -1,8 +1,8 @@
 import { Collections } from '@minddrop/collections';
-import { DataViews } from '@minddrop/data-views';
+import { ContentViews } from '@minddrop/content-views';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { CollectionMenuItem } from '@minddrop/feature-collections';
-import { DataViewMenuItem } from '@minddrop/feature-data-views';
+import { ContentViewMenuItem } from '@minddrop/feature-content-views';
 import {
   DatabaseEntryMenuItem,
   DatabaseMenuItem,
@@ -46,9 +46,13 @@ export const SidebarGroupItem: React.FC<SidebarGroupItemProps> = ({
     );
   }
 
-  if (type === DataViews.constants.EntityType) {
+  if (type === ContentViews.constants.EntityType) {
     return (
-      <DataViewMenuItem dataViewId={itemId} menu={menu} popovers={popovers} />
+      <ContentViewMenuItem
+        contentViewId={itemId}
+        menu={menu}
+        popovers={popovers}
+      />
     );
   }
 

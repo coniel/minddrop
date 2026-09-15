@@ -47,7 +47,7 @@ export function createElementCssStyle(
       return createTypographyCss(resolveElementStyle(element, layoutType));
     case 'property':
       return createPropertyElementCss(element, parentDirection, layoutType);
-    case 'data-view':
+    case 'content-view':
       return createEmbedCss(
         resolveElementStyle(element, layoutType),
         parentDirection,

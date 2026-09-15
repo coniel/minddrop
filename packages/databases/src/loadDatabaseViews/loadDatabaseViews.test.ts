@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DataViews } from '@minddrop/data-views';
-import { DataViewFixtures } from '@minddrop/data-views/test-utils';
+import { ContentViews } from '@minddrop/content-views';
+import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { getDatabase } from '../getDatabase';
@@ -10,7 +10,7 @@ import type { Database } from '../types';
 import { resolveDatabasePath, resolveDatabaseViewFilePath } from '../utils';
 import { loadDatabaseViews } from './loadDatabaseViews';
 
-const { dataView_virtual_1, dataView_board_1 } = DataViewFixtures;
+const { contentView_virtual_1, contentView_board_1 } = ContentViewFixtures;
 
 // The views as stored in view files, without the fields derived
 // at load time.
@@ -18,15 +18,15 @@ const {
   dataSource: _dataSource1,
   virtual: _virtual1,
   ...storedView1
-} = dataView_virtual_1;
-const { dataSource: _dataSource2, ...storedView2 } = dataView_board_1;
+} = contentView_virtual_1;
+const { dataSource: _dataSource2, ...storedView2 } = contentView_board_1;
 
 const { workspace_1 } = WorkspaceFixtures;
 
 describe('loadDatabaseViews', () => {
   beforeEach(() => {
     setup();
-    DataViews.Store.clear();
+    ContentViews.Store.clear();
   });
 
   afterEach(cleanup);
@@ -47,8 +47,8 @@ describe('loadDatabaseViews', () => {
     await loadDatabaseViews([objectDatabase], workspace_1);
 
     // Should have loaded the view with dataSource and virtual
-    const views = DataViews.Store.getAllArray();
-    const view = views.find((view) => view.id === dataView_virtual_1.id);
+    const views = ContentViews.Store.getAllArray();
+    const view = views.find((view) => view.id === contentView_virtual_1.id);
 
     expect(view).toBeDefined();
     expect(view!.virtual).toBe(true);
@@ -85,7 +85,7 @@ describe('loadDatabaseViews', () => {
     await loadDatabaseViews([objectDatabase], workspace_1);
 
     // Store should remain empty
-    expect(DataViews.Store).toHaveItemCount(0);
+    expect(ContentViews.Store).toHaveItemCount(0);
   });
 
   it('loads views from multiple databases', async () => {
@@ -125,13 +125,13 @@ describe('loadDatabaseViews', () => {
     // Load views from multiple databases
     await loadDatabaseViews([database1, database2], workspace_1);
 
-    const views = DataViews.Store.getAllArray();
+    const views = ContentViews.Store.getAllArray();
 
     expect(views).toHaveLength(2);
 
     // Each view should have its database's ID as the dataSource
-    const viewA = views.find((view) => view.id === dataView_virtual_1.id);
-    const viewB = views.find((view) => view.id === dataView_board_1.id);
+    const viewA = views.find((view) => view.id === contentView_virtual_1.id);
+    const viewB = views.find((view) => view.id === contentView_board_1.id);
 
     expect(viewA!.dataSource.id).toBe('database_db-1');
     expect(viewB!.dataSource.id).toBe('database_db-2');

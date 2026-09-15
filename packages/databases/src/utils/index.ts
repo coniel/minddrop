@@ -8,7 +8,7 @@ export * from './resolveEntryTemplatesDirPath';
 export * from './resolveEntryTemplateDirPath';
 export * from './resolveEntryTemplateFilePath';
 export * from './resolveEntryTemplateConfigFilePath';
-export * from './resolveDatabaseViewsDirPath';
+export * from './resolveDatabaseContentViewsDirPath';
 export * from './resolveDatabaseViewFilePath';
 export * from './resolveDatabaseDesignsDirPath';
 export * from './resolveDatabaseDesignFilePath';

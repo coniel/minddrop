@@ -15,7 +15,7 @@ export interface Breadcrumb {
 
   /**
    * The crumb's own display title, used by crumbs labelled by what
-   * they show (e.g. a selected data view).
+   * they show (e.g. a selected content view).
    */
   title?: string;
 

@@ -1,4 +1,4 @@
-import { DataViewType } from '@minddrop/data-views';
+import { ContentViewType } from '@minddrop/content-views';
 import {
   Database,
   DatabaseEntryTemplateSearchResult,
@@ -15,7 +15,7 @@ export type CreateOptionAction =
   | { type: 'group' }
   | { type: 'space' }
   | { type: 'database' }
-  | { type: 'data-view'; viewType: string }
+  | { type: 'content-view'; viewType: string }
   | { type: 'entry'; databaseId: string; templateId?: string };
 
 export interface CreateOption {
@@ -53,10 +53,10 @@ export interface ResolveCreateOptionsParams {
   query: string;
 
   /**
-   * The data view types, one option each: a view is created as a
+   * The content view types, one option each: a view is created as a
    * type rather than as a kind of its own.
    */
-  viewTypes: DataViewType[];
+  viewTypes: ContentViewType[];
 
   /**
    * The databases the query matched, an entry of each.
@@ -97,10 +97,10 @@ export function resolveCreateOptions({
       (viewType): CreateCandidate => ({
         matchTexts: [i18n.t(viewType.name)],
         option: {
-          id: `data-view:${viewType.type}`,
+          id: `content-view:${viewType.type}`,
           label: i18n.t(viewType.name),
           contentIcon: Icons.fromName(viewType.icon),
-          action: { type: 'data-view', viewType: viewType.type },
+          action: { type: 'content-view', viewType: viewType.type },
         },
       }),
     ),

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DataView, StoredDataView } from '@minddrop/data-views';
-import { DataViewFixtures } from '@minddrop/data-views/test-utils';
+import { ContentView, StoredContentView } from '@minddrop/content-views';
+import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { DatabaseNotFoundError } from '../errors';
 import {
   MockFs,
@@ -12,11 +12,11 @@ import {
 import { resolveDatabaseViewFilePath } from '../utils';
 import { writeDatabaseView } from './writeDatabaseView';
 
-const { dataView_virtual_1 } = DataViewFixtures;
+const { contentView_virtual_1 } = ContentViewFixtures;
 
 // A virtual view owned by the object database
-const view: DataView = {
-  ...dataView_virtual_1,
+const view: ContentView = {
+  ...contentView_virtual_1,
   dataSource: { type: 'database', id: objectDatabase.id },
   owner: objectDatabase.id,
 };
@@ -35,7 +35,7 @@ describe('writeDatabaseView', () => {
   it('writes the view to its file without runtime fields', async () => {
     await writeDatabaseView(view);
 
-    const storedView = MockFs.readJsonFile<StoredDataView>(viewFilePath);
+    const storedView = MockFs.readJsonFile<StoredContentView>(viewFilePath);
 
     // The stored view should not contain the derived fields
     expect(storedView).not.toHaveProperty('dataSource');
@@ -48,7 +48,7 @@ describe('writeDatabaseView', () => {
 
   it("throws when the view's database does not exist", async () => {
     // Create a view owned by a missing database
-    const orphanedView: DataView = { ...view, owner: 'database_missing' };
+    const orphanedView: ContentView = { ...view, owner: 'database_missing' };
 
     await expect(writeDatabaseView(orphanedView)).rejects.toThrow(
       DatabaseNotFoundError,

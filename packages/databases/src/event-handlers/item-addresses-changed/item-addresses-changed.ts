@@ -1,4 +1,4 @@
-import { DataViews } from '@minddrop/data-views';
+import { ContentViews } from '@minddrop/content-views';
 import { History } from '@minddrop/history';
 import {
   ItemAddressChange,
@@ -48,7 +48,7 @@ export async function onItemAddressesChanged(
 
   // Re-persist embedded view configs referencing the changed items
   await Promise.all(
-    DataViews.getReferencing(changedIds, workspaceId)
+    ContentViews.getReferencing(changedIds, workspaceId)
       .filter((view) => view.owner && isEntityId(view.owner, 'database-entry'))
       .map((view) => persistVirtualViewConfig(view, workspaceId)),
   );

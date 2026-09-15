@@ -28,8 +28,8 @@ from `@minddrop/ui-theme`.
 Every consumer imports from `@minddrop/ui-theme` **except two**, which go
 through the ui-primitives re-export:
 
-- `data-views/table/src/types/TableView.types.ts`
-- `data-views/table/src/TableView/TableView.tsx`
+- `content-views/table/src/types/TableView.types.ts`
+- `content-views/table/src/TableView/TableView.tsx`
 
 ## Consumers by package
 
@@ -194,8 +194,8 @@ The `*-color-*` CSS hits there are unrelated.
 
 - `features/collections/src/CollectionsView/CollectionDetails.tsx`
 - `features/collections/src/initializeCollectionsFeature/initializeCollectionsFeature.ts`
-- `features/data-views/src/initializeDataViewsFeature/initializeDataViewsFeature.ts`
-- `features/data-views/src/DataViewRenderer/DataViewRenderer.tsx`
+- `features/content-views/src/initializeContentViewsFeature/initializeContentViewsFeature.ts`
+- `features/content-views/src/ContentViewRenderer/ContentViewRenderer.tsx`
 - `features/databases/src/DatabaseSettingsPanel/DatabaseSettingsPanel.tsx`
 - `features/databases/src/NewDatabaseDialog/NewDatabaseDialog.tsx`
 - `features/databases/src/DatabaseEntryTemplateEditor/DatabaseEntryTemplatePropertyField.tsx`
@@ -205,7 +205,7 @@ The `*-color-*` CSS hits there are unrelated.
 - `features/views/src/tabs/getTabIcon/getTabIcon.tsx`
 - `features/onboarding/src/CreateWorkspaceForm/CreateWorkspaceForm.tsx`
 
-### data-views/table (4 files)
+### content-views/table (4 files)
 
 | File                               | Usage                                                                                         |
 | ---------------------------------- | --------------------------------------------------------------------------------------------- |
@@ -214,7 +214,7 @@ The `*-color-*` CSS hits there are unrelated.
 | `src/SelectCell/SelectCell.tsx`    | `<Chip color={option.color \|\| 'default'}>`                                                  |
 | `src/SelectCell/SelectDisplay.tsx` | `<Chip color={option?.color \|\| 'default'}>`                                                 |
 
-### data-views/canvas (1 file)
+### content-views/canvas (1 file)
 
 | File                                                      | Usage                                                                                                                                        |
 | --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -233,7 +233,7 @@ places where the _schema_ meets color names:
 
 1. `packages/properties/src/schemas/SelectPropertySchema.ts` -
    `SelectPropertyOption.color: ContentColor`
-2. `data-views/table/src/types/TableView.types.ts` -
+2. `content-views/table/src/types/TableView.types.ts` -
    `TableSelectOption.color?: ContentColor`
 3. `ui/canvas/src/types/CanvasConnection.types.ts` -
    `CanvasConnection.color?: ContentColor` (written by `CanvasConnectionToolbar`)
@@ -308,7 +308,7 @@ Duplicated color-name lists (drift risk, unify in the rebuild):
 | features/designs                           | 19      |
 | features/properties                        | 4       |
 | other features                             | 13      |
-| data-views/table                           | 4       |
-| data-views/canvas                          | 1       |
+| content-views/table                        | 4       |
+| content-views/canvas                       | 1       |
 | apps/\*                                    | 0       |
 | **Total**                                  | **137** |

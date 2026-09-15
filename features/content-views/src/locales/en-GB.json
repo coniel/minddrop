@@ -1,0 +1,36 @@
+{
+  "contentViews": {
+    "labels": {
+      "views": "Views"
+    },
+    "list": {
+      "searchPlaceholder": "Search views...",
+      "empty": "No views",
+      "noResults": "No matching views"
+    },
+    "details": {
+      "noSelection": "Select a view"
+    },
+    "missing": {
+      "message": "This view no longer exists."
+    },
+    "form": {
+      "name": {
+        "label": "Name",
+        "placeholder": "View name"
+      },
+      "source": {
+        "label": "Data source",
+        "collectionName": {
+          "label": "Collection name"
+        },
+        "queryName": {
+          "label": "Query name"
+        }
+      },
+      "actions": {
+        "create": "Create view"
+      }
+    }
+  }
+}

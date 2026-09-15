@@ -1,5 +1,5 @@
 import { CollectionsMenuItem } from '@minddrop/feature-collections';
-import { DataViewsMenuItem } from '@minddrop/feature-data-views';
+import { ContentViewsMenuItem } from '@minddrop/feature-content-views';
 import { QueriesMenuItem } from '@minddrop/feature-queries';
 import { SpacesMenuItem } from '@minddrop/feature-spaces';
 import { TagsMenuItem } from '@minddrop/feature-tags';
@@ -12,7 +12,7 @@ import { TagsMenuItem } from '@minddrop/feature-tags';
 export const LibraryGroup: React.FC = () => (
   <>
     <SpacesMenuItem />
-    <DataViewsMenuItem />
+    <ContentViewsMenuItem />
     <CollectionsMenuItem />
     <QueriesMenuItem />
     <TagsMenuItem />

@@ -28,7 +28,7 @@ export * as Collections from './Collections';
 
 A package that manages more than one entity type gives each its own namespace file and `export * as` line (`Databases`, `DatabaseEntries`, `DatabaseTemplates`; `Tags` and `TagGroups`). Never add sub-entity aliases to the parent namespace (`Tags.createGroup`, `Tags.useAllGroups`).
 
-Package-level lifecycle functions are named after the package and live on the package's namespace, not on a sub-concept: `Views.initialize` (function `initializeViews`), never `DataViews.initialize`.
+Package-level lifecycle functions are named after the package and live on the package's namespace, not on a sub-concept: `Databases.initialize` (function `initializeDatabases`), never `DatabaseTemplates.initialize`.
 
 ## Namespace file shape
 

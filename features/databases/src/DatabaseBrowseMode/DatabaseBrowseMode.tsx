@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { DataViews } from '@minddrop/data-views';
+import { ContentViews } from '@minddrop/content-views';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
-import { DataViewRenderer } from '@minddrop/feature-data-views';
-import { DataViewTabBar } from '@minddrop/ui-data-views';
+import { ContentViewRenderer } from '@minddrop/feature-content-views';
+import { ContentViewTabBar } from '@minddrop/ui-content-views';
 import { useTransientState } from '@minddrop/ui-primitives';
 import { orderByCreated, reconcileIdOrder, uuid } from '@minddrop/utils';
 
@@ -14,7 +14,7 @@ export interface DatabaseBrowseModeProps {
 }
 
 /**
- * Renders the database's entries through its data views: the view
+ * Renders the database's entries through its content views: the view
  * tab bar and the active view's renderer. The active view is
  * remembered per session.
  */
@@ -23,7 +23,7 @@ export const DatabaseBrowseMode: React.FC<DatabaseBrowseModeProps> = ({
 }) => {
   const database = Databases.use(databaseId);
   const entryIds = DatabaseEntries.useIds(databaseId);
-  const unsortedViews = DataViews.useDataSourceDataViews(
+  const unsortedViews = ContentViews.useDataSourceContentViews(
     'database',
     databaseId,
   );
@@ -91,7 +91,7 @@ export const DatabaseBrowseMode: React.FC<DatabaseBrowseModeProps> = ({
       return;
     }
 
-    const newView = DataViews.createVirtual({
+    const newView = ContentViews.createVirtual({
       id: uuid(),
       type,
       dataSource: { type: 'database', id: database.id },
@@ -110,7 +110,7 @@ export const DatabaseBrowseMode: React.FC<DatabaseBrowseModeProps> = ({
       {/* View tab bar - hidden when the views toolbar is disabled in
           settings */}
       {!database.hideViewsToolbar && (
-        <DataViewTabBar
+        <ContentViewTabBar
           views={databaseViews}
           activeViewId={view?.id ?? null}
           dataSources={['database']}
@@ -122,7 +122,7 @@ export const DatabaseBrowseMode: React.FC<DatabaseBrowseModeProps> = ({
 
       {/* View content */}
       {view && (
-        <DataViewRenderer key={view.id} view={view} entries={entryIds} />
+        <ContentViewRenderer key={view.id} view={view} entries={entryIds} />
       )}
     </>
   );

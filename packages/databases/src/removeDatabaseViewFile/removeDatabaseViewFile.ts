@@ -1,4 +1,4 @@
-import { DataView } from '@minddrop/data-views';
+import { ContentView } from '@minddrop/content-views';
 import { Fs } from '@minddrop/file-system';
 import { InvalidParameterError } from '@minddrop/utils';
 import { getDatabase } from '../getDatabase';
@@ -13,7 +13,7 @@ import { resolveDatabasePath, resolveDatabaseViewFilePath } from '../utils';
  * @throws {InvalidParameterError} If the view has no owner.
  * @throws {DatabaseNotFoundError} If the owning database does not exist.
  */
-export async function removeDatabaseViewFile(view: DataView): Promise<void> {
+export async function removeDatabaseViewFile(view: ContentView): Promise<void> {
   // Views without an owner are not database views
   if (!view.owner) {
     throw new InvalidParameterError(

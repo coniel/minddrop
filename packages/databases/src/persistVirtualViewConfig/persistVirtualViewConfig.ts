@@ -1,4 +1,8 @@
-import { DataView, DataViewConfig, DataViews } from '@minddrop/data-views';
+import {
+  ContentView,
+  ContentViewConfig,
+  ContentViews,
+} from '@minddrop/content-views';
 import { isEntityId } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntryMetadata } from '../types';
@@ -12,7 +16,7 @@ import { updateEntryMetadata } from '../updateEntryMetadata';
  * @param workspaceId - The workspace the view belongs to. Omit for the active workspace.
  */
 export async function persistVirtualViewConfig(
-  view: DataView,
+  view: ContentView,
   workspaceId?: string,
 ): Promise<void> {
   // Skip views not owned by a database entry
@@ -34,7 +38,7 @@ export async function persistVirtualViewConfig(
   }
 
   // Collect the view's persistable config
-  const viewConfig: DataViewConfig = {};
+  const viewConfig: ContentViewConfig = {};
 
   if (view.options !== undefined) {
     viewConfig.options = view.options;
@@ -45,7 +49,7 @@ export async function persistVirtualViewConfig(
   }
 
   // Convert the config's item references into durable form
-  const serializedConfig = DataViews.serializeConfig(
+  const serializedConfig = ContentViews.serializeConfig(
     view.type,
     viewConfig,
     workspaceId,

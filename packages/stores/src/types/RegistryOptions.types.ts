@@ -6,7 +6,7 @@ import { EventName } from '@minddrop/events';
 export interface RegistryOptions {
   /**
    * What the registry holds, used in the not registered error
-   * message (e.g. "data view type").
+   * message (e.g. "content view type").
    */
   label: string;
 

@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@minddrop/collections": "workspace:*",
-    "@minddrop/data-views": "workspace:*",
+    "@minddrop/content-views": "workspace:*",
     "@minddrop/databases": "workspace:*",
     "@minddrop/entity-groups": "workspace:*",
     "@minddrop/events": "workspace:*",

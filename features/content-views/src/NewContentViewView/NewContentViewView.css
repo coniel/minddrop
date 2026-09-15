@@ -1,0 +1,9 @@
+.new-content-view-view {
+  height: 100%;
+
+  .new-content-view-view-panel {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+}

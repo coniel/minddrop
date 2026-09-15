@@ -1,4 +1,4 @@
-import { DataViews } from '@minddrop/data-views';
+import { ContentViews } from '@minddrop/content-views';
 import { DesignRoles, Designs } from '@minddrop/designs';
 import { TranslationKey } from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/ui-icons';
@@ -60,11 +60,11 @@ export function resolveNodeLabel(element: FlatDesignElement): NodeLabel {
     icon: role?.icon ?? propertyElementConfig?.icon ?? config.icon,
   };
 
-  // Data view elements reference a data view by ID, so they
+  // Content view elements reference a content view by ID, so they
   // display the view's name instead of their raw content.
-  if (element.type === 'data-view') {
+  if (element.type === 'content-view') {
     nodeLabel.staticContent = element.content
-      ? DataViews.get(element.content, false)?.name
+      ? ContentViews.get(element.content, false)?.name
       : undefined;
 
     return nodeLabel;

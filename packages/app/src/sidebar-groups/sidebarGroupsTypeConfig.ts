@@ -1,5 +1,5 @@
 import { Collections } from '@minddrop/collections';
-import { DataViews } from '@minddrop/data-views';
+import { ContentViews } from '@minddrop/content-views';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { EntityGroupTypeConfig } from '@minddrop/entity-groups';
 import { Queries } from '@minddrop/queries';
@@ -26,7 +26,7 @@ export const sidebarGroupsTypeConfig: EntityGroupTypeConfig = {
   itemDeletedEvents: [
     Databases.events.Deleted,
     DatabaseEntries.events.Deleted,
-    DataViews.events.Deleted,
+    ContentViews.events.Deleted,
     Spaces.events.Deleted,
     Collections.events.Deleted,
     Queries.events.Deleted,

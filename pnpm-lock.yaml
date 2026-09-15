@@ -198,23 +198,23 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  data-views/board:
+  content-views/board:
     dependencies:
       '@minddrop/collections':
         specifier: workspace:*
         version: link:../../packages/collections
-      '@minddrop/data-views':
+      '@minddrop/content-views':
         specifier: workspace:*
-        version: link:../../packages/data-views
+        version: link:../../packages/content-views
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
-      '@minddrop/feature-data-views':
+      '@minddrop/feature-content-views':
         specifier: workspace:*
-        version: link:../../features/data-views
+        version: link:../../features/content-views
       '@minddrop/feature-databases':
         specifier: workspace:*
         version: link:../../features/databases
@@ -227,9 +227,9 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
-      '@minddrop/ui-data-views':
+      '@minddrop/ui-content-views':
         specifier: workspace:*
-        version: link:../../ui/data-views
+        version: link:../../ui/content-views
       '@minddrop/ui-databases':
         specifier: workspace:*
         version: link:../../ui/databases
@@ -256,23 +256,23 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  data-views/canvas:
+  content-views/canvas:
     dependencies:
       '@minddrop/collections':
         specifier: workspace:*
         version: link:../../packages/collections
-      '@minddrop/data-views':
+      '@minddrop/content-views':
         specifier: workspace:*
-        version: link:../../packages/data-views
+        version: link:../../packages/content-views
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
-      '@minddrop/feature-data-views':
+      '@minddrop/feature-content-views':
         specifier: workspace:*
-        version: link:../../features/data-views
+        version: link:../../features/content-views
       '@minddrop/feature-databases':
         specifier: workspace:*
         version: link:../../features/databases
@@ -288,9 +288,9 @@ importers:
       '@minddrop/ui-canvas':
         specifier: workspace:*
         version: link:../../ui/canvas
-      '@minddrop/ui-data-views':
+      '@minddrop/ui-content-views':
         specifier: workspace:*
-        version: link:../../ui/data-views
+        version: link:../../ui/content-views
       '@minddrop/ui-databases':
         specifier: workspace:*
         version: link:../../ui/databases
@@ -323,11 +323,11 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  data-views/gallery:
+  content-views/gallery:
     dependencies:
-      '@minddrop/data-views':
+      '@minddrop/content-views':
         specifier: workspace:*
-        version: link:../../packages/data-views
+        version: link:../../packages/content-views
       '@minddrop/feature-databases':
         specifier: workspace:*
         version: link:../../features/databases
@@ -360,11 +360,11 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  data-views/kanban:
+  content-views/kanban:
     dependencies:
-      '@minddrop/data-views':
+      '@minddrop/content-views':
         specifier: workspace:*
-        version: link:../../packages/data-views
+        version: link:../../packages/content-views
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
@@ -418,14 +418,14 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  data-views/notebook:
+  content-views/notebook:
     dependencies:
       '@minddrop/collections':
         specifier: workspace:*
         version: link:../../packages/collections
-      '@minddrop/data-views':
+      '@minddrop/content-views':
         specifier: workspace:*
-        version: link:../../packages/data-views
+        version: link:../../packages/content-views
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
@@ -441,9 +441,9 @@ importers:
       '@minddrop/ui-components':
         specifier: workspace:*
         version: link:../../ui/components
-      '@minddrop/ui-data-views':
+      '@minddrop/ui-content-views':
         specifier: workspace:*
-        version: link:../../ui/data-views
+        version: link:../../ui/content-views
       '@minddrop/ui-databases':
         specifier: workspace:*
         version: link:../../ui/databases
@@ -467,11 +467,11 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  data-views/table:
+  content-views/table:
     dependencies:
-      '@minddrop/data-views':
+      '@minddrop/content-views':
         specifier: workspace:*
-        version: link:../../packages/data-views
+        version: link:../../packages/content-views
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
@@ -521,18 +521,18 @@ importers:
       '@minddrop/collections':
         specifier: workspace:*
         version: link:../../packages/collections
-      '@minddrop/data-views':
+      '@minddrop/content-views':
         specifier: workspace:*
-        version: link:../../packages/data-views
+        version: link:../../packages/content-views
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
-      '@minddrop/feature-data-views':
+      '@minddrop/feature-content-views':
         specifier: workspace:*
-        version: link:../data-views
+        version: link:../content-views
       '@minddrop/feature-views':
         specifier: workspace:*
         version: link:../views
@@ -574,14 +574,14 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  features/data-views:
+  features/content-views:
     dependencies:
       '@minddrop/collections':
         specifier: workspace:*
         version: link:../../packages/collections
-      '@minddrop/data-views':
+      '@minddrop/content-views':
         specifier: workspace:*
-        version: link:../../packages/data-views
+        version: link:../../packages/content-views
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
@@ -612,9 +612,9 @@ importers:
       '@minddrop/ui-components':
         specifier: workspace:*
         version: link:../../ui/components
-      '@minddrop/ui-data-views':
+      '@minddrop/ui-content-views':
         specifier: workspace:*
-        version: link:../../ui/data-views
+        version: link:../../ui/content-views
       '@minddrop/ui-icons':
         specifier: workspace:*
         version: link:../../ui/icons
@@ -652,9 +652,9 @@ importers:
       '@minddrop/collections':
         specifier: workspace:*
         version: link:../../packages/collections
-      '@minddrop/data-views':
+      '@minddrop/content-views':
         specifier: workspace:*
-        version: link:../../packages/data-views
+        version: link:../../packages/content-views
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
@@ -667,9 +667,9 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
-      '@minddrop/feature-data-views':
+      '@minddrop/feature-content-views':
         specifier: workspace:*
-        version: link:../data-views
+        version: link:../content-views
       '@minddrop/feature-designs':
         specifier: workspace:*
         version: link:../designs
@@ -706,9 +706,9 @@ importers:
       '@minddrop/ui-components':
         specifier: workspace:*
         version: link:../../ui/components
-      '@minddrop/ui-data-views':
+      '@minddrop/ui-content-views':
         specifier: workspace:*
-        version: link:../../ui/data-views
+        version: link:../../ui/content-views
       '@minddrop/ui-databases':
         specifier: workspace:*
         version: link:../../ui/databases
@@ -761,18 +761,18 @@ importers:
       '@minddrop/collections':
         specifier: workspace:*
         version: link:../../packages/collections
-      '@minddrop/data-views':
+      '@minddrop/content-views':
         specifier: workspace:*
-        version: link:../../packages/data-views
+        version: link:../../packages/content-views
       '@minddrop/designs':
         specifier: workspace:*
         version: link:../../packages/designs
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
-      '@minddrop/feature-data-views':
+      '@minddrop/feature-content-views':
         specifier: workspace:*
-        version: link:../data-views
+        version: link:../content-views
       '@minddrop/feature-markdown-editor':
         specifier: workspace:*
         version: link:../markdown-editor
@@ -803,9 +803,9 @@ importers:
       '@minddrop/ui-components':
         specifier: workspace:*
         version: link:../../ui/components
-      '@minddrop/ui-data-views':
+      '@minddrop/ui-content-views':
         specifier: workspace:*
-        version: link:../../ui/data-views
+        version: link:../../ui/content-views
       '@minddrop/ui-drag-and-drop':
         specifier: workspace:*
         version: link:../../ui/drag-and-drop
@@ -901,27 +901,27 @@ importers:
       '@minddrop/collections':
         specifier: workspace:*
         version: link:../../packages/collections
-      '@minddrop/data-view-board':
+      '@minddrop/content-view-board':
         specifier: workspace:*
-        version: link:../../data-views/board
-      '@minddrop/data-view-canvas':
+        version: link:../../content-views/board
+      '@minddrop/content-view-canvas':
         specifier: workspace:*
-        version: link:../../data-views/canvas
-      '@minddrop/data-view-gallery':
+        version: link:../../content-views/canvas
+      '@minddrop/content-view-gallery':
         specifier: workspace:*
-        version: link:../../data-views/gallery
-      '@minddrop/data-view-kanban':
+        version: link:../../content-views/gallery
+      '@minddrop/content-view-kanban':
         specifier: workspace:*
-        version: link:../../data-views/kanban
-      '@minddrop/data-view-notebook':
+        version: link:../../content-views/kanban
+      '@minddrop/content-view-notebook':
         specifier: workspace:*
-        version: link:../../data-views/notebook
-      '@minddrop/data-view-table':
+        version: link:../../content-views/notebook
+      '@minddrop/content-view-table':
         specifier: workspace:*
-        version: link:../../data-views/table
-      '@minddrop/data-views':
+        version: link:../../content-views/table
+      '@minddrop/content-views':
         specifier: workspace:*
-        version: link:../../packages/data-views
+        version: link:../../packages/content-views
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
@@ -943,9 +943,9 @@ importers:
       '@minddrop/feature-collections':
         specifier: workspace:*
         version: link:../collections
-      '@minddrop/feature-data-views':
+      '@minddrop/feature-content-views':
         specifier: workspace:*
-        version: link:../data-views
+        version: link:../content-views
       '@minddrop/feature-databases':
         specifier: workspace:*
         version: link:../databases
@@ -1428,9 +1428,9 @@ importers:
 
   features/spaces:
     dependencies:
-      '@minddrop/data-views':
+      '@minddrop/content-views':
         specifier: workspace:*
-        version: link:../../packages/data-views
+        version: link:../../packages/content-views
       '@minddrop/designs':
         specifier: workspace:*
         version: link:../../packages/designs
@@ -1660,9 +1660,9 @@ importers:
       '@minddrop/collections':
         specifier: workspace:*
         version: link:../collections
-      '@minddrop/data-views':
+      '@minddrop/content-views':
         specifier: workspace:*
-        version: link:../data-views
+        version: link:../content-views
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../databases
@@ -1830,7 +1830,7 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  packages/data-views:
+  packages/content-views:
     dependencies:
       '@minddrop/events':
         specifier: workspace:*
@@ -1884,9 +1884,9 @@ importers:
       '@minddrop/collections':
         specifier: workspace:*
         version: link:../collections
-      '@minddrop/data-views':
+      '@minddrop/content-views':
         specifier: workspace:*
-        version: link:../data-views
+        version: link:../content-views
       '@minddrop/designs':
         specifier: workspace:*
         version: link:../designs
@@ -1969,9 +1969,9 @@ importers:
 
   packages/designs:
     dependencies:
-      '@minddrop/data-views':
+      '@minddrop/content-views':
         specifier: workspace:*
-        version: link:../data-views
+        version: link:../content-views
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
@@ -2741,9 +2741,9 @@ importers:
         specifier: workspace:*
         version: link:../workspaces
     devDependencies:
-      '@minddrop/data-views':
+      '@minddrop/content-views':
         specifier: workspace:*
-        version: link:../data-views
+        version: link:../content-views
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
@@ -3087,9 +3087,9 @@ importers:
       '@minddrop/collections':
         specifier: workspace:*
         version: link:../../packages/collections
-      '@minddrop/data-views':
+      '@minddrop/content-views':
         specifier: workspace:*
-        version: link:../../packages/data-views
+        version: link:../../packages/content-views
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
@@ -3161,14 +3161,14 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  ui/data-views:
+  ui/content-views:
     dependencies:
       '@minddrop/collections':
         specifier: workspace:*
         version: link:../../packages/collections
-      '@minddrop/data-views':
+      '@minddrop/content-views':
         specifier: workspace:*
-        version: link:../../packages/data-views
+        version: link:../../packages/content-views
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
@@ -4210,7 +4210,7 @@ packages:
       '@babel/parser': 7.26.9
       '@babel/template': 7.26.9
       '@babel/types': 7.26.9
-      debug: 4.4.0
+      debug: 4.4.3
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -7168,18 +7168,6 @@ packages:
   /date-fns@4.1.0:
     resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
     dev: false
-
-  /debug@4.4.0:
-    resolution: {integrity: sha512-6WTZ/IxCY/T6BALoZHaE4ctp9xm+Z5kY/pzYaCHRFeyVhojxlrm+46y68HA6hr0TcwEssoxNiDEUJQjfPZ/RYA==}
-    engines: {node: '>=6.0'}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
-    dependencies:
-      ms: 2.1.3
-    dev: true
 
   /debug@4.4.3:
     resolution: {integrity: sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==}

@@ -7,7 +7,7 @@ import { getElementConfig, getElementConfigs } from './index';
 const staticContentSupport: Record<string, boolean> = {
   text: true,
   property: false,
-  'data-view': true,
+  'content-view': true,
   container: false,
   'page-panel': false,
   root: false,
@@ -17,7 +17,7 @@ const staticContentSupport: Record<string, boolean> = {
 const emptyBehaviors: Record<string, ElementEmptyBehavior> = {
   text: 'hide',
   property: 'hide',
-  'data-view': 'none',
+  'content-view': 'none',
   container: 'none',
   'page-panel': 'none',
   root: 'none',

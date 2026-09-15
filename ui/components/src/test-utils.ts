@@ -3,8 +3,8 @@ import {
   cleanupCollectionFixtures,
   setupCollectionFixtures,
 } from '@minddrop/collections/test-utils';
-import { DataViews } from '@minddrop/data-views';
-import { DataViewFixtures } from '@minddrop/data-views/test-utils';
+import { ContentViews } from '@minddrop/content-views';
+import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
@@ -39,7 +39,7 @@ export function setup() {
   setupCollectionFixtures(MockFs);
 
   // Load the other entities the entity search lists
-  DataViews.Store.load(DataViewFixtures.dataViews);
+  ContentViews.Store.load(ContentViewFixtures.contentViews);
   Spaces.Store.load(SpaceFixtures.spaces);
   Queries.Store.load(QueryFixtures.queries);
   Tags.Store.load(TagFixtures.tags);
@@ -54,7 +54,7 @@ export async function cleanup(): Promise<void> {
 
   DatabaseFixtures.cleanup();
   cleanupCollectionFixtures();
-  DataViews.Store.clear();
+  ContentViews.Store.clear();
   Spaces.Store.clear();
   Queries.Store.clear();
   Tags.Store.clear();

@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { CollectionFixtures } from '@minddrop/collections/test-utils';
-import { DataView, DataViews } from '@minddrop/data-views';
-import { DataViewFixtures } from '@minddrop/data-views/test-utils';
+import { ContentView, ContentViews } from '@minddrop/content-views';
+import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { Database, DatabaseEntries, Databases } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Queries } from '@minddrop/queries';
@@ -16,7 +16,7 @@ import { cleanup, setup } from '../test-utils';
 import { EntitySearchMenu } from './EntitySearchMenu';
 
 const { objectDatabase, objectEntry1 } = DatabaseFixtures;
-const { dataView_gallery_1 } = DataViewFixtures;
+const { contentView_gallery_1 } = ContentViewFixtures;
 const { space_1 } = SpaceFixtures;
 const { collection_1, collection_virtual_1 } = CollectionFixtures;
 const { query_1 } = QueryFixtures;
@@ -42,9 +42,9 @@ const secondSpace: Space = {
   name: 'Second space',
   created: new Date('2026-02-28T00:00:00.000Z'),
 };
-const recentDataView: DataView = {
-  ...dataView_gallery_1,
-  id: 'data-view_recent',
+const recentContentView: ContentView = {
+  ...contentView_gallery_1,
+  id: 'content-view_recent',
   name: 'Recent view',
   created: new Date('2026-03-03T00:00:00.000Z'),
 };
@@ -55,7 +55,7 @@ describe('<EntitySearchMenu />', () => {
 
     Databases.Store.load([recentDatabase]);
     Spaces.Store.load([recentSpace, secondSpace]);
-    DataViews.Store.load([recentDataView]);
+    ContentViews.Store.load([recentContentView]);
   });
 
   afterEach(cleanup);
@@ -76,7 +76,7 @@ describe('<EntitySearchMenu />', () => {
   it('lists the most recent entities, mixing their types', () => {
     init({});
 
-    expect(screen.getByText(recentDataView.name)).toBeInTheDocument();
+    expect(screen.getByText(recentContentView.name)).toBeInTheDocument();
     expect(screen.getByText(recentSpace.name)).toBeInTheDocument();
     expect(screen.getByText(recentDatabase.name)).toBeInTheDocument();
   });
@@ -89,7 +89,7 @@ describe('<EntitySearchMenu />', () => {
       .map((item) => item.textContent);
 
     expect(listed.slice(0, 3)).toEqual([
-      recentDataView.name,
+      recentContentView.name,
       recentSpace.name,
       recentDatabase.name,
     ]);

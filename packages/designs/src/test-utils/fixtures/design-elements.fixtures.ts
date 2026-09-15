@@ -2,7 +2,7 @@ import {
   CollectionPropertyElement,
   ContainerElement,
   ContentPropertyElement,
-  DataViewElement,
+  ContentViewElement,
   DatePropertyElement,
   DesignElement,
   IconPropertyElement,
@@ -24,12 +24,14 @@ function generateTextElementFixture(version: number): TextElement {
   };
 }
 
-function generateDataViewElementFixture(version: number): DataViewElement {
+function generateContentViewElementFixture(
+  version: number,
+): ContentViewElement {
   return {
-    id: `data-view-element-${version}`,
-    type: 'data-view',
+    id: `content-view-element-${version}`,
+    type: 'content-view',
     static: true,
-    dataViewType: 'gallery',
+    contentViewType: 'gallery',
     style: {},
   };
 }
@@ -62,8 +64,8 @@ export const element_text_1 = generateTextElementFixture(1);
 export const element_text_2 = generateTextElementFixture(2);
 export const element_text_3 = generateTextElementFixture(3);
 
-export const element_data_view_1 = generateDataViewElementFixture(1);
-export const element_data_view_2 = generateDataViewElementFixture(2);
+export const element_content_view_1 = generateContentViewElementFixture(1);
+export const element_content_view_2 = generateContentViewElementFixture(2);
 
 export const element_container_1 = generateContainerElementFixture(1);
 export const element_container_2 = generateContainerElementFixture(2);

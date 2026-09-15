@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Collection, Collections } from '@minddrop/collections';
-import { DataView, DataViews } from '@minddrop/data-views';
+import { ContentView, ContentViews } from '@minddrop/content-views';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
-import { OpenDataViewViewEvent } from '@minddrop/feature-data-views';
+import { OpenContentViewViewEvent } from '@minddrop/feature-content-views';
 import { useTranslation } from '@minddrop/i18n';
 import {
   DatabaseEntryContextProvider,
@@ -45,7 +45,7 @@ export const CollectionDetails: React.FC<CollectionDetailsProps> = ({
   const [name, setName] = useState(collection.name);
   const [selectedItemIds, setSelectedItemIds] = useState<string[]>([]);
   const { t } = useTranslation();
-  const consumers = DataViews.useDataSourceDataViews(
+  const consumers = ContentViews.useDataSourceContentViews(
     'collection',
     collection.id,
   );
@@ -124,14 +124,14 @@ export const CollectionDetails: React.FC<CollectionDetailsProps> = ({
   }
 
   // Open the clicked consumer's view
-  function handleOpenConsumer(dataViewId: string) {
-    Events.dispatch(OpenDataViewViewEvent, {
-      dataViewId,
+  function handleOpenConsumer(contentViewId: string) {
+    Events.dispatch(OpenContentViewViewEvent, {
+      contentViewId,
     });
   }
 
   // Render a consumer as a button which opens its view
-  function renderConsumer(consumer: DataView) {
+  function renderConsumer(consumer: ContentView) {
     return (
       <Button
         size="sm"

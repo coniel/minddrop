@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DataViews } from '@minddrop/data-views';
-import { DataViewFixtures } from '@minddrop/data-views/test-utils';
+import { ContentViews } from '@minddrop/content-views';
+import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { Events } from '@minddrop/events';
 import {
   ItemAddressesChangedEventData,
@@ -20,7 +20,7 @@ import { BackgroundSyncChangeset } from '../types';
 import { convertEntryToSqlRecord, databaseEntryAddress } from '../utils';
 import { handleBackgroundSyncResult } from './handleBackgroundSyncResult';
 
-const { dataViewType_referencing } = DataViewFixtures;
+const { contentViewType_referencing } = ContentViewFixtures;
 const { workspace_1, workspace_2 } = WorkspaceFixtures;
 
 // A changeset without any changes, spread into per-test variants
@@ -165,9 +165,9 @@ describe('handleBackgroundSyncResult', () => {
 
   it('removes deleted entries from referencing view configs', async () => {
     // A view referencing the deleted entry
-    DataViews.createVirtual({
-      id: 'data-view_referencing-1',
-      type: dataViewType_referencing.type,
+    ContentViews.createVirtual({
+      id: 'content-view_referencing-1',
+      type: contentViewType_referencing.type,
       dataSource: { type: 'collection', id: 'collection-1' },
       owner: relatedEntry1.id,
       name: 'Referencing',
@@ -180,17 +180,19 @@ describe('handleBackgroundSyncResult', () => {
     });
 
     // The view's config drops the deleted entry
-    expect(DataViews.get('data-view_referencing-1', false)?.data).toEqual({
-      items: [],
-    });
+    expect(ContentViews.get('content-view_referencing-1', false)?.data).toEqual(
+      {
+        items: [],
+      },
+    );
   });
 
   it("applies the cascades to the changeset's workspace", async () => {
     // A view referencing the deleted entry, held by the second
     // workspace only.
-    DataViews.Store.in(workspace_2.id).set({
-      id: 'data-view_referencing-1',
-      type: dataViewType_referencing.type,
+    ContentViews.Store.in(workspace_2.id).set({
+      id: 'content-view_referencing-1',
+      type: contentViewType_referencing.type,
       dataSource: { type: 'collection', id: 'collection-1' },
       owner: relatedEntry1.id,
       name: 'Referencing',
@@ -210,7 +212,8 @@ describe('handleBackgroundSyncResult', () => {
 
     // The second workspace's view drops the deleted entry
     expect(
-      DataViews.get('data-view_referencing-1', false, workspace_2.id)?.data,
+      ContentViews.get('content-view_referencing-1', false, workspace_2.id)
+        ?.data,
     ).toEqual({ items: [] });
   });
 });

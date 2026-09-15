@@ -1,11 +1,11 @@
-import { DataViewTypes } from '@minddrop/data-views';
+import { ContentViewTypes } from '@minddrop/content-views';
 import { PropertyElementConfig } from '../types';
 
 /**
  * The collection property element. Renders the bound collection
- * property's view as an embedded data view; the presentation
+ * property's view as an embedded content view; the presentation
  * variants are the view types the view can render as, derived
- * live from the registered data view types supporting collection
+ * live from the registered content view types supporting collection
  * data sources.
  */
 export const CollectionPropertyElementConfig: PropertyElementConfig = {
@@ -19,7 +19,7 @@ export const CollectionPropertyElementConfig: PropertyElementConfig = {
     // One variant per registered view type able to render a
     // collection, so new view types join the vocabulary on
     // registration.
-    return DataViewTypes.getAll()
+    return ContentViewTypes.getAll()
       .filter((viewType) =>
         viewType.supportedDataSources.includes('collection'),
       )

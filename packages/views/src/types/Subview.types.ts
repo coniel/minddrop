@@ -3,7 +3,7 @@ import { UiIconName } from '@minddrop/ui-icons';
 export interface SubviewDescriptor {
   /**
    * The id of the entity the view currently shows within itself
-   * (e.g. the selected data view in the data views list).
+   * (e.g. the selected content view in the content views list).
    */
   id: string;
 

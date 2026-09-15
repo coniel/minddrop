@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Collections } from '@minddrop/collections';
-import { DataViews } from '@minddrop/data-views';
+import { ContentViews } from '@minddrop/content-views';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { Events } from '@minddrop/events';
 import { ItemReferences } from '@minddrop/item-references';
@@ -86,7 +86,7 @@ describe('onRenameDatabase', () => {
 
     // Create virtual views for each collection property in each layout
     [layout_card_2.id, layout_card_3.id].forEach((layoutId) => {
-      DataViews.createVirtual({
+      ContentViews.createVirtual({
         id: virtualViewId(collectionEntry1.id, layoutId, 'Related'),
         type: 'board',
         dataSource: {
@@ -244,7 +244,7 @@ describe('onRenameDatabase', () => {
     });
 
     // The view should still exist unchanged
-    const view = DataViews.get(
+    const view = ContentViews.get(
       virtualViewId(collectionEntry1.id, layoutId, 'Related'),
     );
 

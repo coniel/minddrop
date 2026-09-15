@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { DataViewFixtures } from '@minddrop/data-views/test-utils';
+import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import '../../test-utils';
 import { resolveCreateOptions } from './resolveCreateOptions';
 
 const { objectDatabase, entryTemplatesDatabase, entryTemplate1 } =
   DatabaseFixtures;
-const { dataViewType_table } = DataViewFixtures;
+const { contentViewType_table } = ContentViewFixtures;
 
 // The options the query matched, by label
 function labels(query: string, options = {}): string[] {
@@ -28,9 +28,9 @@ describe('resolveCreateOptions', () => {
     expect(labels('space')).not.toContain('Database');
   });
 
-  it('matches a data view type by name', () => {
-    expect(labels('table', { viewTypes: [dataViewType_table] })).toEqual([
-      dataViewType_table.name,
+  it('matches a content view type by name', () => {
+    expect(labels('table', { viewTypes: [contentViewType_table] })).toEqual([
+      contentViewType_table.name,
     ]);
   });
 
@@ -60,7 +60,7 @@ describe('resolveCreateOptions', () => {
 
   it('ranks every kind of option against the others', () => {
     const matched = labels('temp', {
-      viewTypes: [dataViewType_table],
+      viewTypes: [contentViewType_table],
       databases: [objectDatabase],
       templates: [
         { database: entryTemplatesDatabase, template: entryTemplate1 },

@@ -1,6 +1,6 @@
 import { FC, useMemo } from 'react';
 import { Collections } from '@minddrop/collections';
-import { ViewDataSource, ViewDataSourceType } from '@minddrop/data-views';
+import { ViewDataSource, ViewDataSourceType } from '@minddrop/content-views';
 import { Databases } from '@minddrop/databases';
 import { useTranslation } from '@minddrop/i18n';
 import { Queries } from '@minddrop/queries';
@@ -54,7 +54,7 @@ export interface DataSourceComboboxProps
 }
 
 /**
- * Renders a searchable combobox for selecting a data view data
+ * Renders a searchable combobox for selecting a content view data
  * source, grouping the available sources by type.
  */
 export const DataSourceCombobox: FC<DataSourceComboboxProps> = ({
@@ -65,7 +65,7 @@ export const DataSourceCombobox: FC<DataSourceComboboxProps> = ({
   onSelectionChange,
   ...comboboxProps
 }) => {
-  const { t } = useTranslation({ keyPrefix: 'dataViews.dataSource' });
+  const { t } = useTranslation({ keyPrefix: 'contentViews.dataSource' });
   const collections = Collections.useAll();
   const queries = Queries.useAll();
   const databases = Databases.useAll();
@@ -103,7 +103,7 @@ export const DataSourceCombobox: FC<DataSourceComboboxProps> = ({
     if (newOptions.length) {
       optionGroups.push({
         value: 'new',
-        label: 'dataViews.dataSource.groups.new',
+        label: 'contentViews.dataSource.groups.new',
         items: newOptions,
       });
     }
@@ -132,7 +132,7 @@ export const DataSourceCombobox: FC<DataSourceComboboxProps> = ({
       if (options.length) {
         optionGroups.push({
           value: 'collections',
-          label: 'dataViews.dataSource.groups.collections',
+          label: 'contentViews.dataSource.groups.collections',
           items: sortOptions(options),
         });
       }
@@ -155,7 +155,7 @@ export const DataSourceCombobox: FC<DataSourceComboboxProps> = ({
       if (options.length) {
         optionGroups.push({
           value: 'queries',
-          label: 'dataViews.dataSource.groups.queries',
+          label: 'contentViews.dataSource.groups.queries',
           items: sortOptions(options),
         });
       }
@@ -178,7 +178,7 @@ export const DataSourceCombobox: FC<DataSourceComboboxProps> = ({
       if (options.length) {
         optionGroups.push({
           value: 'databases',
-          label: 'dataViews.dataSource.groups.databases',
+          label: 'contentViews.dataSource.groups.databases',
           items: sortOptions(options),
         });
       }
@@ -231,7 +231,7 @@ export const DataSourceCombobox: FC<DataSourceComboboxProps> = ({
       groups={groups}
       defaultValue={defaultOption}
       placeholder={t('placeholder')}
-      searchPlaceholder="dataViews.dataSource.searchPlaceholder"
+      searchPlaceholder="contentViews.dataSource.searchPlaceholder"
       emptyText={t('empty')}
       onValueChange={handleValueChange}
       {...comboboxProps}

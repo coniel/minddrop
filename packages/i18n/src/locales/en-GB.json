@@ -1739,7 +1739,7 @@
       "empty": "No collections"
     }
   },
-  "dataViews": {
+  "contentViews": {
     "actions": {
       "add": "Add view",
       "settings": "View settings",

@@ -28,14 +28,14 @@ The app ships with its own baked in dev tools for inspecting store state, watchi
 
 The monorepo is split by role rather than by feature, so that the logic behind a feature can be used, and tested, without its interface.
 
-| Directory     | Contents                                                                                         |
-| ------------- | ------------------------------------------------------------------------------------------------ |
-| `packages/`   | Core logic, with no UI: databases, properties, collections, queries, spaces, views, and the like |
-| `features/`   | The React interface for each core package, one `@minddrop/feature-*` package per core package    |
-| `ui/`         | Shared interface building blocks: primitives, composed components, icons, theme, drag and drop   |
-| `data-views/` | The view types entries are displayed in: board, table, gallery, and notebook                     |
-| `apps/`       | The desktop app, the marketing site, and the internal dev review tool                            |
-| `dev/`        | Documentation and internal tooling that ships with the repo but not with the app                 |
+| Directory        | Contents                                                                                         |
+| ---------------- | ------------------------------------------------------------------------------------------------ |
+| `packages/`      | Core logic, with no UI: databases, properties, collections, queries, spaces, views, and the like |
+| `features/`      | The React interface for each core package, one `@minddrop/feature-*` package per core package    |
+| `ui/`            | Shared interface building blocks: primitives, composed components, icons, theme, drag and drop   |
+| `content-views/` | The view types entries are displayed in: board, table, gallery, and notebook                     |
+| `apps/`          | The desktop app, the marketing site, and the internal dev review tool                            |
+| `dev/`           | Documentation and internal tooling that ships with the repo but not with the app                 |
 
 Every package is consumed straight from source (`"main": "src/index"`), so there is no build step between packages and no compiled output to keep in sync.
 

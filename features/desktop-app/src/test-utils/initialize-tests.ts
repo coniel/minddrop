@@ -3,8 +3,8 @@ import { SidebarGroups } from '@minddrop/app';
 import { SidebarGroupFixtures } from '@minddrop/app/test-utils';
 import { Collections } from '@minddrop/collections';
 import { CollectionFixtures } from '@minddrop/collections/test-utils';
-import { DataViews } from '@minddrop/data-views';
-import { DataViewFixtures } from '@minddrop/data-views/test-utils';
+import { ContentViews } from '@minddrop/content-views';
+import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { EntityGroups } from '@minddrop/entity-groups';
@@ -46,7 +46,7 @@ export function setup(): void {
   // Load the entities the sidebar's items render
   Databases.Store.load(DatabaseFixtures.databases);
   DatabaseEntries.Store.load(DatabaseFixtures.databaseEntries);
-  DataViews.Store.load(DataViewFixtures.dataViews);
+  ContentViews.Store.load(ContentViewFixtures.contentViews);
   Spaces.Store.load(SpaceFixtures.spaces);
   Collections.Store.load(CollectionFixtures.collections);
   Queries.Store.load(QueryFixtures.queries);
@@ -74,7 +74,7 @@ export async function cleanup(): Promise<void> {
 
   Databases.Store.clear();
   DatabaseEntries.Store.clear();
-  DataViews.Store.clear();
+  ContentViews.Store.clear();
   Spaces.Store.clear();
   Collections.Store.clear();
   Queries.Store.clear();

@@ -1,8 +1,12 @@
 import React from 'react';
 import { Collections } from '@minddrop/collections';
-import { DataView, DataViewTypes, DataViews } from '@minddrop/data-views';
+import {
+  ContentView,
+  ContentViewTypes,
+  ContentViews,
+} from '@minddrop/content-views';
 import { CollectionPropertyElement, Designs } from '@minddrop/designs';
-import { DataViewRenderer } from '@minddrop/feature-data-views';
+import { ContentViewRenderer } from '@minddrop/feature-content-views';
 import { Icon, Text } from '@minddrop/ui-primitives';
 import { useElementProperty } from '../../../DesignPropertiesProvider';
 import { useElementCssStyle } from '../../../useElementCssStyle';
@@ -17,7 +21,7 @@ export interface CollectionPropertyRendererProps {
 
 /**
  * Display renderer for a collection property element. Renders the
- * bound property's view as an embedded data view of the selected
+ * bound property's view as an embedded content view of the selected
  * variant's view type; a view created in place is written to the
  * property value. Unmapped elements render the view type's
  * skeleton as a design-time stand-in.
@@ -38,7 +42,7 @@ export const CollectionPropertyRenderer: React.FC<
       : undefined;
 
   // Look up the view from the store
-  const view = DataViews.use(viewId ?? '');
+  const view = ContentViews.use(viewId ?? '');
 
   // Get entries from the view's collection data source
   const collectionId =
@@ -46,12 +50,12 @@ export const CollectionPropertyRenderer: React.FC<
   const collection = Collections.use(collectionId ?? '');
 
   // Look up the registered view type
-  const viewType = DataViewTypes.use(variant.id);
+  const viewType = ContentViewTypes.use(variant.id);
 
   const cssStyle = useElementCssStyle(element);
 
   // Write the created view to the bound property's value
-  function handleCreateView(createdView: DataView) {
+  function handleCreateView(createdView: ContentView) {
     property?.updateValue(createdView.id);
   }
 
@@ -83,7 +87,7 @@ export const CollectionPropertyRenderer: React.FC<
   // notice as appropriate.
   return (
     <div className="designs-collection-element" style={cssStyle}>
-      <DataViewRenderer
+      <ContentViewRenderer
         view={view ?? undefined}
         viewDeleted={Boolean(viewId && !view)}
         createViewType={variant.id}

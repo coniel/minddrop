@@ -1,0 +1,42 @@
+import { ContentViewTypesRegistry } from '../ContentViewTypesRegistry';
+import { getReferencingContentViews } from '../getReferencingContentViews';
+import { updateContentView } from '../updateContentView';
+
+/**
+ * Removes references to the given items from all content views
+ * referencing them, updating each view's config through its view
+ * type's serialization hook.
+ *
+ * @param itemIds - The removed item IDs.
+ * @param workspaceId - The workspace the content views belong to. Omit for the active workspace.
+ */
+export async function removeContentViewReferences(
+  itemIds: string[],
+  workspaceId?: string,
+): Promise<void> {
+  // Index the removed IDs for lookup
+  const removedIds = new Set(itemIds);
+
+  // Find views referencing the removed items
+  const affectedViews = getReferencingContentViews(itemIds, workspaceId);
+
+  await Promise.all(
+    affectedViews.map((view) => {
+      const viewType = ContentViewTypesRegistry.get(view.type, false);
+
+      // Views without a serialization hook cannot be rewritten
+      if (!viewType?.serializeReferences) {
+        return undefined;
+      }
+
+      // Drop the removed items from the view's config
+      const config = viewType.serializeReferences(
+        { options: view.options, data: view.data },
+        (id) => (removedIds.has(id) ? null : id),
+      );
+
+      // Persist the cleaned config
+      return updateContentView(view.id, config, false, workspaceId);
+    }),
+  );
+}

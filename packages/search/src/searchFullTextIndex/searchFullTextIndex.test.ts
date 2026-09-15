@@ -95,7 +95,7 @@ describe('searchFullTextIndex', () => {
       { id: 'entry-5', title: 'Databases' },
       {
         id: 'entry-6',
-        title: 'data-view-owner',
+        title: 'content-view-owner',
         properties: [
           {
             name: 'Packages',

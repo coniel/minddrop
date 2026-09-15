@@ -1,5 +1,5 @@
 import { Collections } from '@minddrop/collections';
-import { DataViews } from '@minddrop/data-views';
+import { ContentViews } from '@minddrop/content-views';
 import { Designs } from '@minddrop/designs-next';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabaseEntryTemplatesStore } from '../../DatabaseEntryTemplatesStore';
@@ -22,9 +22,9 @@ export async function onDeleteDatabase(
   sqlDeleteDatabase(data.id);
 
   // Delete all views belonging to this database
-  const databaseViews = DataViews.getByDataSource('database', data.id);
+  const databaseViews = ContentViews.getByDataSource('database', data.id);
 
-  await Promise.all(databaseViews.map((view) => DataViews.delete(view.id)));
+  await Promise.all(databaseViews.map((view) => ContentViews.delete(view.id)));
 
   // Delete all designs owned by this database
   const databaseDesigns = Designs.getByOwner(data.id);
@@ -69,5 +69,5 @@ export async function onDeleteDatabase(
   await removeEntriesFromCollections(entries.map((entry) => entry.id));
 
   // Remove the entries from view configs referencing them
-  await DataViews.removeReferences(entries.map((entry) => entry.id));
+  await ContentViews.removeReferences(entries.map((entry) => entry.id));
 }

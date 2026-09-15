@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DataViewTypes } from '@minddrop/data-views';
-import { DataViewFixtures } from '@minddrop/data-views/test-utils';
+import { ContentViewTypes } from '@minddrop/content-views';
+import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { DefaultDesignTheme } from '../themes';
 import {
@@ -8,11 +8,11 @@ import {
   getPropertyElementConfigs,
 } from './registry';
 
-const { dataViewType_table } = DataViewFixtures;
+const { contentViewType_table } = ContentViewFixtures;
 
 describe('property element configs', () => {
   // The collection element's variants derive from the registered
-  // data view types.
+  // content view types.
   beforeEach(setup);
   afterEach(cleanup);
   it('offers an element for every display property type', () => {
@@ -42,8 +42,8 @@ describe('property element configs', () => {
 
   it('derives the collection variants from the registered collection view types', () => {
     // Register a view type which cannot render collections
-    DataViewTypes.register({
-      ...dataViewType_table,
+    ContentViewTypes.register({
+      ...contentViewType_table,
       type: 'database-only',
       supportedDataSources: ['database'],
     });

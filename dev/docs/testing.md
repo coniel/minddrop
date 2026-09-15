@@ -71,10 +71,10 @@ UI packages add their own `src/test-utils.ts` on top, registering translations a
 
 ```ts
 // GOOD
-const { dataView_gallery_1 } = DataViewFixtures;
+const { contentView_gallery_1 } = ContentViewFixtures;
 
 // BAD
-import { dataView_gallery_1 } from '../test-utils/fixtures/data-views.fixtures';
+import { contentView_gallery_1 } from '../test-utils/fixtures/content-views.fixtures';
 ```
 
 Fixture modules are exported twice from a package's `test-utils` barrel — flat, and namespaced as `DesignFixtures`, `ElementConfigFixtures` — and the namespaced form is the one to use.
@@ -85,13 +85,13 @@ A fixture is named `<type>_<number>`, `<type>_<variant>` or `<type>_<variant>_<n
 
 ```ts
 tag_1; // nothing distinctive about it
-dataView_gallery_1; // a gallery view
+contentView_gallery_1; // a gallery view
 sidebarGroup_library; // the library group
 ```
 
 Reading the name tells you which fixture you are looking at without opening the file, and the numbers stay attached to their variant rather than running across the whole type.
 
-**Number the ordinary ones from the start, even where there is only one.** A plain fixture of a type and a basic variant of it both take a number — `dataView_1`, `dataView_board_1` — so that the second one a later test needs can be added without renaming the first out from under everything already using it.
+**Number the ordinary ones from the start, even where there is only one.** A plain fixture of a type and a basic variant of it both take a number — `contentView_1`, `contentView_board_1` — so that the second one a later test needs can be added without renaming the first out from under everything already using it.
 
 Leave the number off only where a second one makes no sense: a singleton such as `sidebarGroup_library`, or a variant standing for one specific case such as `sidebarGroup_empty`.
 
@@ -99,11 +99,11 @@ Leave the number off only where a second one makes no sense: a singleton such as
 
 ```ts
 tag_1.id === 'tag_1';
-dataView_gallery_1.id === 'data-view_gallery_1';
+contentView_gallery_1.id === 'content-view_gallery_1';
 sidebarGroup_empty.id === 'sidebar-group_empty';
 ```
 
-The collection exported alongside the fixtures takes the plural of the type with no underscore: `dataViews`, `sidebarGroups`.
+The collection exported alongside the fixtures takes the plural of the type with no underscore: `contentViews`, `sidebarGroups`.
 
 ### Reference fixture values, never retype them
 
@@ -111,10 +111,10 @@ A test names a fixture value by reading it off the fixture, so that changing the
 
 ```ts
 // GOOD
-expect(resolveDataViewId(path)).toBe(dataView_gallery_1.id);
+expect(resolveContentViewId(path)).toBe(contentView_gallery_1.id);
 
 // BAD
-expect(resolveDataViewId(path)).toBe('data-view_gallery_1');
+expect(resolveContentViewId(path)).toBe('content-view_gallery_1');
 ```
 
 A literal is right only where the value is deliberately _not_ a fixture: an ID for an entity which does not exist, standing in for a missing item or a bad lookup.
@@ -149,7 +149,7 @@ A dependency only the fixtures need belongs in `devDependencies`.
 
 One ordering note: importing another package's `test-utils` runs its `initializeMockFileSystem()`, and the last call wins. A package's own call has to come after the ones its fixtures trigger, which it does as long as it happens in the module body rather than inside an import.
 
-`packages/data-views` is the reference for both naming and consuming — its fixtures read their workspace path off `WorkspaceFixtures`. Not every fixture file follows the naming yet — `packages/databases` has `objectEntry1` next to `rootStorageEntry_empty_value` — so copy the convention rather than the nearest existing file.
+`packages/content-views` is the reference for both naming and consuming — its fixtures read their workspace path off `WorkspaceFixtures`. Not every fixture file follows the naming yet — `packages/databases` has `objectEntry1` next to `rootStorageEntry_empty_value` — so copy the convention rather than the nearest existing file.
 
 ## Assert outcomes, not calls
 

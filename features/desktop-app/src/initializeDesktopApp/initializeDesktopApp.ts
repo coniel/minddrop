@@ -1,13 +1,13 @@
 import { App, SidebarGroups } from '@minddrop/app';
 import { Collections } from '@minddrop/collections';
-import { DataViews } from '@minddrop/data-views';
+import { ContentViews } from '@minddrop/content-views';
 import { Databases } from '@minddrop/databases';
 import { Designs } from '@minddrop/designs';
 import { Designs as DesignsNext } from '@minddrop/designs-next';
 import { registerBlockSelectionSerializer } from '@minddrop/editor';
 import { EntityGroups } from '@minddrop/entity-groups';
 import { initializeCollectionsFeature } from '@minddrop/feature-collections';
-import { initializeDataViewsFeature } from '@minddrop/feature-data-views';
+import { initializeContentViewsFeature } from '@minddrop/feature-content-views';
 import { initializeDesignsFeature } from '@minddrop/feature-designs';
 import { initializeDesignsNextFeature } from '@minddrop/feature-designs-next';
 import { initializeDevToolsFeature } from '@minddrop/feature-dev-tools';
@@ -38,7 +38,7 @@ import { AppUiState } from '../AppUiState';
 import { initializeWorkspaceCleanup } from '../initializeWorkspaceCleanup';
 import { initializeWorkspaceWatchers } from '../initializeWorkspaceWatchers';
 import { locales } from '../locales';
-import { initializeDataViewTypes } from './initializeDataViewTypes';
+import { initializeContentViewTypes } from './initializeContentViewTypes';
 import { initializeSelection } from './initializeSelection';
 import { initializeTheme } from './initializeTheme';
 import { loadWorkspace } from './loadWorkspace';
@@ -107,12 +107,12 @@ async function runInitialization(): Promise<void> {
   await initializeDevToolsFeature();
 
   registerBlockSelectionSerializer();
-  initializeDataViewTypes();
+  initializeContentViewTypes();
   registerViews();
   registerSidebars();
   initializeViewsFeature();
   initializeCollectionsFeature();
-  initializeDataViewsFeature();
+  initializeContentViewsFeature();
   initializeDesignsFeature();
   initializeDesignsNextFeature();
   initializeQueriesFeature();
@@ -131,7 +131,7 @@ async function runInitialization(): Promise<void> {
   DesignsNext.initialize();
   Tags.initialize();
   Databases.initialize();
-  DataViews.initialize();
+  ContentViews.initialize();
   Collections.initialize();
   Queries.initialize();
   Spaces.initialize();

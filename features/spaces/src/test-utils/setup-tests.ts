@@ -1,7 +1,7 @@
 // Registers the store assertion matchers
 import '@minddrop/stores/test-utils';
 import { vi } from 'vitest';
-import { DataViews } from '@minddrop/data-views';
+import { ContentViews } from '@minddrop/content-views';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
@@ -37,6 +37,6 @@ export async function cleanup(): Promise<void> {
 
   await Events.tests.cleanup();
   Spaces.Store.clear();
-  DataViews.Store.clear();
+  ContentViews.Store.clear();
   cleanupWorkspaceFixtures();
 }

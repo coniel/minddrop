@@ -1,5 +1,5 @@
 import { Collections } from '@minddrop/collections';
-import { DataViews } from '@minddrop/data-views';
+import { ContentViews } from '@minddrop/content-views';
 import { History } from '@minddrop/history';
 import { isUntitledTitle } from '@minddrop/utils';
 import {
@@ -50,7 +50,7 @@ export async function onDeleteEntry(data: DatabaseEntryDeletedEventData) {
   await removeEntriesFromCollections([data.id]);
 
   // Remove the entry from view configs referencing it
-  await DataViews.removeReferences([data.id]);
+  await ContentViews.removeReferences([data.id]);
 
   // Drop the entry's recorded capture, so an entry taking its title
   // next is not measured against it.

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DataViews } from '@minddrop/data-views';
-import { DataViewFixtures } from '@minddrop/data-views/test-utils';
+import { ContentViews } from '@minddrop/content-views';
+import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { History } from '@minddrop/history';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
@@ -29,7 +29,7 @@ import {
 } from '../../utils';
 import { onItemAddressesChanged } from './item-addresses-changed';
 
-const { dataViewType_referencing } = DataViewFixtures;
+const { contentViewType_referencing } = ContentViewFixtures;
 
 // The renamed state of relatedEntry1, used as the change's new address
 const renamedRelated = {
@@ -99,9 +99,9 @@ describe('onItemAddressesChanged', () => {
 
   it('re-persists embedded view configs referencing changed items', async () => {
     // An embedded virtual view referencing the renamed entry
-    DataViews.createVirtual({
+    ContentViews.createVirtual({
       id: virtualViewId(collectionEntry1.id, 'layout-1', 'Related'),
-      type: dataViewType_referencing.type,
+      type: contentViewType_referencing.type,
       dataSource: { type: 'collection', id: 'collection-1' },
       owner: collectionEntry1.id,
       ownerKey: viewMetadataKey('layout-1', 'Related'),
@@ -137,7 +137,7 @@ describe('onItemAddressesChanged', () => {
         viewMetadataKey('layout-1', 'Related')
       ],
     ).toEqual({
-      options: dataViewType_referencing.defaultOptions,
+      options: contentViewType_referencing.defaultOptions,
       data: {
         items: [databaseEntryAddress(renamedRelated, collectionDatabase)],
       },

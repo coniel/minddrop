@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DataViews } from '@minddrop/data-views';
+import { ContentViews } from '@minddrop/content-views';
 import { sqlGetAllDatabases } from '../../sql';
 import {
   cleanup,
@@ -38,13 +38,13 @@ describe('onCreateDatabase', () => {
 
   it('creates a new view for the database', () => {
     // Clear existing views to ensure none exist for this database
-    DataViews.Store.clear();
+    ContentViews.Store.clear();
 
     // Call the handler
     onCreateDatabase(objectDatabase);
 
     // Should have added a table view for the database to the store
-    const views = DataViews.Store.getAllArray();
+    const views = ContentViews.Store.getAllArray();
     const view = views.find(
       (view) =>
         view.type === 'table' && view.dataSource.id === objectDatabase.id,

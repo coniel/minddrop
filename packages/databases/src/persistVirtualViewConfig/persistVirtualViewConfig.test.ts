@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DataView } from '@minddrop/data-views';
-import { DataViewFixtures } from '@minddrop/data-views/test-utils';
+import { ContentView } from '@minddrop/content-views';
+import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
@@ -14,18 +14,18 @@ import {
 import { viewMetadataKey, virtualViewId } from '../utils';
 import { persistVirtualViewConfig } from './persistVirtualViewConfig';
 
-const { dataViewType_table } = DataViewFixtures;
+const { contentViewType_table } = ContentViewFixtures;
 
 const layoutId = 'layout-card-1';
 const propertyName = 'Related';
 
-const baseView: DataView = {
+const baseView: ContentView = {
   id: virtualViewId(objectEntry1.id, layoutId, propertyName),
   virtual: true,
   owner: objectEntry1.id,
   ownerKey: viewMetadataKey(layoutId, propertyName),
   name: propertyName,
-  type: dataViewType_table.type,
+  type: contentViewType_table.type,
   icon: 'lucide:shapes:blue',
   dataSource: { type: 'collection', id: 'collection-1' },
   created: new Date(),

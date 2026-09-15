@@ -1,4 +1,4 @@
-import { DataViewCreatedEventData } from '@minddrop/data-views';
+import { ContentViewCreatedEventData } from '@minddrop/content-views';
 import { isEntityId } from '@minddrop/utils';
 import { getDatabase } from '../../getDatabase';
 import { updateDatabase } from '../../updateDatabase';
@@ -10,7 +10,7 @@ import { writeDatabaseView } from '../../writeDatabaseView';
  * it to the database's view ID list.
  */
 export async function onDatabaseViewCreated(
-  data: DataViewCreatedEventData,
+  data: ContentViewCreatedEventData,
 ): Promise<void> {
   if (!data.owner || !isEntityId(data.owner, 'database')) {
     return;

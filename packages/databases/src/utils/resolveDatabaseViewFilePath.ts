@@ -1,4 +1,4 @@
-import { resolveDatabaseViewsDirPath } from './resolveDatabaseViewsDirPath';
+import { resolveDatabaseContentViewsDirPath } from './resolveDatabaseContentViewsDirPath';
 
 /**
  * Generates the path to a database-owned view's file inside the
@@ -13,5 +13,5 @@ export function resolveDatabaseViewFilePath(
   databasePath: string,
   viewId: string,
 ): string {
-  return `${resolveDatabaseViewsDirPath(databasePath)}/${viewId}.json`;
+  return `${resolveDatabaseContentViewsDirPath(databasePath)}/${viewId}.json`;
 }

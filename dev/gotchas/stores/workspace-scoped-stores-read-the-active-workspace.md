@@ -18,7 +18,7 @@ tags: [stores, workspaces, scoping, testing]
 
 A store created with `scope: 'workspace'` keeps one record per workspace ID and every function on the store itself (`get`, `getAll`, `set`, `load`, `clear`, `hydrate`, the hooks) addresses the **active** workspace's record. The active workspace is a stores-level context (`setActiveWorkspaceScope`) which `packages/workspaces` sets whenever the active workspace changes: in `Workspaces.initialize`, `Workspaces.setActive` and `Workspaces.remove`. Nothing else should set it. Another workspace's record is reached through `Store.in(workspaceId)`, which exposes the same functions bound to that workspace.
 
-The twelve content stores are scoped: databases, entries and entry templates, data views, collections, spaces, queries, tags and tag groups, both designs stores and entity groups. Each content package's `loadWorkspace(workspace)` reads the workspace's files with its path and loads them through `in(workspace.id)`, and the `file-system:changed` handlers do the same with the change's workspace, so neither depends on which workspace is active.
+The twelve content stores are scoped: databases, entries and entry templates, content views, collections, spaces, queries, tags and tag groups, both designs stores and entity groups. Each content package's `loadWorkspace(workspace)` reads the workspace's files with its path and loads them through `in(workspace.id)`, and the `file-system:changed` handlers do the same with the change's workspace, so neither depends on which workspace is active.
 
 Two consequences are easy to trip over:
 

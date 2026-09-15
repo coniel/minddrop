@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DataView } from '@minddrop/data-views';
-import { DataViewFixtures } from '@minddrop/data-views/test-utils';
+import { ContentView } from '@minddrop/content-views';
+import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { DatabaseNotFoundError } from '../errors';
 import {
   MockFs,
@@ -12,11 +12,11 @@ import {
 import { resolveDatabaseViewFilePath } from '../utils';
 import { removeDatabaseViewFile } from './removeDatabaseViewFile';
 
-const { dataView_virtual_1 } = DataViewFixtures;
+const { contentView_virtual_1 } = ContentViewFixtures;
 
 // A virtual view owned by the object database
-const view: DataView = {
-  ...dataView_virtual_1,
+const view: ContentView = {
+  ...contentView_virtual_1,
   dataSource: { type: 'database', id: objectDatabase.id },
   owner: objectDatabase.id,
 };
@@ -45,7 +45,7 @@ describe('removeDatabaseViewFile', () => {
 
   it("throws when the view's database does not exist", async () => {
     // Create a view owned by a missing database
-    const orphanedView: DataView = { ...view, owner: 'database_missing' };
+    const orphanedView: ContentView = { ...view, owner: 'database_missing' };
 
     await expect(removeDatabaseViewFile(orphanedView)).rejects.toThrow(
       DatabaseNotFoundError,

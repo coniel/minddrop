@@ -1848,7 +1848,7 @@ declare module 'i18next' {
         toast: {
           close: string;
         };
-        dataViews: {
+        contentViews: {
           actions: {
             add: string;
             settings: string;

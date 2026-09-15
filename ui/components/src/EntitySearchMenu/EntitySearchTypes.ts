@@ -1,5 +1,5 @@
 import { Collection, Collections } from '@minddrop/collections';
-import { DataView, DataViews } from '@minddrop/data-views';
+import { ContentView, ContentViews } from '@minddrop/content-views';
 import {
   Database,
   DatabaseEntries,
@@ -68,10 +68,11 @@ export const EntitySearchTypes: EntitySearchTypeConfig[] = [
     search: (query) => DatabaseEntries.searchByTitle(query).map(toEntryOption),
   },
   {
-    type: DataViews.constants.EntityType,
-    getRecent: (limit) => DataViews.getRecent(limit).map(toDataViewOption),
+    type: ContentViews.constants.EntityType,
+    getRecent: (limit) =>
+      ContentViews.getRecent(limit).map(toContentViewOption),
     search: (query) =>
-      DataViews.search(query).filter(isPersisted).map(toDataViewOption),
+      ContentViews.search(query).filter(isPersisted).map(toContentViewOption),
   },
   {
     type: Spaces.constants.EntityType,
@@ -101,7 +102,7 @@ export const EntitySearchTypes: EntitySearchTypeConfig[] = [
  * Whether the entity is one the workspace holds. A virtual one
  * belongs to whatever made it, so it is not offered.
  */
-function isPersisted(entity: DataView | Collection): boolean {
+function isPersisted(entity: ContentView | Collection): boolean {
   return !entity.virtual;
 }
 
@@ -127,12 +128,12 @@ function toEntryOption(entry: DatabaseEntry): EntitySearchOption {
   };
 }
 
-function toDataViewOption(dataView: DataView): EntitySearchOption {
+function toContentViewOption(contentView: ContentView): EntitySearchOption {
   return {
-    id: dataView.id,
-    label: dataView.name,
-    icon: dataView.icon,
-    recency: dataView.created,
+    id: contentView.id,
+    label: contentView.name,
+    icon: contentView.icon,
+    recency: contentView.created,
   };
 }
 

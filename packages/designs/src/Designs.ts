@@ -1,7 +1,7 @@
 import { DesignTypeLayoutTypes, DesignsIcon, MediaDirName } from './constants';
 import {
   ContainerElementConfig,
-  DataViewElementConfig,
+  ContentViewElementConfig,
   PropertyElementTypeConfig,
   TextElementConfig,
 } from './design-element-configs';
@@ -85,7 +85,7 @@ export const styles = {
 export const elementConfigs = {
   Text: TextElementConfig,
   Container: ContainerElementConfig,
-  DataView: DataViewElementConfig,
+  ContentView: ContentViewElementConfig,
   Property: PropertyElementTypeConfig,
 };
 

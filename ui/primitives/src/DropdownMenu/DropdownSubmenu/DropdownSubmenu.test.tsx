@@ -39,7 +39,7 @@ const SearchableSubmenu: React.FC = () => {
         </>
       ) : (
         <DropdownSubmenu>
-          <DropdownSubmenuTriggerItem stringLabel="Data view" />
+          <DropdownSubmenuTriggerItem stringLabel="Content view" />
           <DropdownMenuPortal>
             <DropdownMenuPositioner>
               <DropdownSubmenuContent>
@@ -63,7 +63,7 @@ const SearchableSubmenu: React.FC = () => {
 // stops closing the submenu on hover once the pointer has been in it.
 async function hoverOpenSubmenu() {
   await userEvent.click(screen.getByRole('button', { name: 'Open' }));
-  await userEvent.hover(await screen.findByText('Data view'));
+  await userEvent.hover(await screen.findByText('Content view'));
   await userEvent.hover(await screen.findByText('Table'));
 }
 
@@ -103,7 +103,7 @@ describe('DropdownSubmenu', () => {
 
       await hoverOpenSubmenu();
 
-      await userEvent.hover(screen.getByText('Data view'));
+      await userEvent.hover(screen.getByText('Content view'));
 
       expect(screen.getByText('Table')).toBeInTheDocument();
     });
@@ -122,7 +122,7 @@ describe('DropdownSubmenu', () => {
       expect(highlighted()).toEqual(['Space']);
 
       await userEvent.keyboard('{ArrowDown}');
-      expect(highlighted()).toEqual(['Data view']);
+      expect(highlighted()).toEqual(['Content view']);
 
       await userEvent.keyboard('{ArrowDown}');
       expect(highlighted()).toEqual(['Database']);
@@ -141,7 +141,7 @@ describe('DropdownSubmenu', () => {
 
       await userEvent.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}');
 
-      expect(highlighted()).toEqual(['Data view']);
+      expect(highlighted()).toEqual(['Content view']);
     });
 
     it('opens the submenu from its trigger', async () => {
@@ -210,7 +210,7 @@ describe('DropdownSubmenu', () => {
       // The highlight returns to the item the submenu was entered
       // from, rather than the menu being left with none.
       await waitFor(() => {
-        expect(highlighted()).toEqual(['Data view']);
+        expect(highlighted()).toEqual(['Content view']);
       });
     });
 
@@ -248,7 +248,7 @@ describe('DropdownSubmenu', () => {
       expect(screen.getByText('Database')).toBeInTheDocument();
 
       await waitFor(() => {
-        expect(highlighted()).toEqual(['Data view']);
+        expect(highlighted()).toEqual(['Content view']);
       });
     });
   });

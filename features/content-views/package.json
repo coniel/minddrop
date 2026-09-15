@@ -1,0 +1,39 @@
+{
+  "name": "@minddrop/feature-content-views",
+  "version": "0.0.0",
+  "main": "src/index",
+  "types": "src/index",
+  "scripts": {
+    "lint": "eslint .  --max-warnings 0",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.3",
+    "@minddrop/eslint-config": "workspace:*",
+    "@minddrop/vitest-config": "workspace:*",
+    "tsconfig": "workspace:*",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@minddrop/collections": "workspace:*",
+    "@minddrop/content-views": "workspace:*",
+    "@minddrop/databases": "workspace:*",
+    "@minddrop/events": "workspace:*",
+    "@minddrop/feature-views": "workspace:*",
+    "@minddrop/file-system": "workspace:*",
+    "@minddrop/filters": "workspace:*",
+    "@minddrop/i18n": "workspace:*",
+    "@minddrop/properties": "workspace:*",
+    "@minddrop/queries": "workspace:*",
+    "@minddrop/test-utils": "workspace:*",
+    "@minddrop/ui-components": "workspace:*",
+    "@minddrop/ui-content-views": "workspace:*",
+    "@minddrop/ui-icons": "workspace:*",
+    "@minddrop/ui-primitives": "workspace:*",
+    "@minddrop/utils": "workspace:*",
+    "@minddrop/views": "workspace:*",
+    "@minddrop/workspaces": "workspace:*"
+  }
+}

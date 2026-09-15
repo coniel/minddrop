@@ -1,0 +1,178 @@
+import React, { useCallback } from 'react';
+import {
+  ContentView,
+  ContentViewSortDirection,
+  ContentViewTypes,
+  ContentViews,
+} from '@minddrop/content-views';
+import { Databases } from '@minddrop/databases';
+import {
+  DropdownMenuContent,
+  DropdownMenuPortal,
+  DropdownMenuPositioner,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuRoot,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  IconButton,
+  IconButtonColor,
+  IconButtonSize,
+  IconButtonVariant,
+  MenuGroup,
+  MenuLabel,
+} from '@minddrop/ui-primitives';
+import { useContentViewSortProperties } from '../useContentViewSortProperties';
+
+export interface ContentViewSortMenuProps {
+  /**
+   * The content view for which to render the sort menu.
+   */
+  view: ContentView;
+
+  /**
+   * The size of the menu's trigger button.
+   */
+  size?: IconButtonSize;
+
+  /**
+   * The visual style of the menu's trigger button.
+   */
+  variant?: IconButtonVariant;
+
+  /**
+   * The colour of the menu's trigger button.
+   */
+  color?: IconButtonColor;
+
+  /**
+   * Called when the menu opens or closes.
+   */
+  onOpenChange?: (open: boolean) => void;
+}
+
+/**
+ * Renders a dropdown menu button for setting the property a data
+ * view's entries are sorted by and the direction they are sorted
+ * in. Renders nothing when the view type is not sortable.
+ */
+export const ContentViewSortMenu: React.FC<ContentViewSortMenuProps> = ({
+  view,
+  size,
+  variant,
+  color = 'neutral',
+  onOpenChange,
+}) => {
+  const viewType = ContentViewTypes.use(view.type);
+  const sortProperties = useContentViewSortProperties(view);
+
+  // The view's sort options, falling back to the defaults the
+  // sorter applies.
+  const sortBy =
+    view.options?.sortBy ?? Databases.constants.DefaultEntrySort.by;
+  const sortProperty =
+    view.options?.sortProperty ?? Databases.constants.DefaultEntrySort.property;
+  const sortDirection =
+    view.options?.sortDirection ??
+    Databases.constants.DefaultEntrySort.direction;
+
+  // The sorted property, missing when the database no longer
+  // declares it.
+  const selectedProperty = sortProperties.find(
+    (property) => property.by === sortBy && property.property === sortProperty,
+  );
+
+  // Sort by the selected property
+  const handleSortPropertyChange = useCallback(
+    (value: string) => {
+      const property = sortProperties.find(
+        (candidate) => candidate.id === value,
+      );
+
+      if (!property) {
+        return;
+      }
+
+      ContentViews.updateOptions(view.id, {
+        sortBy: property.by,
+        sortProperty: property.property,
+      });
+    },
+    [view.id, sortProperties],
+  );
+
+  // Sort in the selected direction
+  const handleSortDirectionChange = useCallback(
+    (value: string) => {
+      ContentViews.updateOptions(view.id, {
+        sortDirection: value as ContentViewSortDirection,
+      });
+    },
+    [view.id],
+  );
+
+  // View types which position entries themselves have no sort
+  if (!viewType?.sortable) {
+    return null;
+  }
+
+  return (
+    <DropdownMenuRoot onOpenChange={onOpenChange}>
+      <DropdownMenuTrigger>
+        <IconButton
+          icon="arrow-down-up"
+          label="contentViews.sort.label"
+          tooltip={{ title: 'contentViews.sort.label' }}
+          size={size}
+          variant={variant}
+          color={color}
+        />
+      </DropdownMenuTrigger>
+      <DropdownMenuPortal>
+        <DropdownMenuPositioner side="bottom" align="start">
+          <DropdownMenuContent>
+            {/** Sorted property */}
+            <MenuGroup>
+              <MenuLabel label="contentViews.sort.property" />
+              <DropdownMenuRadioGroup
+                value={selectedProperty?.id ?? ''}
+                onValueChange={handleSortPropertyChange}
+              >
+                {sortProperties.map((property) => (
+                  <DropdownMenuRadioItem
+                    key={property.id}
+                    value={property.id}
+                    stringLabel={property.label}
+                    contentIcon={property.icon}
+                  />
+                ))}
+              </DropdownMenuRadioGroup>
+            </MenuGroup>
+
+            <DropdownMenuSeparator />
+
+            {/** Sort direction */}
+            <MenuGroup>
+              <MenuLabel label="contentViews.sort.direction" />
+              <DropdownMenuRadioGroup
+                value={sortDirection}
+                onValueChange={handleSortDirectionChange}
+              >
+                <DropdownMenuRadioItem
+                  value="ascending"
+                  label="contentViews.sort.ascending"
+                  icon="arrow-up-narrow-wide"
+                />
+                <DropdownMenuRadioItem
+                  value="descending"
+                  label="contentViews.sort.descending"
+                  icon="arrow-down-wide-narrow"
+                />
+              </DropdownMenuRadioGroup>
+            </MenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenuPositioner>
+      </DropdownMenuPortal>
+    </DropdownMenuRoot>
+  );
+};

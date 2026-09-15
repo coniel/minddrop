@@ -1,5 +1,5 @@
 import { CollectionFixtures } from '@minddrop/collections/test-utils';
-import { DataViewFixtures } from '@minddrop/data-views/test-utils';
+import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { EntityGroup, EntityGroupId } from '@minddrop/entity-groups';
 import { QueryFixtures } from '@minddrop/queries/test-utils';
@@ -51,7 +51,7 @@ export const sidebarGroup_1: EntityGroup = {
   items: [
     DatabaseFixtures.objectDatabase.id,
     DatabaseFixtures.objectEntry1.id,
-    DataViewFixtures.dataView_gallery_1.id,
+    ContentViewFixtures.contentView_gallery_1.id,
     SpaceFixtures.space_1.id,
     CollectionFixtures.collection_1.id,
     QueryFixtures.query_1.id,

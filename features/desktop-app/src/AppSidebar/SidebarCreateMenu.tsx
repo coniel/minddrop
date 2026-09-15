@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { DataViewTypes, DataViews } from '@minddrop/data-views';
+import { ContentViewTypes, ContentViews } from '@minddrop/content-views';
 import {
   Database,
   DatabaseEntries,
@@ -7,7 +7,7 @@ import {
   Databases,
 } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
-import { OpenNewDataViewViewEvent } from '@minddrop/feature-data-views';
+import { OpenNewContentViewViewEvent } from '@minddrop/feature-content-views';
 import { OpenNewDatabaseDialogEvent } from '@minddrop/feature-databases';
 import { OpenNewSpaceDialogEvent } from '@minddrop/feature-spaces';
 import { Spaces } from '@minddrop/spaces';
@@ -44,7 +44,7 @@ export const SidebarCreateMenu: React.FC<SidebarCreateMenuProps> = ({
   const [query, setQuery] = useState('');
   const databases = Databases.useAll();
   const templates = DatabaseEntryTemplates.useAll();
-  const viewTypes = DataViewTypes.useAll();
+  const viewTypes = ContentViewTypes.useAll();
 
   // Every option the search term matches, of every kind, ranked as
   // one list. The databases and templates are matched first, by
@@ -78,8 +78,8 @@ export const SidebarCreateMenu: React.FC<SidebarCreateMenuProps> = ({
     Events.dispatch(OpenNewDatabaseDialogEvent);
   }
 
-  function handleCreateDataView(viewType: string) {
-    Events.dispatch(OpenNewDataViewViewEvent, { viewType });
+  function handleCreateContentView(viewType: string) {
+    Events.dispatch(OpenNewContentViewViewEvent, { viewType });
   }
 
   // Create an entry, optionally from a template, and open it
@@ -111,8 +111,8 @@ export const SidebarCreateMenu: React.FC<SidebarCreateMenuProps> = ({
       return;
     }
 
-    if (action.type === 'data-view') {
-      handleCreateDataView(action.viewType);
+    if (action.type === 'content-view') {
+      handleCreateContentView(action.viewType);
 
       return;
     }
@@ -125,14 +125,14 @@ export const SidebarCreateMenu: React.FC<SidebarCreateMenuProps> = ({
     return templates.filter((template) => template.database === databaseId);
   }
 
-  // Render the data view types as the options of a submenu
-  function renderDataViewItems() {
+  // Render the content view types as the options of a submenu
+  function renderContentViewItems() {
     return viewTypes.map((viewType) => (
       <DropdownSearchableMenuItem
         key={viewType.type}
         contentIcon={Icons.fromName(viewType.icon)}
         label={viewType.name}
-        onSelect={() => handleCreateDataView(viewType.type)}
+        onSelect={() => handleCreateContentView(viewType.type)}
       />
     ));
   }
@@ -216,13 +216,13 @@ export const SidebarCreateMenu: React.FC<SidebarCreateMenuProps> = ({
           />
           <DropdownSubmenu>
             <DropdownSubmenuTriggerItem
-              icon={DataViews.constants.Icon}
-              label="dataViews.labels.view"
+              icon={ContentViews.constants.Icon}
+              label="contentViews.labels.view"
             />
             <DropdownMenuPortal>
               <DropdownMenuPositioner side="right" align="start" sideOffset={4}>
                 <DropdownSubmenuContent>
-                  {renderDataViewItems()}
+                  {renderContentViewItems()}
                 </DropdownSubmenuContent>
               </DropdownMenuPositioner>
             </DropdownMenuPortal>

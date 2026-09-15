@@ -1,5 +1,5 @@
 import { Collections } from '@minddrop/collections';
-import { DataViews } from '@minddrop/data-views';
+import { ContentViews } from '@minddrop/content-views';
 import { Databases } from '@minddrop/databases';
 import { Designs } from '@minddrop/designs';
 import { Designs as DesignsNext } from '@minddrop/designs-next';
@@ -51,9 +51,9 @@ export async function loadWorkspace(workspace: Workspace): Promise<void> {
 
   const { schemaChanged } = await Databases.loadWorkspace(workspace);
 
-  // Load persisted data views. Requires entries and the item
+  // Load persisted content views. Requires entries and the item
   // reference adapters, both loaded by Databases.loadWorkspace.
-  await DataViews.loadWorkspace(workspace);
+  await ContentViews.loadWorkspace(workspace);
 
   // Load persisted collections. Requires entries and the item
   // reference adapters, both loaded by Databases.loadWorkspace.

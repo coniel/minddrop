@@ -1,4 +1,4 @@
-import { DataViewUpdatedEventData } from '@minddrop/data-views';
+import { ContentViewUpdatedEventData } from '@minddrop/content-views';
 import { isEntityId } from '@minddrop/utils';
 import { persistVirtualViewConfig } from '../../persistVirtualViewConfig';
 
@@ -8,7 +8,7 @@ import { persistVirtualViewConfig } from '../../persistVirtualViewConfig';
  * entry's metadata file.
  */
 export async function onUpdateVirtualView(
-  data: DataViewUpdatedEventData,
+  data: ContentViewUpdatedEventData,
 ): Promise<void> {
   const { updated } = data;
 

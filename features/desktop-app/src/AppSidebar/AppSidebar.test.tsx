@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { SidebarGroups } from '@minddrop/app';
 import { SidebarGroupFixtures } from '@minddrop/app/test-utils';
-import { DataViewFixtures } from '@minddrop/data-views/test-utils';
+import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Events } from '@minddrop/events';
 import { OpenNewDatabaseDialogEvent } from '@minddrop/feature-databases';
@@ -11,7 +11,7 @@ import { cleanup, setup } from '../test-utils';
 import { AppSidebar } from './AppSidebar';
 
 const { objectDatabase, objectEntry1 } = DatabaseFixtures;
-const { dataView_gallery_1 } = DataViewFixtures;
+const { contentView_gallery_1 } = ContentViewFixtures;
 const { space_1 } = SpaceFixtures;
 
 describe('<AppSidebar />', () => {
@@ -33,7 +33,7 @@ describe('<AppSidebar />', () => {
     render(<AppSidebar />);
 
     expect(screen.getByText(objectEntry1.title)).toBeInTheDocument();
-    expect(screen.getByText(dataView_gallery_1.name)).toBeInTheDocument();
+    expect(screen.getByText(contentView_gallery_1.name)).toBeInTheDocument();
     expect(screen.getByText(space_1.name)).toBeInTheDocument();
   });
 

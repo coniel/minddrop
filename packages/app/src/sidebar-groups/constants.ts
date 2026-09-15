@@ -1,5 +1,5 @@
 import { Collections } from '@minddrop/collections';
-import { DataViews } from '@minddrop/data-views';
+import { ContentViews } from '@minddrop/content-views';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { EntityGroups } from '@minddrop/entity-groups';
 import { Queries } from '@minddrop/queries';
@@ -18,7 +18,7 @@ export const SidebarGroupsType = 'sidebar-groups';
 export const SidebarGroupItemTypes = [
   Databases.constants.EntityType,
   DatabaseEntries.constants.EntityType,
-  DataViews.constants.EntityType,
+  ContentViews.constants.EntityType,
   Spaces.constants.EntityType,
   Collections.constants.EntityType,
   Queries.constants.EntityType,

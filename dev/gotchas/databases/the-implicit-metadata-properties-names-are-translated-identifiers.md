@@ -15,4 +15,4 @@ tags: [i18n, metadata, identifiers, property-map]
 
 In en-GB everything lines up because the translations are "Title", "Created" and "Last modified". Adding a second locale breaks anything persisted under the old name, silently, since the lookups just stop matching. The fix is to treat the untranslated type names as stable identifiers and add a separate translated display `label` to the property schema (updating the property mapping UI to render labels over names).
 
-Data view sort options avoid this: they record whether the sort targets a property or entry metadata, and reference metadata by type ('created') rather than by the name it is surfaced under.
+Content view sort options avoid this: they record whether the sort targets a property or entry metadata, and reference metadata by type ('created') rather than by the name it is surfaced under.

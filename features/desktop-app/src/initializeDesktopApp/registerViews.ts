@@ -1,5 +1,5 @@
 import { registerCollectionViews } from '@minddrop/feature-collections';
-import { registerDataViewViews } from '@minddrop/feature-data-views';
+import { registerContentViewViews } from '@minddrop/feature-content-views';
 import { registerDatabaseViews } from '@minddrop/feature-databases';
 import { registerDesignStudioViews } from '@minddrop/feature-designs';
 import { registerQueryViews } from '@minddrop/feature-queries';
@@ -13,7 +13,7 @@ import { registerTagViews } from '@minddrop/feature-tags';
 export function registerViews(): void {
   // Register feature-provided views
   registerCollectionViews();
-  registerDataViewViews();
+  registerContentViewViews();
   registerQueryViews();
   registerDatabaseViews();
   registerDesignStudioViews();

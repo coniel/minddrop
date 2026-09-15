@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
-import { DataViews } from '@minddrop/data-views';
-import { DataViewFixtures } from '@minddrop/data-views/test-utils';
+import { ContentViews } from '@minddrop/content-views';
+import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { Layout } from '@minddrop/designs';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
@@ -20,7 +20,8 @@ import { virtualCollectionId } from '../virtualCollectionId';
 import { virtualViewId } from '../virtualViewId';
 import { createEntryVirtualViews } from './createEntryVirtualViews';
 
-const { dataViewType_table, dataViewType_referencing } = DataViewFixtures;
+const { contentViewType_table, contentViewType_referencing } =
+  ContentViewFixtures;
 
 // Layout with a collection element mapped to the 'Related' property
 const designWithView: Layout = {
@@ -39,7 +40,7 @@ const designWithView: Layout = {
         id: 'view-element-1',
         type: 'property',
         propertyType: 'collection',
-        variant: dataViewType_table.type,
+        variant: contentViewType_table.type,
         style: {},
       },
       {
@@ -135,11 +136,11 @@ describe('createEntryVirtualViews', () => {
       designWithView.id,
       'Related',
     );
-    const view = DataViews.get(vViewId, false);
+    const view = ContentViews.get(vViewId, false);
     const collId = virtualCollectionId(collectionEntry1.id, 'Related');
 
     expect(view).not.toBeNull();
-    expect(view!.type).toBe(dataViewType_table.type);
+    expect(view!.type).toBe(contentViewType_table.type);
     expect(view!.dataSource).toEqual({ type: 'collection', id: collId });
   });
 
@@ -148,7 +149,7 @@ describe('createEntryVirtualViews', () => {
 
     // Verify the view carries the entry as owner and the metadata
     // key as owner key.
-    const view = DataViews.get(
+    const view = ContentViews.get(
       virtualViewId(collectionEntry1.id, designWithView.id, 'Related'),
       false,
     );
@@ -189,7 +190,7 @@ describe('createEntryVirtualViews', () => {
     });
 
     // The saved config resolves through the owner key despite the colon
-    const view = DataViews.get(
+    const view = ContentViews.get(
       virtualViewId(collectionEntry1.id, designWithView.id, colonProperty),
       false,
     );
@@ -230,7 +231,7 @@ describe('createEntryVirtualViews', () => {
     );
 
     expect(Collections.get(collId, false)).not.toBeNull();
-    expect(DataViews.get(vViewId, false)).not.toBeNull();
+    expect(ContentViews.get(vViewId, false)).not.toBeNull();
   });
 
   it('handles multiple collection properties', () => {
@@ -244,14 +245,14 @@ describe('createEntryVirtualViews', () => {
             id: 'view-element-1',
             type: 'property',
             propertyType: 'collection',
-            variant: dataViewType_table.type,
+            variant: contentViewType_table.type,
             style: {},
           },
           {
             id: 'view-element-2',
             type: 'property',
             propertyType: 'collection',
-            variant: dataViewType_table.type,
+            variant: contentViewType_table.type,
             style: {},
           },
         ],
@@ -307,11 +308,11 @@ describe('createEntryVirtualViews', () => {
       designWithView.id,
       'Related',
     );
-    const view = DataViews.get(vViewId, false);
+    const view = ContentViews.get(vViewId, false);
 
     // Saved options are merged over the view type's default options
     expect(view!.options).toEqual({
-      ...dataViewType_table.defaultOptions,
+      ...contentViewType_table.defaultOptions,
       ...savedConfig.options,
     });
     expect(view!.data).toEqual(savedConfig.data);
@@ -328,7 +329,7 @@ describe('createEntryVirtualViews', () => {
             id: 'view-element-1',
             type: 'property',
             propertyType: 'collection',
-            variant: dataViewType_referencing.type,
+            variant: contentViewType_referencing.type,
             style: {},
           },
         ],
@@ -355,7 +356,7 @@ describe('createEntryVirtualViews', () => {
       propertyMap,
     );
 
-    const view = DataViews.get(
+    const view = ContentViews.get(
       virtualViewId(collectionEntry1.id, referencingLayout.id, 'Related'),
       false,
     );
@@ -373,7 +374,7 @@ describe('createEntryVirtualViews', () => {
       designWithView.id,
       'Related',
     );
-    const view = DataViews.get(vViewId, false);
+    const view = ContentViews.get(vViewId, false);
 
     // Should not have custom data
     expect(view!.data).toBeUndefined();

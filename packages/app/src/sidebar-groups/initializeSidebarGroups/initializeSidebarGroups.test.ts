@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
-import { DataViews } from '@minddrop/data-views';
+import { ContentViews } from '@minddrop/content-views';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { EntityGroups } from '@minddrop/entity-groups';
 import { Queries } from '@minddrop/queries';
@@ -35,7 +35,7 @@ describe('initializeSidebarGroups', () => {
     expect(EntityGroups.getConfig(SidebarGroupsType).itemTypes).toEqual([
       Databases.constants.EntityType,
       DatabaseEntries.constants.EntityType,
-      DataViews.constants.EntityType,
+      ContentViews.constants.EntityType,
       Spaces.constants.EntityType,
       Collections.constants.EntityType,
       Queries.constants.EntityType,
@@ -76,7 +76,7 @@ describe('initializeSidebarGroups', () => {
       [
         Databases.events.Deleted,
         DatabaseEntries.events.Deleted,
-        DataViews.events.Deleted,
+        ContentViews.events.Deleted,
         Spaces.events.Deleted,
         Collections.events.Deleted,
         Queries.events.Deleted,

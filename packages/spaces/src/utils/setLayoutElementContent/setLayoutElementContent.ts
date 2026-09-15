@@ -1,7 +1,7 @@
 import { DesignElement, Layout } from '@minddrop/designs';
 
 /**
- * Returns the layout with the target data view element's static
+ * Returns the layout with the target content view element's static
  * content set.
  *
  * @param layout - The layout containing the element.
@@ -26,7 +26,7 @@ export function setLayoutElementContent(
 }
 
 /**
- * Sets the content on the matched data view element, recursing
+ * Sets the content on the matched content view element, recursing
  * into containers.
  */
 function setElementContent(
@@ -34,8 +34,8 @@ function setElementContent(
   elementId: string,
   content: string,
 ): DesignElement {
-  // Set the content on the matched data view element
-  if (element.id === elementId && element.type === 'data-view') {
+  // Set the content on the matched content view element
+  if (element.id === elementId && element.type === 'content-view') {
     return { ...element, content };
   }
 

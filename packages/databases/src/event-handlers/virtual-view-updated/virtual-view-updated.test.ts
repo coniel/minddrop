@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DataView } from '@minddrop/data-views';
-import { DataViewFixtures } from '@minddrop/data-views/test-utils';
+import { ContentView } from '@minddrop/content-views';
+import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { cleanup, objectEntry1, setup } from '../../test-utils';
 import {
@@ -10,13 +10,13 @@ import {
 } from '../../utils';
 import { onUpdateVirtualView } from './virtual-view-updated';
 
-const { dataViewType_referencing } = DataViewFixtures;
+const { contentViewType_referencing } = ContentViewFixtures;
 
 const layoutId = 'layout-card-1';
 const propertyName = 'Related';
 const viewId = virtualViewId(objectEntry1.id, layoutId, propertyName);
 
-const baseView: DataView = {
+const baseView: ContentView = {
   id: viewId,
   virtual: true,
   owner: objectEntry1.id,
@@ -35,7 +35,7 @@ describe('onUpdateVirtualView', () => {
   afterEach(cleanup);
 
   it('does nothing for views without an owner', () => {
-    const unownedView: DataView = { ...baseView, owner: undefined };
+    const unownedView: ContentView = { ...baseView, owner: undefined };
 
     onUpdateVirtualView({
       original: unownedView,
@@ -49,7 +49,7 @@ describe('onUpdateVirtualView', () => {
   });
 
   it('does nothing for views not owned by a database entry', () => {
-    const databaseOwnedView: DataView = {
+    const databaseOwnedView: ContentView = {
       ...baseView,
       owner: 'database_some-database',
     };
@@ -66,7 +66,7 @@ describe('onUpdateVirtualView', () => {
   });
 
   it('does nothing if the entry does not exist', () => {
-    const unknownEntryView: DataView = {
+    const unknownEntryView: ContentView = {
       ...baseView,
       owner: 'database-entry_unknown',
     };
@@ -79,7 +79,7 @@ describe('onUpdateVirtualView', () => {
   });
 
   it('updates the entry metadata with the view config', () => {
-    const updatedView: DataView = {
+    const updatedView: ContentView = {
       ...baseView,
       options: { sortDirection: 'ascending' },
       data: { columns: [['a', 'b'], ['c']] },
@@ -102,9 +102,9 @@ describe('onUpdateVirtualView', () => {
   it('serializes item references into durable form', () => {
     // A virtual view referencing an entry via the referencing view
     // type's data.
-    const referencingView: DataView = {
+    const referencingView: ContentView = {
       ...baseView,
-      type: dataViewType_referencing.type,
+      type: contentViewType_referencing.type,
       data: { items: [objectEntry1.id] },
     };
 
@@ -140,7 +140,7 @@ describe('onUpdateVirtualView', () => {
       metadata: existingMetadata,
     });
 
-    const updatedView: DataView = {
+    const updatedView: ContentView = {
       ...baseView,
       data: { columns: [] },
     };

@@ -1,11 +1,11 @@
-import { DataView, DataViews } from '@minddrop/data-views';
+import { ContentView, ContentViews } from '@minddrop/content-views';
 import { Fs } from '@minddrop/file-system';
 import { InvalidParameterError } from '@minddrop/utils';
 import { getDatabase } from '../getDatabase';
 import {
+  resolveDatabaseContentViewsDirPath,
   resolveDatabasePath,
   resolveDatabaseViewFilePath,
-  resolveDatabaseViewsDirPath,
 } from '../utils';
 
 /**
@@ -17,7 +17,7 @@ import {
  * @throws {InvalidParameterError} If the view has no owner.
  * @throws {DatabaseNotFoundError} If the owning database does not exist.
  */
-export async function writeDatabaseView(view: DataView): Promise<void> {
+export async function writeDatabaseView(view: ContentView): Promise<void> {
   // Views without an owner are not database views
   if (!view.owner) {
     throw new InvalidParameterError(
@@ -31,12 +31,12 @@ export async function writeDatabaseView(view: DataView): Promise<void> {
   // Ensure the database's views directory exists
   const databasePath = resolveDatabasePath(database);
 
-  await Fs.ensureDir(resolveDatabaseViewsDirPath(databasePath));
+  await Fs.ensureDir(resolveDatabaseContentViewsDirPath(databasePath));
 
   // Write the view to the file system in its stored form, without
   // the data source which is derived from the database at load time.
   await Fs.writeJsonFile(
     resolveDatabaseViewFilePath(databasePath, view.id),
-    DataViews.serialize(view, { dataSource: false }),
+    ContentViews.serialize(view, { dataSource: false }),
   );
 }

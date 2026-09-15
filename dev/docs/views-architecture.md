@@ -1,6 +1,6 @@
-# Views & Data Views Architecture
+# Views & Content Views Architecture
 
-How views and data views relate to databases, entries, and designs, and
+How views and content views relate to databases, entries, and designs, and
 why they are modelled the way they are.
 
 ## Two separate concepts, two packages
@@ -12,22 +12,22 @@ startup (e.g. `registerSpaceViews`, `registerDatabaseViews`,
 type named by an `OpenViewEvent` and renders the component. Nothing is
 persisted; the registry has no lifecycle beyond registration.
 
-**Data views** (`@minddrop/data-views`) are user-curated content: a
-`DataView` renders entries from a data source using a registered
-`DataViewType` (table, gallery, notebook, board, ...). Each data view
+**Content views** (`@minddrop/content-views`) are user-curated content: a
+`ContentView` renders entries from a data source using a registered
+`ContentViewType` (table, gallery, notebook, board, ...). Each content view
 
-- has a **type** registered via `DataViewTypes`; the type contributes the
+- has a **type** registered via `ContentViewTypes`; the type contributes the
   rendering component and an options menu.
 - has a **`dataSource`** reference (e.g. `{ type: 'database', id }`)
   naming where its entries come from.
 - owns type-specific **`options`** (its own rendering configuration).
-- is persisted (unless virtual), dispatches `data-views:*` events, and
-  uses `data-view_<uuid>` IDs.
+- is persisted (unless virtual), dispatches `content-views:*` events, and
+  uses `content-view_<uuid>` IDs.
 
-The `features/data-views` package renders them (`DataViewRenderer`,
-`CreateDataViewForm`); `features/views` keeps the code-view side
-(`ViewRenderer`, view areas, the tab strip). The built-in data view type
-packages live in the top-level `data-views/` workspace directory (board,
+The `features/content-views` package renders them (`ContentViewRenderer`,
+`CreateContentViewForm`); `features/views` keeps the code-view side
+(`ViewRenderer`, view areas, the tab strip). The built-in content view type
+packages live in the top-level `content-views/` workspace directory (board,
 gallery, notebook, table).
 
 ## View sessions
@@ -124,34 +124,34 @@ width dispatch, and `AppSidebar` reduced to content and registered as
 the default `sidebar` fill by `registerSidebars`. Fills are content
 only, so every sidebar shares the one width.
 
-## Data views are independent entities
+## Content views are independent entities
 
-Data views are first-class entities, not children of a database, because
-a data view is used in three distinct contexts, only one of which is
+Content views are first-class entities, not children of a database, because
+a content view is used in three distinct contexts, only one of which is
 database-owned:
 
 1. **Database browse views** — the tabs shown when browsing a database
    directly (`DatabaseView` in `features/databases`).
 2. **Embedded views** — a layout can contain a `view` design element,
-   rendering a data view inside an entry (e.g. a collection property's
+   rendering a content view inside an entry (e.g. a collection property's
    entries shown as a table on the entry's page). Rendered via
-   `DataViewRenderer`.
-3. **Independent / entry-virtual views** — data views not tied to a
+   `ContentViewRenderer`.
+3. **Independent / entry-virtual views** — content views not tied to a
    database's browse UI, such as the per-entry virtual views generated
    for collection properties.
 
-If data views were structurally nested inside databases, contexts 2 and
+If content views were structurally nested inside databases, contexts 2 and
 3 could not exist.
 
 ## Ownership and persistence
 
-The data-views package persists standalone data views as `.view` files in
-the workspace `views/` directory, loaded at startup by
-`DataViews.initialize` (which also resolves durable item references and
-indexes each view's `references`). Whatever entity _owns_ a data view
+The content-views package persists standalone content views as JSON files in
+the workspace `content-views/` directory, loaded at startup by
+`ContentViews.initialize` (which also resolves durable item references and
+indexes each view's `references`). Whatever entity _owns_ a content view
 beyond that is responsible for persisting it, and loads it into the
-`DataViewsStore` at startup as a **virtual** data view ("virtual" =
-persisted by its owner, not by the data-views package):
+`ContentViewsStore` at startup as a **virtual** content view ("virtual" =
+persisted by its owner, not by the content-views package):
 
 - **Database browse views** are stored as individual files in the
   database's `.minddrop/views/` directory (stripped of
@@ -160,7 +160,7 @@ persisted by its owner, not by the data-views package):
   time. `loadDatabaseViews` rehydrates them (re-deriving `dataSource`
   from the owning database); `writeDatabaseView` and
   `removeDatabaseViewFile` persist changes back, driven by the
-  `data-views:data-view:created/updated/deleted` event handlers in
+  `content-views:content-view:created/updated/deleted` event handlers in
   `packages/databases`, which also maintain the config's ID list.
 - **Entry collection views** are generated per entry for collection
   properties (`virtualViewId(entryId, propertyName, layoutId)`), with
@@ -182,14 +182,14 @@ owned design of the context's base type → null).
 ## Per-view layout configuration
 
 "Which layout should entries use in this view" is view-rendering
-configuration, so it lives in **view options**, owned by the data view:
+configuration, so it lives in **view options**, owned by the content view:
 
 - Gallery: `options.cardLayoutId`.
 - Notebook: `options.layoutOverrides[databaseId]` with
   `listLayoutId`/`pageLayoutId` (keyed by database because a notebook can
   aggregate entries from multiple databases).
 
-Set via the data view type's options menu (`DatabaseLayoutSelectionMenu`)
+Set via the content view type's options menu (`DatabaseLayoutSelectionMenu`)
 and passed as the `layoutId` prop to `DatabaseEntryRenderer`, whose
 resolution cascade is: explicit `layoutId` → database default
 (`Databases.getDefaultLayout`: pinned `defaultLayouts[type]` → first
@@ -208,7 +208,7 @@ layout of the type in the database's design → null).
   now. The entry-level override needs a decision: real feature (then
   something must consume it) or delete. See the figma-design-studio plan,
   open question 8.
-- A **full data views audit** is planned later — covering the redundant
+- A **full content views audit** is planned later — covering the redundant
   override mechanisms above and the broken load/write path. Do not build
   new features on `viewLayouts` in the meantime.
 - Changing a database's design does not touch per-view layout overrides;
@@ -219,12 +219,12 @@ layout of the type in the database's design → null).
   packages listen and remap their own layout configs for views sourcing
   that database (the databases package only remaps what it owns, i.e.
   entry `metadata.viewLayoutOverrides`).
-- The database view load/write path is currently broken by the data views
+- The database view load/write path is currently broken by the content views
   object-store conversion (`getAll` returning a map) — pre-existing, see
-  the "Stale DataViews.Store.getAll() usage in views tests" issue.
+  the "Stale ContentViews.Store.getAll() usage in views tests" issue.
 - "Virtual" does double duty for database browse views and entry
   collection views, which have quite different lifecycles; a clearer term
   for "owner-persisted" may be worth adopting.
-- Deliberately retained view-era names (`.view` extension, `views/` data
-  dir, `ViewDataSource` types) are listed in the data-views gotchas
-  (`bun dev/scripts/gotchas.ts --package data-views`).
+- The deliberately retained `ViewDataSource` type names are covered in the
+  content-views gotchas
+  (`bun dev/scripts/gotchas.ts --package content-views`).

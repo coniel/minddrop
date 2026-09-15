@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DataView } from '@minddrop/data-views';
-import { DataViewFixtures } from '@minddrop/data-views/test-utils';
+import { ContentView } from '@minddrop/content-views';
+import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { DatabasesStore } from '../../DatabasesStore';
 import { getDatabase } from '../../getDatabase';
 import { MockFs, cleanup, databaseDirPath, setup } from '../../test-utils';
@@ -8,7 +8,7 @@ import { objectDatabase } from '../../test-utils/fixtures';
 import { resolveDatabaseViewFilePath } from '../../utils';
 import { onDatabaseViewDeleted } from './database-view-deleted';
 
-const { dataView_virtual_1 } = DataViewFixtures;
+const { contentView_virtual_1 } = ContentViewFixtures;
 
 describe('onDatabaseViewDeleted', () => {
   beforeEach(setup);
@@ -16,8 +16,8 @@ describe('onDatabaseViewDeleted', () => {
 
   it("deletes the view's file from the database's views directory", async () => {
     // Create a virtual view owned by this database
-    const view: DataView = {
-      ...dataView_virtual_1,
+    const view: ContentView = {
+      ...contentView_virtual_1,
       dataSource: { type: 'database', id: objectDatabase.id },
       owner: objectDatabase.id,
     };
@@ -40,8 +40,8 @@ describe('onDatabaseViewDeleted', () => {
 
   it("drops the view from the config's view ID list", async () => {
     // Create a virtual view owned by this database
-    const view: DataView = {
-      ...dataView_virtual_1,
+    const view: ContentView = {
+      ...contentView_virtual_1,
       dataSource: { type: 'database', id: objectDatabase.id },
       owner: objectDatabase.id,
     };
@@ -59,8 +59,8 @@ describe('onDatabaseViewDeleted', () => {
 
   it('ignores views not owned by a database', async () => {
     // Create a virtual view without a database owner
-    const view: DataView = {
-      ...dataView_virtual_1,
+    const view: ContentView = {
+      ...contentView_virtual_1,
       dataSource: { type: 'collection', id: 'some-collection' },
     };
 

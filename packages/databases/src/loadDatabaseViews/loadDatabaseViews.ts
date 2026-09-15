@@ -1,17 +1,20 @@
 import {
-  DataViews,
-  StoredDataView,
-  VirtualDataViewData,
-} from '@minddrop/data-views';
+  ContentViews,
+  StoredContentView,
+  VirtualContentViewData,
+} from '@minddrop/content-views';
 import { Fs } from '@minddrop/file-system';
 import { Workspace } from '@minddrop/workspaces';
 import { normalizeDatabaseConfigIds } from '../normalizeDatabaseConfigIds';
 import type { Database } from '../types';
-import { resolveDatabasePath, resolveDatabaseViewsDirPath } from '../utils';
+import {
+  resolveDatabaseContentViewsDirPath,
+  resolveDatabasePath,
+} from '../utils';
 
 /**
  * Loads database views from the databases' view directories into
- * the workspace's data views store record as virtual views,
+ * the workspace's content views store record as virtual views,
  * normalizing each database config's view ID list against the
  * view files found.
  *
@@ -34,7 +37,7 @@ export async function loadDatabaseViews(
   }
 
   // Load the views as virtual views
-  DataViews.loadVirtual(viewData, workspace.id);
+  ContentViews.loadVirtual(viewData, workspace.id);
 }
 
 /**
@@ -43,20 +46,20 @@ export async function loadDatabaseViews(
  *
  * @param database - The database whose views to read.
  * @param workspace - The workspace the database belongs to.
- * @returns The database's views as virtual data view data.
+ * @returns The database's views as virtual content view data.
  */
 async function readDatabaseViews(
   database: Database,
   workspace: Workspace,
-): Promise<VirtualDataViewData[]> {
+): Promise<VirtualContentViewData[]> {
   // Path to the database's views directory
-  const dirPath = resolveDatabaseViewsDirPath(
+  const dirPath = resolveDatabaseContentViewsDirPath(
     resolveDatabasePath(database, workspace.path),
   );
 
   // The stored views read from the views directory, empty for
   // databases without one.
-  let storedViews: StoredDataView[] = [];
+  let storedViews: StoredContentView[] = [];
 
   if (await Fs.exists(dirPath)) {
     // List the view files
@@ -69,7 +72,7 @@ async function readDatabaseViews(
           .filter((file) => file.path.endsWith('.json'))
           .map((file) => readStoredView(file, workspace.id)),
       )
-    ).filter((storedView): storedView is StoredDataView => !!storedView);
+    ).filter((storedView): storedView is StoredContentView => !!storedView);
   }
 
   // Normalize the config's view ID list against the views found
@@ -93,12 +96,12 @@ async function readDatabaseViews(
 async function readStoredView(
   file: { path: string },
   workspaceId: string,
-): Promise<StoredDataView | null> {
+): Promise<StoredContentView | null> {
   try {
-    const storedView = await Fs.readJsonFile<StoredDataView>(file.path);
+    const storedView = await Fs.readJsonFile<StoredContentView>(file.path);
 
     // Restore the view's dates and resolve its config references
-    return DataViews.deserialize(storedView, workspaceId);
+    return ContentViews.deserialize(storedView, workspaceId);
   } catch {
     return null;
   }

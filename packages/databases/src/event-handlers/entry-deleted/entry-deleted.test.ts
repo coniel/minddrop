@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
-import { DataViews } from '@minddrop/data-views';
-import { DataViewFixtures } from '@minddrop/data-views/test-utils';
+import { ContentViews } from '@minddrop/content-views';
+import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { History } from '@minddrop/history';
 import {
   sqlGetEntrySyncRecords,
@@ -109,12 +109,12 @@ describe('onDeleteEntry', () => {
   });
 
   it('removes the entry from view configs referencing it', async () => {
-    const { dataViewType_referencing } = DataViewFixtures;
+    const { contentViewType_referencing } = ContentViewFixtures;
 
     // A view referencing the deleted entry
-    DataViews.createVirtual({
-      id: 'data-view_referencing-1',
-      type: dataViewType_referencing.type,
+    ContentViews.createVirtual({
+      id: 'content-view_referencing-1',
+      type: contentViewType_referencing.type,
       dataSource: { type: 'collection', id: 'collection-1' },
       owner: collectionEntry1.id,
       name: 'Referencing',
@@ -124,9 +124,11 @@ describe('onDeleteEntry', () => {
     await onDeleteEntry(relatedEntry1);
 
     // The view's config drops the deleted entry
-    expect(DataViews.get('data-view_referencing-1', false)?.data).toEqual({
-      items: [relatedEntry2.id],
-    });
+    expect(ContentViews.get('content-view_referencing-1', false)?.data).toEqual(
+      {
+        items: [relatedEntry2.id],
+      },
+    );
   });
 
   it('does nothing if the database has no collection properties', async () => {

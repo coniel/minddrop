@@ -1,5 +1,5 @@
 import { Collections } from '@minddrop/collections';
-import { DataViews } from '@minddrop/data-views';
+import { ContentViews } from '@minddrop/content-views';
 import { Designs } from '@minddrop/designs';
 import { Designs as DesignsNext } from '@minddrop/designs-next';
 import { Events } from '@minddrop/events';
@@ -82,14 +82,14 @@ export function initializeDatabaseEventHandlers() {
     [Tags.events.Renamed]: onTagRenamed,
     [Tags.events.Deleted]: onTagDeleted,
     [TagGroups.events.Deleted]: onTagGroupDeleted,
-    [DataViews.events.Updated]: onUpdateVirtualView,
+    [ContentViews.events.Updated]: onUpdateVirtualView,
     [Fs.events.Changed]: onFileSystemChanged,
   });
 
   Events.addListeners('databases:database-views', {
-    [DataViews.events.Created]: onDatabaseViewCreated,
-    [DataViews.events.Updated]: onDatabaseViewUpdated,
-    [DataViews.events.Deleted]: onDatabaseViewDeleted,
+    [ContentViews.events.Created]: onDatabaseViewCreated,
+    [ContentViews.events.Updated]: onDatabaseViewUpdated,
+    [ContentViews.events.Deleted]: onDatabaseViewDeleted,
   });
 
   Events.addListeners('databases:database-designs', {

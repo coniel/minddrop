@@ -1,4 +1,4 @@
-import { DataViewUpdatedEventData } from '@minddrop/data-views';
+import { ContentViewUpdatedEventData } from '@minddrop/content-views';
 import { isEntityId } from '@minddrop/utils';
 import { writeDatabaseView } from '../../writeDatabaseView';
 
@@ -7,7 +7,7 @@ import { writeDatabaseView } from '../../writeDatabaseView';
  * database, writes it to the database's views directory.
  */
 export async function onDatabaseViewUpdated(
-  data: DataViewUpdatedEventData,
+  data: ContentViewUpdatedEventData,
 ): Promise<void> {
   const { updated } = data;
 

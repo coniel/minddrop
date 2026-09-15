@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@minddrop/data-views": "workspace:*",
+    "@minddrop/content-views": "workspace:*",
     "@minddrop/designs": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/feature-designs": "workspace:*",

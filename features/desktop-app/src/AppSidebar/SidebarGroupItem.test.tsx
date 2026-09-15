@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { SidebarGroups } from '@minddrop/app';
 import { CollectionFixtures } from '@minddrop/collections/test-utils';
-import { DataViewFixtures } from '@minddrop/data-views/test-utils';
+import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { Databases } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Events } from '@minddrop/events';
@@ -14,7 +14,7 @@ import { cleanup, setup } from '../test-utils';
 import { SidebarGroupItem } from './SidebarGroupItem';
 
 const { objectDatabase, objectEntry1 } = DatabaseFixtures;
-const { dataView_gallery_1 } = DataViewFixtures;
+const { contentView_gallery_1 } = ContentViewFixtures;
 const { space_1 } = SpaceFixtures;
 const { collection_1 } = CollectionFixtures;
 const { query_1 } = QueryFixtures;
@@ -37,10 +37,10 @@ describe('<SidebarGroupItem />', () => {
     expect(screen.getByText(objectEntry1.title)).toBeInTheDocument();
   });
 
-  it('renders a data view by name', () => {
-    render(<SidebarGroupItem itemId={dataView_gallery_1.id} />);
+  it('renders a content view by name', () => {
+    render(<SidebarGroupItem itemId={contentView_gallery_1.id} />);
 
-    expect(screen.getByText(dataView_gallery_1.name)).toBeInTheDocument();
+    expect(screen.getByText(contentView_gallery_1.name)).toBeInTheDocument();
   });
 
   it('renders a space by name', () => {

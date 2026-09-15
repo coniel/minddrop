@@ -1,4 +1,4 @@
-import { DataViews } from '@minddrop/data-views';
+import { ContentViews } from '@minddrop/content-views';
 import { entityId } from '@minddrop/utils';
 import { DatabaseCreatedEventData } from '../../events';
 import { sqlUpsertDatabase } from '../../sql';
@@ -9,8 +9,8 @@ import { sqlUpsertDatabase } from '../../sql';
  */
 export function onCreateDatabase(data: DatabaseCreatedEventData) {
   // Create a virtual view for the database
-  DataViews.createVirtual({
-    id: entityId(DataViews.constants.EntityType),
+  ContentViews.createVirtual({
+    id: entityId(ContentViews.constants.EntityType),
     type: 'table',
     dataSource: { type: 'database', id: data.id },
     owner: data.id,

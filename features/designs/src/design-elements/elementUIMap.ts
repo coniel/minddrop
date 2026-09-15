@@ -9,7 +9,7 @@ import {
   ContainerDesignElement,
   ContainerStudioDesignElement,
 } from './container';
-import { DataViewDesignElement } from './data-view';
+import { ContentViewDesignElement } from './content-view';
 import {
   PagePanelDesignElement,
   PagePanelStudioDesignElement,
@@ -64,7 +64,10 @@ function elementUI<TElement extends DesignElement>(config: {
 const elementUIs: ElementUIConfig[] = [
   elementUI({ type: 'text', DisplayComponent: TextDesignElement }),
   elementUI({ type: 'property', DisplayComponent: PropertyDesignElement }),
-  elementUI({ type: 'data-view', DisplayComponent: DataViewDesignElement }),
+  elementUI({
+    type: 'content-view',
+    DisplayComponent: ContentViewDesignElement,
+  }),
   elementUI({
     type: 'container',
     DisplayComponent: ContainerDesignElement,

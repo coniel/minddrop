@@ -1,5 +1,5 @@
 import { Collections } from '@minddrop/collections';
-import { DataViews } from '@minddrop/data-views';
+import { ContentViews } from '@minddrop/content-views';
 import {
   ContainerElement,
   DesignElement,
@@ -95,16 +95,16 @@ export function createEntryVirtualViews(
 
     // Create the virtual view if it doesn't exist, applying any
     // saved view config from entry metadata.
-    if (!DataViews.get(viewId, false)) {
+    if (!ContentViews.get(viewId, false)) {
       const metadataKey = viewMetadataKey(layout.id, property.name);
       const savedConfig = entry.metadata.embeddedViewConfigs?.[metadataKey];
 
       // Resolve the saved config's durable references into item IDs
       const resolvedConfig = savedConfig
-        ? DataViews.resolveConfig(viewType, savedConfig)
+        ? ContentViews.resolveConfig(viewType, savedConfig)
         : undefined;
 
-      DataViews.createVirtual({
+      ContentViews.createVirtual({
         id: viewId,
         type: viewType,
         dataSource: { type: 'collection', id: collId },

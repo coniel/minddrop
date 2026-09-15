@@ -21,7 +21,7 @@ const BackgroundImageElementTypes = ['container', 'root', 'page-panel'];
 
 // Element types whose static content is a reference set elsewhere
 // rather than editable text.
-const ReferenceContentElementTypes = ['data-view'];
+const ReferenceContentElementTypes = ['content-view'];
 
 export interface ElementContentSectionProps {
   /**
@@ -92,7 +92,7 @@ export const ElementContentSection: React.FC<ElementContentSectionProps> = ({
     return null;
   }
 
-  // Data view elements hold the ID of the data view they render,
+  // Content view elements hold the ID of the content view they render,
   // set by creating the view rather than by typing it
   if (ReferenceContentElementTypes.includes(element.type)) {
     return null;

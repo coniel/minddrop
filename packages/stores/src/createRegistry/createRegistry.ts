@@ -73,7 +73,7 @@ export interface Registry<TItem extends object> {
  * The items are held in an object store, so the registry appears in
  * the store registry and the dev tools store inspector.
  *
- * @param name - The namespaced name for the store registry (e.g. "DataViews:DataViewTypes").
+ * @param name - The namespaced name for the store registry (e.g. "ContentViews:ContentViewTypes").
  * @param identifierKey - The key to use as the identifier for the items.
  * @param options - The registry's label and registration events.
  * @returns The registry.

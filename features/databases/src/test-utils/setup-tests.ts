@@ -1,8 +1,8 @@
 // Registers the store assertion matchers
 import '@minddrop/stores/test-utils';
 import { vi } from 'vitest';
-import { DataViewTypes } from '@minddrop/data-views';
-import { DataViewFixtures } from '@minddrop/data-views/test-utils';
+import { ContentViewTypes } from '@minddrop/content-views';
+import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import {
   DatabaseEntryTemplates,
   DatabaseTemplates,
@@ -28,7 +28,7 @@ import {
 
 const { workspace_1 } = WorkspaceFixtures;
 
-const { dataViewType_table } = DataViewFixtures;
+const { contentViewType_table } = ContentViewFixtures;
 
 interface SetupOptions {
   loadDatabases?: boolean;
@@ -75,7 +75,7 @@ export function setup(
   }
 
   // Load view types into the store
-  DataViewTypes.register(dataViewType_table);
+  ContentViewTypes.register(contentViewType_table);
 }
 
 export async function cleanup(): Promise<void> {
@@ -98,6 +98,6 @@ export async function cleanup(): Promise<void> {
   DatabaseTemplates.Store.clear();
   Designs.Store.clear();
   DesignsNext.Store.clear();
-  DataViewTypes.Store.clear();
+  ContentViewTypes.Store.clear();
   cleanupWorkspaceFixtures();
 }

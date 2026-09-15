@@ -1,4 +1,4 @@
-import { DataViewDeletedEventData } from '@minddrop/data-views';
+import { ContentViewDeletedEventData } from '@minddrop/content-views';
 import { isEntityId } from '@minddrop/utils';
 import { getDatabase } from '../../getDatabase';
 import { removeDatabaseViewFile } from '../../removeDatabaseViewFile';
@@ -10,7 +10,7 @@ import { updateDatabase } from '../../updateDatabase';
  * and removes it from the database's view ID list.
  */
 export async function onDatabaseViewDeleted(
-  data: DataViewDeletedEventData,
+  data: ContentViewDeletedEventData,
 ): Promise<void> {
   if (!data.owner || !isEntityId(data.owner, 'database')) {
     return;

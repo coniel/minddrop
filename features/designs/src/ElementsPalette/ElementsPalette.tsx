@@ -1,4 +1,4 @@
-import { DataViewTypes } from '@minddrop/data-views';
+import { ContentViewTypes } from '@minddrop/content-views';
 import {
   DesignElementConfig,
   DesignRoleConfig,
@@ -15,7 +15,7 @@ import {
   useDesignStudioStore,
 } from '../DesignStudioStore';
 import { isElementInContext } from '../utils';
-import { DataViewTypePaletteItem } from './DataViewTypePaletteItem';
+import { ContentViewTypePaletteItem } from './ContentViewTypePaletteItem';
 import { ElementPaletteItem } from './ElementPaletteItem';
 import { PropertyElementPaletteItem } from './PropertyElementPaletteItem';
 import { RolePaletteItem } from './RolePaletteItem';
@@ -37,17 +37,17 @@ const ElementGroups: { group: ElementGroup; label: TranslationKey }[] = [
 export const ElementsPalette: React.FC = () => {
   const designType = useDesignStudioStore((state) => state.design?.type);
   const layoutType = useActiveLayoutType();
-  const dataViewTypes = DataViewTypes.useAll();
+  const contentViewTypes = ContentViewTypes.useAll();
 
   // Property elements insertable in the current design and layout
   const propertyElements = Designs.getPropertyElementConfigs().filter(
     (config) => isElementInContext(config.context, { designType, layoutType }),
   );
 
-  // Data view elements are listed one per registered data view
+  // Content view elements are listed one per registered content view
   // type, gated on the element being insertable here.
-  const dataViewsInContext = isElementInContext(
-    Designs.elementConfigs.DataView.context,
+  const contentViewsInContext = isElementInContext(
+    Designs.elementConfigs.ContentView.context,
     {
       designType,
       layoutType,
@@ -72,13 +72,13 @@ export const ElementsPalette: React.FC = () => {
         </MenuGroup>
       )}
 
-      {dataViewsInContext && dataViewTypes.length > 0 && (
+      {contentViewsInContext && contentViewTypes.length > 0 && (
         <MenuGroup>
           <MenuLabel label="design-studio.elements.group.views" />
-          {dataViewTypes.map((dataViewType) => (
-            <DataViewTypePaletteItem
-              key={dataViewType.type}
-              dataViewType={dataViewType}
+          {contentViewTypes.map((contentViewType) => (
+            <ContentViewTypePaletteItem
+              key={contentViewType.type}
+              contentViewType={contentViewType}
             />
           ))}
         </MenuGroup>

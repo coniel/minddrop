@@ -1,0 +1,42 @@
+import { vi } from 'vitest';
+import {
+  cleanupContentViewFixtures,
+  setupContentViewFixtures,
+} from '@minddrop/content-views/test-utils';
+import { registerDatabaseEntryFilterAdapter } from '@minddrop/databases/test-utils';
+import { Events } from '@minddrop/events';
+import { Fs } from '@minddrop/file-system';
+import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
+import { Filters } from '@minddrop/filters';
+import { initializeI18n } from '@minddrop/i18n';
+import {
+  cleanupWorkspaceFixtures,
+  setupWorkspaceFixtures,
+} from '@minddrop/workspaces/test-utils';
+
+initializeI18n();
+
+export const MockFs = initializeMockFileSystem();
+
+export function setup() {
+  // Load workspace fixtures required for view file path resolution
+  setupWorkspaceFixtures(MockFs);
+
+  // Load content view fixtures into the store and mock file system
+  setupContentViewFixtures(MockFs);
+
+  // Register the entry filter adapter, as Databases.initialize does
+  registerDatabaseEntryFilterAdapter();
+}
+
+export async function cleanup(): Promise<void> {
+  // Let in-flight file operations settle and reset the mock file
+  // system before clearing the state they may still read.
+  await Fs.tests.cleanup();
+
+  cleanupContentViewFixtures();
+  cleanupWorkspaceFixtures();
+  Filters.unregisterAdapter('database-entry');
+  await Events.tests.cleanup();
+  vi.clearAllMocks();
+}

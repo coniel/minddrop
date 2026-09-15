@@ -3,9 +3,9 @@ import '@minddrop/stores/test-utils';
 import { vi } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import {
-  cleanupDataViewFixtures,
-  setupDataViewFixtures,
-} from '@minddrop/data-views/test-utils';
+  cleanupContentViewFixtures,
+  setupContentViewFixtures,
+} from '@minddrop/content-views/test-utils';
 import { Designs as DesignsNext } from '@minddrop/designs-next';
 import {
   cleanupDesignFixtures,
@@ -52,7 +52,7 @@ export function setup(options?: SetupDatabaseFixturesOptions) {
   // Setup database fixtures
   setupDatabaseFixtures(MockFs, options);
   // Setup external fixtures
-  setupDataViewFixtures(MockFs);
+  setupContentViewFixtures(MockFs);
   setupDesignFixtures(MockFs);
 
   // Register the item reference adapters registered at runtime
@@ -88,7 +88,7 @@ export async function cleanup(): Promise<void> {
   cleanupDatabaseFixtures();
   // Clear external fixtures
   cleanupDesignFixtures();
-  cleanupDataViewFixtures();
+  cleanupContentViewFixtures();
   cleanupWorkspaceFixtures();
   DesignsNext.Store.clear();
 

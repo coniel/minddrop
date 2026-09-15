@@ -1,0 +1,89 @@
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import {
+  ContentView,
+  ContentViewTypes,
+  ContentViews,
+} from '@minddrop/content-views';
+import { CanvasViewConnection, CanvasViewData, CanvasViewNode } from '../types';
+import { CanvasViewType } from './CanvasViewType';
+
+const nodeA: CanvasViewNode = {
+  type: 'entry',
+  id: 'entry-a',
+  x: 0,
+  y: 0,
+  width: 300,
+};
+
+const nodeB: CanvasViewNode = {
+  type: 'entry',
+  id: 'entry-b',
+  x: 400,
+  y: 100,
+  width: 300,
+};
+
+const connection: CanvasViewConnection = {
+  id: 'connection-1',
+  from: { nodeId: 'entry-a', side: 'right' },
+  to: { nodeId: 'entry-b', side: 'left' },
+};
+
+// A virtual canvas view loaded directly into the store, so
+// updates skip file persistence.
+const canvasView: ContentView<object, CanvasViewData> = {
+  id: 'content-view_canvas-test',
+  virtual: true,
+  name: 'Canvas',
+  type: 'canvas',
+  icon: CanvasViewType.icon,
+  dataSource: { type: 'collection', id: 'collection-1' },
+  created: new Date('2026-01-01'),
+  lastModified: new Date('2026-01-01'),
+  data: { nodes: [nodeA, nodeB], connections: [connection] },
+};
+
+describe('CanvasViewType', () => {
+  beforeEach(() => {
+    // Register the type and load the test view into the store
+    ContentViewTypes.register(CanvasViewType);
+    ContentViews.Store.load([canvasView]);
+  });
+
+  afterEach(() => {
+    // Reset the type registry and view store
+    ContentViewTypes.unregister(CanvasViewType.type);
+    ContentViews.Store.clear();
+  });
+
+  it('replaces the node list wholesale on update', async () => {
+    // Persist a node list with a node removed. The update deep
+    // merges, so this asserts that arrays replace rather than
+    // merge, which node removal depends on.
+    await ContentViews.update(canvasView.id, { data: { nodes: [nodeA] } });
+
+    expect(ContentViews.get(canvasView.id).data).toEqual({
+      nodes: [nodeA],
+      connections: [connection],
+    });
+  });
+
+  it('replaces the connection list wholesale on update', async () => {
+    // Persist an empty connection list, asserting that removal
+    // persists and the sibling nodes key is untouched.
+    await ContentViews.update(canvasView.id, { data: { connections: [] } });
+
+    expect(ContentViews.get(canvasView.id).data).toEqual({
+      nodes: [nodeA, nodeB],
+      connections: [],
+    });
+  });
+
+  it('indexes entry node IDs as references', async () => {
+    const updated = await ContentViews.update(canvasView.id, {
+      data: { nodes: [nodeA], connections: [] },
+    });
+
+    expect(updated.references).toEqual(['entry-a']);
+  });
+});

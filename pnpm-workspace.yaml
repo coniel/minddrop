@@ -3,4 +3,4 @@ packages:
   - 'features/*'
   - 'packages/*'
   - 'ui/*'
-  - 'data-views/*'
+  - 'content-views/*'

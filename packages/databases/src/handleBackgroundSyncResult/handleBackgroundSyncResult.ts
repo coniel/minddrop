@@ -1,4 +1,4 @@
-import { DataViews } from '@minddrop/data-views';
+import { ContentViews } from '@minddrop/content-views';
 import { Designs } from '@minddrop/designs-next';
 import { Events } from '@minddrop/events';
 import { ItemAddressChange, ItemReferences } from '@minddrop/item-references';
@@ -61,14 +61,14 @@ export async function handleBackgroundSyncResult(
 
   // Delete views belonging to deleted databases
   for (const id of changeset.deletedDatabaseIds) {
-    const databaseViews = DataViews.getByDataSource(
+    const databaseViews = ContentViews.getByDataSource(
       'database',
       id,
       workspace.id,
     );
 
     for (const view of databaseViews) {
-      DataViews.delete(view.id, workspace.id);
+      ContentViews.delete(view.id, workspace.id);
     }
   }
 
@@ -157,6 +157,9 @@ export async function handleBackgroundSyncResult(
   // referencing them.
   if (changeset.deletedEntryIds.length > 0) {
     await removeEntriesFromCollections(changeset.deletedEntryIds, workspace.id);
-    await DataViews.removeReferences(changeset.deletedEntryIds, workspace.id);
+    await ContentViews.removeReferences(
+      changeset.deletedEntryIds,
+      workspace.id,
+    );
   }
 }
