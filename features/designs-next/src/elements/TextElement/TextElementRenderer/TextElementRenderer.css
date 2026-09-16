@@ -12,3 +12,11 @@
   overflow-wrap: break-word;
   font-family: var(--font-sans);
 }
+
+/* Text held to one line. It overruns into an ellipsis rather than
+   wrapping into a line the block clips. */
+.design-text-element-line {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

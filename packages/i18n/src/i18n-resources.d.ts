@@ -2332,6 +2332,13 @@ declare module 'i18next' {
               label: string;
               placeholder: string;
             };
+            icon: {
+              label: string;
+            };
+            label: {
+              label: string;
+              placeholder: string;
+            };
             text: {
               label: string;
               placeholder: string;
@@ -2350,6 +2357,7 @@ declare module 'i18next' {
             label: string;
             description: string;
             textPlaceholder: string;
+            iconLabel: string;
           };
         };
         filters: {

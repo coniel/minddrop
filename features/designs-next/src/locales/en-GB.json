@@ -11,6 +11,13 @@
         "label": "Heading",
         "placeholder": "Heading"
       },
+      "icon": {
+        "label": "Icon"
+      },
+      "label": {
+        "label": "Label",
+        "placeholder": "Label"
+      },
       "text": {
         "label": "Text",
         "placeholder": "Text"

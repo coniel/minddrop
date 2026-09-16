@@ -1,0 +1,17 @@
+/* The block's box. Sized as a container so the glyph can take the
+   smaller of its two axes. Its line height is zeroed so the glyph's
+   line box adds no height under it. */
+.design-icon-element {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  line-height: 0;
+  container-type: size;
+}
+
+/* The glyph, drawn at the smaller of the block's two axes so it
+   fits whichever way the block is out of square */
+.design-icon-element .content-icon {
+  width: min(100cqw, 100cqh);
+  height: min(100cqw, 100cqh);
+}

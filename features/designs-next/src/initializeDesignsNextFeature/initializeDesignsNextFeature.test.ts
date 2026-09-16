@@ -9,6 +9,10 @@ import {
   EditorTitleElementType,
   HeadingElementConfig,
   HeadingElementType,
+  IconElementConfig,
+  IconElementType,
+  LabelElementConfig,
+  LabelElementType,
   TextElementConfig,
   TextElementType,
 } from '../elements';
@@ -31,6 +35,8 @@ describe('initializeDesignsNextFeature', () => {
     expect(DesignElementConfigs.get(HeadingElementType)).toBe(
       HeadingElementConfig,
     );
+    expect(DesignElementConfigs.get(IconElementType)).toBe(IconElementConfig);
+    expect(DesignElementConfigs.get(LabelElementType)).toBe(LabelElementConfig);
     expect(DesignElementConfigs.get(TextElementType)).toBe(TextElementConfig);
   });
 
@@ -44,5 +50,20 @@ describe('initializeDesignsNextFeature', () => {
         expect(config.propertyTypes).toContain(type);
       });
     });
+  });
+
+  it('starts square elements square and holds them there', () => {
+    initializeDesignsNextFeature();
+
+    // Unequal default spans would insert an out-of-square block,
+    // and a fluid width mode would stretch it on whichever axis
+    // scales with the render width.
+    DesignElementConfigs.getAll()
+      .filter((config) => config.square)
+      .forEach((config) => {
+        expect(config.defaultColumnSpan).toBe(config.defaultRowSpan);
+        expect(config.defaultWidthMode).toBeDefined();
+        expect(config.defaultWidthMode).not.toBe('fluid');
+      });
   });
 });

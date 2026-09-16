@@ -185,7 +185,8 @@
     "content": {
       "label": "Static content",
       "description": "Shown when the element has no property, or its property has no value.",
-      "textPlaceholder": "Static text"
+      "textPlaceholder": "Static text",
+      "iconLabel": "Static icon"
     }
   }
 }

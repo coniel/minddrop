@@ -5,6 +5,8 @@ import {
   EditorElementConfig,
   EditorTitleElementConfig,
   HeadingElementConfig,
+  IconElementConfig,
+  LabelElementConfig,
   TextElementConfig,
 } from '../elements';
 import { locales } from '../locales';
@@ -22,5 +24,7 @@ export function initializeDesignsNextFeature(): void {
   DesignElementConfigs.register(EditorElementConfig);
   DesignElementConfigs.register(EditorTitleElementConfig);
   DesignElementConfigs.register(HeadingElementConfig);
+  DesignElementConfigs.register(IconElementConfig);
+  DesignElementConfigs.register(LabelElementConfig);
   DesignElementConfigs.register(TextElementConfig);
 }
