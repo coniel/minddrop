@@ -129,8 +129,8 @@ export const KanbanViewColumnHeading: React.FC<
 }) => {
   const chipButtonRef = useRef<HTMLButtonElement>(null);
 
-  // Whether the rename was open when the chip was last pressed
-  const renamingOnChipPressRef = useRef(false);
+  // Whether the rename was open when the chip's click began
+  const renamingOnChipClickRef = useRef(false);
 
   // Whether the option's rename popover is open
   const [renamePopoverOpen, setRenamePopoverOpen] = useState(false);
@@ -156,35 +156,37 @@ export const KanbanViewColumnHeading: React.FC<
     setRenamePopoverOpen(true);
   }
 
-  // Rename the column's option, refusing a name another column
-  // already goes by.
+  // Rename the column's option, returning the error to show when
+  // the rename is rejected.
   function handleRename(newValue: string): TranslationKey | void {
-    // Nothing to rename
+    // Check whether the name changed
     if (newValue === column.value) {
       return;
     }
 
-    // Another column already has the name
+    // Check whether another column has the name. If so, it is taken.
     if (existingValues?.includes(newValue)) {
       return 'contentViews.kanban.columns.nameTaken';
     }
 
+    // Hand the rename over
     onRename?.(column.value, newValue);
   }
 
-  // Keep the press on the chip from starting a column drag, which
-  // would capture the pointer and swallow the click. The popover
-  // dismisses itself on a press outside it, so whether the chip
-  // opens or closes the rename is decided here, before that.
+  // Handle the start of the chip's click, before the popover sees it
   function handleChipPointerDown(event: React.PointerEvent) {
+    // Keep the click from starting a column drag, which would
+    // capture the pointer and swallow it.
     event.stopPropagation();
 
-    renamingOnChipPressRef.current = renamePopoverOpen;
+    // Record whether the rename was open, as the popover closes
+    // itself on a click outside it before the click lands here.
+    renamingOnChipClickRef.current = renamePopoverOpen;
   }
 
-  // Open the rename from the chip, unless the press closed it
+  // Open the rename from the chip, unless the click closed it
   function handleChipClick() {
-    if (renamingOnChipPressRef.current) {
+    if (renamingOnChipClickRef.current) {
       return;
     }
 
