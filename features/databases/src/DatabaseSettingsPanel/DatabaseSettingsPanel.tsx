@@ -80,7 +80,7 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
   }
 
   // Commit a name change by renaming the database
-  async function handleNameBlur() {
+  async function handleCommitName() {
     // Skip when the database is missing, the name is blank, or unchanged
     if (!database || name.trim() === '' || name === database.name) {
       return;
@@ -96,7 +96,7 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
   }
 
   // Commit an entry name change
-  function handleEntryNameBlur() {
+  function handleCommitEntryName() {
     // Skip when the database is missing, the value is blank, or unchanged
     if (
       !database ||
@@ -147,7 +147,7 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
   }
 
   // Commit a change to the common property files directory name
-  function handlePropertyFilesDirBlur() {
+  function handleCommitPropertyFilesDir() {
     // Keep the invalid value in place so the user can correct it
     if (validateDirName(propertyFilesDir, true)) {
       return;
@@ -230,7 +230,8 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
           placeholder="databases.form.name.placeholder"
           value={name}
           onValueChange={setName}
-          onBlur={handleNameBlur}
+          onBlur={handleCommitName}
+          onCommit={handleCommitName}
         />
         <TextSetting
           title="databases.form.entryName.label"
@@ -238,7 +239,8 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
           placeholder="databases.form.entryName.placeholder"
           value={entryName}
           onValueChange={setEntryName}
-          onBlur={handleEntryNameBlur}
+          onBlur={handleCommitEntryName}
+          onCommit={handleCommitEntryName}
         />
       </SettingsSection>
 
@@ -286,7 +288,8 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
             value={propertyFilesDir}
             invalid={Boolean(propertyFilesDirError)}
             onValueChange={handlePropertyFilesDirChange}
-            onBlur={handlePropertyFilesDirBlur}
+            onBlur={handleCommitPropertyFilesDir}
+            onCommit={handleCommitPropertyFilesDir}
           />
         )}
       </SettingsSection>

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { TranslationKey } from '@minddrop/i18n';
 import { TextInput } from '@minddrop/ui-primitives';
 import './CanvasNameField.css';
@@ -30,7 +30,6 @@ export const CanvasNameField: React.FC<CanvasNameFieldProps> = ({
   placeholder,
   onNameChange,
 }) => {
-  const inputRef = useRef<HTMLInputElement>(null);
   const [draft, setDraft] = useState(name);
 
   // Follow the name when it is changed elsewhere
@@ -39,7 +38,7 @@ export const CanvasNameField: React.FC<CanvasNameFieldProps> = ({
   }, [name]);
 
   // Commit the edited name, reverting blank names
-  const handleBlur = useCallback(() => {
+  const handleCommit = useCallback(() => {
     const trimmedName = draft.trim();
 
     // Revert to the current name when blank or unchanged
@@ -54,27 +53,16 @@ export const CanvasNameField: React.FC<CanvasNameFieldProps> = ({
     }
   }, [draft, name, onNameChange]);
 
-  // Enter commits the edit by blurring the input
-  const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter') {
-        inputRef.current?.blur();
-      }
-    },
-    [],
-  );
-
   return (
     <TextInput
-      ref={inputRef}
       className="ui-canvas-name-field"
       variant="subtle"
       size="sm"
       value={draft}
       placeholder={placeholder}
       onValueChange={setDraft}
-      onBlur={handleBlur}
-      onKeyDown={handleKeyDown}
+      onBlur={handleCommit}
+      onCommit={handleCommit}
     />
   );
 };

@@ -94,13 +94,6 @@ export const CollectionDetails: React.FC<CollectionDetailsProps> = ({
     Collections.update(collection.id, { name: editedName });
   }
 
-  // Commit the name on Enter by blurring the field
-  function handleNameKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
-    if (event.key === 'Enter') {
-      event.currentTarget.blur();
-    }
-  }
-
   // Select or deselect all of the collection's entries
   function handleSelectAllItems(selected: boolean) {
     setSelectedItemIds(selected ? [...collection.items] : []);
@@ -176,7 +169,7 @@ export const CollectionDetails: React.FC<CollectionDetailsProps> = ({
                 value={name}
                 onValueChange={setName}
                 onBlur={handleCommitName}
-                onKeyDown={handleNameKeyDown}
+                onCommit={handleCommitName}
               />
               <CollectionOptionsMenu collection={collection} />
             </Group>

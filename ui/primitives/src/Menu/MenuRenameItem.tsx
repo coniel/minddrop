@@ -97,12 +97,9 @@ export const MenuRenameItem: React.FC<MenuRenameItemProps> = ({
   };
 
   // Commit the rename on Enter, then submit
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      onRename(localValue);
-      onSubmit?.();
-    }
+  const handleCommit = (committedValue: string) => {
+    onRename(committedValue);
+    onSubmit?.();
   };
 
   return (
@@ -136,7 +133,7 @@ export const MenuRenameItem: React.FC<MenuRenameItemProps> = ({
         placeholder={placeholder}
         onValueChange={handleValueChange}
         onBlur={handleBlur}
-        onKeyDown={handleKeyDown}
+        onCommit={handleCommit}
       />
     </Group>
   );

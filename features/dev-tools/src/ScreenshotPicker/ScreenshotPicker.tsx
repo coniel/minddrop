@@ -183,13 +183,13 @@ export const ScreenshotPicker: React.FC = () => {
     setMode('naming');
   }
 
-  // Start the capture, or cancel it
-  function handleNameKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      capture();
-    }
+  // Start the capture
+  function handleNameCommit() {
+    capture();
+  }
 
+  // Cancel the capture
+  function handleNameKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key === 'Escape') {
       event.preventDefault();
       setMode('idle');
@@ -287,6 +287,7 @@ export const ScreenshotPicker: React.FC = () => {
               placeholder={screenshotsI18nKey('namePlaceholder')}
               unassisted
               onValueChange={setName}
+              onCommit={handleNameCommit}
               onKeyDown={handleNameKeyDown}
             />
           </div>

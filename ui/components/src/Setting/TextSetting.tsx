@@ -24,6 +24,12 @@ export interface TextSettingProps extends Omit<SettingProps, 'control'> {
   onBlur?: FocusEventHandler<HTMLInputElement>;
 
   /**
+   * Callback fired with the input's value when Enter is pressed,
+   * typically used to commit the value.
+   */
+  onCommit?: (value: string) => void;
+
+  /**
    * Placeholder text shown when the input is empty.
    */
   placeholder?: TranslationKey;
@@ -58,6 +64,7 @@ export const TextSetting: React.FC<TextSettingProps> = ({
   value,
   onValueChange,
   onBlur,
+  onCommit,
   placeholder,
   variant = 'filled',
   size = 'md',
@@ -74,6 +81,7 @@ export const TextSetting: React.FC<TextSettingProps> = ({
           value={value}
           onValueChange={onValueChange}
           onBlur={onBlur}
+          onCommit={onCommit}
           placeholder={placeholder}
           variant={variant}
           size={size}
