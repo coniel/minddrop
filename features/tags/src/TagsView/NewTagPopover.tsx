@@ -70,7 +70,7 @@ export const NewTagPopover: React.FC<NewTagPopoverProps> = ({
   const [name, setName] = useState('');
   const [nameTaken, setNameTaken] = useState(false);
   const [icon, setIcon] = useState(Tags.constants.EntityDefaultIcon);
-  const [color, setColor] = useState<ContentColor>('blue');
+  const [color, setColor] = useState<ContentColor>('default');
   const [groupId, setGroupId] = useState<string>(NoGroupValue);
   const setSubview = Views.useSetSubview();
   const groups = TagGroups.useAll();
@@ -78,12 +78,10 @@ export const NewTagPopover: React.FC<NewTagPopoverProps> = ({
   // Reset the staged fields for the next tag when opened
   useEffect(() => {
     if (open) {
-      const nextColor = Tags.resolveNextColor();
-
       setName('');
       setNameTaken(false);
-      setIcon(Icons.applyColor(Tags.constants.EntityDefaultIcon, nextColor));
-      setColor(nextColor);
+      setIcon(Tags.constants.EntityDefaultIcon);
+      setColor('default');
       setGroupId(defaultGroup?.id ?? NoGroupValue);
     }
   }, [open, defaultGroup]);

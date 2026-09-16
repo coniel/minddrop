@@ -27,12 +27,11 @@ describe('createTag', () => {
     expect(tag).toEqual(newTag);
   });
 
-  it('defaults the color to the next color in the rotation', async () => {
-    // Three fixture tags exist, so the rotation yields the fourth
-    // non-default content color.
+  it('leaves the color at the default until one is picked', async () => {
     const tag = await createTag('Work');
 
-    expect(tag.color).toBe('pink');
+    expect(tag.color).toBe('default');
+    expect(tag.icon).toBe('lucide:tag:default');
   });
 
   it('trims the tag name', async () => {
