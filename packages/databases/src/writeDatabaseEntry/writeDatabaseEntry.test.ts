@@ -268,7 +268,9 @@ describe('writeDatabaseEntry', () => {
       },
     );
 
-    await writeDatabaseEntry(collectionEntry1.id, workspace_2.id);
+    await writeDatabaseEntry(collectionEntry1.id, {
+      workspaceId: workspace_2.id,
+    });
 
     const contents = MockFs.readTextFile(
       resolveDatabaseEntryPath(

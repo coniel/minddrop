@@ -129,6 +129,7 @@ export { initializeDatabases as initialize } from './initializeDatabases';
 export { loadWorkspaceDatabases as loadWorkspace } from './loadWorkspaceDatabases';
 export { removeDatabaseProperty as removeProperty } from './removeDatabaseProperty';
 export { renameDatabase as rename } from './renameDatabase';
+export { renameDatabaseProperty as renameProperty } from './renameDatabaseProperty';
 export { renameDatabasePropertyOption as renamePropertyOption } from './renameDatabasePropertyOption';
 export { searchDatabases as search } from './utils';
 export { getRecentDatabases as getRecent } from './utils';

@@ -1,58 +1,57 @@
 import { Collections } from '@minddrop/collections';
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
+import { Properties } from '@minddrop/properties';
 import { DatabasePropertyRenamedEventData } from '../../events';
+import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
+import { renameDatabaseEntriesProperty } from '../../renameDatabaseEntriesProperty';
+import { renameDatabaseEntryTemplatesProperty } from '../../renameDatabaseEntryTemplatesProperty';
+import { renamePropertyFileDir } from '../../renamePropertyFileDir';
 import { sqlRenameProperty } from '../../sql';
-import { Database } from '../../types';
-import { updateDatabase } from '../../updateDatabase';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
 
 /**
- * Called when a database property is renamed. Renames in SQL,
- * remaps the design property map, and updates virtual collection
- * IDs and names.
+ * Called when a database property is renamed. Carries the new name
+ * into everything keyed by the old one.
  */
 export async function onRenameProperty(
   data: DatabasePropertyRenamedEventData,
 ): Promise<void> {
-  const { updated: database, oldName, newName } = data;
+  const { original, updated: database, oldName, newName } = data;
 
   // Rename in SQL
   sqlRenameProperty(database.id, oldName, newName);
 
-  const update: Partial<Database> = {};
+  // Re-key the property's value in the database's entry templates
+  // that have one.
+  await renameDatabaseEntryTemplatesProperty(database.id, oldName, newName);
 
-  // Remap the design property map so any values pointing at the
-  // renamed property use the new name.
-  const remappedDesignPropertyMap = remapPropertyMapValues(
-    database.designPropertyMap,
-    oldName,
-    newName,
+  // Find the property under its old name
+  const oldProperty = original.properties.find(
+    (property) => property.name === oldName,
   );
 
-  if (remappedDesignPropertyMap) {
-    update.designPropertyMap = remappedDesignPropertyMap;
+  // Check the database declared the renamed property
+  if (!oldProperty) {
+    return;
   }
 
-  // Follow the rename when the property colors the entries
-  if (database.colorProperty === oldName) {
-    update.colorProperty = newName;
+  // Re-key the property's value in the database's entries that
+  // have one.
+  await renameDatabaseEntriesProperty(database.id, oldProperty, newName);
+
+  // Move the property's file directory, which only file based
+  // properties have.
+  if (Properties.isFileBased(oldProperty)) {
+    await renamePropertyFileDir(database.id, oldProperty, newName);
   }
 
-  if (Object.keys(update).length) {
-    await updateDatabase(database.id, update);
-  }
-
-  // Check if the renamed property is a collection property
-  const property = database.properties.find((p) => p.name === newName);
-
-  if (!property || property.type !== 'collection') {
+  // Check the renamed property is a collection property. If not,
+  // there is nothing left to do.
+  if (oldProperty.type !== 'collection') {
     return;
   }
 
   // Get entries belonging to this database
-  const entries = DatabaseEntriesStore.getAllArray().filter(
-    (entry) => entry.database === database.id,
-  );
+  const entries = getAllDatabaseEntries(database.id);
 
   // Update virtual collection IDs and names
   await Promise.all(
@@ -70,30 +69,4 @@ export async function onRenameProperty(
       await Collections.update(oldCollectionId, { id: newCollectionId, name });
     }),
   );
-}
-
-/**
- * Returns a copy of the property map with any values equal to
- * `oldName` replaced by `newName`, or null if nothing matched.
- */
-function remapPropertyMapValues(
-  propertyMap: Record<string, string>,
-  oldName: string,
-  newName: string,
-): Record<string, string> | null {
-  let changed = false;
-
-  const remapped = Object.fromEntries(
-    Object.entries(propertyMap).map(([key, value]): [string, string] => {
-      if (value === oldName) {
-        changed = true;
-
-        return [key, newName];
-      }
-
-      return [key, value];
-    }),
-  );
-
-  return changed ? remapped : null;
 }

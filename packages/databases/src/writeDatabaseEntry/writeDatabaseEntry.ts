@@ -1,5 +1,6 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
+import { PropertiesSchema } from '@minddrop/properties';
 import { Workspaces } from '@minddrop/workspaces';
 import { DatabaseEntrySerializersRegistry } from '../DatabaseEntrySerializersRegistry';
 import { DatabaseEntryWrittenEvent } from '../events';
@@ -10,11 +11,26 @@ import {
   serializeCollectionProperties,
 } from '../utils';
 
+export interface WriteDatabaseEntryOptions {
+  /**
+   * Properties which have left the database schema but whose values
+   * must be cleared from the entry's file. Serializers which merge
+   * into the file's existing contents only clear values of properties
+   * the schema declares.
+   */
+  clearedProperties?: PropertiesSchema;
+
+  /**
+   * The workspace the entry belongs to. Omit for the active workspace.
+   */
+  workspaceId?: string;
+}
+
 /**
  * Writes an entry to the file system.
  *
  * @param id - The ID of the entry to write.
- * @param workspaceId - The workspace the entry belongs to. Omit for the active workspace.
+ * @param options - Options for the write.
  *
  * @throws {DatabaseEntryNotFoundError} If the entry does not exist.
  * @throws {DatabaseNotFoundError} If the entry database does not exist.
@@ -24,8 +40,10 @@ import {
  */
 export async function writeDatabaseEntry(
   id: string,
-  workspaceId?: string,
+  options: WriteDatabaseEntryOptions = {},
 ): Promise<void> {
+  const { clearedProperties = [], workspaceId } = options;
+
   // Get the entry
   const entry = getDatabaseEntry(id, true, workspaceId);
 
@@ -58,15 +76,15 @@ export async function writeDatabaseEntry(
     ? await Fs.readTextFile(entryPath)
     : undefined;
 
+  // Declare the cleared properties alongside the schema. A declared
+  // property with no value is how the serializer removes it.
+  const schema = [...database.properties, ...clearedProperties];
+
   // Serialize the entry's properties
   const serializer = DatabaseEntrySerializersRegistry.get(
     database.entrySerializer,
   );
-  const contents = serializer.serialize(
-    database.properties,
-    properties,
-    previousContents,
-  );
+  const contents = serializer.serialize(schema, properties, previousContents);
 
   // Check whether the file already holds what would be written. If so,
   // record it as the app's own contents anyway, or a file the app has

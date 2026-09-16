@@ -1,18 +1,28 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
-import { getDatabase } from '../../getDatabase';
+import { Properties } from '@minddrop/properties';
+import { storeItem } from '@minddrop/stores/test-utils';
+import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
+import { DatabaseEntryTemplatesStore } from '../../DatabaseEntryTemplatesStore';
+import { DatabasesStore } from '../../DatabasesStore';
 import {
   sqlGetAllEntriesFull,
   sqlUpsertDatabase,
   sqlUpsertEntries,
 } from '../../sql';
 import {
+  MockFs,
   cleanup,
   cleanupTestSqlDatabase,
   collectionDatabase,
   collectionEntry1,
   collectionEntry1SqlRecord,
+  databaseDirPath,
+  entryTemplate1,
+  entryTemplatesDatabase,
   objectDatabase,
+  objectEntry1,
+  propertyStorageDatabase,
   setup,
   setupTestSqlDatabase,
 } from '../../test-utils';
@@ -21,21 +31,25 @@ import { virtualCollectionId, virtualCollectionName } from '../../utils';
 import { onRenameProperty } from './property-renamed';
 
 /**
- * Returns a copy of a database with the named property renamed
- * in its schema, matching the updated config carried by the
- * property renamed event.
+ * Renames a property in the stored database config and runs the
+ * rename handler against it, as the rename API function does.
  */
-function withRenamedProperty(
+async function renameProperty(
   database: Database,
   oldName: string,
   newName: string,
-): Database {
-  return {
+): Promise<void> {
+  // Apply the rename to the database config
+  const updated: Database = {
     ...database,
-    properties: database.properties.map((property) =>
-      property.name === oldName ? { ...property, name: newName } : property,
-    ),
+    properties: Properties.rename(database.properties, oldName, newName),
   };
+
+  // Update the stored config
+  DatabasesStore.update(database.id, updated);
+
+  // Run the rename handler
+  await onRenameProperty({ original: database, updated, oldName, newName });
 }
 
 describe('onRenameProperty', () => {
@@ -90,12 +104,7 @@ describe('onRenameProperty', () => {
 
   it("renames the property across the entries' SQL records", async () => {
     // Rename the 'Related' collection property to 'Links'
-    await onRenameProperty({
-      original: collectionDatabase,
-      updated: withRenamedProperty(collectionDatabase, 'Related', 'Links'),
-      oldName: 'Related',
-      newName: 'Links',
-    });
+    await renameProperty(collectionDatabase, 'Related', 'Links');
 
     // Find the entry's SQL record
     const record = sqlGetAllEntriesFull().find(
@@ -114,71 +123,39 @@ describe('onRenameProperty', () => {
     );
   });
 
-  it('remaps design property map values pointing at the renamed property', async () => {
-    // Rename 'Content' to 'Body' with a design property map that
-    // maps a design property onto it.
-    const original = {
-      ...objectDatabase,
-      designPropertyMap: { Heading: 'Content', Cover: 'Icon' },
-    };
+  it("re-keys the property in the database's entries", async () => {
+    await renameProperty(objectDatabase, 'Icon', 'Symbol');
 
-    await onRenameProperty({
-      original,
-      updated: withRenamedProperty(original, 'Content', 'Body'),
-      oldName: 'Content',
-      newName: 'Body',
-    });
-
-    // The map value pointing at 'Content' should now point at 'Body',
-    // other entries left untouched
-    expect(getDatabase(objectDatabase.id).designPropertyMap).toEqual({
-      Heading: 'Body',
-      Cover: 'Icon',
-    });
+    // The entry should hold its value under the new name
+    expect(
+      storeItem(DatabaseEntriesStore, objectEntry1.id).properties.Symbol,
+    ).toBe(objectEntry1.properties.Icon);
   });
 
-  it('follows the rename when the property colors the entries', async () => {
-    const original = {
-      ...objectDatabase,
-      colorProperty: 'Content',
-    };
+  it("re-keys the property in the database's entry templates", async () => {
+    await renameProperty(entryTemplatesDatabase, 'Notes', 'Details');
 
-    await onRenameProperty({
-      original,
-      updated: withRenamedProperty(original, 'Content', 'Body'),
-      oldName: 'Content',
-      newName: 'Body',
-    });
-
-    // The color property setting should follow the rename
-    expect(getDatabase(objectDatabase.id).colorProperty).toBe('Body');
+    // The template should hold its value under the new name
+    expect(
+      storeItem(DatabaseEntryTemplatesStore, entryTemplate1.id).properties
+        .Details,
+    ).toBe(entryTemplate1.properties.Notes);
   });
 
-  it('does not update the database when no map value matches', async () => {
-    const original = {
-      ...objectDatabase,
-      designPropertyMap: { Heading: 'Content' },
-    };
+  it("renames the property's file directory", async () => {
+    await renameProperty(propertyStorageDatabase, 'Image', 'Cover');
 
-    await onRenameProperty({
-      original,
-      updated: withRenamedProperty(original, 'Icon', 'Symbol'),
-      oldName: 'Icon',
-      newName: 'Symbol',
-    });
-
-    // The design property map should be unchanged
-    expect(getDatabase(objectDatabase.id).designPropertyMap).toEqual({});
+    // The property's files should have moved to the new directory
+    expect(
+      MockFs.exists(
+        `${databaseDirPath(propertyStorageDatabase)}/Cover/image.png`,
+      ),
+    ).toBe(true);
   });
 
   it('does nothing if the renamed property is not a collection type', async () => {
     // Rename a non-collection property
-    await onRenameProperty({
-      original: objectDatabase,
-      updated: withRenamedProperty(objectDatabase, 'Content', 'Body'),
-      oldName: 'Content',
-      newName: 'Body',
-    });
+    await renameProperty(objectDatabase, 'Content', 'Body');
 
     // Virtual collections should be unchanged
     const related = Collections.Store.get(
@@ -189,12 +166,7 @@ describe('onRenameProperty', () => {
 
   it('replaces virtual collections with new ones under the new property name', async () => {
     // Rename the 'Related' collection property to 'Links'
-    await onRenameProperty({
-      original: collectionDatabase,
-      updated: withRenamedProperty(collectionDatabase, 'Related', 'Links'),
-      oldName: 'Related',
-      newName: 'Links',
-    });
+    await renameProperty(collectionDatabase, 'Related', 'Links');
 
     // The old virtual collection should be deleted
     const oldCollection = Collections.Store.get(
@@ -222,12 +194,7 @@ describe('onRenameProperty', () => {
 
   it('does not affect other collection properties', async () => {
     // Rename the 'Related' collection property
-    await onRenameProperty({
-      original: collectionDatabase,
-      updated: withRenamedProperty(collectionDatabase, 'Related', 'Links'),
-      oldName: 'Related',
-      newName: 'Links',
-    });
+    await renameProperty(collectionDatabase, 'Related', 'Links');
 
     // The 'References' virtual collection should be unchanged
     const references = Collections.Store.get(

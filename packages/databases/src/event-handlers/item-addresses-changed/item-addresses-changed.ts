@@ -42,7 +42,7 @@ export async function onItemAddressesChanged(
   // Rewrite each referencing entry's file
   await Promise.all(
     referencingEntries.map((entry) =>
-      writeDatabaseEntry(entry.id, workspaceId),
+      writeDatabaseEntry(entry.id, { workspaceId }),
     ),
   );
 
