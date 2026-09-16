@@ -1,7 +1,9 @@
 import { ContentViews } from '@minddrop/content-views';
+import { Databases } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { I18n, i18n } from '@minddrop/i18n';
 import { Views } from '@minddrop/views';
+import { onDatabasePropertyRenamed } from '../event-handlers';
 import {
   ContentViewViewName,
   ContentViewsViewName,
@@ -25,7 +27,8 @@ const NEW_CONTENT_VIEW_VIEW_ICON = 'lucide:plus:inherit';
 /**
  * Initializes the content views feature by registering translations
  * and event listeners for opening, updating, and closing data
- * view views.
+ * view views, and for keeping the views' sort options following
+ * their sort property's renames.
  *
  * @returns A cleanup function which removes the event listeners.
  */
@@ -100,11 +103,19 @@ export function initializeContentViewsFeature(): VoidFunction {
     });
   });
 
+  // Update the sort options of the views sorted by a renamed property
+  Events.addListener(
+    Databases.events.PropertyRenamed,
+    EventListenerId,
+    onDatabasePropertyRenamed,
+  );
+
   return () => {
     Events.removeListener(OpenContentViewViewEvent, EventListenerId);
     Events.removeListener(OpenContentViewsViewEvent, EventListenerId);
     Events.removeListener(OpenNewContentViewViewEvent, EventListenerId);
     Events.removeListener(ContentViews.events.Updated, EventListenerId);
     Events.removeListener(ContentViews.events.Deleted, EventListenerId);
+    Events.removeListener(Databases.events.PropertyRenamed, EventListenerId);
   };
 }
