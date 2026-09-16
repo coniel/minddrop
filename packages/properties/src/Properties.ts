@@ -32,5 +32,6 @@ export {
   isFileBasedProperty as isFileBased,
   isMultiselectProperty as isMultiselect,
   isUrlProperty as isUrl,
+  renameSchemaProperty as rename,
   resolveNewOptionColor,
 } from './utils';
