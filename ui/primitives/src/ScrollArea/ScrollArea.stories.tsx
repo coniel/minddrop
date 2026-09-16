@@ -162,55 +162,43 @@ export const ScrollAreaStories = () => (
     </StorySection>
 
     {/* --------------------------------------------------------
-        END PADDING
+        PADDING
     -------------------------------------------------------- */}
     <StorySection
-      title="endPadding"
-      description="Whitespace kept after the content along the scroll axis, so it does not sit against the far edge when scrolled to the end. Scroll to the bottom of each."
+      title="Padding"
+      description="Whitespace inside the viewport, on the space token scale. Start and end run along the scroll axis, sides along the cross axis, keeping the content clear of the overlay scrollbar."
     >
       <StoryRow>
         <StoryItem label="none">
           <VerticalScrollArea style={{ height: 240, ...containerStyle }}>
-            <div style={{ padding: 'var(--space-3)' }}>
-              <LoremParagraphs count={6} />
-            </div>
+            <LoremParagraphs count={6} />
           </VerticalScrollArea>
         </StoryItem>
-        <StoryItem label="sm">
+        <StoryItem label="sidePadding 3">
           <VerticalScrollArea
-            endPadding="sm"
+            sidePadding={3}
             style={{ height: 240, ...containerStyle }}
           >
-            <div style={{ padding: 'var(--space-3)' }}>
-              <LoremParagraphs count={6} />
-            </div>
+            <LoremParagraphs count={6} />
           </VerticalScrollArea>
         </StoryItem>
-        <StoryItem label="md">
+        <StoryItem label="startPadding 3, endPadding 7">
           <VerticalScrollArea
-            endPadding="md"
+            startPadding={3}
+            endPadding={7}
+            sidePadding={3}
             style={{ height: 240, ...containerStyle }}
           >
-            <div style={{ padding: 'var(--space-3)' }}>
-              <LoremParagraphs count={6} />
-            </div>
-          </VerticalScrollArea>
-        </StoryItem>
-        <StoryItem label="lg">
-          <VerticalScrollArea
-            endPadding="lg"
-            style={{ height: 240, ...containerStyle }}
-          >
-            <div style={{ padding: 'var(--space-3)' }}>
-              <LoremParagraphs count={6} />
-            </div>
+            <LoremParagraphs count={6} />
           </VerticalScrollArea>
         </StoryItem>
       </StoryRow>
       <StoryRow>
-        <StoryItem label="horizontal lg">
+        <StoryItem label="horizontal, all sides 4">
           <HorizontalScrollArea
-            endPadding="lg"
+            startPadding={4}
+            endPadding={4}
+            sidePadding={4}
             style={{ width: 400, ...containerStyle }}
           >
             <WideContent />

@@ -7,7 +7,7 @@ import './ScrollArea.css';
 
 export type ScrollAreaVisibility = 'hover' | 'scroll' | 'always';
 
-export type ScrollAreaEndPadding = 'sm' | 'md' | 'lg';
+export type ScrollAreaPadding = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
 /* ============================================================
    PRIMITIVE RE-EXPORTS
@@ -47,10 +47,20 @@ export interface ScrollAreaProps {
    */
   stateKey?: string;
   /*
-   * Whitespace kept below the content, so that it does not sit
-   * against the bottom edge when scrolled to the end.
+   * Whitespace above the content, on the space token scale.
    */
-  endPadding?: ScrollAreaEndPadding;
+  startPadding?: ScrollAreaPadding;
+  /*
+   * Whitespace below the content, on the space token scale, so
+   * that it does not sit against the bottom edge when scrolled to
+   * the end.
+   */
+  endPadding?: ScrollAreaPadding;
+  /*
+   * Whitespace to the left and right of the content, on the space
+   * token scale, keeping it clear of the overlay scrollbar.
+   */
+  sidePadding?: ScrollAreaPadding;
   /*
    * Ref to the scrollable viewport element, for consumers which
    * scroll it programmatically.
@@ -66,7 +76,9 @@ export const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
       children,
       visibility = 'scroll',
       stateKey,
+      startPadding,
       endPadding,
+      sidePadding,
       viewportRef: externalViewportRef,
       className,
       style,
@@ -102,7 +114,9 @@ export const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
         ref={setRef}
         className={propsToClass('scroll-area', {
           visibility,
+          startPadding,
           endPadding,
+          sidePadding,
           className,
         })}
         style={style}

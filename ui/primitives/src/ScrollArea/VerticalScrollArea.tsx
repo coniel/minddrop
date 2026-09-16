@@ -1,7 +1,7 @@
 import { ScrollArea as ScrollAreaPrimitive } from '@base-ui/react/scroll-area';
 import React from 'react';
 import { propsToClass } from '../utils';
-import type { ScrollAreaEndPadding, ScrollAreaVisibility } from './ScrollArea';
+import type { ScrollAreaPadding, ScrollAreaVisibility } from './ScrollArea';
 import { useScrollStatePersistence } from './useScrollStatePersistence';
 import { useScrollVisibility } from './useScrollVisibility';
 
@@ -20,10 +20,20 @@ export interface VerticalScrollAreaProps {
    */
   stateKey?: string;
   /*
-   * Whitespace kept below the content, so that it does not sit
-   * against the bottom edge when scrolled to the end.
+   * Whitespace above the content, on the space token scale.
    */
-  endPadding?: ScrollAreaEndPadding;
+  startPadding?: ScrollAreaPadding;
+  /*
+   * Whitespace below the content, on the space token scale, so
+   * that it does not sit against the bottom edge when scrolled to
+   * the end.
+   */
+  endPadding?: ScrollAreaPadding;
+  /*
+   * Whitespace to the left and right of the content, on the space
+   * token scale, keeping it clear of the overlay scrollbar.
+   */
+  sidePadding?: ScrollAreaPadding;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -33,7 +43,16 @@ export const VerticalScrollArea = React.forwardRef<
   VerticalScrollAreaProps
 >(
   (
-    { children, visibility = 'hover', stateKey, endPadding, className, style },
+    {
+      children,
+      visibility = 'hover',
+      stateKey,
+      startPadding,
+      endPadding,
+      sidePadding,
+      className,
+      style,
+    },
     ref,
   ) => {
     const { setRef, handleScroll } = useScrollVisibility(visibility, ref);
@@ -55,7 +74,9 @@ export const VerticalScrollArea = React.forwardRef<
         ref={setRef}
         className={propsToClass('scroll-area', {
           visibility,
+          startPadding,
           endPadding,
+          sidePadding,
           className,
         })}
         style={style}

@@ -1,7 +1,7 @@
 import { ScrollArea as ScrollAreaPrimitive } from '@base-ui/react/scroll-area';
 import React from 'react';
 import { propsToClass } from '../utils';
-import type { ScrollAreaEndPadding, ScrollAreaVisibility } from './ScrollArea';
+import type { ScrollAreaPadding, ScrollAreaVisibility } from './ScrollArea';
 import { useScrollStatePersistence } from './useScrollStatePersistence';
 import { useScrollVisibility } from './useScrollVisibility';
 
@@ -20,10 +20,20 @@ export interface HorizontalScrollAreaProps {
    */
   stateKey?: string;
   /*
-   * Whitespace kept after the content, so that it does not sit
-   * against the trailing edge when scrolled to the end.
+   * Whitespace before the content, on the space token scale.
    */
-  endPadding?: ScrollAreaEndPadding;
+  startPadding?: ScrollAreaPadding;
+  /*
+   * Whitespace after the content, on the space token scale, so
+   * that it does not sit against the trailing edge when scrolled
+   * to the end.
+   */
+  endPadding?: ScrollAreaPadding;
+  /*
+   * Whitespace above and below the content, on the space token
+   * scale, keeping it clear of the overlay scrollbar.
+   */
+  sidePadding?: ScrollAreaPadding;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -33,7 +43,16 @@ export const HorizontalScrollArea = React.forwardRef<
   HorizontalScrollAreaProps
 >(
   (
-    { children, visibility = 'hover', stateKey, endPadding, className, style },
+    {
+      children,
+      visibility = 'hover',
+      stateKey,
+      startPadding,
+      endPadding,
+      sidePadding,
+      className,
+      style,
+    },
     ref,
   ) => {
     const { setRef, handleScroll } = useScrollVisibility(visibility, ref);
@@ -56,7 +75,9 @@ export const HorizontalScrollArea = React.forwardRef<
         className={propsToClass('scroll-area', {
           horizontal: true,
           visibility,
+          startPadding,
           endPadding,
+          sidePadding,
           className,
         })}
         style={style}

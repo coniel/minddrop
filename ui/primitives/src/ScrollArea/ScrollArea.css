@@ -10,6 +10,13 @@
 .scroll-area {
   position: relative;
   overflow: hidden;
+
+  /* Reset on every root, so that a scroll area nested inside another
+     does not inherit the outer padding. Declared before the padding
+     step classes, which share its specificity and so override it */
+  --scroll-area-padding-start: 0;
+  --scroll-area-padding-end: 0;
+  --scroll-area-padding-side: 0;
 }
 
 /* --- Viewport --- */
@@ -25,35 +32,112 @@
   }
 }
 
-/* --- End padding --- */
+/* --- Padding --- */
 
-/* Whitespace kept after the content along the scroll axis, so it
-   does not sit against the far edge when scrolled to the end.
-   Scoped to the root's own viewport, so that a scroll area nested
-   inside another does not inherit the outer padding */
-.scroll-area-end-padding-sm {
-  --scroll-area-end-padding: var(--space-4);
+/* Whitespace kept inside the viewport, so that the content does not
+   sit against the edges or under the overlay scrollbar. Start and end
+   run along the scroll axis, sides along the cross axis */
+
+.scroll-area-start-padding-0 {
+  --scroll-area-padding-start: 0;
+}
+.scroll-area-start-padding-1 {
+  --scroll-area-padding-start: var(--space-1);
+}
+.scroll-area-start-padding-2 {
+  --scroll-area-padding-start: var(--space-2);
+}
+.scroll-area-start-padding-3 {
+  --scroll-area-padding-start: var(--space-3);
+}
+.scroll-area-start-padding-4 {
+  --scroll-area-padding-start: var(--space-4);
+}
+.scroll-area-start-padding-5 {
+  --scroll-area-padding-start: var(--space-5);
+}
+.scroll-area-start-padding-6 {
+  --scroll-area-padding-start: var(--space-6);
+}
+.scroll-area-start-padding-7 {
+  --scroll-area-padding-start: var(--space-7);
+}
+.scroll-area-start-padding-8 {
+  --scroll-area-padding-start: var(--space-8);
 }
 
-.scroll-area-end-padding-md {
-  --scroll-area-end-padding: var(--space-6);
+.scroll-area-end-padding-0 {
+  --scroll-area-padding-end: 0;
+}
+.scroll-area-end-padding-1 {
+  --scroll-area-padding-end: var(--space-1);
+}
+.scroll-area-end-padding-2 {
+  --scroll-area-padding-end: var(--space-2);
+}
+.scroll-area-end-padding-3 {
+  --scroll-area-padding-end: var(--space-3);
+}
+.scroll-area-end-padding-4 {
+  --scroll-area-padding-end: var(--space-4);
+}
+.scroll-area-end-padding-5 {
+  --scroll-area-padding-end: var(--space-5);
+}
+.scroll-area-end-padding-6 {
+  --scroll-area-padding-end: var(--space-6);
+}
+.scroll-area-end-padding-7 {
+  --scroll-area-padding-end: var(--space-7);
+}
+.scroll-area-end-padding-8 {
+  --scroll-area-padding-end: var(--space-8);
 }
 
-.scroll-area-end-padding-lg {
-  --scroll-area-end-padding: var(--space-8);
+.scroll-area-side-padding-0 {
+  --scroll-area-padding-side: 0;
+}
+.scroll-area-side-padding-1 {
+  --scroll-area-padding-side: var(--space-1);
+}
+.scroll-area-side-padding-2 {
+  --scroll-area-padding-side: var(--space-2);
+}
+.scroll-area-side-padding-3 {
+  --scroll-area-padding-side: var(--space-3);
+}
+.scroll-area-side-padding-4 {
+  --scroll-area-padding-side: var(--space-4);
+}
+.scroll-area-side-padding-5 {
+  --scroll-area-padding-side: var(--space-5);
+}
+.scroll-area-side-padding-6 {
+  --scroll-area-padding-side: var(--space-6);
+}
+.scroll-area-side-padding-7 {
+  --scroll-area-padding-side: var(--space-7);
+}
+.scroll-area-side-padding-8 {
+  --scroll-area-padding-side: var(--space-8);
 }
 
-.scroll-area-end-padding-sm,
-.scroll-area-end-padding-md,
-.scroll-area-end-padding-lg {
-  > .scroll-area-viewport {
-    padding-bottom: var(--scroll-area-end-padding);
-  }
+/* Vertical scroll areas: start and end are top and bottom, the sides
+   are left and right */
+.scroll-area:not(.scroll-area-horizontal) > .scroll-area-viewport {
+  padding-top: var(--scroll-area-padding-start);
+  padding-bottom: var(--scroll-area-padding-end);
+  padding-left: var(--scroll-area-padding-side);
+  padding-right: var(--scroll-area-padding-side);
+}
 
-  &.scroll-area-horizontal > .scroll-area-viewport {
-    padding-bottom: 0;
-    padding-right: var(--scroll-area-end-padding);
-  }
+/* Horizontal scroll areas: start and end are left and right, the
+   sides are top and bottom */
+.scroll-area-horizontal > .scroll-area-viewport {
+  padding-left: var(--scroll-area-padding-start);
+  padding-right: var(--scroll-area-padding-end);
+  padding-top: var(--scroll-area-padding-side);
+  padding-bottom: var(--scroll-area-padding-side);
 }
 
 /* --- Scrollbar (track container) --- */
