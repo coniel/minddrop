@@ -40,8 +40,12 @@ export interface NamePopoverProps {
 
   /**
    * Callback fired with the trimmed name when it is committed.
+   * Return an error message for an invalid name. The naming stays
+   * open and shows it below the field.
    */
-  onSubmit: (name: string) => void;
+  onSubmit: (
+    name: string,
+  ) => TranslationKey | void | Promise<TranslationKey | void>;
 
   /**
    * The stringified content icon shown beside the field. Given
@@ -74,11 +78,6 @@ export interface NamePopoverProps {
    * @default false
    */
   commitOnClose?: boolean;
-
-  /**
-   * Message shown below the field, e.g. when the name is taken.
-   */
-  error?: TranslationKey;
 
   /**
    * Accessible label of the button which picks the icon.
@@ -120,30 +119,45 @@ export const NamePopover: React.FC<NamePopoverProps> = ({
   color,
   onColorChange,
   commitOnClose = false,
-  error,
   iconLabel,
   colorLabel,
   submitLabel,
   className,
 }) => {
   const [name, setName] = useState(defaultValue);
+  const [error, setError] = useState<TranslationKey | null>(null);
 
   // Reset the field for the next naming when opened
   useEffect(() => {
     if (open) {
       setName(defaultValue);
+      setError(null);
     }
   }, [open, defaultValue]);
 
-  // Committing the name is the end of the naming
-  function handleSubmit(submittedName: string) {
-    onSubmit(submittedName);
+  // Commit the name and close, unless the consumer rejects it
+  async function handleSubmit(submittedName: string) {
+    const submitError = await onSubmit(submittedName);
+
+    // Show the error and leave the naming open
+    if (submitError) {
+      setError(submitError);
+
+      return;
+    }
+
     onOpenChange(false);
+  }
+
+  // Clear the error while the next name is typed
+  function handleValueChange(value: string) {
+    setName(value);
+    setError(null);
   }
 
   // Closing the popover settles the name for a consumer which asked
   // for that, whether it was dismissed with a press outside it or by
-  // the focus leaving it. Escape is the one close which does not: it
+  // the focus leaving it. Escape is the one close which does not. It
   // cancels, leaving the name as it was.
   function handleOpenChange(
     nextOpen: boolean,
@@ -174,14 +188,14 @@ export const NamePopover: React.FC<NamePopoverProps> = ({
           <PopoverContent className={`name-popover ${className ?? ''}`.trim()}>
             <NameForm
               value={name}
-              onValueChange={setName}
+              onValueChange={handleValueChange}
               placeholder={placeholder}
               onSubmit={handleSubmit}
               icon={icon}
               onIconChange={onIconChange}
               color={color}
               onColorChange={onColorChange}
-              error={error}
+              error={error ?? undefined}
               iconLabel={iconLabel}
               colorLabel={colorLabel}
               submitLabel={submitLabel}

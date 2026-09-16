@@ -5,6 +5,7 @@ import {
   render,
   screen,
   userEvent,
+  waitFor,
 } from '@minddrop/test-utils';
 import { NamePopover } from './NamePopover';
 
@@ -20,7 +21,9 @@ describe('<NamePopover />', () => {
         open
         defaultValue="A name"
         onOpenChange={(open) => openStates.push(open)}
-        onSubmit={(name) => committed.push(name)}
+        onSubmit={(name) => {
+          committed.push(name);
+        }}
         {...props}
       />,
     );
@@ -34,7 +37,7 @@ describe('<NamePopover />', () => {
     expect(screen.getByRole('textbox')).toHaveValue('A name');
   });
 
-  it('commits the name on Enter', () => {
+  it('commits the name on Enter', async () => {
     const { committed, openStates } = init();
 
     const field = screen.getByRole('textbox');
@@ -43,7 +46,10 @@ describe('<NamePopover />', () => {
     fireEvent.keyDown(field, { key: 'Enter' });
 
     expect(committed).toEqual(['A new name']);
-    expect(openStates).toEqual([false]);
+
+    await waitFor(() => {
+      expect(openStates).toEqual([false]);
+    });
   });
 
   it('commits the name from the check button', async () => {
@@ -56,7 +62,10 @@ describe('<NamePopover />', () => {
     await userEvent.click(screen.getByLabelText('actions.save'));
 
     expect(committed).toEqual(['A new name']);
-    expect(openStates).toEqual([false]);
+
+    await waitFor(() => {
+      expect(openStates).toEqual([false]);
+    });
   });
 
   it('commits the name without the spaces around it', () => {
@@ -101,10 +110,40 @@ describe('<NamePopover />', () => {
     expect(screen.getByLabelText('actions.pickColor')).toBeInTheDocument();
   });
 
-  it('shows the error it is given', () => {
-    init({ error: 'formErrors.required' });
+  describe('a name the consumer refuses', () => {
+    // Renders a popover whose consumer refuses every name
+    function initRefusing() {
+      return init({ onSubmit: () => 'formErrors.required' });
+    }
 
-    expect(screen.getByText('formErrors.required')).toBeInTheDocument();
+    it('leaves the naming open, showing what was wrong', async () => {
+      const { openStates } = initRefusing();
+
+      const field = screen.getByRole('textbox');
+
+      fireEvent.change(field, { target: { value: 'A new name' } });
+      fireEvent.keyDown(field, { key: 'Enter' });
+
+      expect(
+        await screen.findByText('formErrors.required'),
+      ).toBeInTheDocument();
+      expect(openStates).toEqual([]);
+    });
+
+    it('takes what was wrong back while the next name is typed', async () => {
+      initRefusing();
+
+      const field = screen.getByRole('textbox');
+
+      fireEvent.change(field, { target: { value: 'A new name' } });
+      fireEvent.keyDown(field, { key: 'Enter' });
+
+      await screen.findByText('formErrors.required');
+
+      fireEvent.change(field, { target: { value: 'Another name' } });
+
+      expect(screen.queryByText('formErrors.required')).toBeNull();
+    });
   });
   describe('commitOnClose', () => {
     it('commits the name when the popover is dismissed', async () => {
