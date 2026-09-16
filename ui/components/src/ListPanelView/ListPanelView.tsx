@@ -320,7 +320,11 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
             {addAction}
           </Group>
 
-          <ScrollArea className="list-panel-view-list-items">
+          <ScrollArea
+            className="list-panel-view-list-items"
+            sidePadding={2}
+            endPadding={2}
+          >
             {grouped && groups ? (
               /* The items under the groups they belong to */
               <EntityGroupList

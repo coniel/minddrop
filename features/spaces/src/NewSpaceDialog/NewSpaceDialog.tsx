@@ -112,7 +112,7 @@ export const NewSpaceDialog: React.FC<NewSpaceDialogProps> = ({
     <DialogRoot open={dialogOpen} onOpenChange={toggleDialog}>
       <Dialog className="new-space-dialog">
         <div className="left-column">
-          <ScrollArea>
+          <ScrollArea startPadding={2} sidePadding={2} endPadding={2}>
             <MenuGroup>
               <MenuLabel label="spaces.form.labels.templates" />
               {/* The blank space is the only template for now */}

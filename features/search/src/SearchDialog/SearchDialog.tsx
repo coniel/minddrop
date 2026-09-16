@@ -138,7 +138,7 @@ export const SearchDialog: React.FC = () => {
         {/* Results area, hidden when there is no query */}
         {query.trim() && (
           <div className="search-dialog-results">
-            <ScrollArea>
+            <ScrollArea startPadding={2} sidePadding={2} endPadding={2}>
               <Stack className="search-dialog-results-content">
                 {results.map((result, index) => {
                   const itemProps = getItemProps(index);

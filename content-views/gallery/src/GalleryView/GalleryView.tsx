@@ -93,6 +93,8 @@ export const GalleryViewComponent: React.FC<
       <ScrollArea
         className="gallery-view-scroll"
         stateKey="content"
+        startPadding={4}
+        sidePadding={4}
         ref={scrollAreaRef}
       >
         <DatabaseEntryContextProvider optionsMenu source={view.dataSource}>

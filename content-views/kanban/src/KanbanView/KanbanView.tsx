@@ -521,7 +521,7 @@ export const KanbanViewComponent: React.FC<
   // Space kept under the cards when the board scrolls them. With
   // the columns scrolling on their own the board only scrolls
   // horizontally, and carries its bottom padding itself.
-  const boardEndPadding = columnScroll ? undefined : 'lg';
+  const boardEndPadding = columnScroll ? undefined : 8;
 
   // Check that a select property is available. Without one there
   // are no columns to generate.

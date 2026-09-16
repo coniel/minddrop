@@ -214,7 +214,7 @@ export const NotebookViewComponent: React.FC<
               <ScrollArea
                 className="notebook-view-page-scroll"
                 stateKey="page"
-                endPadding="lg"
+                endPadding={8}
               >
                 <DatabaseEntryRenderer
                   key={selectedEntryId}

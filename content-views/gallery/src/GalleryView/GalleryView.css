@@ -22,7 +22,6 @@
 /* Columns are sized by the minimum column width rather than by a
    count, so the browser fits the columns to the available width */
 .gallery-view-content {
-  padding: var(--space-4);
   column-width: var(--gallery-min-column-width, 300px);
   column-gap: var(--gallery-gap, 1rem);
 }

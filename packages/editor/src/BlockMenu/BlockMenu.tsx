@@ -201,7 +201,12 @@ export const BlockMenu: React.FC<BlockMenuProps> = ({
               onMouseDown={handlePopupMouseDown}
               onClick={stopPropagation}
             >
-              <ScrollArea className="block-menu-scroll-area">
+              <ScrollArea
+                className="block-menu-scroll-area"
+                startPadding={1}
+                sidePadding={1}
+                endPadding={1}
+              >
                 <MenuGroup>
                   {menuItems.map((menuItem, index) => (
                     <MenuItem

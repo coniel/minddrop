@@ -12,12 +12,12 @@
   flex: 1;
 }
 
-/* The cards scroll all the way to the column's bottom edge, so
-   the space under them moves inside the scrollport as the scroll
-   area's end padding, where it follows the last card rather than
-   cropping it */
+/* The cards scroll all the way to the column's edges, so the
+   space around them moves inside the scrollport as the scroll
+   area's own padding, where it follows the last card rather than
+   cropping it and keeps the scrollbar off the cards */
 .kanban-view-columns-scroll .kanban-view-column {
-  padding-bottom: 0;
+  padding: 0;
 }
 
 /* Fills the scrollport, where the flex growth sizing the

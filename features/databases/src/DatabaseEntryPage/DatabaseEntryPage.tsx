@@ -27,7 +27,7 @@ export const DatabaseEntryPage: React.FC<DatabaseEntryRendererProps> = (
       <ScrollArea
         className="database-entry-page-content"
         stateKey="content"
-        endPadding="lg"
+        endPadding={8}
       >
         <DatabaseEntryRenderer {...props} />
       </ScrollArea>

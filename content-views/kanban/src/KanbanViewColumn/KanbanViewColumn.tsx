@@ -97,8 +97,8 @@ export const KanbanViewColumn: React.FC<KanbanViewColumnProps> = ({
       {scroll ? (
         <ScrollArea
           className="kanban-view-column-scroll"
-          visibility="hover"
-          endPadding="lg"
+          sidePadding={2}
+          endPadding={8}
           stateKey={`kanban-column-${column.value}`}
         >
           {dropContainer}

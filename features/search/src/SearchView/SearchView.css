@@ -8,10 +8,6 @@
     min-height: 0;
   }
 
-  .search-view-content {
-    padding: var(--space-2);
-  }
-
   .search-view-heading,
   .search-view-empty {
     padding: var(--space-1) var(--space-2);

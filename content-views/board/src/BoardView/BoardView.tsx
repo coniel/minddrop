@@ -512,6 +512,8 @@ export const BoardViewComponent: React.FC<
       ref={scrollRootRef}
       className="board-view-scroll floating-toolbar-host"
       stateKey="content"
+      startPadding={4}
+      sidePadding={4}
     >
       <DatabaseEntryContextProvider
         draggable

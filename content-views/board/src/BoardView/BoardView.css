@@ -17,8 +17,8 @@
 }
 
 .board-view {
-  padding: var(--space-4);
-  /* Leave room for the floating toolbar */
+  /* Leave room for the floating toolbar. The remaining insets are
+     the scroll area's own padding */
   padding-bottom: calc(var(--space-7) + var(--space-5));
   min-height: 100%;
   align-items: stretch;

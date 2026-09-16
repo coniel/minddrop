@@ -226,8 +226,13 @@ export const SearchView: React.FC = () => {
   return (
     <PanelView className="search-view" header={searchInput}>
       {/* Results, or the recent entries when there is no query */}
-      <ScrollArea className="search-view-list">
-        <Stack className="search-view-content" gap={1}>
+      <ScrollArea
+        className="search-view-list"
+        startPadding={2}
+        sidePadding={2}
+        endPadding={2}
+      >
+        <Stack gap={1}>
           {/* Heading above the recent entries */}
           {!showingResults && recentEntries.length > 0 && (
             <Text

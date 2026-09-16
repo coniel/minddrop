@@ -162,7 +162,7 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
     <DialogRoot open={dialogOpen} onOpenChange={toggleDialog}>
       <Dialog className="new-database-dialog">
         <div className="left-column">
-          <ScrollArea>
+          <ScrollArea startPadding={2} sidePadding={2} endPadding={2}>
             <MenuGroup>
               <MenuLabel label="databases.form.labels.templates" />
               <MenuItem

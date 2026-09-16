@@ -35,22 +35,6 @@
     min-height: 0;
   }
 
-  .database-configuration-panel-properties-content {
-    padding-bottom: var(--space-2);
-  }
-
-  .database-configuration-panel-designs-content {
-    padding: var(--space-2) 0;
-  }
-
-  .database-configuration-panel-templates-content {
-    padding-bottom: var(--space-2);
-  }
-
-  .database-configuration-panel-settings-content {
-    padding: var(--space-2) 0;
-  }
-
   .database-properties-editor-sortable,
   .database-entry-templates-editor-sortable {
     gap: 0;

@@ -157,44 +157,44 @@ export const DatabaseConfigurationPanel: React.FC<
         </div>
 
         {showSettings ? (
-          <VerticalScrollArea stateKey="settings">
-            <div className="database-configuration-panel-settings-content">
-              <DatabaseSettingsPanel key={databaseId} databaseId={databaseId} />
-            </div>
+          <VerticalScrollArea
+            stateKey="settings"
+            startPadding={2}
+            endPadding={2}
+          >
+            <DatabaseSettingsPanel key={databaseId} databaseId={databaseId} />
           </VerticalScrollArea>
         ) : (
           <>
             <TabsPanel value="properties">
-              <VerticalScrollArea stateKey="properties">
-                <div className="database-configuration-panel-properties-content">
-                  <DatabasePropertiesEditor
-                    databaseId={databaseId}
-                    draftProperties={draftProperties}
-                    onSaveDraft={removeDraftProperty}
-                    onCancelDraft={removeDraftProperty}
-                  />
-                </div>
+              <VerticalScrollArea stateKey="properties" endPadding={2}>
+                <DatabasePropertiesEditor
+                  databaseId={databaseId}
+                  draftProperties={draftProperties}
+                  onSaveDraft={removeDraftProperty}
+                  onCancelDraft={removeDraftProperty}
+                />
               </VerticalScrollArea>
             </TabsPanel>
 
             <TabsPanel value="templates">
-              <VerticalScrollArea stateKey="templates">
-                <div className="database-configuration-panel-templates-content">
-                  <DatabaseEntryTemplatesEditor
-                    databaseId={databaseId}
-                    draftTemplates={draftTemplates}
-                    onSaveDraft={removeDraftTemplate}
-                    onCancelDraft={removeDraftTemplate}
-                  />
-                </div>
+              <VerticalScrollArea stateKey="templates" endPadding={2}>
+                <DatabaseEntryTemplatesEditor
+                  databaseId={databaseId}
+                  draftTemplates={draftTemplates}
+                  onSaveDraft={removeDraftTemplate}
+                  onCancelDraft={removeDraftTemplate}
+                />
               </VerticalScrollArea>
             </TabsPanel>
 
             <TabsPanel value="designs">
-              <VerticalScrollArea stateKey="designs">
-                <div className="database-configuration-panel-designs-content">
-                  <DatabaseDesignPanel databaseId={databaseId} />
-                </div>
+              <VerticalScrollArea
+                stateKey="designs"
+                startPadding={2}
+                endPadding={2}
+              >
+                <DatabaseDesignPanel databaseId={databaseId} />
               </VerticalScrollArea>
             </TabsPanel>
           </>

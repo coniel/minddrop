@@ -30,8 +30,13 @@ export const TagEntries: React.FC<TagEntriesProps> = ({ tag }) => {
   const taggedEntries = DatabaseEntries.getTagged(tag.name);
 
   return (
-    <ScrollArea className="tag-entries">
-      <Stack gap={2} className="tag-entries-content">
+    <ScrollArea
+      className="tag-entries"
+      startPadding={4}
+      sidePadding={4}
+      endPadding={4}
+    >
+      <Stack gap={2}>
         <Subheading noMargin size="sm" text="tags.details.entries" />
         {taggedEntries.length > 0 ? (
           <MenuGroup>

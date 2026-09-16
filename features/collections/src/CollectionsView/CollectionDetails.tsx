@@ -144,8 +144,14 @@ export const CollectionDetails: React.FC<CollectionDetailsProps> = ({
       source={{ type: 'collection', id: collection.id }}
     >
       <div className="collection-details">
-        <ScrollArea className="collection-details-scroll">
-          <Stack gap={5} className="collection-details-content">
+        {/* The end padding leaves room for the entry selection toolbar */}
+        <ScrollArea
+          className="collection-details-scroll"
+          startPadding={4}
+          sidePadding={4}
+          endPadding={7}
+        >
+          <Stack gap={5}>
             {/* The collection's fields */}
             <Group gap={2} className="collection-details-fields">
               {/* Selection is a no-op until collections have an icon field */}

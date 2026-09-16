@@ -52,6 +52,5 @@
 }
 
 .search-dialog-results-content {
-  padding: var(--space-2) var(--space-2);
   gap: var(--space-0-5);
 }

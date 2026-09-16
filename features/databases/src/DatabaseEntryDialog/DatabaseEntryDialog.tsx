@@ -180,7 +180,7 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
         />
 
         {/* Content wrapper */}
-        <ScrollArea className="database-entry-dialog-content" endPadding="lg">
+        <ScrollArea className="database-entry-dialog-content" endPadding={8}>
           <DatabaseEntryRenderer entryId={entryId} layoutContext="dialog" />
         </ScrollArea>
 

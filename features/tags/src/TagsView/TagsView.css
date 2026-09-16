@@ -8,10 +8,6 @@
     flex: 1;
     min-width: 0;
   }
-
-  .tag-entries-content {
-    padding: var(--space-4);
-  }
 }
 
 /* Portaled outside the view, so styled at the top level. Sized to

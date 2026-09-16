@@ -15,10 +15,6 @@
     .scroll-area {
       flex: 1;
       min-height: 0;
-
-      .menu-group {
-        padding: var(--space-2);
-      }
     }
   }
 

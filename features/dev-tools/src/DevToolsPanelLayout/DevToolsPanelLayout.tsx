@@ -44,7 +44,9 @@ export const DevToolsPanelLayout: React.FC<DevToolsPanelLayoutProps> = ({
     <div className="dev-tools-panel-layout">
       {sidebar && sidebarOpen && (
         <aside className="dev-tools-panel-sidebar">
-          <ScrollArea>{sidebar}</ScrollArea>
+          <ScrollArea startPadding={1} sidePadding={2} endPadding={1}>
+            {sidebar}
+          </ScrollArea>
         </aside>
       )}
 

@@ -25,7 +25,6 @@
   .list-panel-view-list-items {
     flex: 1;
     min-height: 0;
-    padding: 0 var(--space-2) var(--space-2);
   }
 
   .list-panel-view-details {
