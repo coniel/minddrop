@@ -1,4 +1,5 @@
 import {
+  ALL_PROPERTY_TYPES,
   FileExtensionToPropertyType,
   FilePropertySupportedFileExtensions,
   METADATA_PROPERTY_TYPES,
@@ -8,6 +9,7 @@ import {
 } from './constants';
 
 export const constants = {
+  AllTypes: ALL_PROPERTY_TYPES,
   MetadataSchemas: MetadataPropertySchemas,
   MetadataTypes: METADATA_PROPERTY_TYPES,
   SortableTypes: SORTABLE_PROPERTY_TYPES,

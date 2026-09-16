@@ -44,6 +44,29 @@ export const SORTABLE_PROPERTY_TYPES = new Set<PropertyType>([
 ]);
 
 /**
+ * Every property type, listed so that anything accepting them all
+ * can declare it.
+ */
+export const ALL_PROPERTY_TYPES: PropertyType[] = [
+  'collection',
+  'color',
+  'content',
+  'created',
+  'date',
+  'file',
+  'icon',
+  'image',
+  'last-modified',
+  'number',
+  'select',
+  'tags',
+  'text',
+  'title',
+  'toggle',
+  'url',
+];
+
+/**
  * Property types whose values have a text form, listed so that
  * anything rendering a value as text can declare what it accepts.
  * The rest hold content a string cannot carry, such as an icon, a
