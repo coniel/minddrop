@@ -104,6 +104,11 @@ export interface IconPickerProps {
    * @default 'bottom'
    */
   side?: PopoverPositionerProps['side'];
+
+  /**
+   * How far the popover sits from its trigger.
+   */
+  sideOffset?: PopoverPositionerProps['sideOffset'];
 }
 
 export const IconPicker: React.FC<IconPickerProps> = ({
@@ -119,6 +124,9 @@ export const IconPicker: React.FC<IconPickerProps> = ({
   open: controlledOpen,
   onOpenChange: controlledOnOpenChange,
   anchor,
+  align = 'start',
+  side = 'bottom',
+  sideOffset,
 }) => {
   const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
 
@@ -188,7 +196,12 @@ export const IconPicker: React.FC<IconPickerProps> = ({
     <Popover open={open} onOpenChange={setOpen}>
       {children && <PopoverTrigger>{children}</PopoverTrigger>}
       <PopoverPortal>
-        <PopoverPositioner align="start" side="bottom" anchor={anchor}>
+        <PopoverPositioner
+          align={align}
+          side={side}
+          sideOffset={sideOffset}
+          anchor={anchor}
+        >
           <PopoverContent>
             <div className="icon-picker" onClick={stopPropagation}>
               <div className="icon-picker-header">
