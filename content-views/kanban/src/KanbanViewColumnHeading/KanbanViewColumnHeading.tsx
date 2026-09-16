@@ -256,7 +256,7 @@ export const KanbanViewColumnHeading: React.FC<
         {canCreateEntry && (
           <IconButton
             icon="plus"
-            size="sm"
+            size="xs"
             variant="ghost"
             color="neutral"
             label="contentViews.kanban.columns.newEntry"
@@ -269,7 +269,7 @@ export const KanbanViewColumnHeading: React.FC<
             trigger={
               <IconButton
                 icon="ellipsis"
-                size="sm"
+                size="xs"
                 variant="ghost"
                 color="neutral"
                 label="actions.options"
