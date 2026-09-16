@@ -91,6 +91,28 @@ The filter util then passes the two fields it has, and the function is findable 
 
 The same applies to naming: `resolveFilterValue`, `getSortValue`, `columnValueFor` are three names for one behaviour, and three names means three files nobody connects. Name the behaviour once.
 
+### The noun names what comes back
+
+The prefix says what the function does. The rest of the name says what the caller gets. A function returning IDs is named for IDs, never for the entities they point at, because a caller who reads the name and not the return type gets it wrong every time.
+
+```ts
+// BAD, the name says items, the type says IDs
+function resolveListedEntityGroupItems(
+  groupItemIds: string[],
+  itemIds?: string[],
+): string[];
+
+// GOOD
+function resolveListedEntityGroupItemIds(
+  groupItemIds: string[],
+  itemIds?: string[],
+): string[];
+```
+
+A parameter misleads inside the signature exactly as the name does outside it, so `items: string[]` is `itemIds: string[]`. So does the variable the result lands in: `const draggedItems = useDraggedEntityGroupItemIds(config)` undoes the rename one line later. Rename the whole chain, or leave a reader to work out which `items` are items.
+
+This is the same rule as the prefixes below, applied to the noun rather than the verb.
+
 ## Inside the file
 
 Order within a function file:
@@ -128,4 +150,5 @@ Before committing a new function:
 - Is it in its own file, named after itself, exported, with a test if it has logic?
 - Is it domain-free? Then it lives in `packages/utils`.
 - Is it named and typed for what it does, taking the values it uses rather than a caller's object?
+- Does the name say what comes back? A function returning IDs is `...Ids`, and its parameters and the variables it lands in follow.
 - Could a second function ever call any helper left below it? If so, that helper is its own file.

@@ -26,6 +26,10 @@ reader has dropped out of the comments and into the code:
 - The callback or emit handing the result off at the end
   (`onElementsChange(result.elements)` still takes
   `// Emit the adjusted layout`).
+- The `return` which does the work rather than handing back a value a
+  step above it built (`return listed.filter(({ itemId }) =>
+shown.has(itemId))` still takes `// Leave out the items the list
+does not show`).
 
 Calibrate density against `packages/databases`, which is the reference.
 
@@ -33,6 +37,8 @@ Not everything needs one:
 
 - Single-expression accessors are covered by their name and JSDoc.
 - A `return` of the value the previous step just built needs nothing.
+  A `return` which builds, filters or transforms takes one, since the
+  work happens there rather than above it.
 - A trivial early-return guard on a missing value
   (`if (!selected) return`) needs nothing; a guard encoding a real
   rule takes one.
@@ -161,6 +167,20 @@ operation is meant.
 // can simply be renamed.
 ```
 
+**Use the codebase's own term, and the technical one.** The operation
+is usually already named in the code under the comment, and a plainer
+sounding word for it only makes the reader map it back. A paraphrase
+of a term the codebase has is the same reach. Say who or what is told
+about something, too, since "report" alone could mean the user, a log
+or a server.
+
+| Avoid                          | Prefer                                 |
+| ------------------------------ | -------------------------------------- |
+| `Make the group`               | `Create the group`                     |
+| `report a name it cannot have` | `show an error if the name is invalid` |
+| `a name it cannot have`        | `an invalid name`                      |
+| `refuses it`                   | `rejects it`                           |
+
 **Follow the order of the code.** A comment above a guard describes the
 check first and the consequence second, because that is the order the
 lines below it read in. Putting the consequence first makes the reader
@@ -208,6 +228,34 @@ const className = joinClasses(rootClass, resolveTextSettingsClass(element));
 // GOOD
 // Resolve the text settings into modifier classes
 const className = joinClasses(rootClass, resolveTextSettingsClass(element));
+```
+
+**One comment per declaration, unless one statement covers them all.**
+A comment which needs a second statement to reach the second
+declaration is describing two things at once, and the reader has to go
+up a line and then work out which half belongs to which. Split it, and
+put each half immediately above what it describes.
+
+```ts
+// BAD, two statements in one comment
+// The group taking shape, and the group it becomes
+const { index, itemIds, sourceGroupId } = placeholder;
+let group: EntityGroupType;
+
+// GOOD, each is described where it is
+// Placeholder group values
+const { index, itemIds, sourceGroupId } = placeholder;
+// Group being created
+let group: EntityGroupType;
+```
+
+A single statement covering a run of them is fine. There is nothing to
+match up.
+
+```ts
+// The block dimensions
+const height = 100;
+const width = 200;
 ```
 
 ## What not to comment
@@ -442,6 +490,24 @@ entry's ID" and "resolved by ID". The lowercase form is reserved for
 referring to an actual `id` parameter, property or variable by name, in
 backticks.
 
+**A colon is not a full stop.** A colon before a clause which could
+stand as its own sentence has the same effect as a hung `which`. The
+reader holds the first half until the second resolves. Split it.
+
+| Avoid                                                                                          | Prefer                                                                                         |
+| ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `Resolves a drop into the calls which carry it out: the items leave every group holding them.` | `Resolves a drop into the calls which carry it out. The items leave every group holding them.` |
+| `The ungrouped group is the exception: dropping items on it ungroups them.`                    | `The ungrouped group is the exception. Dropping items on it ungroups them.`                    |
+| `Tags listed in the left column: name matches while searching, every tag otherwise.`           | `Tags listed in the left column. Name matches while searching, every tag otherwise.`           |
+
+A colon introducing a list of items rather than a clause stays, since
+there is no sentence to split off:
+
+```ts
+// Null when the items came from outside the type's groups: out of
+// another type's group, or from no group at all.
+```
+
 No em dashes in comments.
 
 ## Syntax
@@ -580,3 +646,35 @@ say the rest.
 JSDoc sits directly above the thing it documents. Local helper functions
 go below the main function in the file, so the file reads top down from
 its entry point.
+
+**Comment the parts, not the shape.** Where a step assembles something
+out of several pieces, put a comment on each piece instead of describing
+the assembly above it. Where each comment sits carries the order, so the
+comment above does not have to spell it out.
+
+```ts
+// BAD, the comment spells out an order the code already shows
+// Add the missing ones, the ungrouped group above the type's own
+// groups and the app's own below them.
+return [
+  ...missing.filter(({ id }) => id === UngroupedEntityGroupId),
+  ...normalized,
+  ...missing.filter(({ id }) => id !== UngroupedEntityGroupId),
+];
+
+// GOOD, each piece says what it is where it sits
+// Add the missing groups
+return [
+  // The ungrouped group
+  ...missing.filter(({ id }) => id === UngroupedEntityGroupId),
+  // The type's stored groups
+  ...normalized,
+  // The app's own groups
+  ...missing.filter(({ id }) => id !== UngroupedEntityGroupId),
+];
+```
+
+Every piece takes one, for the same reason every step does. Labelling
+only the pieces that feel interesting leaves gaps in the skim. This
+applies to any assembled literal, an array's elements and an object's
+properties alike, and it is why a JSX child list is labelled in place.
