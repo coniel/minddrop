@@ -1,6 +1,7 @@
 import { Popover as PopoverPrimitive } from '@base-ui/react/popover';
 import React from 'react';
 import { useMenuTargetContext } from '../MenuTargetContext';
+import { PopupCloseContext } from '../PopupCloseContext';
 import { propsToClass } from '../utils';
 import './Popover.css';
 
@@ -30,6 +31,9 @@ export interface PopoverContentProps extends PopoverPrimitive.Popup.Props {
  * Opened from a menu item or group label's menu, it keeps that
  * target highlighted for as long as it is open, so the popover
  * reads as belonging to the item it was opened from.
+ *
+ * Provides the popup close context, so content can close the
+ * popover it is rendered in.
  */
 export const Popover: React.FC<PopoverProps> = ({
   defaultOpen,
@@ -37,6 +41,7 @@ export const Popover: React.FC<PopoverProps> = ({
   open,
   ...other
 }) => {
+  const actionsRef = React.useRef<PopoverPrimitive.Root.Actions>(null);
   const menuTarget = useMenuTargetContext();
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(
     Boolean(defaultOpen),
@@ -57,6 +62,10 @@ export const Popover: React.FC<PopoverProps> = ({
     return menuTarget?.holdActionsVisible();
   }, [isOpen, menuTarget]);
 
+  const close = React.useCallback(() => {
+    actionsRef.current?.close();
+  }, []);
+
   function handleOpenChange(
     nextOpen: boolean,
     eventDetails: PopoverPrimitive.Root.ChangeEventDetails,
@@ -66,12 +75,15 @@ export const Popover: React.FC<PopoverProps> = ({
   }
 
   return (
-    <PopoverPrimitive.Root
-      defaultOpen={defaultOpen}
-      open={open}
-      onOpenChange={handleOpenChange}
-      {...other}
-    />
+    <PopupCloseContext.Provider value={close}>
+      <PopoverPrimitive.Root
+        actionsRef={actionsRef}
+        defaultOpen={defaultOpen}
+        open={open}
+        onOpenChange={handleOpenChange}
+        {...other}
+      />
+    </PopupCloseContext.Provider>
   );
 };
 

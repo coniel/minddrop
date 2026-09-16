@@ -14,6 +14,13 @@ import {
   DropdownSubmenuContent,
   DropdownSubmenuTriggerItem,
 } from '../DropdownMenu';
+import {
+  Popover,
+  PopoverContent,
+  PopoverPortal,
+  PopoverPositioner,
+  PopoverTrigger,
+} from '../Popover';
 import { SearchableMenu } from './SearchableMenu';
 import { SearchableMenuItem } from './SearchableMenuItem';
 
@@ -111,6 +118,67 @@ describe('SearchableMenu', () => {
     await waitFor(() => {
       expect(screen.queryByText('Fruit')).toBeNull();
     });
+  });
+
+  it('reports a close it asked for rather than a keyboard one', async () => {
+    let closeReason: string | undefined;
+
+    render(
+      <DropdownMenu
+        trigger={<button>Open</button>}
+        searchable
+        onOpenChange={(open, eventDetails) => {
+          if (!open) {
+            closeReason = eventDetails.reason;
+          }
+        }}
+      >
+        <SearchableMenuItem stringLabel="Apple" onSelect={vi.fn()} />
+      </DropdownMenu>,
+    );
+
+    await userEvent.click(screen.getByText('Open'));
+    await userEvent.click(await screen.findByText('Apple'));
+
+    await waitFor(() => expect(closeReason).toBe('imperative-action'));
+  });
+
+  it('closes the popover it is rendered in', async () => {
+    let closeReason: string | undefined;
+
+    render(
+      <Popover
+        onOpenChange={(open, eventDetails) => {
+          if (!open) {
+            closeReason = eventDetails.reason;
+          }
+        }}
+      >
+        <PopoverTrigger>
+          <button>Open</button>
+        </PopoverTrigger>
+        <PopoverPortal>
+          <PopoverPositioner>
+            <PopoverContent
+              render={
+                <SearchableMenu>
+                  <SearchableMenuItem stringLabel="Apple" onSelect={vi.fn()} />
+                </SearchableMenu>
+              }
+            />
+          </PopoverPositioner>
+        </PopoverPortal>
+      </Popover>,
+    );
+
+    await userEvent.click(screen.getByText('Open'));
+    await userEvent.click(await screen.findByText('Apple'));
+
+    await waitFor(() => {
+      expect(screen.queryByText('Apple')).toBeNull();
+    });
+
+    expect(closeReason).toBe('imperative-action');
   });
 });
 
