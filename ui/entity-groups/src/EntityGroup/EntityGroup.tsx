@@ -40,11 +40,13 @@ import {
 import { EntityGroupItem } from '../EntityGroupItem';
 import { useEntityGroupList } from '../EntityGroupListContext';
 import { applyEntityGroupDrop } from '../applyEntityGroupDrop';
-import { useDraggedEntityGroupItems } from '../useDraggedEntityGroupItems';
+import { useDraggedEntityGroupItemIds } from '../useDraggedEntityGroupItemIds';
 import {
   resolveEntityGroupDragSource,
   resolveEntityGroupDrop,
   resolveEntityGroupDropTypes,
+  resolveEntityGroupNameError,
+  resolveUngroupedEntityGroupDrop,
 } from '../utils';
 import './EntityGroup.css';
 
@@ -68,7 +70,8 @@ export interface EntityGroupProps {
  *
  * The app's own groups are named and filled by the app rather than
  * the user, so they offer neither a drop target nor the actions
- * which would edit them.
+ * which would edit them. The ungrouped group is the exception.
+ * Dropping items on it takes them out of their groups.
  */
 export const EntityGroup: React.FC<EntityGroupProps> = ({
   group,
@@ -90,17 +93,19 @@ export const EntityGroup: React.FC<EntityGroupProps> = ({
     type,
   } = useEntityGroupList();
 
-  const draggedItems = useDraggedEntityGroupItems(config);
+  const draggedItemIds = useDraggedEntityGroupItemIds(config);
   const collapsed = EntityGroups.useCollapsed(type, group.id);
   const { actionsVisible, menuTarget } = useActionsVisibleHold();
 
-  // The app's own groups hold what the app puts in them, so they
-  // take no drops and offer no actions of their own.
-  const isProtected = EntityGroups.isProtected(group.id, config);
+  // Whether this is the 'ungrouped' group
+  const isUngrouped = group.id === EntityGroups.constants.UngroupedId;
 
-  // The group itself takes drops of what the type can hold, adding
-  // them after the items it already lists.
-  const acceptsDrop = !isProtected && draggedItems.length > 0;
+  // Whether the group is the user's to edit
+  const isEditable =
+    !isUngrouped && !EntityGroups.isProtected(group.id, config);
+
+  // Whether the group takes the dragged items
+  const acceptsDrop = (isEditable || isUngrouped) && draggedItemIds.length > 0;
 
   // The component rendering the group's contents in place of the
   // items it lists, for groups whose contents are not stored items.
@@ -112,7 +117,9 @@ export const EntityGroup: React.FC<EntityGroupProps> = ({
 
   // A group the app names is shown under the consumer's label,
   // translated, rather than under the name it is stored with.
-  const label = resolveLabel?.(group) ?? undefined;
+  const label =
+    resolveLabel?.(group) ??
+    (isUngrouped ? 'entityGroups.labels.ungrouped' : undefined);
 
   // Popovers open where the menu that led to them did: at the
   // right click position for the context menu, at the options
@@ -150,9 +157,21 @@ export const EntityGroup: React.FC<EntityGroupProps> = ({
     return menuTarget.holdActionsVisible();
   }, [addPopoverOpen, menuTarget]);
 
-  // Route the drop to the model call it stands for
+  // Route the drop to the model calls it stands for
   const handleDrop = useCallback(
     (drop: DropEventData) => {
+      if (isUngrouped) {
+        applyEntityGroupDrop(
+          type,
+          resolveUngroupedEntityGroupDrop(
+            EntityGroups.getAll(type),
+            draggedItemIds,
+          ),
+        );
+
+        return;
+      }
+
       applyEntityGroupDrop(
         type,
         resolveEntityGroupDrop({
@@ -160,11 +179,11 @@ export const EntityGroup: React.FC<EntityGroupProps> = ({
           targetGroupId: group.id,
           targetItems: group.items,
           sourceGroupId: resolveEntityGroupDragSource(drop.event, type),
-          itemIds: draggedItems,
+          itemIds: draggedItemIds,
         }),
       );
     },
-    [type, group.id, group.items, draggedItems],
+    [type, isUngrouped, group.id, group.items, draggedItemIds],
   );
 
   const { droppableProps, isDraggingOver } = Selection.useDroppable({
@@ -176,8 +195,13 @@ export const EntityGroup: React.FC<EntityGroupProps> = ({
     onDrop: handleDrop,
   });
 
-  function handleRename(name: string) {
-    EntityGroups.update(type, group.id, { name });
+  // Rename the group, or show an error if the name is invalid
+  async function handleRename(name: string) {
+    try {
+      await EntityGroups.update(type, group.id, { name });
+    } catch (error) {
+      return resolveEntityGroupNameError(error);
+    }
   }
 
   // Remember how the user left the group, for this workspace on
@@ -289,7 +313,7 @@ export const EntityGroup: React.FC<EntityGroupProps> = ({
   const groupElement = (
     // Protected groups show their actions on hover anywhere in the
     // group.
-    <MenuGroup showLabelActionsOnHover={isProtected}>
+    <MenuGroup showLabelActionsOnHover={!isEditable}>
       <Collapsible open={!collapsed} onOpenChange={handleOpenChange}>
         {/* Label acting as the expand/collapse trigger */}
         <CollapsibleTrigger
@@ -320,7 +344,7 @@ export const EntityGroup: React.FC<EntityGroupProps> = ({
                   )}
 
                   {/* Opens the group's menu */}
-                  {!isProtected && (
+                  {isEditable && (
                     <DropdownMenuRoot onOpenChange={handleDropdownOpenChange}>
                       <DropdownMenuTrigger>
                         <IconButton
@@ -354,7 +378,7 @@ export const EntityGroup: React.FC<EntityGroupProps> = ({
   return (
     <MenuTargetContext.Provider value={menuTarget}>
       <div className="entity-group" {...(acceptsDrop ? droppableProps : {})}>
-        {isProtected ? (
+        {!isEditable ? (
           groupElement
         ) : (
           /* The menu doubles as the group's context menu */
@@ -370,7 +394,7 @@ export const EntityGroup: React.FC<EntityGroupProps> = ({
 
         {/* The rename popover, anchored where the menu which opened
             it was */}
-        {!isProtected && (
+        {isEditable && (
           <NamePopover
             open={renaming}
             anchor={popoverAnchor}

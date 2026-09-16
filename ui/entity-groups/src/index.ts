@@ -6,3 +6,4 @@ export * from './EntityGroup';
 export * from './EntityGroupItem';
 export * from './EntityGroupItemContext';
 export * from './useEntityGroupItemMenu';
+export * from './utils/resolveEntityGroupNameError';

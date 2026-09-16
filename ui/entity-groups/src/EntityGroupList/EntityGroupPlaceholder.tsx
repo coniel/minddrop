@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { TranslationKey } from '@minddrop/i18n';
 import { MenuGroup, MenuLabel, NamePopover } from '@minddrop/ui-primitives';
 import { useEntityGroupList } from '../EntityGroupListContext';
 import './EntityGroupPlaceholder.css';
@@ -10,9 +11,13 @@ export interface EntityGroupPlaceholderProps {
   itemIds: string[];
 
   /**
-   * Called with the group's name once it is confirmed.
+   * Called with the group's name once it is confirmed. Return an
+   * error message for an invalid name. The naming stays open and
+   * shows it below the field.
    */
-  onSubmit: (name: string) => void;
+  onSubmit: (
+    name: string,
+  ) => TranslationKey | void | Promise<TranslationKey | void>;
 
   /**
    * Called when the naming is abandoned, dropping the placeholder.

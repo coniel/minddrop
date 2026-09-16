@@ -31,10 +31,17 @@ function applyAction(
   type: string,
   action: EntityGroupDropAction,
 ): Promise<unknown> {
+  // Reorder the items within their group
   if (action.action === 'reorder-items') {
     return EntityGroups.reorderItems(type, action.groupId, action.itemIds);
   }
 
+  // Take the item out of the group
+  if (action.action === 'remove-item') {
+    return EntityGroups.removeItem(type, action.groupId, action.itemId);
+  }
+
+  // Move the item from one group to another
   if (action.action === 'move-item') {
     return EntityGroups.moveItem(
       type,
@@ -45,6 +52,7 @@ function applyAction(
     );
   }
 
+  // Add the item to the group
   return EntityGroups.addItem(
     type,
     action.groupId,

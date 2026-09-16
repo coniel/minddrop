@@ -62,11 +62,13 @@ export const protectedGroup_1 = {
 };
 
 /**
- * A type whose items belong to a single group, the default.
+ * A type whose items belong to a single group, the default. The
+ * items in none of its groups form the ungrouped group.
  */
 export const groupTypeConfig_exclusive: EntityGroupTypeConfig = {
   id: 'exclusive',
   itemTypes: ['addressed-item', 'plain-item'],
+  ungrouped: true,
   itemDeletedEvents: [ItemDeletedEvent],
 };
 

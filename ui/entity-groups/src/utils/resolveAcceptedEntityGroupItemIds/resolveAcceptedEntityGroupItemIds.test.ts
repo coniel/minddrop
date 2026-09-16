@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { EntityGroupFixtures } from '@minddrop/entity-groups/test-utils';
-import { resolveAcceptedEntityGroupItems } from './resolveAcceptedEntityGroupItems';
+import { resolveAcceptedEntityGroupItemIds } from './resolveAcceptedEntityGroupItemIds';
 
 const {
   addressedItem_1,
@@ -9,10 +9,10 @@ const {
   unsupportedItem_1,
 } = EntityGroupFixtures;
 
-describe('resolveAcceptedEntityGroupItems', () => {
+describe('resolveAcceptedEntityGroupItemIds', () => {
   it('keeps items of the types the group type holds', () => {
     expect(
-      resolveAcceptedEntityGroupItems(
+      resolveAcceptedEntityGroupItemIds(
         [addressedItem_1, plainItem_1],
         groupTypeConfig_exclusive,
       ),
@@ -21,7 +21,7 @@ describe('resolveAcceptedEntityGroupItems', () => {
 
   it('drops items of a type the group type does not hold', () => {
     expect(
-      resolveAcceptedEntityGroupItems(
+      resolveAcceptedEntityGroupItemIds(
         [addressedItem_1, unsupportedItem_1],
         groupTypeConfig_exclusive,
       ),
@@ -30,7 +30,7 @@ describe('resolveAcceptedEntityGroupItems', () => {
 
   it('drops IDs which carry no entity type', () => {
     expect(
-      resolveAcceptedEntityGroupItems(['untyped'], groupTypeConfig_exclusive),
+      resolveAcceptedEntityGroupItemIds(['untyped'], groupTypeConfig_exclusive),
     ).toEqual([]);
   });
 });

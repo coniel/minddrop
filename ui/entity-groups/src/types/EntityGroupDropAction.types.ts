@@ -55,10 +55,25 @@ export interface AddEntityGroupItemAction {
   index: number;
 }
 
+export interface RemoveEntityGroupItemAction {
+  action: 'remove-item';
+
+  /**
+   * The ID of the group the item is removed from.
+   */
+  groupId: string;
+
+  /**
+   * The ID of the item to remove.
+   */
+  itemId: string;
+}
+
 /**
  * A model call a drop on a group resolves to.
  */
 export type EntityGroupDropAction =
   | ReorderEntityGroupItemsAction
   | MoveEntityGroupItemAction
-  | AddEntityGroupItemAction;
+  | AddEntityGroupItemAction
+  | RemoveEntityGroupItemAction;

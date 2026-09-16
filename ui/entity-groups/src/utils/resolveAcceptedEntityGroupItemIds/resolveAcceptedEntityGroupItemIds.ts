@@ -8,7 +8,7 @@ import { entityIdType } from '@minddrop/utils';
  * @param config - The config of the group type.
  * @returns The IDs of the entities the type accepts.
  */
-export function resolveAcceptedEntityGroupItems(
+export function resolveAcceptedEntityGroupItemIds(
   itemIds: string[],
   config: EntityGroupTypeConfig,
 ): string[] {

@@ -17,6 +17,10 @@ import {
   EntityGroupDropAction,
   ProtectedEntityGroupComponent,
 } from '../types';
+import {
+  resolveEntityGroupNameError,
+  resolveUngroupedEntityGroup,
+} from '../utils';
 import { EntityGroupGap } from './EntityGroupGap';
 import { EntityGroupPlaceholder } from './EntityGroupPlaceholder';
 import './EntityGroupList.css';
@@ -31,6 +35,13 @@ export interface EntityGroupListProps {
    * Renders an item listed in a group.
    */
   renderItem: (itemId: string) => React.ReactNode;
+
+  /**
+   * The IDs of the type's items. The ungrouped group shows the ones
+   * no group lists, in the order given. Required for a type whose
+   * config sets `ungrouped`.
+   */
+  itemIds?: string[];
 
   /**
    * Components rendering the contents of the groups the app
@@ -98,6 +109,7 @@ interface PlaceholderGroup {
 export const EntityGroupList: React.FC<EntityGroupListProps> = ({
   type,
   renderItem,
+  itemIds,
   protectedGroupComponents,
   resolveLabel,
   resolveAddAction,
@@ -109,6 +121,19 @@ export const EntityGroupList: React.FC<EntityGroupListProps> = ({
     useState<PlaceholderGroup | null>(null);
   const groups = EntityGroups.useAll(type);
   const config = EntityGroups.getConfig(type);
+
+  // Resolve what the 'ungrouped' group shows. Null for a type
+  // without one.
+  const ungrouped = useMemo(() => {
+    if (!config.ungrouped) {
+      return null;
+    }
+
+    const group = resolveUngroupedEntityGroup(type, groups, itemIds ?? []);
+
+    // Shown only while it has something to show
+    return group.items.length > 0 ? group : null;
+  }, [config.ungrouped, type, groups, itemIds]);
 
   // The group taking shape: the one stood up in a gap, or an empty
   // one at the top of the list when the consumer asks for a new
@@ -122,6 +147,7 @@ export const EntityGroupList: React.FC<EntityGroupListProps> = ({
       type,
       config,
       renderItem,
+      itemIds,
       protectedGroupComponents,
       resolveLabel,
       resolveAddAction,
@@ -130,6 +156,7 @@ export const EntityGroupList: React.FC<EntityGroupListProps> = ({
       type,
       config,
       renderItem,
+      itemIds,
       protectedGroupComponents,
       resolveLabel,
       resolveAddAction,
@@ -153,10 +180,14 @@ export const EntityGroupList: React.FC<EntityGroupListProps> = ({
     [],
   );
 
-  // Make the named group, empty, at the position
+  // Create the named group, or show an error if the name is invalid
   const handleCreateNamedGroup = useCallback(
-    (index: number, name: string) => {
-      EntityGroups.create(type, name, { index });
+    async (index: number, name: string) => {
+      try {
+        await EntityGroups.create(type, name, { index });
+      } catch (error) {
+        return resolveEntityGroupNameError(error);
+      }
     },
     [type],
   );
@@ -167,17 +198,25 @@ export const EntityGroupList: React.FC<EntityGroupListProps> = ({
       return;
     }
 
+    // Placeholder group values
     const { index, itemIds, sourceGroupId } = placeholder;
-
-    // Drop the placeholder, which the created group takes the place
-    // of.
-    clearPlaceholder();
+    // Group being created
+    let group: EntityGroupType;
 
     // Create the group at the position it was stood up at. It is
     // created empty so that the model applies its own rules to each
     // item as it goes in, such as a protected group keeping the item
     // dragged out of it.
-    const group = await EntityGroups.create(type, name, { index });
+    try {
+      group = await EntityGroups.create(type, name, { index });
+    } catch (error) {
+      // Show the error, leaving the group taking shape
+      return resolveEntityGroupNameError(error);
+    }
+
+    // Drop the placeholder, which the created group takes the place
+    // of.
+    clearPlaceholder();
 
     // Fill the group with the items which were dropped into it
     await applyEntityGroupDrop(
@@ -202,7 +241,10 @@ export const EntityGroupList: React.FC<EntityGroupListProps> = ({
   // list, and the gap below it. The last group's gap is the one
   // filling the rest of the list, rendered outside the sortable
   // items so that it does not stretch the group's own.
-  function renderGroup(groupId: string, sortable: SortableItemRenderProps) {
+  function renderGroup(
+    groupId: string,
+    sortableProps: SortableItemRenderProps,
+  ) {
     const index = groups.findIndex(({ id }) => id === groupId);
     const group = groups[index];
 
@@ -212,11 +254,14 @@ export const EntityGroupList: React.FC<EntityGroupListProps> = ({
 
     return (
       <div
-        ref={sortable.ref}
-        style={sortable.style}
-        className={sortable.className}
+        ref={sortableProps.ref}
+        style={sortableProps.style}
+        className={sortableProps.className}
       >
-        <EntityGroup group={group} dragHandleProps={sortable.handleProps} />
+        <EntityGroup
+          group={group}
+          dragHandleProps={sortableProps.handleProps}
+        />
         {index < groups.length - 1 &&
           renderGap(index + 1, group.id, groups[index + 1].id)}
       </div>
@@ -256,9 +301,13 @@ export const EntityGroupList: React.FC<EntityGroupListProps> = ({
   return (
     <EntityGroupListProvider value={context}>
       <div className={propsToClass('entity-group-list', { className })}>
-        {/* The gap above the first group */}
-        {renderGap(0, undefined, groups[0]?.id)}
+        {/* The items in no group, above the list proper */}
+        {ungrouped && <EntityGroup group={ungrouped} />}
 
+        {/* The gap above the first group, below the ungrouped one */}
+        {renderGap(0, ungrouped?.id, groups[0]?.id)}
+
+        {/* The groups, reordered by dragging them past each other */}
         <SortableList
           direction="vertical"
           gap={0}

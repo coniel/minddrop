@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { EntityGroups } from '@minddrop/entity-groups';
+import { EntityGroup, EntityGroups } from '@minddrop/entity-groups';
 import { EntityGroupFixtures } from '@minddrop/entity-groups/test-utils';
 import {
   fireEvent,
@@ -132,14 +132,14 @@ describe('useEntityGroupItemMenu', () => {
     await pickNewGroup('A moved group');
 
     await waitFor(() => {
-      expect(EntityGroups.getAll(groupTypeConfig_exclusive.id)[0].name).toBe(
-        'A moved group',
-      );
+      expect(
+        getGroupByName(groupTypeConfig_exclusive.id, 'A moved group'),
+      ).toBeDefined();
     });
 
-    expect(EntityGroups.getAll(groupTypeConfig_exclusive.id)[0].items).toEqual([
-      plainItem_1,
-    ]);
+    expect(
+      getGroupByName(groupTypeConfig_exclusive.id, 'A moved group')?.items,
+    ).toEqual([plainItem_1]);
     expect(
       EntityGroups.get(groupTypeConfig_exclusive.id, entityGroup_exclusive_1.id)
         .items,
@@ -154,19 +154,26 @@ describe('useEntityGroupItemMenu', () => {
     await pickNewGroup('An added group');
 
     await waitFor(() => {
-      expect(EntityGroups.getAll(groupTypeConfig_multi.id)[0].name).toBe(
-        'An added group',
-      );
+      expect(
+        getGroupByName(groupTypeConfig_multi.id, 'An added group'),
+      ).toBeDefined();
     });
 
-    expect(EntityGroups.getAll(groupTypeConfig_multi.id)[0].items).toEqual([
-      plainItem_1,
-    ]);
+    expect(
+      getGroupByName(groupTypeConfig_multi.id, 'An added group')?.items,
+    ).toEqual([plainItem_1]);
     expect(
       EntityGroups.get(groupTypeConfig_multi.id, entityGroup_multi_1.id).items,
     ).toContain(plainItem_1);
   });
 });
+
+/**
+ * Returns the group of the type with the given name.
+ */
+function getGroupByName(type: string, name: string): EntityGroup | undefined {
+  return EntityGroups.getAll(type).find((group) => group.name === name);
+}
 
 /**
  * Opens the context menu of the item with the given ID, which the

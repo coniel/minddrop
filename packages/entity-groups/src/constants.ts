@@ -13,7 +13,7 @@ export const EntityGroupEntityType = 'entity-group';
 export const EntityGroupsDirName = 'entity-groups';
 
 /**
- * The ID of the virtual group holding the items in none of a type's
- * groups, for a type which sets `ungrouped`. Never stored.
+ * The ID of the virtual group standing for the items in none of a
+ * type's groups, for a type which sets `ungrouped`. Never stored.
  */
 export const UngroupedEntityGroupId: EntityGroupId = `${EntityGroupEntityType}_ungrouped`;

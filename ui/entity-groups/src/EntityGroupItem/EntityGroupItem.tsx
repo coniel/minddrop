@@ -9,7 +9,7 @@ import { useEntityGroupList } from '../EntityGroupListContext';
 import { applyEntityGroupDrop } from '../applyEntityGroupDrop';
 import { EntityGroupSourceDataKey } from '../constants';
 import { EntityGroupDragSource } from '../types';
-import { useDraggedEntityGroupItems } from '../useDraggedEntityGroupItems';
+import { useDraggedEntityGroupItemIds } from '../useDraggedEntityGroupItemIds';
 import {
   resolveEntityGroupDragSource,
   resolveEntityGroupDrop,
@@ -77,22 +77,24 @@ export const EntityGroupItem: React.FC<EntityGroupItemProps> = ({
   );
 
   const group = EntityGroups.use(type, groupId);
-  const draggedItems = useDraggedEntityGroupItems(config);
+  const draggedItemIds = useDraggedEntityGroupItemIds(config);
   const { draggableProps, isDragging } = Selection.useDraggable(selectionItem);
 
   // Hover is tracked here rather than left to `:hover`, which a
-  // native drag freezes and the browser does not retire: the list
+  // native drag freezes and the browser does not retire. The list
   // reorders around the drop, and the frozen state surfaces on
   // whichever item the released DOM node is reused for.
   const { hoveredProps } = useHoveredItem(`${groupId}:${itemId}`);
 
-  // The app's own groups hold what the app puts in them, so they
-  // take no drops.
-  const isProtected = EntityGroups.isProtected(groupId, config);
+  // The app's groups hold what the app puts in them, and the
+  // 'ungrouped' group lists in no order, so neither takes drops.
+  const isPlaced =
+    groupId !== EntityGroups.constants.UngroupedId &&
+    !EntityGroups.isProtected(groupId, config);
 
   // An item takes drops of what the group type can hold, landing
   // them above or below itself.
-  const acceptsDrop = !isProtected && draggedItems.length > 0;
+  const acceptsDrop = isPlaced && draggedItemIds.length > 0;
 
   // Route the drop to the model call it stands for
   const handleDrop = useCallback(
@@ -105,11 +107,11 @@ export const EntityGroupItem: React.FC<EntityGroupItemProps> = ({
           targetGroupId: groupId,
           targetItems: group?.items ?? [],
           sourceGroupId: resolveEntityGroupDragSource(drop.event, type),
-          itemIds: draggedItems,
+          itemIds: draggedItemIds,
         }),
       );
     },
-    [type, index, groupId, group, draggedItems],
+    [type, index, groupId, group, draggedItemIds],
   );
 
   const { droppableProps, dropIndicatorPosition, isDraggingOver } =

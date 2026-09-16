@@ -20,6 +20,12 @@ export interface EntityGroupListContextValue {
   renderItem: (itemId: string) => React.ReactNode;
 
   /**
+   * The IDs of the type's items. The ungrouped group shows the ones
+   * no group lists, in the order given.
+   */
+  itemIds?: string[];
+
+  /**
    * Components rendering the contents of the groups the app
    * provides, keyed by group ID. Used in place of the items the
    * group lists.

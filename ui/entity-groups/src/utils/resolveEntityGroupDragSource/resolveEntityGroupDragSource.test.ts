@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { EntityGroups } from '@minddrop/entity-groups';
 import { EntityGroupFixtures } from '@minddrop/entity-groups/test-utils';
 import { Selection } from '@minddrop/selection';
 import { EntityGroupSourceDataKey } from '../../constants';
@@ -27,15 +28,12 @@ describe('resolveEntityGroupDragSource', () => {
   }
 
   // Returns a drop event for a drag started in the group
-  function dropFromGroup(): DragEvent {
+  function dropFromGroup(groupId = entityGroup_exclusive_1.id): DragEvent {
     const dataTransfer = dragDataTransfer();
 
     dataTransfer.setData(
       Selection.toMimeType(EntityGroupSourceDataKey),
-      JSON.stringify({
-        type: groupTypeConfig_exclusive.id,
-        groupId: entityGroup_exclusive_1.id,
-      }),
+      JSON.stringify({ type: groupTypeConfig_exclusive.id, groupId }),
     );
 
     return dropEvent(dataTransfer);
@@ -53,6 +51,15 @@ describe('resolveEntityGroupDragSource', () => {
   it('returns null for a drag started in a group of another type', () => {
     expect(
       resolveEntityGroupDragSource(dropFromGroup(), groupTypeConfig_multi.id),
+    ).toBe(null);
+  });
+
+  it('returns null for a drag started in the ungrouped group', () => {
+    expect(
+      resolveEntityGroupDragSource(
+        dropFromGroup(EntityGroups.constants.UngroupedId),
+        groupTypeConfig_exclusive.id,
+      ),
     ).toBe(null);
   });
 

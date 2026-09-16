@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { EntityGroups } from '@minddrop/entity-groups';
+import { TranslationKey } from '@minddrop/i18n';
 import { DropEventData, Selection } from '@minddrop/selection';
 import { DropIndicator } from '@minddrop/ui-drag-and-drop';
 import {
@@ -14,7 +15,7 @@ import {
   propsToClass,
 } from '@minddrop/ui-primitives';
 import { useEntityGroupList } from '../EntityGroupListContext';
-import { useDraggedEntityGroupItems } from '../useDraggedEntityGroupItems';
+import { useDraggedEntityGroupItemIds } from '../useDraggedEntityGroupItemIds';
 import {
   resolveEntityGroupDragSource,
   resolveEntityGroupDropTypes,
@@ -64,9 +65,14 @@ export interface EntityGroupGapProps {
 
   /**
    * Called with the name given to the group a right click in the
-   * gap asked for, to make at its position.
+   * gap asked for, to create at its position. Return an error
+   * message for an invalid name. The naming stays open and shows it
+   * below the field.
    */
-  onCreateGroup: (index: number, name: string) => void;
+  onCreateGroup: (
+    index: number,
+    name: string,
+  ) => TranslationKey | void | Promise<TranslationKey | void>;
 
   /**
    * The group taking shape in the gap, rendered below its spacing.
@@ -91,15 +97,17 @@ export const EntityGroupGap: React.FC<EntityGroupGapProps> = ({
 }) => {
   const [naming, setNaming] = useState(false);
   const [name, setName] = useState('');
+  const [error, setError] = useState<TranslationKey | null>(null);
   const { config, type } = useEntityGroupList();
-  const draggedItems = useDraggedEntityGroupItems(config);
+  const draggedItemIds = useDraggedEntityGroupItemIds(config);
 
-  // The gap gives up its spacing only between collapsed groups: a
-  // collapsed group above an expanded one keeps them apart, and the
-  // gap above the first group always does. A missing group is
-  // looked up under no ID, which is collapsed for nobody.
+  // Whether the group above is collapsed. A missing group is looked
+  // up under no ID, which is collapsed for nobody.
   const aboveCollapsed = EntityGroups.useCollapsed(type, aboveGroupId ?? '');
+  // Whether the group below is collapsed
   const belowCollapsed = EntityGroups.useCollapsed(type, belowGroupId ?? '');
+  // Whether the gap gives up its spacing. Only two collapsed groups
+  // do that. The gap above the first group always keeps it.
   const compact =
     aboveGroupId !== undefined &&
     aboveCollapsed &&
@@ -107,17 +115,17 @@ export const EntityGroupGap: React.FC<EntityGroupGapProps> = ({
 
   // The gap takes the entities the type's groups can hold, which
   // land in a group of their own.
-  const acceptsDrop = draggedItems.length > 0;
+  const acceptsDrop = draggedItemIds.length > 0;
 
   const handleDrop = useCallback(
     (drop: DropEventData) => {
       onDropItems(
-        draggedItems,
+        draggedItemIds,
         index,
         resolveEntityGroupDragSource(drop.event, type),
       );
     },
-    [draggedItems, index, type, onDropItems],
+    [draggedItemIds, index, type, onDropItems],
   );
 
   const { droppableProps, isDraggingOver } = Selection.useDroppable({
@@ -141,48 +149,65 @@ export const EntityGroupGap: React.FC<EntityGroupGapProps> = ({
   function handleNamingOpenChange(open: boolean) {
     if (open) {
       setName('');
+      setError(null);
     }
 
     setNaming(open);
   }
 
-  // Naming the group makes it, and is the end of the naming
-  function handleSubmit(submittedName: string) {
-    onCreateGroup(index, submittedName);
+  // Create the group, or show an error if the name is invalid
+  async function handleSubmit(submittedName: string) {
+    const submitError = await onCreateGroup(index, submittedName);
+
+    if (submitError) {
+      setError(submitError);
+
+      return;
+    }
+
     setNaming(false);
   }
+
+  // Clear the error while the next name is typed
+  function handleNameChange(value: string) {
+    setName(value);
+    setError(null);
+  }
+
+  // Render the spacing between the groups
+  const gapElement = (
+    <div
+      className={propsToClass('entity-group-gap', { compact, fill })}
+      {...(acceptsDrop ? droppableProps : {})}
+    >
+      {/* The spacing itself, which the indicator centres in. What
+          a drop there does is said beside it: a native drag
+          suspends hover, so the tooltip is opened by the drag
+          rather than the pointer. */}
+      <Tooltip
+        open={acceptsDrop && isDraggingOver}
+        side="right"
+        title="entityGroups.labels.newGroup"
+        description="entityGroups.gap.drop"
+      >
+        <div className="entity-group-gap-spacing">
+          <DropIndicator
+            axis="horizontal"
+            position="inside"
+            show={acceptsDrop && isDraggingOver}
+          />
+        </div>
+      </Tooltip>
+
+      {children}
+    </div>
+  );
 
   return (
     <ContextMenuRoot open={naming} onOpenChange={handleNamingOpenChange}>
       <ContextMenuTrigger
         onContextMenu={handleContextMenu}
-        render={
-          <div
-            className={propsToClass('entity-group-gap', { compact, fill })}
-            {...(acceptsDrop ? droppableProps : {})}
-          >
-            {/* The spacing itself, which the indicator centres in. What
-                a drop there does is said beside it: a native drag
-                suspends hover, so the tooltip is opened by the drag
-                rather than the pointer. */}
-            <Tooltip
-              open={acceptsDrop && isDraggingOver}
-              side="right"
-              title="entityGroups.labels.newGroup"
-              description="entityGroups.gap.drop"
-            >
-              <div className="entity-group-gap-spacing">
-                <DropIndicator
-                  axis="horizontal"
-                  position="inside"
-                  show={acceptsDrop && isDraggingOver}
-                />
-              </div>
-            </Tooltip>
-
-            {children}
-          </div>
-        }
+        render={gapElement}
       />
 
       {/* Names the group the right click asked for, where it was
@@ -192,8 +217,9 @@ export const EntityGroupGap: React.FC<EntityGroupGapProps> = ({
           <ContextMenuContent>
             <NameForm
               value={name}
-              onValueChange={setName}
+              onValueChange={handleNameChange}
               placeholder="entityGroups.labels.newGroup"
+              error={error ?? undefined}
               onSubmit={handleSubmit}
             />
           </ContextMenuContent>

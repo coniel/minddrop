@@ -113,6 +113,29 @@ describe('EntityGroupItem', () => {
     ]);
   });
 
+  // The position a drop lands at is a position among the items the
+  // group lists, which is not the position the item is shown at when
+  // the list shows only some of them.
+  it('lists a dropped item at the position among the items the group lists', () => {
+    // A list showing all of the group's items but its first
+    render(
+      <EntityGroupList
+        type={type}
+        itemIds={[addressedItem_2, plainItem_1]}
+        renderItem={(itemId) => <span data-testid={itemId}>{itemId}</span>}
+      />,
+    );
+
+    fireEvent.dragStart(screen.getByTestId(addressedItem_2), { dataTransfer });
+    dropOn(getItem(plainItem_1), 2);
+
+    expect(EntityGroups.get(type, entityGroup_exclusive_1.id).items).toEqual([
+      addressedItem_1,
+      addressedItem_2,
+      plainItem_1,
+    ]);
+  });
+
   it('makes its item draggable', () => {
     init();
 

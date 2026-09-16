@@ -170,6 +170,32 @@ describe('EntityGroup', () => {
     expect(await screen.findByText('Delete group')).toBeInTheDocument();
   });
 
+  it('says so when a group is renamed to a name another has', async () => {
+    init(groupTypeConfig_exclusive.id);
+
+    const group = getGroup(entityGroup_exclusive_1.name);
+
+    fireEvent.click(within(group).getByLabelText('Options'));
+    await userEvent.click(await screen.findByText('Rename group'));
+
+    const nameField = screen.getByDisplayValue(entityGroup_exclusive_1.name);
+
+    fireEvent.change(nameField, {
+      target: { value: entityGroup_exclusive_2.name },
+    });
+    fireEvent.keyDown(nameField, { key: 'Enter' });
+
+    expect(
+      await screen.findByText('A group with this name already exists'),
+    ).toBeInTheDocument();
+
+    // The renaming goes on, and the group keeps its name
+    expect(
+      EntityGroups.get(groupTypeConfig_exclusive.id, entityGroup_exclusive_1.id)
+        .name,
+    ).toBe(entityGroup_exclusive_1.name);
+  });
+
   it('offers no actions on a group the app provides', () => {
     init(groupTypeConfig_multi.id);
 

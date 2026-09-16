@@ -3,6 +3,7 @@
     "labels": {
       "group": "Group",
       "newGroup": "New group",
+      "ungrouped": "Ungrouped",
       "empty": "Empty"
     },
     "actions": {
@@ -18,7 +19,8 @@
       "drop": "Drop here to create a new group."
     },
     "name": {
-      "placeholder": "Group name"
+      "placeholder": "Group name",
+      "taken": "A group with this name already exists"
     }
   }
 }

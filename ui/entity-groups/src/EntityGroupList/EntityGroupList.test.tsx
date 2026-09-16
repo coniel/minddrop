@@ -10,6 +10,7 @@ import {
   screen,
   userEvent,
   waitFor,
+  within,
 } from '@minddrop/test-utils';
 import { cleanup, dragDataTransfer, setup } from '../test-utils';
 import { EntityGroupList } from './EntityGroupList';
@@ -17,15 +18,21 @@ import { EntityGroupList } from './EntityGroupList';
 const {
   addressedItem_1,
   addressedItem_2,
+  entityGroup_exclusive_1,
   entityGroup_exclusive_2,
   entityGroup_multi_1,
   exclusiveGroups,
   groupTypeConfig_exclusive,
   groupTypeConfig_multi,
   plainItem_1,
+  plainItem_2,
 } = EntityGroupFixtures;
 
 const type = groupTypeConfig_exclusive.id;
+
+// Every item the exclusive type's groups are listed against, of
+// which only plainItem_2 is in none of them.
+const itemIds = [addressedItem_1, addressedItem_2, plainItem_1, plainItem_2];
 
 let dataTransfer = dragDataTransfer();
 
@@ -43,6 +50,18 @@ describe('EntityGroupList', () => {
     return render(
       <EntityGroupList
         type={type}
+        renderItem={(itemId) => <span data-testid={itemId}>{itemId}</span>}
+      />,
+    );
+  }
+
+  // Renders the list against the type's full item set. The ungrouped
+  // group is derived from it.
+  function initWithItems(listItemIds = itemIds) {
+    return render(
+      <EntityGroupList
+        type={type}
+        itemIds={listItemIds}
         renderItem={(itemId) => <span data-testid={itemId}>{itemId}</span>}
       />,
     );
@@ -211,6 +230,49 @@ describe('EntityGroupList', () => {
     expect(EntityGroups.getAll(type)[1].items).toEqual([]);
   });
 
+  it('says so when a gap is named after a group which exists', async () => {
+    const { container } = init();
+
+    fireEvent.contextMenu(getGap(container, 1));
+
+    const nameField = screen.getByPlaceholderText('New group');
+
+    fireEvent.change(nameField, {
+      target: { value: entityGroup_exclusive_1.name },
+    });
+    fireEvent.keyDown(nameField, { key: 'Enter' });
+
+    expect(
+      await screen.findByText('A group with this name already exists'),
+    ).toBeInTheDocument();
+
+    // The naming goes on, and no group was made
+    expect(screen.getByPlaceholderText('New group')).toBeInTheDocument();
+    expect(EntityGroups.getAll(type)).toHaveLength(exclusiveGroups.length);
+  });
+
+  it('says so when the group taking shape is named after one which exists', async () => {
+    const { container } = init();
+
+    fireEvent.dragStart(screen.getByTestId(addressedItem_2), { dataTransfer });
+    fireEvent.drop(getGap(container, 1), { dataTransfer });
+
+    const nameField = screen.getByPlaceholderText('Group name');
+
+    fireEvent.change(nameField, {
+      target: { value: entityGroup_exclusive_1.name },
+    });
+    fireEvent.keyDown(nameField, { key: 'Enter' });
+
+    expect(
+      await screen.findByText('A group with this name already exists'),
+    ).toBeInTheDocument();
+
+    // The group goes on taking shape around the dropped item
+    expect(container.querySelector('.entity-group-placeholder')).not.toBeNull();
+    expect(EntityGroups.getAll(type)).toHaveLength(exclusiveGroups.length);
+  });
+
   it('takes typing in the naming field', async () => {
     const { container } = init();
 
@@ -269,7 +331,7 @@ describe('EntityGroupList', () => {
       expect(getGap(container, 1)).not.toHaveClass('entity-group-gap-compact');
     });
 
-    it('keeps the expanded spacing above the first group', () => {
+    it('keeps the expanded spacing at the top of the list', () => {
       EntityGroups.setCollapsed(type, exclusiveGroups[0].id, true);
 
       const { container } = init();
@@ -289,12 +351,124 @@ describe('EntityGroupList', () => {
       );
     });
 
+    it('gives up the spacing between a collapsed ungrouped group and a collapsed group', () => {
+      EntityGroups.setCollapsed(type, EntityGroups.constants.UngroupedId, true);
+      EntityGroups.setCollapsed(type, exclusiveGroups[0].id, true);
+
+      const { container } = initWithItems();
+
+      expect(getGap(container, 0)).toHaveClass('entity-group-gap-compact');
+    });
+
+    it('keeps the spacing below a collapsed ungrouped group when the group below it is expanded', () => {
+      EntityGroups.setCollapsed(type, EntityGroups.constants.UngroupedId, true);
+
+      const { container } = initWithItems();
+
+      expect(getGap(container, 0)).not.toHaveClass('entity-group-gap-compact');
+    });
+
     it('fills the rest of the list below the last group', () => {
       const { container } = init();
 
       expect(getGap(container, exclusiveGroups.length)).toHaveClass(
         'entity-group-gap-fill',
       );
+    });
+  });
+
+  describe('the ungrouped group', () => {
+    // Returns the ungrouped group's element
+    function getUngrouped(): HTMLElement {
+      return screen
+        .getByText('Ungrouped')
+        .closest('.entity-group') as HTMLElement;
+    }
+
+    it("lists the items in none of the type's groups", () => {
+      initWithItems();
+
+      const group = getUngrouped();
+
+      expect(within(group).getByTestId(plainItem_2)).toBeInTheDocument();
+      expect(within(group).queryByTestId(addressedItem_1)).toBeNull();
+    });
+
+    it('takes the items dropped on it out of the groups holding them', async () => {
+      initWithItems();
+
+      fireEvent.dragStart(screen.getByTestId(addressedItem_2), {
+        dataTransfer,
+      });
+      fireEvent.drop(getUngrouped(), { dataTransfer });
+
+      await waitFor(() => {
+        expect(
+          EntityGroups.get(type, entityGroup_exclusive_2.id).items,
+        ).toEqual([]);
+      });
+    });
+
+    it('offers no actions of its own', () => {
+      initWithItems();
+
+      expect(within(getUngrouped()).queryByLabelText('Options')).toBeNull();
+    });
+
+    it("lists the items in none of the type's groups", () => {
+      initWithItems();
+
+      const group = getUngrouped();
+
+      expect(within(group).getByTestId(plainItem_2)).toBeInTheDocument();
+      expect(within(group).queryByTestId(addressedItem_1)).toBeNull();
+    });
+
+    it('takes the items dropped on it out of the groups holding them', async () => {
+      initWithItems();
+
+      fireEvent.dragStart(screen.getByTestId(addressedItem_2), {
+        dataTransfer,
+      });
+      fireEvent.drop(getUngrouped(), { dataTransfer });
+
+      await waitFor(() => {
+        expect(
+          EntityGroups.get(type, entityGroup_exclusive_2.id).items,
+        ).toEqual([]);
+      });
+    });
+
+    it('offers no actions of its own', () => {
+      initWithItems();
+
+      expect(within(getUngrouped()).queryByLabelText('Options')).toBeNull();
+    });
+
+    it('is not one of the groups the list rearranges', () => {
+      const { container } = initWithItems();
+
+      const sortable = container.querySelector('.sortable-list');
+
+      expect(sortable?.contains(getUngrouped())).toBe(false);
+    });
+
+    it('is left out when every item is in a group', () => {
+      initWithItems([addressedItem_1, addressedItem_2, plainItem_1]);
+
+      expect(screen.queryByText('Ungrouped')).toBeNull();
+    });
+
+    it('is left out for a type which does not have one', () => {
+      render(
+        <EntityGroupList
+          type={groupTypeConfig_multi.id}
+          itemIds={itemIds}
+          renderItem={(itemId) => <span data-testid={itemId}>{itemId}</span>}
+        />,
+      );
+
+      expect(screen.queryByText('Ungrouped')).toBeNull();
     });
   });
 

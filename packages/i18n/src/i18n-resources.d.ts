@@ -3333,6 +3333,7 @@ declare module 'i18next' {
           labels: {
             group: string;
             newGroup: string;
+            ungrouped: string;
             empty: string;
           };
           actions: {
@@ -3349,6 +3350,7 @@ declare module 'i18next' {
           };
           name: {
             placeholder: string;
+            taken: string;
           };
         };
       };
