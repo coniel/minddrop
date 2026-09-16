@@ -2,7 +2,7 @@ import { EntityGroups } from '@minddrop/entity-groups';
 import { TagGroupsIcon, TagGroupsType } from './constants';
 
 // Tag groups are entity groups, so their events and errors are the
-// generic ones: a listener filters on the group's type.
+// generic ones. A listener filters on the group's type.
 export const events: typeof EntityGroups.events = EntityGroups.events;
 
 export const errors: typeof EntityGroups.errors = EntityGroups.errors;

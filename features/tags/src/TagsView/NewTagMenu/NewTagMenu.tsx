@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { EntityGroup } from '@minddrop/entity-groups';
 import { TagGroups } from '@minddrop/tags';
+import { resolveEntityGroupNameError } from '@minddrop/ui-entity-groups';
 import {
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -12,21 +13,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   IconButton,
+  NamePopover,
 } from '@minddrop/ui-primitives';
 import { NewTagPopover } from '../NewTagPopover';
-import { TagGroupNamePopover } from '../TagGroupNamePopover';
 
 export interface NewTagMenuProps {
   /**
    * The tag groups a new tag can be created into.
    */
   groups: EntityGroup[];
-
-  /**
-   * Callback fired with the group name when the new group naming
-   * is committed.
-   */
-  onCreateGroup: (name: string) => void;
 }
 
 /**
@@ -35,10 +30,7 @@ export interface NewTagMenuProps {
  * existing group. The creation actions swap the menu for form
  * popovers.
  */
-export const NewTagMenu: React.FC<NewTagMenuProps> = ({
-  groups,
-  onCreateGroup,
-}) => {
+export const NewTagMenu: React.FC<NewTagMenuProps> = ({ groups }) => {
   const addButtonRef = useRef<HTMLButtonElement>(null);
   const [namingGroup, setNamingGroup] = useState(false);
   const [creatingTag, setCreatingTag] = useState(false);
@@ -48,6 +40,16 @@ export const NewTagMenu: React.FC<NewTagMenuProps> = ({
   function handleCreateTag(group?: EntityGroup) {
     setTagGroup(group);
     setCreatingTag(true);
+  }
+
+  // Create the group with the committed name, or show an error if
+  // the name is invalid.
+  async function handleCreateGroup(name: string) {
+    try {
+      await TagGroups.create(name);
+    } catch (error) {
+      return resolveEntityGroupNameError(error);
+    }
   }
 
   return (
@@ -107,11 +109,12 @@ export const NewTagMenu: React.FC<NewTagMenuProps> = ({
       />
 
       {/* Names the new group in place of the menu */}
-      <TagGroupNamePopover
+      <NamePopover
         open={namingGroup}
         onOpenChange={setNamingGroup}
         anchor={addButtonRef}
-        onSubmit={onCreateGroup}
+        placeholder="tags.groupName.placeholder"
+        onSubmit={handleCreateGroup}
       />
     </>
   );

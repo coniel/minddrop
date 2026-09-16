@@ -45,6 +45,14 @@ export interface NewTagPopoverProps {
    * The group the new tag is assigned to by default.
    */
   defaultGroup?: EntityGroup;
+
+  /**
+   * Whether the group field is hidden. Set it on a form opened from
+   * the group the tag is filed under.
+   *
+   * @default false
+   */
+  hideGroupField?: boolean;
 }
 
 /**
@@ -57,6 +65,7 @@ export const NewTagPopover: React.FC<NewTagPopoverProps> = ({
   onOpenChange,
   anchor,
   defaultGroup,
+  hideGroupField = false,
 }) => {
   const [name, setName] = useState('');
   const [nameTaken, setNameTaken] = useState(false);
@@ -203,19 +212,21 @@ export const NewTagPopover: React.FC<NewTagPopoverProps> = ({
               />
 
               {/* The tag's group assignment */}
-              <SelectField
-                variant="subtle"
-                size="md"
-                value={groupId}
-                options={[
-                  { value: NoGroupValue, label: 'tags.details.groupNone' },
-                  ...groups.map((group) => ({
-                    value: group.id,
-                    stringLabel: group.name,
-                  })),
-                ]}
-                onValueChange={(value) => setGroupId(String(value))}
-              />
+              {!hideGroupField && (
+                <SelectField
+                  variant="subtle"
+                  size="md"
+                  value={groupId}
+                  options={[
+                    { value: NoGroupValue, label: 'tags.details.groupNone' },
+                    ...groups.map((group) => ({
+                      value: group.id,
+                      stringLabel: group.name,
+                    })),
+                  ]}
+                  onValueChange={(value) => setGroupId(String(value))}
+                />
+              )}
 
               {/* Creates the tag */}
               <Group justify="end">

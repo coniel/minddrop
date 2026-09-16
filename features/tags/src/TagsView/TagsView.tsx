@@ -1,150 +1,64 @@
 import { useMemo, useState } from 'react';
-import { EntityGroup } from '@minddrop/entity-groups';
-import { useTranslation } from '@minddrop/i18n';
-import { Tag, TagGroups, Tags } from '@minddrop/tags';
-import {
-  ListPanelView,
-  ListPanelViewItem,
-  ListPanelViewSection,
-} from '@minddrop/ui-components';
+import { EntityGroup, EntityGroups } from '@minddrop/entity-groups';
+import { TagGroups, Tags } from '@minddrop/tags';
+import { ListPanelView, ListPanelViewItem } from '@minddrop/ui-components';
+import { EntityGroupAddAction } from '@minddrop/ui-entity-groups';
+import { orderByName } from '@minddrop/utils';
 import { Views } from '@minddrop/views';
 import { NewTagMenu } from './NewTagMenu';
 import { NewTagPopover } from './NewTagPopover';
 import { TagEntries } from './TagEntries';
-import { TagGroupNamePopover } from './TagGroupNamePopover';
 import { TagNamePopover } from './TagNamePopover';
-import { buildTagGroupMenu } from './buildTagGroupMenu';
 import { buildTagMenu } from './buildTagMenu';
 import './TagsView.css';
 
 /**
  * Renders a two column view of the global tags: a searchable list
- * of tags sectioned by group on the left, and the entries tagged
+ * of tags grouped by tag group on the left, and the entries tagged
  * with the selected tag on the right.
  */
 export const TagsView: React.FC = () => {
   const [query, setQuery] = useState('');
   const [renamingTagId, setRenamingTagId] = useState<string | null>(null);
-  const [renamingGroupId, setRenamingGroupId] = useState<string | null>(null);
-  const [creatingTagGroupId, setCreatingTagGroupId] = useState<string | null>(
-    null,
-  );
   const subview = Views.useSubview();
-  const { t } = useTranslation();
   const tags = Tags.useAll();
   const groups = TagGroups.useAll();
   const selectedTag = Tags.use(subview?.id ?? '');
 
-  // Tags listed in the left column: fuzzy name matches when
-  // searching, all tags otherwise.
+  // List the tags for the left column. Matches in match order while
+  // searching, every tag by name otherwise.
   const listedTags = useMemo(
-    () => (query ? Tags.search(query) : tags),
+    () => (query ? Tags.search(query) : [...tags].sort(orderByName)),
     [tags, query],
   );
 
-  // The listed tags sectioned by group, ungrouped tags first
-  const sections = useMemo(() => {
-    // Returns the tag as a list item carrying its menu and rename
-    // popover.
-    const toListItem = (
-      tag: Tag,
-      groupId: string | null,
-    ): ListPanelViewItem => ({
-      id: tag.id,
-      label: tag.name,
-      contentIcon: tag.icon,
-      menu: buildTagMenu(tag, groups, groupId, () => setRenamingTagId(tag.id)),
-      popovers: ({ anchor }) => (
-        <TagNamePopover
-          open={renamingTagId === tag.id}
-          onOpenChange={(open) => setRenamingTagId(open ? tag.id : null)}
-          anchor={anchor}
-          tag={tag}
-        />
+  // Build the listed tags into rows with their menu and rename
+  // popover.
+  const items = useMemo(
+    () =>
+      listedTags.map(
+        (tag): ListPanelViewItem => ({
+          id: tag.id,
+          label: tag.name,
+          contentIcon: tag.icon,
+          menu: buildTagMenu(
+            tag,
+            groups,
+            TagGroups.getForItem(tag.id)[0]?.id ?? null,
+            () => setRenamingTagId(tag.id),
+          ),
+          popovers: ({ anchor }) => (
+            <TagNamePopover
+              open={renamingTagId === tag.id}
+              onOpenChange={(open) => setRenamingTagId(open ? tag.id : null)}
+              anchor={anchor}
+              tag={tag}
+            />
+          ),
+        }),
       ),
-    });
-
-    // Collapsible group sections, in the groups' stored order
-    const groupSections: ListPanelViewSection[] = groups.map((group) => ({
-      id: group.id,
-      stringLabel: group.name,
-      menu: buildTagGroupMenu(group, {
-        onCreateTag: () => setCreatingTagGroupId(group.id),
-        onRename: () => setRenamingGroupId(group.id),
-      }),
-      popovers: ({ anchor }) => (
-        <>
-          {/* Renames the group */}
-          <TagGroupNamePopover
-            open={renamingGroupId === group.id}
-            onOpenChange={(open) => setRenamingGroupId(open ? group.id : null)}
-            anchor={anchor}
-            defaultName={group.name}
-            onSubmit={(name) => renameGroup(group, name)}
-          />
-
-          {/* The menu's new tag form */}
-          <NewTagPopover
-            open={creatingTagGroupId === group.id}
-            onOpenChange={(open) =>
-              setCreatingTagGroupId(open ? group.id : null)
-            }
-            anchor={anchor}
-            defaultGroup={group}
-          />
-        </>
-      ),
-      addPopover: ({ anchor, open, onOpenChange }) => (
-        <NewTagPopover
-          open={open}
-          onOpenChange={onOpenChange}
-          anchor={anchor}
-          defaultGroup={group}
-        />
-      ),
-      // The group's listed tags, in the group's order
-      items: group.items
-        .map((tagId) => listedTags.find((tag) => tag.id === tagId))
-        .filter((tag): tag is Tag => tag !== undefined)
-        .map((tag) => toListItem(tag, group.id)),
-    }));
-
-    // Tags in no group, listed first
-    const groupedIds = new Set(groups.flatMap((group) => group.items));
-    const ungroupedItems = listedTags
-      .filter((tag) => !groupedIds.has(tag.id))
-      .map((tag) => toListItem(tag, null));
-
-    // The ungrouped section is only labelled when it has tags to
-    // set apart from the groups, and dropped entirely when empty
-    // so the list-level empty state can show.
-    const ungroupedSections: ListPanelViewSection[] =
-      ungroupedItems.length > 0
-        ? [
-            {
-              id: 'ungrouped',
-              stringLabel:
-                groups.length > 0 ? t('tags.list.ungrouped') : undefined,
-              items: ungroupedItems,
-            },
-          ]
-        : [];
-
-    const allSections = [...ungroupedSections, ...groupSections];
-
-    // While searching, hide sections without matches
-    return query
-      ? allSections.filter((section) => section.items.length > 0)
-      : allSections;
-  }, [
-    groups,
-    listedTags,
-    query,
-    t,
-    renamingTagId,
-    renamingGroupId,
-    creatingTagGroupId,
-  ]);
+    [listedTags, groups, renamingTagId],
+  );
 
   // The tag whose entries the panel's content lists
   const selectedItem = useMemo(
@@ -157,36 +71,25 @@ export const TagsView: React.FC = () => {
     [selectedTag],
   );
 
-  // Create a new group with the committed name, ignoring names
-  // already in use.
-  async function handleCreateGroup(name: string) {
-    try {
-      await TagGroups.create(name);
-    } catch {
-      // A group with the name already exists
-    }
-  }
-
   return (
     <ListPanelView
       className="tags-view"
       icon={Tags.constants.Icon}
       title="tags.labels.tags"
-      sections={sections}
+      items={items}
+      groups={{
+        type: TagGroups.constants.Type,
+        resolveAddAction: resolveGroupAddAction,
+      }}
       selectedItem={selectedItem}
       query={query}
       onQueryChange={setQuery}
       searchPlaceholder="tags.list.searchPlaceholder"
       emptyLabel="tags.list.empty"
       noResultsLabel="tags.list.noResults"
-      sectionEmptyLabel="tags.list.empty"
       noSelectionLabel="tags.details.noSelection"
       itemMenuLabel="tags.actions.options"
-      sectionMenuLabel="tags.actions.groupOptions"
-      sectionAddLabel="tags.actions.new"
-      addAction={
-        <NewTagMenu groups={groups} onCreateGroup={handleCreateGroup} />
-      }
+      addAction={<NewTagMenu groups={groups} />}
     >
       {selectedTag && <TagEntries tag={selectedTag} />}
     </ListPanelView>
@@ -194,17 +97,26 @@ export const TagsView: React.FC = () => {
 };
 
 /**
- * Persists a group's new name, ignoring names already in use.
+ * Returns the add control shown in a group's label row. It creates a
+ * tag filed under the group, with no group field on its form. The
+ * group it was opened from is the tag's.
  */
-async function renameGroup(group: EntityGroup, name: string) {
-  // The name is unchanged
-  if (name === group.name) {
-    return;
-  }
+function resolveGroupAddAction(group: EntityGroup): EntityGroupAddAction {
+  // A tag created from the ungrouped group joins no group
+  const defaultGroup =
+    group.id === EntityGroups.constants.UngroupedId ? undefined : group;
 
-  try {
-    await TagGroups.update(group.id, { name });
-  } catch {
-    // The name is already in use, keep the current one
-  }
+  // Build the add button and the form it opens
+  return {
+    label: 'tags.actions.new',
+    popover: ({ anchor, open, onOpenChange }) => (
+      <NewTagPopover
+        hideGroupField
+        open={open}
+        onOpenChange={onOpenChange}
+        anchor={anchor}
+        defaultGroup={defaultGroup}
+      />
+    ),
+  };
 }

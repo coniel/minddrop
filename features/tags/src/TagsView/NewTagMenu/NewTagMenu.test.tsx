@@ -13,7 +13,7 @@ describe('<NewTagMenu />', () => {
   afterEach(cleanup);
 
   it('creates a tag from the new tag form', async () => {
-    render(<NewTagMenu groups={tagGroups} onCreateGroup={() => {}} />);
+    render(<NewTagMenu groups={tagGroups} />);
     const user = userEvent.setup();
 
     // Open the menu and pick the new tag action
@@ -33,7 +33,7 @@ describe('<NewTagMenu />', () => {
   });
 
   it('creates a tag into the picked group', async () => {
-    render(<NewTagMenu groups={tagGroups} onCreateGroup={() => {}} />);
+    render(<NewTagMenu groups={tagGroups} />);
     const user = userEvent.setup();
 
     // Open the menu and pick the group's new tag action

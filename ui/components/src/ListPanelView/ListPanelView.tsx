@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo } from 'react';
+import { EntityGroups } from '@minddrop/entity-groups';
 import { TranslationKey } from '@minddrop/i18n';
 import { SelectionItem } from '@minddrop/selection';
+import { EntityGroupList } from '@minddrop/ui-entity-groups';
 import {
   Group,
   Icon,
@@ -18,20 +20,16 @@ import {
 } from '@minddrop/ui-primitives';
 import { SubviewDescriptor, Views } from '@minddrop/views';
 import { PanelView, PanelViewAction } from '../PanelView';
-import { SidebarGroup, SidebarGroupAddPopoverContext } from '../SidebarGroup';
 import { DraggableListItem } from './DraggableListItem';
+import { ListPanelViewGroups } from './ListPanelViewGroups.types';
 import './ListPanelView.css';
 
-/**
- * The context items' and sections' follow-up popovers are anchored
- * with.
- */
-export type ListPanelViewPopoverContext = MenuItemPopoverContext;
+export type { ListPanelViewGroups };
 
 /**
- * The context a section's add popover is anchored and opened with.
+ * The context an item's follow-up popovers are anchored with.
  */
-export type ListPanelViewAddPopoverContext = SidebarGroupAddPopoverContext;
+export type ListPanelViewPopoverContext = MenuItemPopoverContext;
 
 export interface ListPanelViewItem {
   /**
@@ -70,69 +68,20 @@ export interface ListPanelViewItem {
   selectionItem?: SelectionItem;
 }
 
-export interface ListPanelViewSection {
-  /**
-   * A unique identifier for the section.
-   */
-  id: string;
-
-  /**
-   * Content rendered above the section's items. Ignored when
-   * `stringLabel` is provided.
-   */
-  header?: React.ReactNode;
-
-  /**
-   * Plain string label rendering the section as a collapsible
-   * labelled group.
-   */
-  stringLabel?: string;
-
-  /**
-   * The section's menu, opened both from a label options button
-   * and as the section's context menu. Only rendered for sections
-   * with a `stringLabel`, which is what carries the button.
-   */
-  menu?: MenuContents;
-
-  /**
-   * Popovers opened by the section's menu actions, anchored via
-   * the given context.
-   */
-  popovers?: (context: ListPanelViewPopoverContext) => React.ReactNode;
-
-  /**
-   * Called when the section's add button is clicked, e.g. to open
-   * a creation dialog. The button is only rendered when this or
-   * `addPopover` is provided.
-   */
-  onAddClick?: () => void;
-
-  /**
-   * The popover opened by the section's add button, anchored via
-   * the given context. The button is only rendered when this or
-   * `onAddClick` is provided.
-   */
-  addPopover?: (context: ListPanelViewAddPopoverContext) => React.ReactNode;
-
-  /**
-   * The section's items.
-   */
-  items: ListPanelViewItem[];
-}
-
 export interface ListPanelViewProps {
   /**
-   * The items listed in the left column. Ignored when `sections`
-   * is provided.
+   * The items listed in the left column. Under their groups when
+   * `groups` is set, in the order given while searching.
    */
   items?: ListPanelViewItem[];
 
   /**
-   * Sections of items listed in the left column, each rendered
-   * with its header above its items. Takes priority over `items`.
+   * Groups the listed items by an entity group type, in place of the
+   * flat list. A search lists its matches on their own, in the order
+   * they matched, and so does a type whose only group is the
+   * ungrouped one.
    */
-  sections?: ListPanelViewSection[];
+  groups?: ListPanelViewGroups;
 
   /**
    * The selected item, titling the panel and rendered by the
@@ -166,11 +115,6 @@ export interface ListPanelViewProps {
   noResultsLabel: TranslationKey;
 
   /**
-   * Empty state shown inside labelled sections without items.
-   */
-  sectionEmptyLabel?: TranslationKey;
-
-  /**
    * Empty state shown in place of the content until an item
    * is selected.
    */
@@ -181,18 +125,6 @@ export interface ListPanelViewProps {
    * @default 'actions.options'
    */
   itemMenuLabel?: TranslationKey;
-
-  /**
-   * Accessible label of the sections' menu buttons.
-   * @default 'actions.options'
-   */
-  sectionMenuLabel?: TranslationKey;
-
-  /**
-   * Label and tooltip of the sections' add buttons.
-   * @default 'actions.new'
-   */
-  sectionAddLabel?: TranslationKey;
 
   /**
    * Control rendered beside the search field, creating a new item.
@@ -240,12 +172,11 @@ export interface ListPanelViewProps {
 
 /**
  * Renders a two column panel view: a searchable list of items on
- * the left, and the selected item's content on the right.
+ * the left, and the selected item's content on the right. The list
+ * is flat, or grouped by an entity group type when given one.
  *
- * Items and sections can carry menus, rendered both behind
- * hover-revealed options buttons and as context menus, and
- * sections can carry an add button opening a popover or firing a
- * callback.
+ * Items can carry menus, rendered both behind hover-revealed
+ * options buttons and as context menus.
  *
  * The selected item is the view's subview, so selecting one can be
  * navigated back and forward through, and titles the view's tab.
@@ -256,6 +187,7 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
   children,
   className,
   emptyLabel,
+  groups,
   icon,
   itemMenuLabel = 'actions.options',
   items,
@@ -266,23 +198,31 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
   onQueryChange,
   query,
   searchPlaceholder,
-  sectionAddLabel = 'actions.new',
-  sectionEmptyLabel,
-  sectionMenuLabel = 'actions.options',
-  sections,
   selectedItem,
   title,
 }) => {
   const subview = Views.useSubview();
   const setSubview = Views.useSetSubview();
+  // Count the type's groups
+  const groupCount = EntityGroups.useAll(groups?.type ?? '').length;
 
-  // Every listed item regardless of sectioning, driving the
-  // fallback selection and the empty states.
-  const allItems = useMemo(
-    () =>
-      sections ? sections.flatMap((section) => section.items) : (items ?? []),
-    [sections, items],
+  // The listed items, driving the fallback selection, the empty
+  // states and the set the groups are listed against.
+  const allItems = useMemo(() => items ?? [], [items]);
+
+  // Whether the items are shown under their groups. A search lists
+  // its matches on their own, and so does a type whose only group
+  // is the ungrouped one.
+  const grouped = Boolean(groups) && !query && groupCount > 0;
+
+  // Key the items by ID, for the group list to look up
+  const itemsById = useMemo(
+    () => new Map(allItems.map((item) => [item.id, item])),
+    [allItems],
   );
+
+  // Map the items to the IDs the group list places
+  const itemIds = useMemo(() => allItems.map((item) => item.id), [allItems]);
 
   // The item the panel shows, falling back to the first listed item
   // when it shows none yet.
@@ -314,38 +254,6 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
     onDoubleClickItem?.(item);
   }
 
-  // Render a labelled section as a collapsible group carrying its
-  // menu and add button, or an unlabelled one as a plain headed
-  // group.
-  function renderSection(section: ListPanelViewSection) {
-    // Unlabelled sections have no label to hang the actions off
-    if (!section.stringLabel) {
-      return (
-        <Stack key={section.id} gap={1}>
-          {section.header}
-          <MenuGroup>{section.items.map(renderItem)}</MenuGroup>
-        </Stack>
-      );
-    }
-
-    return (
-      <SidebarGroup
-        key={section.id}
-        stringLabel={section.stringLabel}
-        menu={section.menu}
-        menuLabel={sectionMenuLabel}
-        popovers={section.popovers}
-        onAddClick={section.onAddClick}
-        addPopover={section.addPopover}
-        addLabel={sectionAddLabel}
-        showLabelActionsOnHover={false}
-        emptyLabel={sectionEmptyLabel}
-      >
-        {section.items.map(renderItem)}
-      </SidebarGroup>
-    );
-  }
-
   // Render an item as a selectable list row carrying its menu,
   // draggable when the item says what it is dragged as
   function renderItem(item: ListPanelViewItem) {
@@ -373,6 +281,14 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
         {row}
       </DraggableListItem>
     );
+  }
+
+  // Render the row of the item a group places
+  function renderGroupedItem(itemId: string) {
+    const item = itemsById.get(itemId);
+
+    // Render the row of the item the ID names
+    return item ? renderItem(item) : null;
   }
 
   return (
@@ -405,19 +321,22 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
           </Group>
 
           <ScrollArea className="list-panel-view-list-items">
-            {sections ? (
-              /* Sectioned list, each section headed by its header */
-              <Stack gap={3} className="list-panel-view-sections">
-                {sections.map(renderSection)}
-              </Stack>
+            {grouped && groups ? (
+              /* The items under the groups they belong to */
+              <EntityGroupList
+                type={groups.type}
+                itemIds={itemIds}
+                renderItem={renderGroupedItem}
+                resolveAddAction={groups.resolveAddAction}
+              />
             ) : (
               /* Flat list of items */
               <MenuGroup>{allItems.map(renderItem)}</MenuGroup>
             )}
             {/* Empty state, differentiating no matches from no
-                items. Sections render their own empty states, so
-                it only shows when there are none */}
-            {allItems.length === 0 && (sections ?? []).length === 0 && (
+                items. Groups show their own empty states, so it only
+                shows when the items are listed on their own */}
+            {allItems.length === 0 && !grouped && (
               <Text
                 block
                 size="sm"

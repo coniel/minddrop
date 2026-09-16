@@ -2125,8 +2125,6 @@ declare module 'i18next' {
             rename: string;
             color: string;
             group: string;
-            groupOptions: string;
-            renameGroup: string;
             delete: {
               label: string;
               confirmation: {
@@ -2136,20 +2134,11 @@ declare module 'i18next' {
                 confirm: string;
               };
             };
-            deleteGroup: {
-              label: string;
-              confirmation: {
-                title: string;
-                message: string;
-                confirm: string;
-              };
-            };
           };
           list: {
             searchPlaceholder: string;
             empty: string;
             noResults: string;
-            ungrouped: string;
           };
           details: {
             noSelection: string;

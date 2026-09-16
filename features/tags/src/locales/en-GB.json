@@ -19,8 +19,6 @@
       "rename": "Rename",
       "color": "Colour",
       "group": "Group",
-      "groupOptions": "Group options",
-      "renameGroup": "Rename group",
       "delete": {
         "label": "Delete tag",
         "confirmation": {
@@ -29,21 +27,12 @@
           "message_other": "The tag will be deleted and removed from {{count}} entries.",
           "confirm": "Delete"
         }
-      },
-      "deleteGroup": {
-        "label": "Delete group",
-        "confirmation": {
-          "title": "Delete group?",
-          "message": "The group will be deleted. Its tags are not deleted and become ungrouped.",
-          "confirm": "Delete"
-        }
       }
     },
     "list": {
       "searchPlaceholder": "Search tags...",
       "empty": "No tags",
-      "noResults": "No matching tags",
-      "ungrouped": "Ungrouped"
+      "noResults": "No matching tags"
     },
     "details": {
       "noSelection": "Select a tag",

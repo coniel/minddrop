@@ -1,4 +1,10 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { EntityGroups } from '@minddrop/entity-groups';
+import {
+  EntityGroupFixtures,
+  cleanup as cleanupEntityGroups,
+  setup as setupEntityGroups,
+} from '@minddrop/entity-groups/test-utils';
 import { Events } from '@minddrop/events';
 import {
   cleanup as cleanupRender,
@@ -6,7 +12,9 @@ import {
   screen,
   userEvent,
   waitFor,
+  within,
 } from '@minddrop/test-utils';
+import { initializeEntityGroupsUi } from '@minddrop/ui-entity-groups';
 import { Views } from '@minddrop/views';
 import {
   ListPanelView,
@@ -14,9 +22,30 @@ import {
   ListPanelViewProps,
 } from './ListPanelView';
 
+// Register the entity group translations. The grouped list renders
+// its chrome with them.
+initializeEntityGroupsUi();
+
+const {
+  addressedItem_1,
+  addressedItem_2,
+  entityGroup_exclusive_1,
+  groupTypeConfig_exclusive,
+  plainItem_1,
+  plainItem_2,
+} = EntityGroupFixtures;
+
 // Plain list items
 const item1: ListPanelViewItem = { id: 'item-1', label: 'Item 1' };
 const item2: ListPanelViewItem = { id: 'item-2', label: 'Item 2' };
+
+// The group fixtures' items as list items, labelled by their IDs
+const groupedItems: ListPanelViewItem[] = [
+  addressedItem_1,
+  addressedItem_2,
+  plainItem_1,
+  plainItem_2,
+].map((id) => ({ id, label: id }));
 
 // Renders the view with sensible defaults inside a subview context
 function renderView(
@@ -39,9 +68,11 @@ function renderView(
 }
 
 describe('<ListPanelView />', () => {
-  afterEach(() => {
+  beforeEach(setupEntityGroups);
+
+  afterEach(async () => {
     cleanupRender();
-    Events.tests.cleanup();
+    await cleanupEntityGroups();
     vi.clearAllMocks();
   });
 
@@ -128,56 +159,107 @@ describe('<ListPanelView />', () => {
     screen.getByText('tags.list.noResults');
   });
 
-  it('renders labelled sections with their items', () => {
-    renderView({
-      sections: [{ id: 'section-1', stringLabel: 'Group 1', items: [item1] }],
+  describe('grouped items', () => {
+    // Renders the panel with its items grouped by the fixture type
+    function renderGrouped(props: Partial<ListPanelViewProps> = {}) {
+      return renderView({
+        items: groupedItems,
+        groups: { type: groupTypeConfig_exclusive.id },
+        ...props,
+      });
+    }
+
+    // Returns the element of the group with the given name
+    function getGroup(name: string): HTMLElement {
+      return screen.getByText(name).closest('.entity-group') as HTMLElement;
+    }
+
+    it('lists the items under the groups holding them', () => {
+      renderGrouped();
+
+      const group = getGroup(entityGroup_exclusive_1.name);
+
+      expect(within(group).getByText(addressedItem_1)).toBeInTheDocument();
+      expect(within(group).getByText(plainItem_1)).toBeInTheDocument();
     });
 
-    screen.getByText('Group 1');
-    screen.getByText('Item 1');
-  });
+    it('renders nothing for an ID no listed item has', () => {
+      renderGrouped({ items: groupedItems.slice(1) });
 
-  it('renders the section empty state inside empty labelled sections', () => {
-    renderView({
-      sections: [{ id: 'section-1', stringLabel: 'Group 1', items: [] }],
-      sectionEmptyLabel: 'tags.details.entriesEmpty',
+      expect(screen.queryByText(addressedItem_1)).toBeNull();
     });
 
-    screen.getByText('tags.details.entriesEmpty');
-  });
+    it('lists the items in no group under the ungrouped group', () => {
+      renderGrouped();
 
-  it('hides the list empty state when sections are present', () => {
-    renderView({
-      sections: [{ id: 'section-1', stringLabel: 'Group 1', items: [] }],
+      expect(
+        within(getGroup('Ungrouped')).getByText(plainItem_2),
+      ).toBeInTheDocument();
     });
 
-    // Only the sections' own empty states apply
-    expect(screen.queryByText('tags.list.empty')).toBeNull();
-  });
+    it('announces a clicked row as the subview', async () => {
+      const announcements: unknown[] = [];
+      const user = userEvent.setup();
 
-  it('renders custom section headers', () => {
-    renderView({
-      sections: [
-        { id: 'section-1', header: <div>Custom header</div>, items: [item1] },
-      ],
+      // Capture subview announcements
+      Events.addListener(Views.events.SetSubview, 'test', (data) => {
+        announcements.push(data);
+      });
+
+      renderGrouped({
+        selectedItem: groupedItems[0],
+      });
+
+      await user.click(screen.getByText(plainItem_1));
+
+      await waitFor(() => {
+        expect(announcements).toContainEqual(
+          expect.objectContaining({
+            subview: expect.objectContaining({ id: plainItem_1 }),
+          }),
+        );
+      });
     });
 
-    screen.getByText('Custom header');
-  });
+    // A lone 'Ungrouped' header groups nothing
+    it('lists the items flat when the type has no groups of its own', async () => {
+      // Leave the type with nothing but its ungrouped group
+      await Promise.all(
+        EntityGroups.getAll(groupTypeConfig_exclusive.id)
+          .filter(({ id }) => id !== EntityGroups.constants.UngroupedId)
+          .map(({ id }) =>
+            EntityGroups.delete(groupTypeConfig_exclusive.id, id),
+          ),
+      );
 
-  it('collapses a labelled section when its label is clicked', async () => {
-    const user = userEvent.setup();
+      renderGrouped();
 
-    renderView({
-      sections: [{ id: 'section-1', stringLabel: 'Group 1', items: [item1] }],
+      expect(screen.queryByText('Ungrouped')).toBeNull();
+      expect(screen.getByText(addressedItem_1)).toBeInTheDocument();
     });
 
-    // Collapse the section
-    await user.click(screen.getByText('Group 1'));
+    // A group's own order would shuffle a ranked list
+    it('lists the matches without their groups while searching', () => {
+      renderGrouped({
+        items: [{ id: addressedItem_1, label: addressedItem_1 }],
+        query: 'query',
+      });
 
-    // The section's items should be hidden
-    await waitFor(() => {
-      expect(screen.queryByText('Item 1')).toBeNull();
+      expect(screen.getByText(addressedItem_1)).toBeInTheDocument();
+      expect(screen.queryByText(entityGroup_exclusive_1.name)).toBeNull();
+      expect(screen.queryByText('Ungrouped')).toBeNull();
+    });
+
+    it('shows the no results state when a search matches nothing', () => {
+      renderGrouped({ items: [], query: 'query' });
+
+      screen.getByText('tags.list.noResults');
+    });
+
+    it('keeps the empty state to itself when the type has groups', () => {
+      renderGrouped({ items: [] });
+
+      expect(screen.queryByText('tags.list.empty')).toBeNull();
     });
   });
 });

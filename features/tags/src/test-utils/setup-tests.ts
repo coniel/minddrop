@@ -8,12 +8,17 @@ import {
   setupTagFixtures,
 } from '@minddrop/tags/test-utils';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
+import { initializeEntityGroupsUi } from '@minddrop/ui-entity-groups';
 import {
   cleanupWorkspaceFixtures,
   setupWorkspaceFixtures,
 } from '@minddrop/workspaces/test-utils';
 
 initializeI18n();
+
+// Register the entity group translations. The grouped tag list
+// renders its chrome with them.
+initializeEntityGroupsUi();
 
 export const MockFs = initializeMockFileSystem();
 
