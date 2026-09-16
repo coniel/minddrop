@@ -55,7 +55,10 @@ export const HorizontalScrollArea = React.forwardRef<
     },
     ref,
   ) => {
-    const { setRef, handleScroll } = useScrollVisibility(visibility, ref);
+    const { setRef, handleScroll, handlePointerLeave } = useScrollVisibility(
+      visibility,
+      ref,
+    );
     const { viewportRef, handlePersistScroll } =
       useScrollStatePersistence(stateKey);
 
@@ -81,6 +84,7 @@ export const HorizontalScrollArea = React.forwardRef<
           className,
         })}
         style={style}
+        onPointerLeave={handlePointerLeave}
       >
         <ScrollAreaPrimitive.Viewport
           ref={viewportRef}

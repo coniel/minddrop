@@ -188,10 +188,11 @@
   transition: opacity 150ms var(--ease-out);
 }
 
-/* scroll - hidden until scrolling, fades out after ~1.5s idle */
+/* scroll - hidden until scrolling, fades out after ~1.5s idle or
+   as soon as the pointer leaves the root */
 .scroll-area-visibility-scroll > .scroll-area-scrollbar {
   opacity: 0;
-  transition: opacity 1000ms var(--ease-out);
+  transition: opacity 400ms var(--ease-out);
   pointer-events: none;
 }
 

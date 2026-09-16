@@ -125,7 +125,7 @@ export const ScrollAreaStories = () => (
     -------------------------------------------------------- */}
     <StorySection
       title="VerticalScrollArea — visibility"
-      description="hover: shown on container hover. scroll: fades in on scroll, out after ~1.5s idle (macOS timing). always: permanently visible."
+      description="hover: shown on container hover. scroll: fades in on scroll, out after ~1.5s idle (macOS timing) or as soon as the pointer leaves. always: permanently visible."
     >
       <StoryRow>
         <StoryItem label="hover (default)">

@@ -34,7 +34,8 @@ export interface ScrollAreaProps {
   /*
    * When to show the scrollbars.
    * - hover  - visible when the container is hovered
-   * - scroll - visible while scrolling, fades out after ~1.5s
+   * - scroll - visible while scrolling, fades out after ~1.5s or
+   *   as soon as the pointer leaves the container
    * - always - always visible
    * @default 'hover'
    */
@@ -85,7 +86,10 @@ export const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
     },
     ref,
   ) => {
-    const { setRef, handleScroll } = useScrollVisibility(visibility, ref);
+    const { setRef, handleScroll, handlePointerLeave } = useScrollVisibility(
+      visibility,
+      ref,
+    );
     const { viewportRef, handlePersistScroll } =
       useScrollStatePersistence(stateKey);
 
@@ -120,6 +124,7 @@ export const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
           className,
         })}
         style={style}
+        onPointerLeave={handlePointerLeave}
       >
         <ScrollAreaPrimitive.Viewport
           ref={setViewportRef}
