@@ -13,8 +13,8 @@ tags: [electrobun, hutch, build, devkit, checkout]
 
 Since Electrobun 2, the `electrobun` npm package is a bootstrapper that downloads Hutch and forwards to it. Its export map points every subpath at `lib/moved.cjs`, which throws — the real SDK is projected into a gitignored `.hutch/devkit/` per app by `npx electrobun sync`, and that is what `electrobun/bun`, `electrobun/view` and `electrobun/main` resolve through.
 
-So a fresh checkout, a newly merged branch or any worktree that has not synced fails on every `electrobun` import: the app tsconfigs extend `./.hutch/devkit/tsconfig.json` for the path aliases, and both Vite configs call `electrobunViteAliases()` against that directory. The failure reads as a module resolution error, which looks like a broken merge or a bad install rather than a missing step. `pnpm i` does not fix it and neither does deleting `node_modules`.
+So a fresh checkout, a newly merged branch or any worktree that has not synced fails on every `electrobun` import: the app tsconfigs extend `./.hutch/devkit/tsconfig.json` for the path aliases, and both Vite configs call `electrobunViteAliases()` against that directory. The failure reads as a module resolution error, which looks like a broken merge or a bad install rather than a missing step. `pnpm i` alone does not fix it and neither does deleting `node_modules`; only the sync projects the devkit.
 
-Run `npx electrobun sync` once in each app directory — `apps/desktop-electrobun` and `apps/dev-tools` have separate devkits. The downloads are cached in `~/.hutch` and shared, so only the first is slow.
+Run `pnpm i` first: on an unsynced install `electrobun sync` hangs with no output rather than reporting the missing dependency. Then run `npx electrobun sync` once in each app directory — `apps/desktop-electrobun` and `apps/dev-tools` have separate devkits. The downloads are cached in `~/.hutch` and shared, so only the first is slow.
 
 The root `hutch.config.ts` declares `packageManager: 'pnpm'`. Without it Hutch's built-in resolver ignores `pnpm-lock.yaml` and writes its own `hutch.lock`, splitting the workspace off its lockfile.
