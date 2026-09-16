@@ -74,6 +74,25 @@ describe('EditorElementRenderer', () => {
     expect(wrapper?.style.getPropertyValue('--editor-line-height')).toBe('1.6');
   });
 
+  it('sets the padding the document is held off the block edges by', () => {
+    const { container } = render(
+      <EditorElementRenderer
+        element={{ ...editorElement, padding: { top: 16, left: 24 } }}
+      />,
+    );
+
+    const wrapper = container.querySelector<HTMLElement>(
+      '.design-editor-element',
+    );
+
+    // Set as a custom property, which the stylesheet applies to the
+    // scrolling box rather than the scroll area.
+    expect(wrapper?.style.padding).toBe('');
+    expect(
+      wrapper?.style.getPropertyValue('--design-editor-element-padding'),
+    ).toBe('16px 0px 0px 24px');
+  });
+
   it("renders the title slot's mapped value as the document title", () => {
     render(
       <DesignPropertiesProvider

@@ -13,6 +13,7 @@ export * from './resolveDesignFilePath';
 export * from './resolveDesignsDirPath';
 export * from './resolveElementRect';
 export * from './resolveOccupiedColumns';
+export * from './resolvePaddingSize';
 export * from './resolveOccupiedRows';
 export * from './resolveRowLayout';
 export * from './resolveScaledWidths';

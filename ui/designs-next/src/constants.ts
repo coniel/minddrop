@@ -4,3 +4,8 @@
  * the default.
  */
 export const BlockControlOffset = 8;
+
+/**
+ * Shown in place of a value which is not set.
+ */
+export const NoValueGlyph = '—';

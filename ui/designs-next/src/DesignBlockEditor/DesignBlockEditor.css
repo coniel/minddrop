@@ -97,6 +97,16 @@
     );
 }
 
+/* A block's padding, drawn as a shaded ring inside its edges */
+.design-block-editor-padding {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-style: solid;
+  border-color: var(--surface-primary);
+  border-radius: inherit;
+}
+
 .design-block-editor-handle {
   position: absolute;
 }
@@ -174,14 +184,11 @@
   cursor: nwse-resize;
 }
 
-/* A block filling one of another block's slots, held against its top
-   edge at its full width. It takes its place from the block holding
-   it, so its height is the only thing dragged. */
+/* A block filling one of another block's slots. It sits against the
+   top edge of that block's content box at its full width, so its
+   height is the only thing dragged. */
 .design-block-editor-slot {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
   /* A couple of ramp steps above the block holding it, so it reads
      as part of that block rather than as a block of its own */
   background-color: var(--accent-500);

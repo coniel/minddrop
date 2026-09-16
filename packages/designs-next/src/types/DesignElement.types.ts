@@ -21,6 +21,31 @@ export type ElementHeightMode =
  */
 export type ElementContentFit = 'fixed' | 'grow' | 'shrink' | 'natural';
 
+/**
+ * A step of the padding scale, from the smallest to the largest.
+ */
+export type PaddingSize =
+  | 'xs'
+  | 's'
+  | 'm'
+  | 'l'
+  | 'xl'
+  | '2xl'
+  | '3xl'
+  | '4xl'
+  | '5xl';
+
+/**
+ * The space between an element's block edges and its content, in
+ * pixels. Sides with no padding are left out.
+ */
+export interface ElementPadding {
+  top?: number;
+  right?: number;
+  bottom?: number;
+  left?: number;
+}
+
 export interface DesignElement {
   /**
    * A unique identifier for the element.
@@ -94,6 +119,12 @@ export interface DesignElement {
    * means fixed. Ignored in aspect-locked designs.
    */
   contentFit?: ElementContentFit;
+
+  /**
+   * The space between the element's block edges and its content.
+   * Absent means none. Only paddable element types have it.
+   */
+  padding?: ElementPadding;
 
   /**
    * How the element's height behaves in an aspect-locked design:

@@ -24,6 +24,7 @@ export const EditorElementConfig: DesignElementConfig<EditorElement> = {
   defaultColumnSpan: Designs.constants.DefaultColumns,
   defaultRowSpan: DefaultRowSpan,
   defaultContentFit: 'grow',
+  paddable: true,
   settingControls: [
     'font',
     'font-size',

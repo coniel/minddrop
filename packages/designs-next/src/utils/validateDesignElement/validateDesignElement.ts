@@ -3,8 +3,9 @@ import {
   ElementContentFits,
   ElementHeightModes,
   ElementWidthModes,
+  PaddingSides,
 } from '../../constants';
-import { DesignElement, ElementWidthMode } from '../../types';
+import { DesignElement, ElementPadding, ElementWidthMode } from '../../types';
 
 /**
  * Validates the shape of a design element read from disk.
@@ -63,6 +64,11 @@ export function validateDesignElement(
     return false;
   }
 
+  // The padding sides must be non-negative amounts when present
+  if (element.padding !== undefined && !isElementPadding(element.padding)) {
+    return false;
+  }
+
   // The mapped property must be a non-empty name when present
   if (
     element.property !== undefined &&
@@ -104,4 +110,34 @@ export function validateDesignElement(
  */
 function isUnitCount(value: unknown, min: number): value is number {
   return typeof value === 'number' && Number.isInteger(value) && value >= min;
+}
+
+/**
+ * Checks whether a value is an element padding.
+ *
+ * @param value - The value to check.
+ * @returns Whether the value is a valid padding.
+ */
+function isElementPadding(value: unknown): value is ElementPadding {
+  if (typeof value !== 'object' || value === null) {
+    return false;
+  }
+
+  const padding = value as Record<string, unknown>;
+
+  return PaddingSides.every((side) => isPaddingAmount(padding[side]));
+}
+
+/**
+ * Checks whether a value is a valid amount for a padding side.
+ *
+ * @param value - The value to check.
+ * @returns Whether the value is a valid padding amount.
+ */
+function isPaddingAmount(value: unknown): boolean {
+  if (value === undefined) {
+    return true;
+  }
+
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0;
 }

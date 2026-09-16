@@ -47,9 +47,17 @@ export const EditorElementRenderer: React.FC<
 
   // Resolve the text settings into the styles they render as. The
   // editor declares its own typography, so those four reach the
-  // document as its custom properties; the rest it inherits.
-  const { fontFamily, fontSize, lineHeight, fontWeight, ...inherited } =
-    resolveElementStyle(element, EditorDefaults);
+  // document as custom properties; the rest it inherits. The padding
+  // is a custom property too, since it goes on the scrolling box
+  // rather than on the scroll area.
+  const {
+    fontFamily,
+    fontSize,
+    lineHeight,
+    fontWeight,
+    padding,
+    ...inherited
+  } = resolveElementStyle(element, EditorDefaults);
 
   const style = {
     ...inherited,
@@ -57,6 +65,7 @@ export const EditorElementRenderer: React.FC<
     '--editor-font-size': fontSize === undefined ? undefined : `${fontSize}px`,
     '--editor-line-height': lineHeight,
     '--editor-font-weight': fontWeight,
+    '--design-editor-element-padding': padding,
   } as React.CSSProperties;
 
   // Scroll a document past the block's height rather than clip it

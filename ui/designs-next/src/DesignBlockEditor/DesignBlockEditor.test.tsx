@@ -1075,6 +1075,34 @@ describe('DesignBlockEditor', () => {
     });
   });
 
+  it("draws a block's padding as the room it takes out of it", () => {
+    const container = renderEditor(null, false, [
+      { ...slottedDesignElement, padding: { top: 8, left: 4 } },
+    ]);
+
+    // A design pixel draws at the editor's own unit size
+    expect(
+      container.querySelector<HTMLElement>('.design-block-editor-padding'),
+    ).toHaveStyle({ borderWidth: '20px 0px 0px 10px' });
+  });
+
+  it('insets a slot block by the padding of the block holding it', () => {
+    const container = renderEditor(null, false, [
+      { ...slottedDesignElement, padding: { top: 8, left: 4 } },
+      captionSlotElement,
+    ]);
+
+    expect(
+      container.querySelector<HTMLElement>('.design-block-editor-slot'),
+    ).toHaveStyle({ top: '20px', left: '10px', right: '0px' });
+  });
+
+  it('draws no padding on a block holding none', () => {
+    const container = renderEditor(null, false, [slottedDesignElement]);
+
+    expect(container.querySelector('.design-block-editor-padding')).toBeNull();
+  });
+
   it('selects a slot block on a press, leaving the block holding it', () => {
     const container = renderEditor(null, false, [
       slottedDesignElement,

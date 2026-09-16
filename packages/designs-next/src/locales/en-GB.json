@@ -123,6 +123,27 @@
       "proportional": "Proportional",
       "proportionalDescription": "Fixed height. Maintains its position relative to the top and bottom edges."
     },
+    "padding": {
+      "label": "Padding",
+      "top": "Padding top",
+      "right": "Padding right",
+      "bottom": "Padding bottom",
+      "left": "Padding left",
+      "link": "Link sides",
+      "unlink": "Unlink sides",
+      "none": "None",
+      "sizes": {
+        "xs": "XS",
+        "s": "S",
+        "m": "M",
+        "l": "L",
+        "xl": "XL",
+        "2xl": "2XL",
+        "3xl": "3XL",
+        "4xl": "4XL",
+        "5xl": "5XL"
+      }
+    },
     "pin": {
       "label": {
         "left": "Pin left",

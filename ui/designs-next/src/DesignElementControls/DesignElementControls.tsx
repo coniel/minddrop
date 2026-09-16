@@ -8,6 +8,7 @@ import {
   Designs,
   ElementContentFit,
   ElementHeightMode,
+  ElementPadding,
   ElementSide,
   ElementWidthMode,
 } from '@minddrop/designs-next';
@@ -32,6 +33,7 @@ import { FontControl } from './FontControl';
 import { FontSizeControl } from './FontSizeControl';
 import { FontWeightMenu } from './FontWeightMenu';
 import { LineHeightControl } from './LineHeightControl';
+import { PaddingControl } from './PaddingControl';
 import { TextAlignMenu } from './TextAlignMenu';
 import { TextColorControl } from './TextColorControl';
 import { VerticalAlignMenu } from './VerticalAlignMenu';
@@ -283,15 +285,20 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
   // a pin on each and fits its content on neither.
   const square = config?.square ?? false;
 
+  // Whether the element takes padding
+  const paddable = config?.paddable ?? false;
+
   // The element's content controls: the property it takes its
   // content from, and the control filling its static content.
   const ContentControls = config?.contentControls;
   const propertyTypes = properties ? config?.propertyTypes : undefined;
 
-  // Whether the controls carry a content and a settings section
+  // Whether the controls carry a content, a sizing and a settings
+  // section, in the order they are rendered.
   const hasContent = Boolean(
     propertyTypes || ContentControls || (properties && config?.slots?.length),
   );
+  const hasSizing = onGrid || paddable;
   const hasSettings = Boolean(settingControls?.length);
 
   // Applies a change to the element
@@ -299,7 +306,7 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
     data: Partial<
       Pick<
         DesignElement,
-        'widthMode' | 'heightMode' | 'contentFit' | 'property'
+        'widthMode' | 'heightMode' | 'contentFit' | 'padding' | 'property'
       >
     >,
   ) {
@@ -367,6 +374,11 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
   // Changes how the element's height fits its content
   function handleContentFitChange(contentFit: ElementContentFit) {
     updateElement({ contentFit });
+  }
+
+  // Changes the element's padding
+  function handlePaddingChange(padding: ElementPadding | undefined) {
+    updateElement({ padding });
   }
 
   // Applies a settings change to the element, making room below it
@@ -474,6 +486,36 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
 
   return (
     <>
+      {/** Content controls, which fill the element **/}
+      {propertyTypes && properties && (
+        <DesignPropertyPicker
+          properties={properties}
+          value={element.property}
+          types={propertyTypes}
+          suggestedTypes={config?.suggestedPropertyTypes}
+          onValueChange={handlePropertyChange}
+        />
+      )}
+      {ContentControls && (
+        <ContentControls
+          element={element}
+          onContentChange={handleContentChange}
+        />
+      )}
+      {properties &&
+        config?.slots?.map((slot) => (
+          <SlotPropertyPicker
+            key={slot.name}
+            slot={slot}
+            properties={properties}
+            value={
+              Designs.resolveSlotElement(elements, element.id, slot.name)
+                ?.property
+            }
+            onValueChange={(property) => changeSlotProperty(slot, property)}
+          />
+        ))}
+      {hasContent && hasSizing && <ToolbarSeparator />}
       {/** Sizing controls, which describe a place on the grid **/}
       {onGrid && (
         <RadioToggleHoverMenu<ElementWidthMode>
@@ -503,36 +545,13 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
           onValueChange={handleContentFitChange}
         />
       )}
-      {onGrid && hasContent && <ToolbarSeparator />}
-      {propertyTypes && properties && (
-        <DesignPropertyPicker
-          properties={properties}
-          value={element.property}
-          types={propertyTypes}
-          suggestedTypes={config?.suggestedPropertyTypes}
-          onValueChange={handlePropertyChange}
+      {paddable && (
+        <PaddingControl
+          value={element.padding}
+          onValueChange={handlePaddingChange}
         />
       )}
-      {ContentControls && (
-        <ContentControls
-          element={element}
-          onContentChange={handleContentChange}
-        />
-      )}
-      {properties &&
-        config?.slots?.map((slot) => (
-          <SlotPropertyPicker
-            key={slot.name}
-            slot={slot}
-            properties={properties}
-            value={
-              Designs.resolveSlotElement(elements, element.id, slot.name)
-                ?.property
-            }
-            onValueChange={(property) => changeSlotProperty(slot, property)}
-          />
-        ))}
-      {(onGrid || hasContent) && hasSettings && <ToolbarSeparator />}
+      {(hasContent || hasSizing) && hasSettings && <ToolbarSeparator />}
       {settingControls?.map((control, index) => {
         // A declared name resolves to its system control, anything
         // else is the element type's own.

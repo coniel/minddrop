@@ -28,6 +28,19 @@ describe('resolveElementStyle', () => {
     });
   });
 
+  it('resolves the padding, sides it holds none on taking no room', () => {
+    const style = resolveElementStyle({
+      ...titleDesignElement,
+      padding: { top: 16, left: 24 },
+    });
+
+    expect(style).toMatchObject({ padding: '16px 0px 0px 24px' });
+  });
+
+  it('leaves out the padding of an element holding none', () => {
+    expect(resolveElementStyle(titleDesignElement).padding).toBeUndefined();
+  });
+
   it('falls back to the given defaults', () => {
     const style = resolveElementStyle(titleDesignElement, {
       fontSize: 24,

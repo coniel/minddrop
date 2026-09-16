@@ -3,6 +3,7 @@ import {
   DesignElementSettings,
   ElementBackground,
   ElementCornerRadius,
+  ElementPadding,
   FontFamily,
   VerticalAlign,
 } from '@minddrop/designs-next';
@@ -72,8 +73,28 @@ export function resolveElementStyle(
     color: resolveElementColor(element.textColor ?? defaults.textColor),
     backgroundColor: background && BackgroundValues[background],
     borderRadius: cornerRadius && CornerRadiusValues[cornerRadius],
+    padding: resolvePadding(element.padding),
     ...custom,
   };
+}
+
+/**
+ * Resolves an element's padding into a CSS padding shorthand. Sides
+ * with no padding are set to 0.
+ *
+ * @param padding - The element's padding.
+ * @returns The shorthand, or undefined if the element has no padding.
+ */
+function resolvePadding(
+  padding: ElementPadding | undefined,
+): string | undefined {
+  if (!padding) {
+    return undefined;
+  }
+
+  return [padding.top, padding.right, padding.bottom, padding.left]
+    .map((amount) => `${amount ?? 0}px`)
+    .join(' ');
 }
 
 /**

@@ -55,6 +55,14 @@ function registerSquare() {
   DesignElementConfigs.register({ ...testElementConfig, square: true });
 }
 
+/**
+ * Registers the box element type as paddable, so the fixture
+ * element's menu offers the padding control.
+ */
+function registerPaddable() {
+  DesignElementConfigs.register({ ...testElementConfig, paddable: true });
+}
+
 interface StubElement extends DesignElement {
   /**
    * A stub element-specific setting.
@@ -499,6 +507,25 @@ describe('DesignElementControls', () => {
     fireEvent.click(screen.getByLabelText('designsNext.contentFit.shrink'));
 
     expect(changedElement(iconDesignElement.id)?.contentFit).toBe('shrink');
+  });
+
+  it('sets the padding of a paddable element', () => {
+    registerPaddable();
+    renderControls();
+
+    openMenu('designsNext.padding.label');
+    openMenu('designsNext.padding.top');
+    fireEvent.click(screen.getByLabelText('designsNext.padding.sizes.xl'));
+
+    expect(changedElement(iconDesignElement.id)?.padding).toEqual({
+      top: Designs.constants.PaddingSizes.xl,
+    });
+  });
+
+  it('offers no padding to an element which takes none', () => {
+    renderControls();
+
+    expect(screen.queryByLabelText('designsNext.padding.label')).toBeNull();
   });
 
   it('drops the content fit for a square element', () => {

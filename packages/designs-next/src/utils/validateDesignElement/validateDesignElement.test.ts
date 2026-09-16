@@ -72,6 +72,30 @@ describe('validateDesignElement', () => {
     ).toBe(true);
   });
 
+  it('accepts a padding holding some of its sides', () => {
+    expect(
+      validateDesignElement({
+        ...coverDesignElement,
+        padding: { top: 16, bottom: 0 },
+      }),
+    ).toBe(true);
+  });
+
+  it('rejects a negative or non-numeric padding side', () => {
+    expect(
+      validateDesignElement({ ...coverDesignElement, padding: { top: -1 } }),
+    ).toBe(false);
+    expect(
+      validateDesignElement({ ...coverDesignElement, padding: { left: '16' } }),
+    ).toBe(false);
+  });
+
+  it('rejects a padding which is not an object', () => {
+    expect(validateDesignElement({ ...coverDesignElement, padding: 16 })).toBe(
+      false,
+    );
+  });
+
   it('accepts a mapped property name', () => {
     expect(
       validateDesignElement({ ...coverDesignElement, property: 'Title' }),

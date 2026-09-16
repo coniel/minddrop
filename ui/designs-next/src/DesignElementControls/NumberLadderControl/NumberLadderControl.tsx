@@ -1,14 +1,7 @@
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/ui-icons';
-import {
-  Icon,
-  InputLabel,
-  NumberField,
-  RadioToggleGroup,
-  Stack,
-  Toggle,
-  ToolbarHoverPanel,
-} from '@minddrop/ui-primitives';
+import { Icon, ToolbarHoverPanel } from '@minddrop/ui-primitives';
+import { NumberLadder } from '../NumberLadder';
 import './NumberLadderControl.css';
 
 export interface NumberLadderControlProps {
@@ -65,15 +58,6 @@ export interface NumberLadderControlProps {
 const LadderColumns = 4;
 
 /**
- * The ladder grid. Laid out inline so the column count wins over
- * the group's own single row.
- */
-const LadderLayout: React.CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: `repeat(${LadderColumns}, auto)`,
-};
-
-/**
  * Renders a picker for a number opened out of the toolbar: a
  * ladder of its conventional values with a stepper field beneath
  * it for any other. The trigger shows its icon, or the value it
@@ -92,19 +76,6 @@ export const NumberLadderControl: React.FC<NumberLadderControlProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  // Sets a ladder value
-  function handleLadderChange(chosenValue: string) {
-    onValueChange(Number(chosenValue));
-  }
-
-  // Sets a value off the ladder, a cleared field leaving the value
-  // as it is.
-  function handleCustomValueChange(customValue: number | null) {
-    if (customValue !== null) {
-      onValueChange(customValue);
-    }
-  }
-
   return (
     <ToolbarHoverPanel
       label={t(label)}
@@ -116,39 +87,20 @@ export const NumberLadderControl: React.FC<NumberLadderControlProps> = ({
         )
       }
     >
-      <Stack gap={3} className="design-number-ladder-control-panel">
-        <Stack gap={1}>
-          <InputLabel size="xs" label={label} />
-          <RadioToggleGroup
-            size="sm"
-            value={String(value)}
-            style={LadderLayout}
-            onValueChange={handleLadderChange}
-          >
-            {ladder.map((ladderValue) => (
-              <Toggle
-                key={ladderValue}
-                size="sm"
-                value={String(ladderValue)}
-                label={String(ladderValue)}
-              />
-            ))}
-          </RadioToggleGroup>
-        </Stack>
-        <NumberField
-          size="sm"
-          variant="subtle"
-          stepper="ends"
-          label="designsNext.settings.custom"
-          labelSize="xs"
-          value={value}
-          min={min}
-          max={max}
-          step={step}
-          decimals={decimals}
-          onValueChange={handleCustomValueChange}
-        />
-      </Stack>
+      <NumberLadder
+        label={label}
+        options={ladder.map((ladderValue) => ({
+          value: ladderValue,
+          label: String(ladderValue),
+        }))}
+        columns={LadderColumns}
+        value={value}
+        min={min}
+        max={max}
+        step={step}
+        decimals={decimals}
+        onValueChange={onValueChange}
+      />
     </ToolbarHoverPanel>
   );
 };

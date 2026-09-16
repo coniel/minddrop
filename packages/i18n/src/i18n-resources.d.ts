@@ -2273,6 +2273,27 @@ declare module 'i18next' {
             proportional: string;
             proportionalDescription: string;
           };
+          padding: {
+            label: string;
+            top: string;
+            right: string;
+            bottom: string;
+            left: string;
+            link: string;
+            unlink: string;
+            none: string;
+            sizes: {
+              xs: string;
+              s: string;
+              m: string;
+              l: string;
+              xl: string;
+              '2xl': string;
+              '3xl': string;
+              '4xl': string;
+              '5xl': string;
+            };
+          };
           pin: {
             label: {
               left: string;

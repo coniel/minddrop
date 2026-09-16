@@ -9,7 +9,11 @@ import {
 import { usePopupDismissPress } from '@minddrop/ui-primitives';
 import { clamp, useDeleteKey, useModKeyHeld } from '@minddrop/utils';
 import { DesignElementInsertMenu } from '../DesignElementInsertMenu';
-import { resolveElementClass, resolveSlotClass } from '../utils';
+import {
+  resolveElementClass,
+  resolveScaledPadding,
+  resolveSlotClass,
+} from '../utils';
 import { SizeLabel } from './SizeLabel';
 import './DesignBlockEditor.css';
 
@@ -741,60 +745,81 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
       onClick={handleGridClick}
       onContextMenu={handleGridContextMenu}
     >
-      {blocks.map((element) => (
-        <div
-          key={element.id}
-          data-element-id={element.id}
-          className={resolveElementClass(
-            element.id,
-            selectedId,
-            draggedElementId,
-          )}
-          style={{
-            left: element.column * unitSize,
-            top: element.row * unitSize,
-            width: element.columnSpan * unitSize,
-            height: element.rowSpan * unitSize,
-          }}
-          onPointerDown={(event) =>
-            handleElementPointerDown(event, element.id, 'move')
-          }
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
-        >
-          {/** Slot blocks, drawn beneath the block's own handles so
-           * its top edge stays draggable across them **/}
-          {Designs.resolveChildElements(elements, element.id).map((child) => (
-            <div
-              key={child.id}
-              className={resolveSlotClass(child.id, selectedId)}
-              style={{ height: child.rowSpan * unitSize }}
-              onPointerDown={(event) => handleSlotPointerDown(event, child.id)}
-            />
-          ))}
+      {blocks.map((element) => {
+        // The block's padding, scaled to the editor's unit size
+        const padding = resolveScaledPadding(element.padding, unitSize);
 
-          {ResizeHandles.map((mode) => (
-            <div
-              key={mode}
-              className={`design-block-editor-handle design-block-editor-handle-${mode}`}
-              onPointerDown={(event) =>
-                handleElementPointerDown(event, element.id, mode)
-              }
-              onPointerMove={handlePointerMove}
-              onPointerUp={handlePointerUp}
-            />
-          ))}
+        return (
+          <div
+            key={element.id}
+            data-element-id={element.id}
+            className={resolveElementClass(
+              element.id,
+              selectedId,
+              draggedElementId,
+            )}
+            style={{
+              left: element.column * unitSize,
+              top: element.row * unitSize,
+              width: element.columnSpan * unitSize,
+              height: element.rowSpan * unitSize,
+            }}
+            onPointerDown={(event) =>
+              handleElementPointerDown(event, element.id, 'move')
+            }
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+          >
+            {element.padding && (
+              <div
+                className="design-block-editor-padding"
+                style={{
+                  borderWidth: `${padding.top}px ${padding.right}px ${padding.bottom}px ${padding.left}px`,
+                }}
+              />
+            )}
 
-          {element.id === resizedElementId && (
-            <SizeLabel
-              columnSpan={element.columnSpan}
-              rowSpan={element.rowSpan}
-              snap={snap}
-              unitSize={unitSize}
-            />
-          )}
-        </div>
-      ))}
+            {/** Slot blocks, drawn beneath the block's own handles so
+             * its top edge stays draggable across them **/}
+            {Designs.resolveChildElements(elements, element.id).map((child) => (
+              <div
+                key={child.id}
+                className={resolveSlotClass(child.id, selectedId)}
+                style={{
+                  top: padding.top,
+                  left: padding.left,
+                  right: padding.right,
+                  height: child.rowSpan * unitSize,
+                }}
+                onPointerDown={(event) =>
+                  handleSlotPointerDown(event, child.id)
+                }
+              />
+            ))}
+
+            {ResizeHandles.map((mode) => (
+              <div
+                key={mode}
+                className={`design-block-editor-handle design-block-editor-handle-${mode}`}
+                onPointerDown={(event) =>
+                  handleElementPointerDown(event, element.id, mode)
+                }
+                onPointerMove={handlePointerMove}
+                onPointerUp={handlePointerUp}
+              />
+            ))}
+
+            {element.id === resizedElementId && (
+              <SizeLabel
+                columnSpan={element.columnSpan}
+                rowSpan={element.rowSpan}
+                snap={snap}
+                unitSize={unitSize}
+              />
+            )}
+          </div>
+        );
+      })}
       {hoveredPoint && !insertArea && (
         <div
           className="design-block-editor-hovered-square"

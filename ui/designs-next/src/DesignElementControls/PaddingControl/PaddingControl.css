@@ -1,0 +1,101 @@
+/* The picker holds a stack rather than a row of controls, so it
+   sets its own padding inside the panel. */
+.design-padding-control-panel {
+  padding: var(--space-2);
+}
+
+/* The element's block, drawn as a box: one area per padding side
+   around the content area they leave. */
+.design-padding-control-box {
+  --design-padding-control-side: 44px;
+  --design-padding-control-edge: 28px;
+  --design-padding-control-scale-width: 224px;
+
+  position: relative;
+  display: grid;
+  grid-template-columns:
+    var(--design-padding-control-side) 1fr
+    var(--design-padding-control-side);
+  grid-template-rows:
+    var(--design-padding-control-edge) 1fr
+    var(--design-padding-control-edge);
+  /* Sized so that a scale opened out of a side reaches the box's
+     far edge and no further. The panel is clipped where it meets
+     the toolbar, which cuts off anything past that edge. */
+  width: calc(
+    var(--design-padding-control-scale-width) +
+      var(--design-padding-control-side)
+  );
+  height: 160px;
+  border: var(--border-width-thin) solid var(--border-default);
+  border-radius: var(--radius-sm);
+}
+
+/* Each side shows its padding, and takes the shade the block editor
+   draws padding in while hovered or open. */
+.design-padding-control-side {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+  border-color: var(--border-subtle);
+  border-style: solid;
+  border-width: 0;
+}
+
+.design-padding-control-side:hover,
+.design-padding-control-side-open {
+  background-color: var(--surface-primary);
+}
+
+/* The top and bottom sides meet the block's corners, so they round
+   with it. */
+.design-padding-control-side-top {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  border-bottom-width: var(--border-width-thin);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.design-padding-control-side-bottom {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  border-top-width: var(--border-width-thin);
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+}
+
+.design-padding-control-side-left {
+  grid-column: 1;
+  grid-row: 2;
+  border-right-width: var(--border-width-thin);
+}
+
+.design-padding-control-side-right {
+  grid-column: 3;
+  grid-row: 2;
+  border-left-width: var(--border-width-thin);
+}
+
+/* The scale renders inside the box, but takes no place in its
+   grid */
+.design-padding-control-scale-portal {
+  display: contents;
+}
+
+/* Fixed to the width the box is sized from, rather than sizing to
+   its content, so a scale fits beside the side it opens from. The
+   box sets the property, and the scale renders inside it. */
+.design-padding-control-scale {
+  width: var(--design-padding-control-scale-width);
+}
+
+/* The content area the sides leave, holding the link toggle */
+.design-padding-control-content {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

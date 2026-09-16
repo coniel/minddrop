@@ -13,11 +13,14 @@ import {
   LineHeightStep,
   LineHeights,
   MaxDesignRows,
+  MaxElementPadding,
   MaxFontSize,
   MaxLineHeight,
   MinDesignRows,
   MinFontSize,
   MinLineHeight,
+  PaddingSides,
+  PaddingSizes,
   SnapPresets,
   UnitPixelSize,
 } from './constants';
@@ -64,6 +67,9 @@ export const constants = {
   MaxLineHeight,
   LineHeightStep,
   DefaultTextColor,
+  MaxPadding: MaxElementPadding,
+  PaddingSides,
+  PaddingSizes,
 };
 
 export { DesignsStore as Store } from './DesignsStore';
@@ -95,6 +101,7 @@ export {
   resolveAspectRows,
   resolveChildElements,
   resolveElementRect,
+  resolvePaddingSize,
   resolveRowLayout,
   resolveSlotElement,
   resolveTextLineRowSpan,

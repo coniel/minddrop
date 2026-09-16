@@ -6,9 +6,11 @@ import {
   ElementColor,
   ElementContentFit,
   ElementHeightMode,
+  ElementPadding,
   ElementWidthMode,
   FontFamily,
   FontWeight,
+  PaddingSize,
 } from './types';
 
 /**
@@ -163,6 +165,36 @@ export const DefaultFontSize = 14;
  */
 export const MinFontSize = 6;
 export const MaxFontSize = 200;
+
+/**
+ * The sides an element's padding can set, in visual order.
+ */
+export const PaddingSides: (keyof ElementPadding)[] = [
+  'top',
+  'right',
+  'bottom',
+  'left',
+];
+
+/**
+ * The padding each step of the scale sets, in pixels.
+ */
+export const PaddingSizes: Record<PaddingSize, number> = {
+  xs: 4,
+  s: 6,
+  m: 8,
+  l: 12,
+  xl: 16,
+  '2xl': 24,
+  '3xl': 32,
+  '4xl': 48,
+  '5xl': 64,
+};
+
+/**
+ * The largest padding a side of an element can hold, in pixels.
+ */
+export const MaxElementPadding = 200;
 
 /**
  * The conventional line heights as multiples of the font size,

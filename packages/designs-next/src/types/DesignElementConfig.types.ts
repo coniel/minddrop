@@ -110,6 +110,14 @@ export interface DesignElementConfig<
   square?: boolean;
 
   /**
+   * Whether the element takes padding, which adds the padding
+   * control to its block controls. Meant for elements which scroll
+   * their content: their content scrolls through the padding,
+   * whereas an empty space on the grid would be a dead band.
+   */
+  paddable?: boolean;
+
+  /**
    * The content fit assigned to newly inserted elements. Defaults to
    * fixed.
    */
