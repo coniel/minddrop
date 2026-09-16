@@ -225,6 +225,24 @@ it('dispatches the design created event', async () =>
   }));
 ```
 
+### No structural assertions
+
+Never assert structure: DOM order, nesting, or which section of a component something renders in. Swapping the order of two sections in a component must not break a single test.
+
+```ts
+// BAD
+expect(
+  property.compareDocumentPosition(width) & Node.DOCUMENT_POSITION_FOLLOWING,
+).toBeTruthy();
+
+// GOOD
+expect(screen.getByLabelText('Padding')).toBeInTheDocument();
+```
+
+Structure is a design decision, and it changes often. A test pinned to it turns every rearrangement into a failure, which teaches people to edit tests rather than trust them.
+
+The exception is where the arrangement _is_ the behaviour under test: drag-and-drop sorting, a list which sorts itself, a layout engine placing elements. There the order is the output, so assert it — preferably against the data the component was given rather than the rendered nodes.
+
 ## Naming
 
 A test name states the behaviour, in the same voice as a JSDoc summary: `inserts the picked element type on the marked grid square`, `holds the marked area inside the design`, `leaves Backspace to editable controls`. Not `it('works')`, and not the name of the function under test.
