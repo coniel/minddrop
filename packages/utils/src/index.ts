@@ -34,6 +34,7 @@ export * from './orderByLastModified';
 export * from './orderByLastModifiedDesc';
 export * from './orderByName';
 export * from './reconcileIdOrder';
+export * from './renameObjectKey';
 export * from './reorderArray';
 export * from './sameIds';
 export * from './setDragPreview';
