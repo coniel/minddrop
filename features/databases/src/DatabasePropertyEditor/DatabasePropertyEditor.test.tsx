@@ -93,25 +93,28 @@ describe('<DatabasePropertyEditor />', () => {
         await user.click(screen.getByText('actions.save'));
       }
 
-      it('confirms before renaming the property', () =>
-        new Promise<void>((done) => {
-          // Listen for the confirmation dialog event
-          Events.addListener(
-            Events.events.OpenConfirmationDialog,
-            'test',
-            (data) => {
-              // Confirm the rename action
-              data.onConfirm();
-            },
-          );
+      it('renames the property once confirmed', async () => {
+        // Listen for the confirmation dialog event
+        Events.addListener(
+          Events.events.OpenConfirmationDialog,
+          'test',
+          (data) => {
+            // Confirm the rename action
+            data.onConfirm();
+          },
+        );
 
-          // TODO: Assert the property was renamed once renaming is implemented
-          Events.addListener(Databases.events.Updated, 'test', () => {
-            done();
-          });
+        // Rename the property through the form
+        await renameProperty();
 
-          renameProperty();
-        }));
+        // The property should have its new name
+        await waitFor(() => {
+          expect(
+            Databases.get(DatabaseFixtures.objectDatabase.id).properties[0]
+              .name,
+          ).toBe('New Property Name');
+        });
+      });
 
       it('closes the form after renaming', () =>
         new Promise<void>((done) => {

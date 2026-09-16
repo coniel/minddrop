@@ -61,9 +61,9 @@ export const DatabasePropertyEditor: React.FC<DatabasePropertyEditorProps> = ({
 
     // Check for name conflicts
     const databaseConfig = Databases.get(databaseId);
-    const existingProperty = databaseConfig?.properties.find(
-      (property) => property.name === name,
-    );
+    const existingProperty = Databases.withImplicitMetadataProperties(
+      databaseConfig?.properties ?? [],
+    ).find((property) => property.name === name);
 
     if (existingProperty) {
       return i18nKey('nameConflict');
@@ -94,19 +94,7 @@ export const DatabasePropertyEditor: React.FC<DatabasePropertyEditorProps> = ({
           message: `${i18nRoot}.message`,
           confirmLabel: `${i18nRoot}.confirm`,
           onConfirm: () => {
-            // TODO: Implement renameProperty method. It must also
-            // re-key the property's value in the database's entry
-            // templates, which are keyed by property name and
-            // would otherwise silently stop applying.
-            // Databases.renameProperty(
-            //   database,
-            //   property.name,
-            //   updatedProperty.name,
-            // );
-            Databases.updateProperty(databaseId, {
-              ...updatedProperty,
-              name: property.name,
-            });
+            handleConfirmRename(updatedProperty);
             resolve(true);
           },
           onCancel: () => {
@@ -118,6 +106,19 @@ export const DatabasePropertyEditor: React.FC<DatabasePropertyEditorProps> = ({
         resolve(true);
       }
     });
+  }
+
+  async function handleConfirmRename(updatedProperty: PropertySchema) {
+    // Rename first, as the update rejects a property name the
+    // database does not yet declare.
+    await Databases.renameProperty(
+      databaseId,
+      property.name,
+      updatedProperty.name,
+    );
+
+    // Apply the property's other changes under the new name
+    await Databases.updateProperty(databaseId, updatedProperty);
   }
 
   async function handleSave(property: PropertySchema) {
