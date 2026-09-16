@@ -135,6 +135,24 @@ describe('<TagsView />', () => {
     });
   });
 
+  it('refuses a tag name another tag already has', async () => {
+    renderView();
+    const user = userEvent.setup();
+
+    // Open the first tag's menu and start renaming
+    await user.click(screen.getAllByLabelText('tags.actions.options')[0]);
+    await user.click(await screen.findByText('tags.actions.rename'));
+
+    // Name it after another tag
+    const nameInput = screen.getByDisplayValue(tag_1.name);
+    await user.clear(nameInput);
+    await user.type(nameInput, `${tag_2.name}{Enter}`);
+
+    // The naming should stay open, saying the name is taken
+    expect(await screen.findByText('tags.form.nameTaken')).toBeInTheDocument();
+    expect(Tags.get(tag_1.id).name).toBe(tag_1.name);
+  });
+
   it('deletes a tag via its context menu', async () => {
     renderView();
     const user = userEvent.setup();

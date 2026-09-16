@@ -1,20 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { TranslationKey } from '@minddrop/i18n';
 import { Tag, Tags } from '@minddrop/tags';
 import { Icons } from '@minddrop/ui-icons';
-import {
-  ContentIcon,
-  Group,
-  IconButton,
-  IconPicker,
-  Popover,
-  PopoverContent,
-  PopoverPortal,
-  PopoverPositioner,
-  PopoverPositionerProps,
-  Stack,
-  Text,
-  TextInput,
-} from '@minddrop/ui-primitives';
+import { NamePopover, PopoverPositionerProps } from '@minddrop/ui-primitives';
 
 export interface TagNamePopoverProps {
   /**
@@ -39,10 +26,9 @@ export interface TagNamePopoverProps {
 }
 
 /**
- * Renders an anchored popover containing a tag's icon and name
- * fields. Icon picks apply immediately; the name commits on Enter
- * or blur, cancels on Escape or when blank, and duplicates show
- * an error.
+ * Renders an anchored popover naming a tag and picking its icon.
+ * The name is committed when the popover closes, and Escape
+ * cancels it.
  */
 export const TagNamePopover: React.FC<TagNamePopoverProps> = ({
   open,
@@ -50,148 +36,45 @@ export const TagNamePopover: React.FC<TagNamePopoverProps> = ({
   anchor,
   tag,
 }) => {
-  const cancelledRef = useRef(false);
-  const [name, setName] = useState(tag.name);
-  const [nameTaken, setNameTaken] = useState(false);
-
-  // Reset the field to the tag's current name when opened
-  useEffect(() => {
-    if (open) {
-      setName(tag.name);
-      setNameTaken(false);
-      cancelledRef.current = false;
-    }
-  }, [open, tag.name]);
-
-  // Persist the picked icon
-  function handleSelectIcon(icon: string) {
-    Tags.update(tag.id, { icon });
-  }
-
-  // Restore the default icon in the tag's color
-  function handleClearIcon() {
+  // Update the tag's icon, restoring the default icon in the tag's
+  // color when the picked one is cleared.
+  function handleIconChange(icon: string | null) {
     Tags.update(tag.id, {
-      icon: Icons.applyColor(Tags.constants.EntityDefaultIcon, tag.color),
+      icon:
+        icon ?? Icons.applyColor(Tags.constants.EntityDefaultIcon, tag.color),
     });
   }
 
-  // Clear the duplicate error while editing
-  function handleNameChange(value: string) {
-    setName(value);
-    setNameTaken(false);
-  }
-
-  // Persist the rename, returning whether the field was resolved:
-  // blank names cancel, duplicates show an error
-  async function commitName(): Promise<boolean> {
-    const trimmedName = name.trim();
-
-    // A blank name cancels the rename
-    if (!trimmedName) {
-      setName(tag.name);
-
-      return true;
+  // Rename the tag, returning the error to show when the rename is
+  // rejected.
+  async function handleRename(
+    name: string,
+  ): Promise<TranslationKey | undefined> {
+    // Check whether the name changed
+    if (name === tag.name) {
+      return;
     }
 
-    // The name is unchanged
-    if (trimmedName === tag.name) {
-      return true;
-    }
-
-    // Another tag already has the name
-    const existing = Tags.getByName(trimmedName, false);
-
-    if (existing && existing.id !== tag.id) {
-      setNameTaken(true);
-
-      return false;
-    }
-
+    // Rename the tag, which rejects a name another tag already has
     try {
-      await Tags.update(tag.id, { name: trimmedName });
-
-      return true;
+      await Tags.update(tag.id, { name });
     } catch {
-      setNameTaken(true);
-
-      return false;
-    }
-  }
-
-  // Commit the name when focus leaves the field, unless cancelled
-  function handleBlur() {
-    if (!cancelledRef.current) {
-      commitName();
-    }
-  }
-
-  // Commit on Enter, closing when resolved; cancel on Escape
-  async function handleNameKeyDown(
-    event: React.KeyboardEvent<HTMLInputElement>,
-  ) {
-    if (event.key === 'Enter') {
-      const resolved = await commitName();
-
-      if (resolved) {
-        onOpenChange(false);
-      }
-    }
-
-    if (event.key === 'Escape') {
-      cancelledRef.current = true;
-      onOpenChange(false);
+      return 'tags.form.nameTaken';
     }
   }
 
   return (
-    <Popover open={open} onOpenChange={onOpenChange}>
-      <PopoverPortal>
-        <PopoverPositioner side="bottom" align="start" anchor={anchor}>
-          <PopoverContent className="tag-rename-popover">
-            <Stack gap={1}>
-              <Group gap={1}>
-                <IconPicker
-                  closeOnSelect
-                  currentIcon={tag.icon}
-                  onSelect={handleSelectIcon}
-                  onClear={handleClearIcon}
-                >
-                  <IconButton
-                    size="md"
-                    variant="ghost"
-                    color="neutral"
-                    label="tags.details.icon"
-                  >
-                    <ContentIcon icon={tag.icon} />
-                  </IconButton>
-                </IconPicker>
-                <TextInput
-                  autoFocus
-                  unassisted
-                  size="md"
-                  variant="ghost"
-                  className="tag-form-popover-name"
-                  placeholder="tags.details.namePlaceholder"
-                  value={name}
-                  onValueChange={handleNameChange}
-                  onBlur={handleBlur}
-                  onKeyDown={handleNameKeyDown}
-                />
-              </Group>
-
-              {/* Duplicate name error */}
-              {nameTaken && (
-                <Text
-                  block
-                  size="sm"
-                  color="danger"
-                  text="tags.form.nameTaken"
-                />
-              )}
-            </Stack>
-          </PopoverContent>
-        </PopoverPositioner>
-      </PopoverPortal>
-    </Popover>
+    <NamePopover
+      commitOnClose
+      open={open}
+      onOpenChange={onOpenChange}
+      anchor={anchor}
+      defaultValue={tag.name}
+      placeholder="tags.details.namePlaceholder"
+      onSubmit={handleRename}
+      icon={tag.icon}
+      onIconChange={handleIconChange}
+      iconLabel="tags.details.icon"
+    />
   );
 };

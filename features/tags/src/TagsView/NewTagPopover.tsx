@@ -148,13 +148,6 @@ export const NewTagPopover: React.FC<NewTagPopoverProps> = ({
     }
   }
 
-  // Create the tag on Enter
-  function handleNameKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
-    if (event.key === 'Enter') {
-      handleCreate();
-    }
-  }
-
   return (
     <Popover open={open} onOpenChange={onOpenChange}>
       <PopoverPortal>
@@ -187,7 +180,7 @@ export const NewTagPopover: React.FC<NewTagPopoverProps> = ({
                   placeholder="tags.details.namePlaceholder"
                   value={name}
                   onValueChange={handleNameChange}
-                  onKeyDown={handleNameKeyDown}
+                  onCommit={handleCreate}
                 />
               </Group>
 

@@ -28,13 +28,6 @@
   padding: var(--space-2) var(--space-3);
 }
 
-/* Tighter than the form popover: the ghost fields carry their own
-   padding, so it lines up with the group name popover */
-.tag-rename-popover {
-  width: 14rem;
-  padding: var(--space-1) var(--space-2);
-}
-
 .tag-form-popover-name {
   flex: 1;
   min-width: 0;
