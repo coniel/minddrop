@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Events } from '@minddrop/events';
+import { TranslationKey } from '@minddrop/i18n';
 import { SortableItemRenderProps } from '@minddrop/ui-drag-and-drop';
 import {
   Chip,
-  ContentColorSwatch,
   ContentColorValues,
   DropdownMenu,
   DropdownMenuColorSelectionItem,
@@ -16,14 +16,8 @@ import {
   DropdownSubmenuTriggerItem,
   Group,
   IconButton,
-  Popover,
-  PopoverContent,
-  PopoverPortal,
-  PopoverPositioner,
-  PopoverTrigger,
-  Stack,
+  NamePopover,
   Text,
-  TextInput,
 } from '@minddrop/ui-primitives';
 import { ContentColor } from '@minddrop/ui-theme';
 import { NO_VALUE_COLUMN } from '../constants';
@@ -133,14 +127,13 @@ export const KanbanViewColumnHeading: React.FC<
   onDelete,
   onCreateEntry,
 }) => {
+  const chipButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Whether the rename was open when the chip was last pressed
+  const renamingOnChipPressRef = useRef(false);
+
   // Whether the option's rename popover is open
   const [renamePopoverOpen, setRenamePopoverOpen] = useState(false);
-
-  // The rename popover's name field value
-  const [renameValue, setRenameValue] = useState('');
-
-  // Whether the entered name already names another column
-  const [nameTaken, setNameTaken] = useState(false);
 
   // Whether the column is the no-value column, whose option-less
   // heading cannot be renamed, recoloured, or deleted.
@@ -152,75 +145,50 @@ export const KanbanViewColumnHeading: React.FC<
   // Open the rename popover on its own for a just added column
   useEffect(() => {
     if (autoOpenRename) {
-      setRenameValue(column.value);
-      setNameTaken(false);
       setRenamePopoverOpen(true);
       onRenameAutoOpened?.();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- open only when the flag turns on
   }, [autoOpenRename]);
 
-  // Open the rename popover primed with the option's value
+  // Open the rename popover
   function openRenamePopover() {
-    setRenameValue(column.value);
-    setNameTaken(false);
     setRenamePopoverOpen(true);
   }
 
-  // Track the popover's open state, priming the name field when
-  // it opens via the chip. Closing without a commit cancels.
-  function handleRenamePopoverOpenChange(open: boolean) {
-    if (open) {
-      setRenameValue(column.value);
-      setNameTaken(false);
-    }
-
-    setRenamePopoverOpen(open);
-  }
-
-  // Clear the duplicate error while editing
-  function handleRenameValueChange(value: string) {
-    setRenameValue(value);
-    setNameTaken(false);
-  }
-
-  // Commit the rename, ignoring empty and unchanged names.
-  // Duplicates show an error and keep the popover open.
-  function commitRename() {
-    const newValue = renameValue.trim();
-
-    // Check that the name changed
-    if (!newValue || newValue === column.value) {
-      setRenamePopoverOpen(false);
-
+  // Rename the column's option, refusing a name another column
+  // already goes by.
+  function handleRename(newValue: string): TranslationKey | void {
+    // Nothing to rename
+    if (newValue === column.value) {
       return;
     }
 
     // Another column already has the name
     if (existingValues?.includes(newValue)) {
-      setNameTaken(true);
-
-      return;
+      return 'contentViews.kanban.columns.nameTaken';
     }
 
-    setRenamePopoverOpen(false);
     onRename?.(column.value, newValue);
   }
 
-  // Commit the rename on Enter. Escape closes the popover, which
-  // cancels.
-  function handleRenameKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
-    if (event.key === 'Enter') {
-      commitRename();
-    }
+  // Keep the press on the chip from starting a column drag, which
+  // would capture the pointer and swallow the click. The popover
+  // dismisses itself on a press outside it, so whether the chip
+  // opens or closes the rename is decided here, before that.
+  function handleChipPointerDown(event: React.PointerEvent) {
+    event.stopPropagation();
+
+    renamingOnChipPressRef.current = renamePopoverOpen;
   }
 
-  // Keep clicks on the chip and inside the rename popover from
-  // starting a column drag. The popover portal's events bubble
-  // through the React tree to the drag handle both sit in, which
-  // would capture the pointer and swallow the click.
-  function handleRenamePointerDown(event: React.PointerEvent) {
-    event.stopPropagation();
+  // Open the rename from the chip, unless the press closed it
+  function handleChipClick() {
+    if (renamingOnChipPressRef.current) {
+      return;
+    }
+
+    setRenamePopoverOpen(true);
   }
 
   // Recolour the column's option
@@ -264,93 +232,15 @@ export const KanbanViewColumnHeading: React.FC<
         {...(draggable ? sortable?.handleProps : {})}
       >
         {canRename ? (
-          <Popover
-            open={renamePopoverOpen}
-            onOpenChange={handleRenamePopoverOpenChange}
+          <button
+            ref={chipButtonRef}
+            type="button"
+            className={`kanban-view-heading-chip-button${renamePopoverOpen ? ' kanban-view-heading-chip-button-renaming' : ''}`}
+            onClick={handleChipClick}
+            onPointerDown={handleChipPointerDown}
           >
-            <PopoverTrigger>
-              <button
-                type="button"
-                className="kanban-view-heading-chip-button"
-                onPointerDown={handleRenamePointerDown}
-              >
-                <Chip color={column.color}>{column.label}</Chip>
-              </button>
-            </PopoverTrigger>
-            <PopoverPortal>
-              <PopoverPositioner side="bottom" align="start" sideOffset={4}>
-                <PopoverContent
-                  className="kanban-view-heading-rename-popover"
-                  onPointerDown={handleRenamePointerDown}
-                >
-                  <Stack gap={1}>
-                    <Group gap={1}>
-                      {/** Option colour picker **/}
-                      <DropdownMenu
-                        trigger={
-                          <IconButton
-                            size="sm"
-                            variant="ghost"
-                            color="neutral"
-                            label="contentViews.kanban.columns.color"
-                          >
-                            <ContentColorSwatch
-                              color={column.color ?? 'default'}
-                              size="xs"
-                              unset={(column.color ?? 'default') === 'default'}
-                            />
-                          </IconButton>
-                        }
-                      >
-                        {ContentColorValues.map((colorOption) => (
-                          <DropdownMenuColorSelectionItem
-                            key={colorOption.value}
-                            color={colorOption.value}
-                            checked={
-                              colorOption.value === (column.color ?? 'default')
-                            }
-                            onClick={() => handleColorSelect(colorOption.value)}
-                          />
-                        ))}
-                      </DropdownMenu>
-
-                      {/** Option name field **/}
-                      <TextInput
-                        autoFocus
-                        variant="ghost"
-                        size="sm"
-                        value={renameValue}
-                        placeholder="contentViews.kanban.columns.namePlaceholder"
-                        onValueChange={handleRenameValueChange}
-                        onKeyDown={handleRenameKeyDown}
-                      />
-
-                      {/** Rename submit button **/}
-                      <IconButton
-                        icon="check"
-                        size="sm"
-                        variant="ghost"
-                        color="neutral"
-                        label="actions.save"
-                        onClick={commitRename}
-                      />
-                    </Group>
-
-                    {/** Duplicate name error **/}
-                    {nameTaken && (
-                      <Text
-                        block
-                        size="sm"
-                        color="danger"
-                        className="kanban-view-heading-rename-error"
-                        text="contentViews.kanban.columns.nameTaken"
-                      />
-                    )}
-                  </Stack>
-                </PopoverContent>
-              </PopoverPositioner>
-            </PopoverPortal>
-          </Popover>
+            <Chip color={column.color}>{column.label}</Chip>
+          </button>
         ) : (
           <Chip color={column.color}>{column.label}</Chip>
         )}
@@ -445,6 +335,23 @@ export const KanbanViewColumnHeading: React.FC<
           </DropdownMenu>
         )}
       </Group>
+
+      {/** The option's rename popover, kept out of the drag handle
+       so that the pointer events its portal bubbles through the
+       React tree do not start a column drag **/}
+      {canRename && (
+        <NamePopover
+          open={renamePopoverOpen}
+          onOpenChange={setRenamePopoverOpen}
+          anchor={chipButtonRef}
+          defaultValue={column.value}
+          placeholder="contentViews.kanban.columns.namePlaceholder"
+          onSubmit={handleRename}
+          color={column.color}
+          onColorChange={handleColorSelect}
+          colorLabel="contentViews.kanban.columns.color"
+        />
+      )}
     </div>
   );
 };

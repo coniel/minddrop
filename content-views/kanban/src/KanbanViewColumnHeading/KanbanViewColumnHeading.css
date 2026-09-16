@@ -40,19 +40,8 @@
 
 /* Marks the chip as actionable */
 .kanban-view-heading-chip-button:hover .chip,
-.kanban-view-heading-chip-button[data-popup-open] .chip {
+.kanban-view-heading-chip-button-renaming .chip {
   box-shadow: 0 0 0 var(--border-width-medium) var(--border-strong);
-}
-
-/* Fits the popover snugly around the rename controls */
-.kanban-view-heading-rename-popover {
-  padding: var(--space-1);
-}
-
-/* Aligns the error with the name field, clear of the popover's
-   tight edges */
-.kanban-view-heading-rename-error {
-  padding: 0 var(--space-2) var(--space-1);
 }
 
 /* Revealed while the pointer is over the column, tracked via the
