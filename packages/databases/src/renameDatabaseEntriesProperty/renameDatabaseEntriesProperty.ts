@@ -2,6 +2,7 @@ import { PropertySchema } from '@minddrop/properties';
 import { renameObjectKey } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { getAllDatabaseEntries } from '../getAllDatabaseEntries';
+import { DatabaseEntry } from '../types';
 import { writeDatabaseEntry } from '../writeDatabaseEntry';
 
 /**
@@ -11,19 +12,20 @@ import { writeDatabaseEntry } from '../writeDatabaseEntry';
  * @param databaseId - The ID of the database the property belongs to.
  * @param oldProperty - The property as the schema declared it before the rename.
  * @param newName - The new property name.
+ * @returns The rewritten entries.
  */
 export async function renameDatabaseEntriesProperty(
   databaseId: string,
   oldProperty: PropertySchema,
   newName: string,
-): Promise<void> {
+): Promise<DatabaseEntry[]> {
   // Filter for entries with a value for the renamed property
   const affectedEntries = getAllDatabaseEntries(databaseId).filter(
     (entry) => oldProperty.name in entry.properties,
   );
 
   // Re-key each of them
-  await Promise.all(
+  return Promise.all(
     affectedEntries.map(async (entry) => {
       // Rename the key in the entry's property values
       const properties = renameObjectKey(
@@ -41,6 +43,8 @@ export async function renameDatabaseEntriesProperty(
       await writeDatabaseEntry(entry.id, {
         clearedProperties: [oldProperty],
       });
+
+      return { ...entry, properties };
     }),
   );
 }

@@ -1,8 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { History } from '@minddrop/history';
 import { SelectPropertySchema } from '@minddrop/properties';
 import { storeItem } from '@minddrop/stores/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
+import { EntryHistorySubjectType } from '../../constants';
 import {
   MockFs,
   cleanup,
@@ -115,5 +117,48 @@ describe('onRenamePropertyOption', () => {
     expect(
       storeItem(DatabaseEntriesStore, selectEntry.id).properties.Labels,
     ).toEqual(['House', 'Work']);
+  });
+  it('records the rename against the entries holding the option', async () => {
+    await onRenamePropertyOption({
+      original: selectDatabase,
+      updated: selectDatabase,
+      property: statusProperty,
+      oldValue: 'Todo',
+      newValue: 'Doing',
+    });
+
+    expect(
+      await History.read({
+        ownerPath: resolveDatabasePath(selectDatabase),
+        subjectType: EntryHistorySubjectType,
+        subjectKey: selectEntry.title,
+      }),
+    ).toContainEqual(
+      expect.objectContaining({
+        kind: 'rename',
+        target: 'value-label',
+        property: statusProperty.name,
+        from: 'Todo',
+        to: 'Doing',
+      }),
+    );
+  });
+
+  it('records nothing against entries which do not hold it', async () => {
+    await onRenamePropertyOption({
+      original: selectDatabase,
+      updated: selectDatabase,
+      property: statusProperty,
+      oldValue: 'Todo',
+      newValue: 'Doing',
+    });
+
+    expect(
+      await History.read({
+        ownerPath: resolveDatabasePath(selectDatabase),
+        subjectType: EntryHistorySubjectType,
+        subjectKey: otherEntry.title,
+      }),
+    ).toEqual([]);
   });
 });
