@@ -1,6 +1,7 @@
 import { History } from '@minddrop/history';
 import { TagRenamedEventData } from '@minddrop/tags';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
+import { EntryHistorySubjectType } from '../../constants';
 import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
 import { getAllDatabases } from '../../getAllDatabases';
 import { sqlUpsertEntries } from '../../sql';
@@ -56,6 +57,7 @@ export async function onTagRenamed(data: TagRenamedEventData): Promise<void> {
         rewritten.properties.map((property) =>
           History.record({
             ownerPath: resolveDatabasePath(database),
+            subjectType: EntryHistorySubjectType,
             subjectKey: entry.title,
             kind: 'rename',
             target: 'value-label',

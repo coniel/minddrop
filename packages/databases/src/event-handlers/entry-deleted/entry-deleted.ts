@@ -2,6 +2,7 @@ import { Collections } from '@minddrop/collections';
 import { ContentViews } from '@minddrop/content-views';
 import { History } from '@minddrop/history';
 import { isUntitledTitle } from '@minddrop/utils';
+import { EntryHistorySubjectType } from '../../constants';
 import {
   clearContentCapture,
   contentCaptureKey,
@@ -62,6 +63,7 @@ export async function onDeleteEntry(data: DatabaseEntryDeletedEventData) {
   if (isUntitledTitle(data.title)) {
     await History.delete({
       ownerPath: databasePath,
+      subjectType: EntryHistorySubjectType,
       subjectKey: data.title,
     });
 
@@ -72,6 +74,7 @@ export async function onDeleteEntry(data: DatabaseEntryDeletedEventData) {
   // entry can be restored from it.
   await History.record({
     ownerPath: databasePath,
+    subjectType: EntryHistorySubjectType,
     subjectKey: data.title,
     kind: 'deleted',
   });

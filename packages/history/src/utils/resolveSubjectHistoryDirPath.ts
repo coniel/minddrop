@@ -1,23 +1,21 @@
 import { Fs } from '@minddrop/file-system';
 import { Paths } from '@minddrop/utils';
 import { HistoryDirName } from '../constants';
+import { HistorySubject } from '../types';
 
 /**
  * Returns the absolute path of a subject's history directory, which
  * holds its log files and its content directory.
  *
- * @param ownerPath - The absolute path of the owner directory.
- * @param subjectKey - The subject's key within the owner.
+ * @param subject - The subject to resolve the history directory of.
  * @returns The absolute subject history directory path.
  */
-export function resolveSubjectHistoryDirPath(
-  ownerPath: string,
-  subjectKey: string,
-): string {
+export function resolveSubjectHistoryDirPath(subject: HistorySubject): string {
   return Fs.concatPath(
-    ownerPath,
+    subject.ownerPath,
     Paths.hiddenDirName,
     HistoryDirName,
-    subjectKey,
+    subject.subjectType,
+    subject.subjectKey,
   );
 }

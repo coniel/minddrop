@@ -3,9 +3,13 @@ import { MockFs, cleanup, setup } from '../test-utils';
 import { HistoryRecord } from '../types';
 import { readHistory } from './readHistory';
 
-const ownerPath = 'Books';
-const subjectKey = 'My Book';
-const historyDirPath = 'Books/.minddrop/history/My Book';
+const subject = {
+  ownerPath: 'Books',
+  subjectType: 'entries',
+  subjectKey: 'My Book',
+};
+
+const historyDirPath = 'Books/.minddrop/history/entries/My Book';
 
 const firstRecord: HistoryRecord = {
   timestamp: new Date('2026-09-01T09:14:02.311Z'),
@@ -38,27 +42,21 @@ describe('readHistory', () => {
   it("reads the subject's records", async () => {
     writeLog('history.json', [firstRecord, secondRecord]);
 
-    expect(await readHistory({ ownerPath, subjectKey })).toEqual([
-      firstRecord,
-      secondRecord,
-    ]);
+    expect(await readHistory(subject)).toEqual([firstRecord, secondRecord]);
   });
 
   it('merges the archived logs with the active one, oldest first', async () => {
     writeLog('history-20260902T000000000Z.json', [firstRecord]);
     writeLog('history.json', [secondRecord]);
 
-    expect(await readHistory({ ownerPath, subjectKey })).toEqual([
-      firstRecord,
-      secondRecord,
-    ]);
+    expect(await readHistory(subject)).toEqual([firstRecord, secondRecord]);
   });
 
   it('merges a conflicted copy left by sync', async () => {
     writeLog('history.json', [firstRecord]);
     writeLog('history (conflicted copy).json', [secondRecord]);
 
-    expect(await readHistory({ ownerPath, subjectKey })).toHaveLength(2);
+    expect(await readHistory(subject)).toHaveLength(2);
   });
 
   it('ignores a log which cannot be read', async () => {
@@ -70,7 +68,7 @@ describe('readHistory', () => {
       },
     ]);
 
-    expect(await readHistory({ ownerPath, subjectKey })).toEqual([firstRecord]);
+    expect(await readHistory(subject)).toEqual([firstRecord]);
   });
 
   it('ignores the content directory', async () => {
@@ -82,10 +80,10 @@ describe('readHistory', () => {
       },
     ]);
 
-    expect(await readHistory({ ownerPath, subjectKey })).toEqual([firstRecord]);
+    expect(await readHistory(subject)).toEqual([firstRecord]);
   });
 
   it('returns an empty array for subjects with no history', async () => {
-    expect(await readHistory({ ownerPath, subjectKey })).toEqual([]);
+    expect(await readHistory(subject)).toEqual([]);
   });
 });

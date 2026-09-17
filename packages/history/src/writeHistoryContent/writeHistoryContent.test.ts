@@ -3,10 +3,11 @@ import { MockFs, cleanup, mockDate, setup } from '../test-utils';
 import { ContentRecordOptions } from '../types';
 import { writeHistoryContent } from './writeHistoryContent';
 
-const contentDirPath = 'Books/.minddrop/history/My Book/content';
+const contentDirPath = 'Books/.minddrop/history/entries/My Book/content';
 
 const options: ContentRecordOptions = {
   ownerPath: 'Books',
+  subjectType: 'entries',
   subjectKey: 'My Book',
   kind: 'content',
   contents: 'The contents the write replaced',

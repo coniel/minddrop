@@ -1,4 +1,5 @@
 import { History } from '@minddrop/history';
+import { EntryHistorySubjectType } from '../../constants';
 import { DatabaseEntryUpdatedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
 import { sqlUpsertEntries } from '../../sql';
@@ -39,6 +40,7 @@ export async function onUpdateEntry(
   // Record the properties changed by this update as one change
   await History.record({
     ownerPath: resolveDatabasePath(database),
+    subjectType: EntryHistorySubjectType,
     subjectKey: updated.title,
     kind: 'property',
     changes,

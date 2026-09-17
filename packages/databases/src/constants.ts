@@ -24,6 +24,12 @@ export const EntryConversionBackupDirName = 'entry-conversion-backup';
 export const PropertyFilesDirNameKey = 'databases.propertyFilesDirName';
 
 /**
+ * The type entries' histories are filed under within a database's
+ * history directory.
+ */
+export const EntryHistorySubjectType = 'entries';
+
+/**
  * How long an entry must go uncaptured before the next write to it
  * captures its content again, so that a burst of saves costs one
  * capture at its start rather than one per save.

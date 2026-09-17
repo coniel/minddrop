@@ -3,8 +3,12 @@ import { MockFs, cleanup, mockDate, setup } from '../test-utils';
 import { HistoryRecord } from '../types';
 import { buildHistoryRecord } from './buildHistoryRecord';
 
-const subject = { ownerPath: 'Books', subjectKey: 'My Book' };
-const contentDirPath = 'Books/.minddrop/history/My Book/content';
+const subject = {
+  ownerPath: 'Books',
+  subjectType: 'entries',
+  subjectKey: 'My Book',
+};
+const contentDirPath = 'Books/.minddrop/history/entries/My Book/content';
 
 /**
  * Returns a content record's hash.

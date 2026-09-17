@@ -1,5 +1,6 @@
 import { Collections } from '@minddrop/collections';
 import { History } from '@minddrop/history';
+import { EntryHistorySubjectType } from '../../constants';
 import { DatabaseEntryCreatedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
 import { sqlUpsertEntries } from '../../sql';
@@ -26,6 +27,7 @@ export async function onCreateEntry(data: DatabaseEntryCreatedEventData) {
   // Open the entry's history
   await History.record({
     ownerPath: resolveDatabasePath(database),
+    subjectType: EntryHistorySubjectType,
     subjectKey: data.title,
     kind: 'created',
   });

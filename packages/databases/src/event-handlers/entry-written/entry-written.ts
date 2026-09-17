@@ -1,5 +1,6 @@
 import { Fs } from '@minddrop/file-system';
 import { History } from '@minddrop/history';
+import { EntryHistorySubjectType } from '../../constants';
 import {
   ContentCapture,
   contentCaptureKey,
@@ -56,6 +57,7 @@ export async function onEntryWritten(
   // Record the content the write replaced
   await History.record({
     ownerPath: databasePath,
+    subjectType: EntryHistorySubjectType,
     subjectKey: entry.title,
     kind: 'content',
     contents: previousContents,
@@ -76,6 +78,7 @@ async function readLastCapture(
   // Read the entry's history
   const records = await History.read({
     ownerPath: databasePath,
+    subjectType: EntryHistorySubjectType,
     subjectKey: entry.title,
   });
 

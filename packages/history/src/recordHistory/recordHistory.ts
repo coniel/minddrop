@@ -20,8 +20,7 @@ const appendsInFlight = new Map<string, Promise<unknown>>();
 export async function recordHistory(
   options: RecordHistoryOptions,
 ): Promise<HistoryRecord> {
-  const { ownerPath, subjectKey } = options;
-  const historyDirPath = resolveSubjectHistoryDirPath(ownerPath, subjectKey);
+  const historyDirPath = resolveSubjectHistoryDirPath(options);
 
   // Get the subject's append in flight, if it has one
   const pending = appendsInFlight.get(historyDirPath) ?? Promise.resolve();

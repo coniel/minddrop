@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { History } from '@minddrop/history';
+import { EntryHistorySubjectType } from '../../constants';
 import {
   sqlGetAllEntriesFull,
   sqlUpsertDatabase,
@@ -91,6 +92,7 @@ describe('onUpdateEntry', () => {
 
     const records = await History.read({
       ownerPath: databaseDirPath(objectDatabase),
+      subjectType: EntryHistorySubjectType,
       subjectKey: objectEntry1.title,
     });
 
@@ -114,6 +116,7 @@ describe('onUpdateEntry', () => {
     expect(
       await History.read({
         ownerPath: databaseDirPath(objectDatabase),
+        subjectType: EntryHistorySubjectType,
         subjectKey: objectEntry1.title,
       }),
     ).toEqual([]);

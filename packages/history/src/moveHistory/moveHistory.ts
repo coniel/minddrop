@@ -8,6 +8,11 @@ export interface MoveHistoryOptions {
   ownerPath: string;
 
   /**
+   * The type of thing the subject is.
+   */
+  subjectType: string;
+
+  /**
    * The subject's key before the move.
    */
   fromKey: string;
@@ -25,9 +30,17 @@ export interface MoveHistoryOptions {
  * @param options - The move options.
  */
 export async function moveHistory(options: MoveHistoryOptions): Promise<void> {
-  const { ownerPath, fromKey, toKey } = options;
-  const fromDirPath = resolveSubjectHistoryDirPath(ownerPath, fromKey);
-  const toDirPath = resolveSubjectHistoryDirPath(ownerPath, toKey);
+  const { ownerPath, subjectType, fromKey, toKey } = options;
+  const fromDirPath = resolveSubjectHistoryDirPath({
+    ownerPath,
+    subjectType,
+    subjectKey: fromKey,
+  });
+  const toDirPath = resolveSubjectHistoryDirPath({
+    ownerPath,
+    subjectType,
+    subjectKey: toKey,
+  });
 
   // Check the subject has a history directory. It only gets one once
   // something has been recorded against it.

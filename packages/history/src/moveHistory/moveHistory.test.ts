@@ -3,10 +3,11 @@ import { MockFs, cleanup, setup } from '../test-utils';
 import { moveHistory } from './moveHistory';
 
 const ownerPath = 'Books';
+const subjectType = 'entries';
 const fromKey = 'My Book';
 const toKey = 'My Renamed Book';
-const fromPath = 'Books/.minddrop/history/My Book';
-const toPath = 'Books/.minddrop/history/My Renamed Book';
+const fromPath = 'Books/.minddrop/history/entries/My Book';
+const toPath = 'Books/.minddrop/history/entries/My Renamed Book';
 
 describe('moveHistory', () => {
   beforeEach(() => {
@@ -21,7 +22,7 @@ describe('moveHistory', () => {
   afterEach(cleanup);
 
   it('moves the history to the new key', async () => {
-    await moveHistory({ ownerPath, fromKey, toKey });
+    await moveHistory({ ownerPath, subjectType, fromKey, toKey });
 
     expect(MockFs.exists(`${toPath}/history.json`)).toBe(true);
     expect(MockFs.exists(`${toPath}/content`)).toBe(true);
@@ -32,7 +33,7 @@ describe('moveHistory', () => {
     // History left behind by an earlier subject of the same name
     MockFs.addFiles([`${toPath}/history-20260101T000000000Z.json`]);
 
-    await moveHistory({ ownerPath, fromKey, toKey });
+    await moveHistory({ ownerPath, subjectType, fromKey, toKey });
 
     expect(MockFs.exists(`${toPath}/history.json`)).toBe(true);
     expect(MockFs.exists(`${toPath}/history-20260101T000000000Z.json`)).toBe(
@@ -47,7 +48,7 @@ describe('moveHistory', () => {
       `${toPath}/content/20260902T110000000Z.md`,
     ]);
 
-    await moveHistory({ ownerPath, fromKey, toKey });
+    await moveHistory({ ownerPath, subjectType, fromKey, toKey });
 
     // The old key's contents must end up under the new key, or the
     // records that moved across would point at nothing.
@@ -67,7 +68,7 @@ describe('moveHistory', () => {
       { path: `${toPath}/content/${name}`, textContent: 'The new key’s' },
     ]);
 
-    await moveHistory({ ownerPath, fromKey, toKey });
+    await moveHistory({ ownerPath, subjectType, fromKey, toKey });
 
     // The file already there keeps its contents, and the one that
     // could not move stays where a user can still find it.
@@ -80,7 +81,7 @@ describe('moveHistory', () => {
   it('leaves files the new key already holds untouched', async () => {
     MockFs.addFiles([`${toPath}/history.json`]);
 
-    await moveHistory({ ownerPath, fromKey, toKey });
+    await moveHistory({ ownerPath, subjectType, fromKey, toKey });
 
     // The colliding log stays where it is rather than being
     // overwritten by the one moving in.
@@ -89,7 +90,12 @@ describe('moveHistory', () => {
   });
 
   it('does nothing when the subject has no history', async () => {
-    await moveHistory({ ownerPath, fromKey: 'Unrecorded Book', toKey });
+    await moveHistory({
+      ownerPath,
+      subjectType,
+      fromKey: 'Unrecorded Book',
+      toKey,
+    });
 
     expect(MockFs.exists(toPath)).toBe(false);
   });

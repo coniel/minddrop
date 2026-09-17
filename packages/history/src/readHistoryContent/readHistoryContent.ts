@@ -1,17 +1,8 @@
 import { Fs } from '@minddrop/file-system';
+import { HistorySubject } from '../types';
 import { resolveContentDirPath } from '../utils';
 
-export interface ReadHistoryContentOptions {
-  /**
-   * The absolute path of the directory holding the history.
-   */
-  ownerPath: string;
-
-  /**
-   * The subject's key within the owner.
-   */
-  subjectKey: string;
-
+export interface ReadHistoryContentOptions extends HistorySubject {
   /**
    * The file name carried by the content record.
    */
@@ -27,9 +18,8 @@ export interface ReadHistoryContentOptions {
 export async function readHistoryContent(
   options: ReadHistoryContentOptions,
 ): Promise<string | null> {
-  const { ownerPath, subjectKey, file } = options;
-  const contentDirPath = resolveContentDirPath(ownerPath, subjectKey);
-  const contentFilePath = Fs.concatPath(contentDirPath, file);
+  const contentDirPath = resolveContentDirPath(options);
+  const contentFilePath = Fs.concatPath(contentDirPath, options.file);
 
   // Check the file is still there. A record can outlive its contents
   // if they were removed by hand.

@@ -7,6 +7,7 @@ import {
 import { isEntityId } from '@minddrop/utils';
 import { Workspaces } from '@minddrop/workspaces';
 import { DatabasesStore } from '../../DatabasesStore';
+import { EntryHistorySubjectType } from '../../constants';
 import { persistVirtualViewConfig } from '../../persistVirtualViewConfig';
 import { getReferencingEntries, resolveDatabasePath } from '../../utils';
 import { writeDatabaseEntry } from '../../writeDatabaseEntry';
@@ -80,6 +81,7 @@ async function recordReferenceRenames(
 
       await History.record({
         ownerPath: resolveDatabasePath(database, workspacePath),
+        subjectType: EntryHistorySubjectType,
         subjectKey: entry.title,
         kind: 'rename',
         target: 'reference',
