@@ -96,6 +96,7 @@ export {
   applyElementSettings,
   floorToMultiple,
   hasNeighbourOnSide,
+  remapElementProperties,
   removeElement,
   resolveAspectRatioValue,
   resolveAspectRows,
@@ -107,5 +108,6 @@ export {
   resolveTextLineRowSpan,
   resolveVerticalElementRect,
   snapToMultiple,
+  unmapElementProperties,
   updateElement,
 } from './utils';
