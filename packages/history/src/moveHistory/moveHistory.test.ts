@@ -1,5 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { readHistory } from '../readHistory';
 import { MockFs, cleanup, setup } from '../test-utils';
+import { HistoryRecord } from '../types';
 import { moveHistory } from './moveHistory';
 
 const ownerPath = 'Books';
@@ -8,6 +10,23 @@ const fromKey = 'My Book';
 const toKey = 'My Renamed Book';
 const fromPath = 'Books/.minddrop/history/entries/My Book';
 const toPath = 'Books/.minddrop/history/entries/My Renamed Book';
+
+const movedRecord: HistoryRecord = {
+  timestamp: new Date('2026-09-01T09:14:02.311Z'),
+  kind: 'created',
+};
+
+const heldRecord: HistoryRecord = {
+  timestamp: new Date('2026-09-02T11:00:00.000Z'),
+  kind: 'deleted',
+};
+
+/**
+ * Writes a log file holding the given records.
+ */
+function writeLog(path: string, records: HistoryRecord[]): void {
+  MockFs.addFiles([{ path, textContent: JSON.stringify(records) }]);
+}
 
 describe('moveHistory', () => {
   beforeEach(() => {
@@ -64,7 +83,6 @@ describe('moveHistory', () => {
     const name = '20260901T091402311Z.md';
 
     MockFs.addFiles([
-      `${toPath}/history.json`,
       { path: `${toPath}/content/${name}`, textContent: 'The new key’s' },
     ]);
 
@@ -78,15 +96,19 @@ describe('moveHistory', () => {
     expect(MockFs.exists(`${fromPath}/content/${name}`)).toBe(true);
   });
 
-  it('leaves files the new key already holds untouched', async () => {
-    MockFs.addFiles([`${toPath}/history.json`]);
+  it('merges the records of two active logs into one history', async () => {
+    writeLog(`${fromPath}/history.json`, [movedRecord]);
+    writeLog(`${toPath}/history.json`, [heldRecord]);
 
     await moveHistory({ ownerPath, subjectType, fromKey, toKey });
 
-    // The colliding log stays where it is rather than being
-    // overwritten by the one moving in.
-    expect(MockFs.exists(`${fromPath}/history.json`)).toBe(true);
-    expect(MockFs.exists(`${toPath}/content`)).toBe(true);
+    // The arriving log goes in under an archive name, so its records
+    // are read as part of the history it joined rather than being
+    // stranded under the old key.
+    expect(
+      await readHistory({ ownerPath, subjectType, subjectKey: toKey }),
+    ).toEqual([movedRecord, heldRecord]);
+    expect(MockFs.exists(fromPath)).toBe(false);
   });
 
   it('does nothing when the subject has no history', async () => {
