@@ -163,6 +163,7 @@ export { setDatabaseDesign as setDesign } from './setDatabaseDesign';
 export { setDatabaseColorProperty as setColorProperty } from './setDatabaseColorProperty';
 export { setDatabaseDefaultLayout as setDefaultLayout } from './setDatabaseDefaultLayout';
 export { getDefaultDatabaseDesign as getDefaultDesign } from './getDefaultDatabaseDesign';
+export { useDefaultDatabaseDesign as useDefaultDesign } from './useDefaultDatabaseDesign';
 export { setDatabaseDefaultDesign as setDefaultDesign } from './setDatabaseDefaultDesign';
 
 /**
