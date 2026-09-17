@@ -1,7 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
+import { Design, Designs } from '@minddrop/designs-next';
+import {
+  DesignElementFixtures,
+  DesignFixtures,
+} from '@minddrop/designs-next/test-utils';
 import { Properties } from '@minddrop/properties';
 import { storeItem } from '@minddrop/stores/test-utils';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabaseEntryTemplatesStore } from '../../DatabaseEntryTemplatesStore';
 import { DatabasesStore } from '../../DatabasesStore';
@@ -29,6 +35,19 @@ import {
 import { Database } from '../../types';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
 import { onRenameProperty } from './property-renamed';
+
+const { ownedCardDesign_1 } = DesignFixtures;
+const { titleDesignElement } = DesignElementFixtures;
+
+const { workspace_1 } = WorkspaceFixtures;
+
+// A design of the object database with an element mapping its
+// 'Icon' property.
+const mappedDesign: Design = {
+  ...ownedCardDesign_1,
+  owner: objectDatabase.id,
+  elements: [{ ...titleDesignElement, property: 'Icon' }],
+};
 
 /**
  * Renames a property in the stored database config and runs the
@@ -95,6 +114,9 @@ describe('onRenameProperty', () => {
       ),
       collectionEntry1.properties.References as string[],
     );
+
+    // Load the object database's design
+    Designs.load([mappedDesign], workspace_1.id);
   });
 
   afterEach(async () => {
@@ -140,6 +162,13 @@ describe('onRenameProperty', () => {
       storeItem(DatabaseEntryTemplatesStore, entryTemplate1.id).properties
         .Details,
     ).toBe(entryTemplate1.properties.Notes);
+  });
+
+  it("remaps the property in the database's designs", async () => {
+    await renameProperty(objectDatabase, 'Icon', 'Symbol');
+
+    // The design's element should map to the new name
+    expect(Designs.get(mappedDesign.id).elements[0].property).toBe('Symbol');
   });
 
   it("renames the property's file directory", async () => {

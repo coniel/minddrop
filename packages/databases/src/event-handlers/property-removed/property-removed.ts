@@ -1,4 +1,5 @@
 import { Collections } from '@minddrop/collections';
+import { Designs } from '@minddrop/designs-next';
 import { Fs } from '@minddrop/file-system';
 import {
   Properties,
@@ -10,6 +11,7 @@ import { DatabasePropertyRemovedEventData } from '../../events';
 import { getDatabaseEntryTemplates } from '../../getDatabaseEntryTemplates';
 import { sqlReindexDatabaseEntries } from '../../sql';
 import { Database } from '../../types';
+import { updateDatabaseDesignsElements } from '../../updateDatabaseDesignsElements';
 import { updateDatabaseEntryTemplate } from '../../updateDatabaseEntryTemplate';
 import {
   resolveDatabasePath,
@@ -18,10 +20,8 @@ import {
 } from '../../utils';
 
 /**
- * Called when a property is removed from a database. Re-indexes
- * SQL entries, clears the property from the database's entry
- * templates, and deletes virtual collections for collection
- * properties.
+ * Called when a property is removed from a database. Clears the
+ * property from everything holding or mapping it.
  */
 export async function onRemoveProperty(
   data: DatabasePropertyRemovedEventData,
@@ -33,6 +33,11 @@ export async function onRemoveProperty(
 
   // Drop the property's value from the database's entry templates
   await removePropertyFromEntryTemplates(database, property);
+
+  // Unmap the property from the database's design elements
+  await updateDatabaseDesignsElements(database.id, (elements) =>
+    Designs.unmapElementProperties(elements, property.name),
+  );
 
   // Only handle collection properties for virtual collections
   if (property.type !== 'collection') {

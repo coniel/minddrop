@@ -1,5 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
+import { Design, Designs } from '@minddrop/designs-next';
+import {
+  DesignElementFixtures,
+  DesignFixtures,
+} from '@minddrop/designs-next/test-utils';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { getDatabaseEntryTemplate } from '../../getDatabaseEntryTemplate';
 import { getDatabaseEntryTemplates } from '../../getDatabaseEntryTemplates';
 import {
@@ -30,6 +36,19 @@ import {
   virtualCollectionName,
 } from '../../utils';
 import { onRemoveProperty } from './property-removed';
+
+const { ownedCardDesign_1 } = DesignFixtures;
+const { titleDesignElement } = DesignElementFixtures;
+
+const { workspace_1 } = WorkspaceFixtures;
+
+// A design of the object database with an element mapping its
+// 'Content' property.
+const mappedDesign: Design = {
+  ...ownedCardDesign_1,
+  owner: objectDatabase.id,
+  elements: [{ ...titleDesignElement, property: 'Content' }],
+};
 
 /**
  * Returns a copy of a database with the named property removed
@@ -86,6 +105,9 @@ describe('onRemoveProperty', () => {
       ),
       collectionEntry1.properties.References as string[],
     );
+
+    // Load the object database's design
+    Designs.load([mappedDesign], workspace_1.id);
   });
 
   afterEach(async () => {
@@ -139,6 +161,17 @@ describe('onRemoveProperty', () => {
       virtualCollectionId(collectionEntry1.id, 'Related'),
     );
     expect(related).not.toBeNull();
+  });
+
+  it("clears the property from the database's designs", async () => {
+    await onRemoveProperty({
+      original: objectDatabase,
+      updated: withoutProperty(objectDatabase, 'Content'),
+      property: { type: 'text', name: 'Content' },
+    });
+
+    // The design's element should no longer map the property
+    expect(Designs.get(mappedDesign.id).elements[0].property).toBeUndefined();
   });
 
   it('deletes virtual collections for all entries', async () => {

@@ -1,4 +1,5 @@
 import { Collections } from '@minddrop/collections';
+import { Designs } from '@minddrop/designs-next';
 import { Properties } from '@minddrop/properties';
 import { DatabasePropertyRenamedEventData } from '../../events';
 import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
@@ -6,6 +7,7 @@ import { renameDatabaseEntriesProperty } from '../../renameDatabaseEntriesProper
 import { renameDatabaseEntryTemplatesProperty } from '../../renameDatabaseEntryTemplatesProperty';
 import { renamePropertyFileDir } from '../../renamePropertyFileDir';
 import { sqlRenameProperty } from '../../sql';
+import { updateDatabaseDesignsElements } from '../../updateDatabaseDesignsElements';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
 
 /**
@@ -23,6 +25,11 @@ export async function onRenameProperty(
   // Re-key the property's value in the database's entry templates
   // that have one.
   await renameDatabaseEntryTemplatesProperty(database.id, oldName, newName);
+
+  // Remap the property in the database's design elements
+  await updateDatabaseDesignsElements(database.id, (elements) =>
+    Designs.remapElementProperties(elements, oldName, newName),
+  );
 
   // Find the property under its old name
   const oldProperty = original.properties.find(
