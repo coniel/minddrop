@@ -17,10 +17,11 @@ import { sliceRegion } from '../sliceRegion';
 /**
  * Compiles a design into the tree of boxes it renders as, cutting it
  * into bands at every horizontal line no element crosses and, where
- * there is none, into column boxes at every vertical one. A region
- * holding no element is a spacer, a region one element fills is that
- * element, and a region no line cuts is atomic, holding its elements
- * at their unit rects.
+ * there is none, into column boxes at every vertical one, each band
+ * and column box cut the same way in turn. A region holding no
+ * element is a spacer, a region one element fills is that element,
+ * and a region no line cuts is atomic, holding its elements at their
+ * unit rects.
  *
  * @param design - The design to compile.
  * @returns The root box of the tree.
@@ -51,7 +52,7 @@ export function resolveLayoutTree(design: Design): LayoutBox {
 /**
  * Cuts a region into bands at the horizontal lines none of its
  * elements cross, or into column boxes at the vertical ones where
- * no horizontal line cuts it.
+ * no horizontal line cuts it, cutting each slice in turn.
  *
  * @param region - The region to cut.
  * @param elements - The elements inside the region.
@@ -102,9 +103,8 @@ function cutRegion(
 }
 
 /**
- * Slices a region at cut lines along an axis and compiles each slice
- * with the elements inside it. Bands are cut further, column boxes
- * are leaves.
+ * Slices a region at cut lines along an axis and cuts each slice
+ * with the elements inside it.
  *
  * @param region - The region to slice.
  * @param elements - The elements inside the region.
@@ -125,7 +125,7 @@ function cutSlices(
     region.column + region.columnSpan,
   ).slice(region.column);
 
-  // Compile each slice with the elements inside it
+  // Cut each slice with the elements inside it
   return sliceRegion(region, lines, axis).map((slice) => {
     const sliceElements = elements.filter((element) =>
       axis === 'rows'
@@ -138,37 +138,8 @@ function cutSlices(
       slice.columnSpan,
     ).span;
 
-    if (axis === 'rows') {
-      return cutRegion(slice, sliceElements, sliceUnits);
-    }
-
-    return resolveLeaf(slice, sliceElements, sliceUnits);
+    return cutRegion(slice, sliceElements, sliceUnits);
   });
-}
-
-/**
- * Compiles a region without cutting it: a spacer when it holds no
- * element, the element when one fills it, an atomic box otherwise.
- *
- * @param region - The region.
- * @param elements - The elements inside the region.
- * @param columnUnits - The region's columns, classified against the box it was cut from.
- * @returns The leaf box.
- */
-function resolveLeaf(
-  region: LayoutRegion,
-  elements: DesignElement[],
-  columnUnits: UnitShare,
-): LayoutBox {
-  if (elements.length === 0) {
-    return { type: 'spacer', ...region, columnUnits };
-  }
-
-  if (elements.length === 1 && fillsRegion(elements[0], region)) {
-    return { type: 'element', ...region, columnUnits, element: elements[0] };
-  }
-
-  return { type: 'atom', ...region, columnUnits, elements };
 }
 
 /**

@@ -33,6 +33,23 @@ const {
 // The column units of a full-width band under a fluid element
 const fluidWidth = { fixed: 0, scaling: 48 };
 
+// A box type, or a box type followed by the types of its children
+type TypeTree = string | [string, ...TypeTree[]];
+
+/**
+ * Reduces a box tree to its types, nested as the boxes are.
+ *
+ * @param box - The box.
+ * @returns The box's type, followed by its children's when it has any.
+ */
+function resolveTypeTree(box: LayoutBox): TypeTree {
+  if (box.type === 'rows' || box.type === 'columns') {
+    return [box.type, ...box.children.map(resolveTypeTree)];
+  }
+
+  return box.type;
+}
+
 describe('resolveLayoutTree', () => {
   it('cuts the heading design into a heading band between two spacers', () => {
     const tree: LayoutBox = {
@@ -196,8 +213,10 @@ describe('resolveLayoutTree', () => {
 
   it('cuts a design with no free horizontal line into column boxes', () => {
     // The icon column keeps its unit width, the gap beside it too,
-    // and the text absorbs the width. The icon column is not cut
-    // further yet.
+    // and the text absorbs the width. The icon column cuts into its
+    // icons and the gaps between them.
+    const iconColumnUnits = { fixed: 6, scaling: 0 };
+
     expect(resolveLayoutTree(design_icons_beside_text)).toEqual({
       type: 'columns',
       column: 0,
@@ -207,16 +226,56 @@ describe('resolveLayoutTree', () => {
       columnUnits: { fixed: 8, scaling: 40 },
       children: [
         {
-          type: 'atom',
+          type: 'rows',
           column: 0,
           row: 0,
           columnSpan: 6,
           rowSpan: 22,
-          columnUnits: { fixed: 6, scaling: 0 },
-          elements: [
-            designElement_besideIcon_1,
-            designElement_besideIcon_2,
-            designElement_besideIcon_3,
+          columnUnits: iconColumnUnits,
+          children: [
+            {
+              type: 'element',
+              column: 0,
+              row: 0,
+              columnSpan: 6,
+              rowSpan: 6,
+              columnUnits: iconColumnUnits,
+              element: designElement_besideIcon_1,
+            },
+            {
+              type: 'spacer',
+              column: 0,
+              row: 6,
+              columnSpan: 6,
+              rowSpan: 2,
+              columnUnits: iconColumnUnits,
+            },
+            {
+              type: 'element',
+              column: 0,
+              row: 8,
+              columnSpan: 6,
+              rowSpan: 6,
+              columnUnits: iconColumnUnits,
+              element: designElement_besideIcon_2,
+            },
+            {
+              type: 'spacer',
+              column: 0,
+              row: 14,
+              columnSpan: 6,
+              rowSpan: 2,
+              columnUnits: iconColumnUnits,
+            },
+            {
+              type: 'element',
+              column: 0,
+              row: 16,
+              columnSpan: 6,
+              rowSpan: 6,
+              columnUnits: iconColumnUnits,
+              element: designElement_besideIcon_3,
+            },
           ],
         },
         {
@@ -256,6 +315,72 @@ describe('resolveLayoutTree', () => {
       ['spacer', { fixed: 0, scaling: 40 }],
       ['element', { fixed: 6, scaling: 0 }],
       ['spacer', { fixed: 2, scaling: 0 }],
+    ]);
+  });
+
+  it('cuts column boxes into bands and those into column boxes again', () => {
+    // A heading above a band of an icon column beside a text. The
+    // first icon has gaps at its sides, the second fills the column.
+    const icon_1: DesignElement = {
+      ...designElement_besideIcon_1,
+      column: 2,
+      columnSpan: 4,
+      row: 6,
+      rowSpan: 4,
+    };
+    const icon_2: DesignElement = {
+      ...designElement_besideIcon_2,
+      column: 0,
+      columnSpan: 8,
+      row: 14,
+      rowSpan: 8,
+    };
+    const text: DesignElement = {
+      ...designElement_besideText,
+      column: 10,
+      columnSpan: 38,
+      row: 6,
+      rowSpan: 16,
+    };
+    const design: Design = {
+      ...design_icons_beside_text,
+      elements: [
+        { ...designElement_stackedHeading, rowSpan: 4 },
+        icon_1,
+        icon_2,
+        text,
+      ],
+    };
+
+    expect(resolveTypeTree(resolveLayoutTree(design))).toEqual([
+      'rows',
+      'element',
+      'spacer',
+      [
+        'columns',
+        [
+          'rows',
+          ['columns', 'spacer', 'element', 'spacer'],
+          'spacer',
+          'element',
+        ],
+        'spacer',
+        'element',
+      ],
+    ]);
+  });
+
+  it('terminates on an element with gaps on every side', () => {
+    const design: Design = {
+      ...design_heading,
+      elements: [{ ...designElement_heading, column: 2, columnSpan: 44 }],
+    };
+
+    expect(resolveTypeTree(resolveLayoutTree(design))).toEqual([
+      'rows',
+      'spacer',
+      ['columns', 'spacer', 'element', 'spacer'],
+      'spacer',
     ]);
   });
 

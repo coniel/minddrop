@@ -260,9 +260,11 @@ describe('DesignRenderer', () => {
     ) as HTMLElement;
     const text = getElementWrapper(container, designElement_besideText.id);
     const spacer = columns.querySelector(
-      '.design-renderer-spacer',
+      ':scope > .design-renderer-spacer',
     ) as HTMLElement;
-    const icons = columns.querySelector('.design-renderer-atom') as HTMLElement;
+    const icons = columns.querySelector(
+      ':scope > .design-renderer-rows',
+    ) as HTMLElement;
 
     // The text grows by its forty columns, the gap and the icon
     // column keep their unit width.
@@ -273,6 +275,21 @@ describe('DesignRenderer', () => {
     );
     expect(icons.style.flexBasis).toBe(
       `${designElement_besideIcon_1.columnSpan * Designs.constants.UnitPixelSize}px`,
+    );
+  });
+
+  it('renders a column of stacked elements as bands of the column', () => {
+    const { container } = render(
+      <DesignRenderer design={design_icons_beside_text} />,
+    );
+    const icon = getElementWrapper(container, designElement_besideIcon_1.id);
+
+    // Every element is in flow: the icons stack as bands inside
+    // their column box, each at its block height.
+    expect(container.querySelector('.design-renderer-atom')).toBeNull();
+    expect(icon.closest('.design-renderer-rows')).not.toBeNull();
+    expect(icon.style.height).toBe(
+      `${designElement_besideIcon_1.rowSpan * Designs.constants.UnitPixelSize}px`,
     );
   });
 
