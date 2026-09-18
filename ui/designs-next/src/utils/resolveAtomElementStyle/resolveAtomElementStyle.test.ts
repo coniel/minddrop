@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Designs, LayoutAtomBox } from '@minddrop/designs-next';
+import { DesignElement, Designs, LayoutAtomBox } from '@minddrop/designs-next';
 import { DesignElementFixtures } from '@minddrop/designs-next/test-utils';
 import { resolveAtomElementStyle } from './resolveAtomElementStyle';
 
@@ -41,17 +41,48 @@ describe('resolveAtomElementStyle', () => {
     expect(style.width).toBe('24px');
   });
 
-  it('places the element rows at their unit height from the box top', () => {
+  it('places a top-pinned element at its unit height from the box top', () => {
     const style = resolveAtomElementStyle(titleDesignElement, {
       ...coverAtom,
       row: 4,
     });
 
     expect(style.top).toBe(
-      (titleDesignElement.row - 4) * Designs.constants.UnitPixelSize,
+      `${(titleDesignElement.row - 4) * Designs.constants.UnitPixelSize}px`,
     );
     expect(style.height).toBe(
-      titleDesignElement.rowSpan * Designs.constants.UnitPixelSize,
+      `${titleDesignElement.rowSpan * Designs.constants.UnitPixelSize}px`,
     );
+  });
+
+  it('holds a bottom-pinned element against the box bottom edge', () => {
+    // A bar pinned to the bottom of the box, in its last four rows
+    const bar: DesignElement = {
+      ...iconDesignElement,
+      column: 0,
+      columnSpan: 48,
+      row: 12,
+      rowSpan: 4,
+      heightMode: 'fixed-bottom',
+    };
+    const style = resolveAtomElementStyle(bar, {
+      ...coverAtom,
+      elements: [coverDesignElement, bar],
+    });
+
+    // The gap above the bar takes whatever height the box gains
+    expect(style.top).toBe('calc(100% - 16px)');
+    expect(style.height).toBe('16px');
+  });
+
+  it('stretches a fluid-height element with the box', () => {
+    const cover: DesignElement = { ...coverDesignElement, heightMode: 'fluid' };
+    const style = resolveAtomElementStyle(cover, {
+      ...coverAtom,
+      elements: [cover, titleDesignElement],
+    });
+
+    expect(style.top).toBe('0px');
+    expect(style.height).toBe('100%');
   });
 });

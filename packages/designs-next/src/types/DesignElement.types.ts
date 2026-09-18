@@ -127,11 +127,12 @@ export interface DesignElement {
   padding?: ElementPadding;
 
   /**
-   * How the element's height behaves in an aspect-locked design:
-   * fluid elements scale with the card's height, fixed elements keep
-   * their unit height and stay pinned to the given card edge, or hold
-   * their place proportionally between both. Absent means fixed to
-   * the top edge. Ignored outside aspect-locked designs.
+   * How the element's height behaves when the region holding it is
+   * taller than its rows, as in an aspect-locked design or a region
+   * stretched beside taller content: fluid elements scale with the
+   * region's height, fixed elements keep their unit height and stay
+   * pinned to the given region edge, or hold their place
+   * proportionally between both. Absent means fixed to the top edge.
    */
   heightMode?: ElementHeightMode;
 }

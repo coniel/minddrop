@@ -30,6 +30,7 @@ const {
   designElement_besideIcon_1,
   designElement_besideText,
   designElement_heading,
+  designElement_pinwheel_3,
   designElement_pinwheel_5,
   designElement_stackedFooter,
   iconDesignElement,
@@ -249,6 +250,31 @@ describe('DesignRenderer', () => {
       `${centre.rowSpan * Designs.constants.UnitPixelSize}px`,
     );
     expect(wrapper.style.minHeight).toBe('');
+  });
+
+  it('holds a pinned element against the edge of its uncut region', () => {
+    // The pinwheel's bottom-right element pinned to the bottom
+    const bottom: DesignElement = {
+      ...designElement_pinwheel_3,
+      heightMode: 'fixed-bottom',
+    };
+    const design: Design = {
+      ...design_pinwheel,
+      elements: [
+        ...design_pinwheel.elements.slice(0, 2),
+        bottom,
+        ...design_pinwheel.elements.slice(3),
+      ],
+    };
+    const { container } = render(<DesignRenderer design={design} />);
+    const wrapper = getElementWrapper(container, bottom.id);
+
+    // The gap above the element takes any height the region gains,
+    // so the element keeps its distance from the bottom edge.
+    expect(wrapper.style.top).toBe('calc(80px + 100% - 120px)');
+    expect(wrapper.style.height).toBe(
+      `${bottom.rowSpan * Designs.constants.UnitPixelSize}px`,
+    );
   });
 
   it('lays a band with no free horizontal line out as column boxes', () => {

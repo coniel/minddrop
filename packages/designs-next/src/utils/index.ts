@@ -16,6 +16,7 @@ export * from './resolveDesignFilePath';
 export * from './resolveDesignsDirPath';
 export * from './resolveElementColumnUnits';
 export * from './resolveElementRect';
+export * from './resolveElementRowUnits';
 export * from './resolveCutLines';
 export * from './resolveLayoutTree';
 export * from './resolveOccupiedColumns';

@@ -103,6 +103,7 @@ export {
   resolveChildElements,
   resolveElementColumnUnits,
   resolveElementRect,
+  resolveElementRowUnits,
   resolveLayoutTree,
   resolvePaddingSize,
   resolveRowLayout,

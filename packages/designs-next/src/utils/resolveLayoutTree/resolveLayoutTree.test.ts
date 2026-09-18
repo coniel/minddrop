@@ -170,6 +170,42 @@ describe('resolveLayoutTree', () => {
     });
   });
 
+  it('boxes overlapping elements at their union rectangle', () => {
+    // A half-width cover with a title over it, beside a text that
+    // starts lower than the cover and ends below it.
+    const cover: DesignElement = { ...coverDesignElement, columnSpan: 24 };
+    const title: DesignElement = { ...titleDesignElement, columnSpan: 18 };
+    const text: DesignElement = {
+      ...designElement_besideText,
+      column: 26,
+      columnSpan: 22,
+      row: 4,
+      rowSpan: 16,
+    };
+    const design: Design = {
+      ...design_cover_title,
+      rows: 20,
+      elements: [cover, title, text],
+    };
+    const tree = resolveLayoutTree(design);
+    const cluster =
+      tree.type === 'columns' &&
+      tree.children[0].type === 'rows' &&
+      tree.children[0].children[0];
+
+    // The cover and title share a box the size of the cover, with
+    // the rows below it as a spacer of their own.
+    expect(cluster).toEqual({
+      type: 'atom',
+      column: 0,
+      row: 0,
+      columnSpan: 24,
+      rowSpan: 16,
+      columnUnits: { fixed: 0, scaling: 24 },
+      elements: [cover, title],
+    });
+  });
+
   it('cuts a band into column boxes around an element with side gaps', () => {
     const tree = resolveLayoutTree(design_cover_title);
 
