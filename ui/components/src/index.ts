@@ -1,4 +1,6 @@
-export * from './AddCollectionEntryButton';
+export * from './AddContentButton';
+export * from './AddContentPicker';
+export * from './AddContentMenu';
 export * from './CollectionSelectionSubmenu';
 export * from './DataSourceCombobox';
 export * from './EntitySearchMenu';

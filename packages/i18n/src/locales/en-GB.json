@@ -1918,5 +1918,22 @@
     "labels": {
       "space": "Space"
     }
+  },
+  "addContent": {
+    "searchPlaceholder": "Search entries, templates...",
+    "empty": "No results",
+    "actions": {
+      "add": "Add content"
+    },
+    "groups": {
+      "suggested": "Suggested",
+      "new": "New entry",
+      "recent": "Recent entries",
+      "existing": "Add entry"
+    },
+    "hints": {
+      "add": "to add",
+      "addMore": "to add more"
+    }
   }
 }

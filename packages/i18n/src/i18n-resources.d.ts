@@ -2098,6 +2098,23 @@ declare module 'i18next' {
             };
           };
         };
+        addContent: {
+          searchPlaceholder: string;
+          empty: string;
+          actions: {
+            add: string;
+          };
+          groups: {
+            suggested: string;
+            new: string;
+            recent: string;
+            existing: string;
+          };
+          hints: {
+            add: string;
+            addMore: string;
+          };
+        };
         tags: {
           labels: {
             tag: string;
