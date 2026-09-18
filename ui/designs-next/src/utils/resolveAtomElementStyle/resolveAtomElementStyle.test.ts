@@ -13,6 +13,7 @@ const coverAtom: LayoutAtomBox = {
   row: 0,
   columnSpan: 48,
   rowSpan: 16,
+  columnUnits: { fixed: 0, scaling: 48 },
   elements: [coverDesignElement, titleDesignElement, iconDesignElement],
 };
 

@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   Design,
+  DesignElement,
   DesignElementComponent,
   DesignElementConfig,
   DesignElementConfigs,
@@ -16,11 +17,20 @@ import { cleanup } from '../test-utils';
 import { useElementValue } from '../useElementValue';
 import { DesignRenderer } from './DesignRenderer';
 
-const { cardDesign_1, design_heading, design_stacked } = DesignFixtures;
+const {
+  cardDesign_1,
+  design_heading,
+  design_icons_beside_text,
+  design_pinwheel,
+  design_stacked,
+} = DesignFixtures;
 const {
   bodyDesignElement,
   coverDesignElement,
+  designElement_besideIcon_1,
+  designElement_besideText,
   designElement_heading,
+  designElement_pinwheel_5,
   designElement_stackedFooter,
   iconDesignElement,
 } = DesignElementFixtures;
@@ -220,16 +230,61 @@ describe('DesignRenderer', () => {
     );
   });
 
-  it('holds an element inside an uncut band at its unit height', () => {
+  it('holds an element inside an uncut region at its unit height', () => {
+    // The pinwheel's centre element set to grow
+    const centre: DesignElement = {
+      ...designElement_pinwheel_5,
+      contentFit: 'grow',
+    };
+    const design: Design = {
+      ...design_pinwheel,
+      elements: [...design_pinwheel.elements.slice(0, 4), centre],
+    };
+    const { container } = render(<DesignRenderer design={design} />);
+    const wrapper = getElementWrapper(container, centre.id);
+
+    // No line cuts the pinwheel, so the element takes its block
+    // height rather than a minimum.
+    expect(wrapper.style.height).toBe(
+      `${centre.rowSpan * Designs.constants.UnitPixelSize}px`,
+    );
+    expect(wrapper.style.minHeight).toBe('');
+  });
+
+  it('lays a band with no free horizontal line out as column boxes', () => {
+    const { container } = render(
+      <DesignRenderer design={design_icons_beside_text} />,
+    );
+    const columns = container.querySelector(
+      '.design-renderer-columns',
+    ) as HTMLElement;
+    const text = getElementWrapper(container, designElement_besideText.id);
+    const spacer = columns.querySelector(
+      '.design-renderer-spacer',
+    ) as HTMLElement;
+    const icons = columns.querySelector('.design-renderer-atom') as HTMLElement;
+
+    // The text grows by its forty columns, the gap and the icon
+    // column keep their unit width.
+    expect(text.style.flexGrow).toBe('40');
+    expect(text.style.flexBasis).toBe('0px');
+    expect(spacer.style.flexBasis).toBe(
+      `${2 * Designs.constants.UnitPixelSize}px`,
+    );
+    expect(icons.style.flexBasis).toBe(
+      `${designElement_besideIcon_1.columnSpan * Designs.constants.UnitPixelSize}px`,
+    );
+  });
+
+  it('grows an element between its side gaps', () => {
     const { container } = render(<DesignRenderer design={cardDesign_1} />);
     const body = getElementWrapper(container, bodyDesignElement.id);
 
-    // The growing body has gaps at its sides, so its band is uncut
-    // and it takes its block height rather than a minimum.
-    expect(body.style.height).toBe(
+    // The body's band is cut into gap, body, gap, so the body grows
+    expect(body.style.minHeight).toBe(
       `${bodyDesignElement.rowSpan * Designs.constants.UnitPixelSize}px`,
     );
-    expect(body.style.minHeight).toBe('');
+    expect(body.style.flexGrow).toBe(`${bodyDesignElement.columnSpan}`);
   });
 
   it('skips elements without a registered renderer', () => {

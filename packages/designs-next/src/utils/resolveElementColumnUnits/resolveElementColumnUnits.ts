@@ -1,5 +1,5 @@
-import { DesignElement, LayoutRegion } from '../../types';
-import { AxisUnits, resolveAxisUnits } from '../resolveAxisUnits';
+import { AxisUnits, DesignElement, LayoutRegion } from '../../types';
+import { resolveAxisUnits } from '../resolveAxisUnits';
 import { resolveContextElements } from '../resolveContextElements';
 import { resolveScalingColumns } from '../resolveScalingColumns';
 

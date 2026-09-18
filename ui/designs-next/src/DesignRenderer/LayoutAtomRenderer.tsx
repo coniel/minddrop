@@ -1,4 +1,4 @@
-import { DesignElement, Designs, LayoutAtomBox } from '@minddrop/designs-next';
+import { DesignElement, LayoutAtomBox } from '@minddrop/designs-next';
 import { resolveAtomElementStyle } from '../utils';
 import { LayoutElementRenderer } from './LayoutElementRenderer';
 
@@ -13,20 +13,23 @@ export interface LayoutAtomRendererProps {
    * from.
    */
   elements: DesignElement[];
+
+  /**
+   * The styles sizing the box inside the box holding it.
+   */
+  style?: React.CSSProperties;
 }
 
 /**
- * Renders an atomic box at its unit height, its elements positioned
- * absolutely inside it at their unit rects.
+ * Renders an atomic box with its elements positioned absolutely
+ * inside it at their unit rects.
  */
 export const LayoutAtomRenderer: React.FC<LayoutAtomRendererProps> = ({
   box,
   elements,
+  style,
 }) => (
-  <div
-    className="design-renderer-atom"
-    style={{ minHeight: box.rowSpan * Designs.constants.UnitPixelSize }}
-  >
+  <div className="design-renderer-atom" style={style}>
     {/* Array order doubles as paint order, later elements layer on top */}
     {box.elements.map((element) => (
       <LayoutElementRenderer

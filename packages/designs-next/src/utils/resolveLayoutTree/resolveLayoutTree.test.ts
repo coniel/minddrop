@@ -18,12 +18,20 @@ const {
 const {
   bodyDesignElement,
   coverDesignElement,
+  designElement_besideIcon_1,
+  designElement_besideIcon_2,
+  designElement_besideIcon_3,
+  designElement_besideText,
   designElement_heading,
   designElement_stackedBody,
   designElement_stackedFooter,
   designElement_stackedHeading,
+  iconDesignElement,
   titleDesignElement,
 } = DesignElementFixtures;
+
+// The column units of a full-width band under a fluid element
+const fluidWidth = { fixed: 0, scaling: 48 };
 
 describe('resolveLayoutTree', () => {
   it('cuts the heading design into a heading band between two spacers', () => {
@@ -33,17 +41,33 @@ describe('resolveLayoutTree', () => {
       row: 0,
       columnSpan: 48,
       rowSpan: 12,
+      columnUnits: fluidWidth,
       children: [
-        { type: 'spacer', column: 0, row: 0, columnSpan: 48, rowSpan: 2 },
+        {
+          type: 'spacer',
+          column: 0,
+          row: 0,
+          columnSpan: 48,
+          rowSpan: 2,
+          columnUnits: fluidWidth,
+        },
         {
           type: 'element',
           column: 0,
           row: 2,
           columnSpan: 48,
           rowSpan: 8,
+          columnUnits: fluidWidth,
           element: designElement_heading,
         },
-        { type: 'spacer', column: 0, row: 10, columnSpan: 48, rowSpan: 2 },
+        {
+          type: 'spacer',
+          column: 0,
+          row: 10,
+          columnSpan: 48,
+          rowSpan: 2,
+          columnUnits: fluidWidth,
+        },
       ],
     };
 
@@ -57,6 +81,7 @@ describe('resolveLayoutTree', () => {
       row: 0,
       columnSpan: 48,
       rowSpan: 32,
+      columnUnits: fluidWidth,
       children: [
         {
           type: 'element',
@@ -64,6 +89,7 @@ describe('resolveLayoutTree', () => {
           row: 0,
           columnSpan: 48,
           rowSpan: 8,
+          columnUnits: fluidWidth,
           element: designElement_stackedHeading,
         },
         {
@@ -72,15 +98,24 @@ describe('resolveLayoutTree', () => {
           row: 8,
           columnSpan: 48,
           rowSpan: 16,
+          columnUnits: fluidWidth,
           element: designElement_stackedBody,
         },
-        { type: 'spacer', column: 0, row: 24, columnSpan: 48, rowSpan: 4 },
+        {
+          type: 'spacer',
+          column: 0,
+          row: 24,
+          columnSpan: 48,
+          rowSpan: 4,
+          columnUnits: fluidWidth,
+        },
         {
           type: 'element',
           column: 0,
           row: 28,
           columnSpan: 48,
           rowSpan: 4,
+          columnUnits: fluidWidth,
           element: designElement_stackedFooter,
         },
       ],
@@ -113,29 +148,115 @@ describe('resolveLayoutTree', () => {
       row: 0,
       columnSpan: 48,
       rowSpan: 16,
+      columnUnits: fluidWidth,
       elements: [coverDesignElement, titleDesignElement],
     });
-    // The body has gaps at its sides, so its band is not cut yet
+  });
+
+  it('cuts a band into column boxes around an element with side gaps', () => {
+    const tree = resolveLayoutTree(design_cover_title);
+
+    // The body's band: a fixed gap, the fluid body, a fixed gap
     expect(tree.type === 'rows' && tree.children[2]).toEqual({
-      type: 'atom',
+      type: 'columns',
       column: 0,
       row: 20,
       columnSpan: 48,
       rowSpan: 10,
-      elements: [bodyDesignElement],
+      columnUnits: fluidWidth,
+      children: [
+        {
+          type: 'spacer',
+          column: 0,
+          row: 20,
+          columnSpan: 2,
+          rowSpan: 10,
+          columnUnits: { fixed: 2, scaling: 0 },
+        },
+        {
+          type: 'element',
+          column: 2,
+          row: 20,
+          columnSpan: 44,
+          rowSpan: 10,
+          columnUnits: { fixed: 0, scaling: 44 },
+          element: bodyDesignElement,
+        },
+        {
+          type: 'spacer',
+          column: 46,
+          row: 20,
+          columnSpan: 2,
+          rowSpan: 10,
+          columnUnits: { fixed: 2, scaling: 0 },
+        },
+      ],
     });
   });
 
-  it('compiles a design with no free horizontal line to one atom', () => {
-    // The text beside the icons spans every row
+  it('cuts a design with no free horizontal line into column boxes', () => {
+    // The icon column keeps its unit width, the gap beside it too,
+    // and the text absorbs the width. The icon column is not cut
+    // further yet.
     expect(resolveLayoutTree(design_icons_beside_text)).toEqual({
-      type: 'atom',
+      type: 'columns',
       column: 0,
       row: 0,
       columnSpan: 48,
       rowSpan: 22,
-      elements: design_icons_beside_text.elements,
+      columnUnits: { fixed: 8, scaling: 40 },
+      children: [
+        {
+          type: 'atom',
+          column: 0,
+          row: 0,
+          columnSpan: 6,
+          rowSpan: 22,
+          columnUnits: { fixed: 6, scaling: 0 },
+          elements: [
+            designElement_besideIcon_1,
+            designElement_besideIcon_2,
+            designElement_besideIcon_3,
+          ],
+        },
+        {
+          type: 'spacer',
+          column: 6,
+          row: 0,
+          columnSpan: 2,
+          rowSpan: 22,
+          columnUnits: { fixed: 2, scaling: 0 },
+        },
+        {
+          type: 'element',
+          column: 8,
+          row: 0,
+          columnSpan: 40,
+          rowSpan: 22,
+          columnUnits: { fixed: 0, scaling: 40 },
+          element: designElement_besideText,
+        },
+      ],
     });
+  });
+
+  it('compiles a right-pinned element to a scaling spacer on its left', () => {
+    // The right-pinned icon alone in a band of its rows
+    const design: Design = {
+      ...design_heading,
+      rows: iconDesignElement.rowSpan,
+      elements: [{ ...iconDesignElement, row: 0 }],
+    };
+    const tree = resolveLayoutTree(design);
+
+    expect(
+      tree.type === 'columns' &&
+        tree.children.map((box) => [box.type, box.columnUnits]),
+    ).toEqual([
+      ['spacer', { fixed: 0, scaling: 40 }],
+      ['element', { fixed: 6, scaling: 0 }],
+      ['spacer', { fixed: 2, scaling: 0 }],
+    ]);
   });
 
   it('compiles the pinwheel to one atom', () => {
@@ -145,6 +266,7 @@ describe('resolveLayoutTree', () => {
       row: 0,
       columnSpan: 48,
       rowSpan: 32,
+      columnUnits: fluidWidth,
       elements: design_pinwheel.elements,
     });
   });
@@ -156,6 +278,7 @@ describe('resolveLayoutTree', () => {
       row: 0,
       columnSpan: 48,
       rowSpan: 12,
+      columnUnits: { fixed: 48, scaling: 0 },
     });
   });
 
@@ -180,6 +303,7 @@ describe('resolveLayoutTree', () => {
       row: body.row,
       columnSpan: 48,
       rowSpan: body.rowSpan,
+      columnUnits: fluidWidth,
       element: body,
     });
   });

@@ -101,7 +101,13 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
         className="design-renderer"
         style={{ width, height: aspectHeight ?? undefined }}
       >
-        {tree && <LayoutBoxRenderer box={tree} elements={design.elements} />}
+        {tree && (
+          <LayoutBoxRenderer
+            box={tree}
+            elements={design.elements}
+            axis="rows"
+          />
+        )}
         {/* Array order doubles as paint order, later elements layer on top */}
         {aspectHeight !== null &&
           blocks.map((element) => {

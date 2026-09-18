@@ -1,39 +1,4 @@
-/**
- * A count of grid units split into those keeping their unit size
- * and those scaling with the region.
- */
-export interface UnitShare {
-  /**
-   * The units keeping their unit size.
-   */
-  fixed: number;
-
-  /**
-   * The units scaling with the region.
-   */
-  scaling: number;
-}
-
-/**
- * An extent along one axis of a region, as unit counts split by
- * whether they scale with the region.
- */
-export interface AxisUnits {
-  /**
-   * The units between the region's start and the extent's start.
-   */
-  before: UnitShare;
-
-  /**
-   * The units the extent spans.
-   */
-  span: UnitShare;
-
-  /**
-   * The units the region spans.
-   */
-  total: UnitShare;
-}
+import { AxisUnits, UnitShare } from '../../types';
 
 /**
  * Resolves an extent along an axis of a region as unit counts split

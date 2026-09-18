@@ -9,6 +9,17 @@
   flex-direction: column;
 }
 
+/* Column boxes side by side, each stretched to the tallest */
+.design-renderer-columns {
+  display: flex;
+}
+
+/* Let a column box shrink below its content's width, so that text
+   wraps rather than widening the row */
+.design-renderer-columns > * {
+  min-width: 0;
+}
+
 .design-renderer-spacer {
   flex: none;
 }
