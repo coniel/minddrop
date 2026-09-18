@@ -6,6 +6,7 @@ import {
   LayoutContext,
 } from '@minddrop/databases';
 import { Designs, Layouts } from '@minddrop/designs';
+import { Design } from '@minddrop/designs-next';
 import { LayoutRenderer } from '@minddrop/feature-designs';
 import { useTranslation } from '@minddrop/i18n';
 import { PropertyValue } from '@minddrop/properties';
@@ -15,6 +16,7 @@ import {
   DatabaseEntryRenderSource,
   useDatabaseEntryContext,
 } from '@minddrop/ui-databases';
+import { DesignRenderer } from '@minddrop/ui-designs-next';
 import { useHoveredItem } from '@minddrop/ui-drag-and-drop';
 import {
   ContextMenuContent,
@@ -51,6 +53,18 @@ export interface DatabaseEntryRendererProps {
   layoutId?: string;
 
   /**
+   * The design to render the entry with, null to render it with
+   * the legacy layout. Resolved from the database when omitted.
+   */
+  design?: Design | null;
+
+  /**
+   * The pixel width the entry renders at. Worth passing where many
+   * entries render at a shared width, so it is measured once.
+   */
+  width?: number;
+
+  /**
    * Optional click handler. When provided, this is called instead
    * of dispatching the default DatabaseEntries.events.OpenView.
    */
@@ -58,7 +72,7 @@ export interface DatabaseEntryRendererProps {
 }
 
 /**
- * Renders a database entry using the appropriate layout.
+ * Renders a database entry using the appropriate design.
  */
 export const DatabaseEntryRenderer: React.FC<DatabaseEntryRendererProps> =
   React.memo(({ entryId, ...other }) => {
@@ -68,7 +82,13 @@ export const DatabaseEntryRenderer: React.FC<DatabaseEntryRendererProps> =
       return null;
     }
 
-    return <Entry entry={entry} {...other} />;
+    // A view rendering many entries resolves the design once and
+    // passes it down, a lone entry resolves its own.
+    if (other.design !== undefined) {
+      return <Entry entry={entry} {...other} />;
+    }
+
+    return <EntryWithResolvedDesign entry={entry} {...other} />;
   });
 
 DatabaseEntryRenderer.displayName = 'DatabaseEntryRenderer';
@@ -77,18 +97,34 @@ interface EntryProps extends Omit<DatabaseEntryRendererProps, 'entryId'> {
   entry: DatabaseEntry;
 }
 
+/**
+ * Renders an entry with the design its database renders the
+ * context with.
+ */
+const EntryWithResolvedDesign: React.FC<EntryProps> = (props) => {
+  const design = Databases.useDefaultDesign(
+    props.entry.database,
+    props.layoutContext,
+  );
+
+  return <Entry {...props} design={design} />;
+};
+
 const Entry: React.FC<EntryProps> = ({
   entry,
   layoutId,
   layoutContext,
+  design,
+  width,
   onClick,
 }) => {
   const rootRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
   const database = Databases.use(entry.database);
-  const resolvedDesign = Designs.use(database?.designId || '');
+  const databaseDesign = Designs.use(database?.designId || '');
   // Only database designs apply to entries
-  const design = resolvedDesign?.type === 'database' ? resolvedDesign : null;
+  const legacyDesign =
+    databaseDesign?.type === 'database' ? databaseDesign : null;
   const { draggable, optionsMenu, contextMenu, source, viewId } =
     useDatabaseEntryContext();
   const focusRequested = DatabaseEntries.useFocusRequest(entry.id, viewId);
@@ -112,6 +148,11 @@ const Entry: React.FC<EntryProps> = ({
   // Resolve the layout to render with, falling back to the
   // database default when no override is specified.
   const layout = useMemo(() => {
+    // A design takes precedence over the legacy layouts
+    if (design) {
+      return null;
+    }
+
     // Look up the explicit layout if a real ID was provided
     if (layoutId && layoutId !== 'default') {
       const explicit = Layouts.get(layoutId, false);
@@ -123,28 +164,30 @@ const Entry: React.FC<EntryProps> = ({
 
     // Fall back to the database's default layout for this context
     return Databases.getDefaultLayout(entry.database, layoutContext);
-    // Depends on the database's pinned default and the design so the layout
-    // recomputes when the default is changed or the design's layouts change
+    // Depends on the database's pinned default and the legacy design so the
+    // layout recomputes when the default is changed or the design's layouts
+    // change
     // eslint-disable-next-line react-hooks/exhaustive-deps -- recompute on default/design changes
   }, [
+    design,
     layoutId,
     entry.database,
     layoutContext,
     database?.defaultLayouts?.[layoutContext],
-    design,
+    legacyDesign,
   ]);
 
   // Resolve each bound element to the database property mapped to
   // its design property (element ID -> design property -> database
   // property)
   const propertyMap = useMemo(() => {
-    if (!layout || !database || !design) {
+    if (!layout || !database || !legacyDesign) {
       return {};
     }
 
     const bindings = Layouts.getPropertyBindings(layout);
     const designPropertyMap = Databases.resolveDesignPropertyMap(
-      design.properties,
+      legacyDesign.properties,
       database,
     );
     const resolved: Record<string, string> = {};
@@ -158,7 +201,7 @@ const Entry: React.FC<EntryProps> = ({
     });
 
     return resolved;
-  }, [database, design, layout]);
+  }, [database, legacyDesign, layout]);
 
   // Database properties including the implicit entry metadata
   // properties, so metadata-mapped elements resolve a schema.
@@ -177,6 +220,16 @@ const Entry: React.FC<EntryProps> = ({
         : {},
     // eslint-disable-next-line react-hooks/exhaustive-deps -- recompute on property changes
     [entry.id, entry.properties, layout, propertyMap],
+  );
+
+  // The entry's property values, which the design's mapped
+  // elements render.
+  const designValues = useMemo(
+    () =>
+      design
+        ? DatabaseEntries.propertyValues(entry, rendererProperties)
+        : undefined,
+    [design, entry, rendererProperties],
   );
 
   // Bring the entry into view when it has been asked to come
@@ -285,31 +338,48 @@ const Entry: React.FC<EntryProps> = ({
     `database-entry-${baseType}`,
     entryColor ? `scheme-${entryColor}` : '',
     showDragHandle && isDragging ? 'database-entry-dragging' : '',
-    layout ? '' : 'database-entry-fallback',
+    design || layout ? '' : 'database-entry-fallback',
   ]
     .filter(Boolean)
     .join(' ');
 
-  // Minimal title-only fallback when the database has no design
-  // or its design has no layout of the requested type.
-  const content = layout ? (
-    <TransientViewStateScope segment={entry.id}>
-      <LayoutRenderer
-        layout={layout}
-        context={layoutContext}
-        autoFocusEditor={focusRequested}
-        designProperties={design?.properties}
-        mediaDirPath={design ? Designs.resolveMediaDirPath(design.id) : null}
-        propertyMap={propertyMap}
-        propertyValues={propertyValues}
-        properties={rendererProperties}
-        onUpdatePropertyValue={onUpdatePropertyValue}
-        onValidatePropertyValue={onValidatePropertyValue}
-      />
-    </TransientViewStateScope>
-  ) : (
-    <Text truncate>{entry.title}</Text>
-  );
+  // Renders the entry with the database's design, falling back to
+  // its legacy layout, then to a minimal title-only text.
+  function renderContent() {
+    if (design) {
+      return (
+        <DesignRenderer
+          design={design}
+          width={width}
+          properties={rendererProperties}
+          values={designValues}
+        />
+      );
+    }
+
+    if (layout) {
+      return (
+        <TransientViewStateScope segment={entry.id}>
+          <LayoutRenderer
+            layout={layout}
+            context={layoutContext}
+            autoFocusEditor={focusRequested}
+            designProperties={legacyDesign?.properties}
+            mediaDirPath={
+              legacyDesign ? Designs.resolveMediaDirPath(legacyDesign.id) : null
+            }
+            propertyMap={propertyMap}
+            propertyValues={propertyValues}
+            properties={rendererProperties}
+            onUpdatePropertyValue={onUpdatePropertyValue}
+            onValidatePropertyValue={onValidatePropertyValue}
+          />
+        </TransientViewStateScope>
+      );
+    }
+
+    return <Text truncate>{entry.title}</Text>;
+  }
 
   const root = (
     <div
@@ -336,7 +406,7 @@ const Entry: React.FC<EntryProps> = ({
         <EntryOptionsMenuButton entryId={entry.id} source={source} />
       )}
 
-      {content}
+      {renderContent()}
     </div>
   );
 

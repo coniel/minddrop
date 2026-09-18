@@ -6,9 +6,21 @@ import {
 } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Designs } from '@minddrop/designs';
+import {
+  DesignElementComponent,
+  DesignElementConfig,
+  DesignElementConfigs,
+  Designs as DesignsNext,
+} from '@minddrop/designs-next';
+import {
+  DesignElementConfigsRegistry,
+  DesignElementFixtures,
+  DesignFixtures as DesignNextFixtures,
+} from '@minddrop/designs-next/test-utils';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { act, fireEvent, render, screen, waitFor } from '@minddrop/test-utils';
 import { DatabaseEntryContextProvider } from '@minddrop/ui-databases';
+import { useElementValue } from '@minddrop/ui-designs-next';
 import { cleanup, setup } from '../test-utils';
 import { DatabaseEntryRenderer } from './DatabaseEntryRenderer';
 
@@ -20,6 +32,61 @@ const {
   element_property_formatted_text_1,
   design_books,
 } = DesignFixtures;
+const { ownedCardDesign_1 } = DesignNextFixtures;
+const { titleDesignElement } = DesignElementFixtures;
+
+// An element type rendering the value of the property it maps to,
+// standing in for the real content elements.
+const ValueElementType = 'value';
+
+const ValueElement: DesignElementComponent = ({ element }) => (
+  <div>{useElementValue(element)}</div>
+);
+
+const valueElementConfig: DesignElementConfig = {
+  type: ValueElementType,
+  label: 'designsNext.elements.text.label',
+  icon: 'text',
+  group: 'content',
+  component: ValueElement,
+  defaultColumnSpan: 12,
+  defaultRowSpan: 4,
+};
+
+// A database with a text property, whose value only a design
+// renders: neither the layout fixtures nor the title-only fallback
+// show it.
+const designDatabase = {
+  ...objectDatabase,
+  id: 'database_design' as const,
+  name: 'DesignDb',
+  path: `${objectDatabase.path}-design`,
+  properties: [{ type: 'text' as const, name: 'Body' }],
+};
+
+const designEntry = {
+  ...objectEntry1,
+  id: 'database-entry_design-entry' as const,
+  database: designDatabase.id,
+  path: `${objectDatabase.path}-design/Entry.md`,
+  title: 'Design Entry',
+  properties: { Body: 'Design value' },
+};
+
+// A card design mapping its only element to the Body property
+const bodyMappedDesign = {
+  ...ownedCardDesign_1,
+  elements: [
+    { ...titleDesignElement, type: ValueElementType, property: 'Body' },
+  ],
+};
+
+// The same design, owned by the entry's database
+const ownedBodyMappedDesign = {
+  ...bodyMappedDesign,
+  id: 'design_owned-body-mapped' as const,
+  owner: designDatabase.id,
+};
 
 // A text element bound to the 'Heading' design property
 const boundTextElement = {
@@ -127,12 +194,16 @@ describe('<DatabaseEntryRenderer />', () => {
 
     // Load the entry into the store so the renderer can resolve it
     DatabaseEntries.Store.load([objectEntry1]);
+
+    // Register the element type the designs render
+    DesignElementConfigs.register(valueElementConfig);
   });
 
   afterEach(async () => {
     await cleanup();
     DatabaseEntries.Store.clear();
     DatabaseEntrySerializers.Store.clear();
+    DesignElementConfigsRegistry.clear();
   });
 
   it('renders an entry using the default layout', () => {
@@ -155,6 +226,60 @@ describe('<DatabaseEntryRenderer />', () => {
 
     // Layout fixture renders its ID as content
     screen.getByText(layout_list_1.id);
+  });
+
+  it('renders an entry with the design its database owns', () => {
+    Databases.Store.load([designDatabase]);
+    DatabaseEntries.Store.load([designEntry]);
+    DesignsNext.Store.load([ownedBodyMappedDesign]);
+
+    render(
+      <DatabaseEntryRenderer
+        entryId={designEntry.id}
+        layoutContext="card"
+        width={300}
+      />,
+    );
+
+    // The design's element resolves the entry's Body value
+    screen.getByText('Design value');
+    // The design takes precedence over the legacy layout
+    expect(screen.queryByText(defaultCardLayout.id)).toBeNull();
+  });
+
+  it('renders an entry with the design it is given', () => {
+    Databases.Store.load([designDatabase]);
+    DatabaseEntries.Store.load([designEntry]);
+
+    render(
+      <DatabaseEntryRenderer
+        entryId={designEntry.id}
+        layoutContext="card"
+        design={bodyMappedDesign}
+        width={300}
+      />,
+    );
+
+    screen.getByText('Design value');
+    expect(screen.queryByText(defaultCardLayout.id)).toBeNull();
+  });
+
+  it('renders the legacy layout when given no design', () => {
+    // The database owns a design, which the given null overrides
+    Databases.Store.load([designDatabase]);
+    DatabaseEntries.Store.load([designEntry]);
+    DesignsNext.Store.load([ownedBodyMappedDesign]);
+
+    render(
+      <DatabaseEntryRenderer
+        entryId={designEntry.id}
+        layoutContext="card"
+        design={null}
+      />,
+    );
+
+    // Layout fixture renders its ID as content
+    screen.getByText(defaultCardLayout.id);
   });
 
   it('returns null if the entry does not exist', () => {
