@@ -3,16 +3,20 @@ import {
   DesignElement,
   LayoutAxis,
   LayoutBox,
+  LayoutBoxBase,
   LayoutRegion,
-  UnitShare,
 } from '../../types';
 import { columnsOverlap } from '../columnsOverlap';
 import { resolveAxisUnits } from '../resolveAxisUnits';
 import { resolveChildElements } from '../resolveChildElements';
 import { resolveCutLines } from '../resolveCutLines';
 import { resolveScalingColumns } from '../resolveScalingColumns';
+import { resolveScalingRows } from '../resolveScalingRows';
 import { rowsOverlap } from '../rowsOverlap';
 import { sliceRegion } from '../sliceRegion';
+
+// How a box's size relates to the box holding it
+type LayoutBoxUnits = Pick<LayoutBoxBase, 'columnUnits' | 'rowUnits'>;
 
 /**
  * Compiles a design into the tree of boxes it renders as, cutting it
@@ -38,15 +42,22 @@ export function resolveLayoutTree(design: Design): LayoutBox {
     rowSpan: design.rows,
   };
 
-  // Classify the design's columns against its own elements
-  const columnUnits = resolveAxisUnits(
-    resolveScalingColumns(elements, design.columns),
-    0,
-    design.columns,
-  ).span;
+  // Classify the design's columns and rows against its own elements
+  const units: LayoutBoxUnits = {
+    columnUnits: resolveAxisUnits(
+      resolveScalingColumns(elements, design.columns),
+      0,
+      design.columns,
+    ).span,
+    rowUnits: resolveAxisUnits(
+      resolveScalingRows(elements, design.rows),
+      0,
+      design.rows,
+    ).span,
+  };
 
   // Cut the whole design
-  return cutRegion(region, elements, columnUnits);
+  return cutRegion(region, elements, units);
 }
 
 /**
@@ -56,22 +67,22 @@ export function resolveLayoutTree(design: Design): LayoutBox {
  *
  * @param region - The region to cut.
  * @param elements - The elements inside the region.
- * @param columnUnits - The region's columns, classified against the box it was cut from.
+ * @param units - The region's columns and rows, classified against the box it was cut from.
  * @returns The box the region compiles to.
  */
 function cutRegion(
   region: LayoutRegion,
   elements: DesignElement[],
-  columnUnits: UnitShare,
+  units: LayoutBoxUnits,
 ): LayoutBox {
   // A region holding no element is a spacer
   if (elements.length === 0) {
-    return { type: 'spacer', ...region, columnUnits };
+    return { type: 'spacer', ...region, ...units };
   }
 
   // A region one element fills is that element
   if (elements.length === 1 && fillsRegion(elements[0], region)) {
-    return { type: 'element', ...region, columnUnits, element: elements[0] };
+    return { type: 'element', ...region, ...units, element: elements[0] };
   }
 
   // Cut into bands at the horizontal lines the region can be cut at
@@ -81,7 +92,7 @@ function cutRegion(
     return {
       type: 'rows',
       ...region,
-      columnUnits,
+      ...units,
       children: cutSlices(region, elements, rowLines, 'rows'),
     };
   }
@@ -93,13 +104,13 @@ function cutRegion(
     return {
       type: 'columns',
       ...region,
-      columnUnits,
+      ...units,
       children: cutSlices(region, elements, columnLines, 'columns'),
     };
   }
 
   // With no cut line, the region is atomic
-  return { type: 'atom', ...region, columnUnits, elements };
+  return { type: 'atom', ...region, ...units, elements };
 }
 
 /**
@@ -118,12 +129,16 @@ function cutSlices(
   lines: number[],
   axis: LayoutAxis,
 ): LayoutBox[] {
-  // Classify the region's columns against its elements, which the
-  // slices' widths are read from.
-  const scaling = resolveScalingColumns(
+  // Classify the region's columns and rows against its elements,
+  // which the slices' sizes are read from.
+  const columnScaling = resolveScalingColumns(
     elements,
     region.column + region.columnSpan,
   ).slice(region.column);
+  const rowScaling = resolveScalingRows(
+    elements,
+    region.row + region.rowSpan,
+  ).slice(region.row);
 
   // Cut each slice with the elements inside it
   return sliceRegion(region, lines, axis).map((slice) => {
@@ -132,11 +147,18 @@ function cutSlices(
         ? rowsOverlap(element, slice)
         : columnsOverlap(element, slice),
     );
-    const sliceUnits = resolveAxisUnits(
-      scaling,
-      slice.column - region.column,
-      slice.columnSpan,
-    ).span;
+    const sliceUnits: LayoutBoxUnits = {
+      columnUnits: resolveAxisUnits(
+        columnScaling,
+        slice.column - region.column,
+        slice.columnSpan,
+      ).span,
+      rowUnits: resolveAxisUnits(
+        rowScaling,
+        slice.row - region.row,
+        slice.rowSpan,
+      ).span,
+    };
 
     return cutRegion(slice, sliceElements, sliceUnits);
   });

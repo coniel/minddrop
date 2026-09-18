@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   Design,
   DesignElement,
@@ -12,7 +12,7 @@ import {
   DesignFixtures,
 } from '@minddrop/designs-next/test-utils';
 import { PropertiesSchema } from '@minddrop/properties';
-import { act, render } from '@minddrop/test-utils';
+import { render } from '@minddrop/test-utils';
 import { cleanup } from '../test-utils';
 import { useElementValue } from '../useElementValue';
 import { DesignRenderer } from './DesignRenderer';
@@ -56,55 +56,24 @@ const valueElementConfig: DesignElementConfig = {
 
 const titleProperties: PropertiesSchema = [{ type: 'title', name: 'Title' }];
 
-// The created mock observers, in construction order
-let observers: MockResizeObserver[] = [];
-
-class MockResizeObserver implements ResizeObserver {
-  callback: ResizeObserverCallback;
-
-  targets: Element[] = [];
-
-  constructor(callback: ResizeObserverCallback) {
-    this.callback = callback;
-    observers.push(this);
-  }
-
-  observe(target: Element) {
-    this.targets.push(target);
-  }
-
-  unobserve() {}
-
-  disconnect() {}
-}
-
-/**
- * Reports a measured size for a node by driving the observer
- * observing it.
- *
- * @param node - The observed node.
- * @param dimension - The dimension to report.
- * @param value - The measured pixel value.
- */
-function reportMeasuredSize(
-  node: HTMLElement,
-  dimension: 'offsetWidth' | 'offsetHeight',
-  value: number,
-) {
-  // Define the reported dimension on the node
-  Object.defineProperty(node, dimension, { value, configurable: true });
-
-  // Find the observer observing the node
-  const observer = observers.find((current) => current.targets.includes(node));
-
-  // Drive the observer's callback with the node as its entry
-  act(() => {
-    observer?.callback(
-      [{ target: node } as unknown as ResizeObserverEntry],
-      observer,
-    );
-  });
-}
+// A 3/2 locked card of a fluid cover above a bottom-pinned bar in
+// rows 26-31.
+const lockedDesign: Design = {
+  ...cardDesign_1,
+  aspectRatio: '3/2',
+  elements: [
+    { ...coverDesignElement, heightMode: 'fluid' },
+    {
+      ...iconDesignElement,
+      id: 'element_bar',
+      column: 0,
+      columnSpan: 48,
+      row: 26,
+      rowSpan: 6,
+      heightMode: 'fixed-bottom',
+    },
+  ],
+};
 
 /**
  * Finds the wrapper of a rendered element.
@@ -123,11 +92,6 @@ function getElementWrapper(
 }
 
 describe('DesignRenderer', () => {
-  beforeEach(() => {
-    observers = [];
-    vi.stubGlobal('ResizeObserver', MockResizeObserver);
-  });
-
   afterEach(() => {
     cleanup();
     vi.unstubAllGlobals();
@@ -160,15 +124,6 @@ describe('DesignRenderer', () => {
     expect(container.querySelectorAll('.design-renderer-element')).toHaveLength(
       cardDesign_1.elements.length,
     );
-  });
-
-  it('sets the container to the given width', () => {
-    const { container } = render(
-      <DesignRenderer design={design_heading} width={480} />,
-    );
-    const renderer = container.querySelector('.design-renderer') as HTMLElement;
-
-    expect(renderer.style.width).toBe('480px');
   });
 
   it('gives a growing band its block height as a minimum', () => {
@@ -204,10 +159,27 @@ describe('DesignRenderer', () => {
     );
   });
 
-  it('measures nothing for a design in flow', () => {
-    render(<DesignRenderer design={design_stacked} />);
+  it('measures nothing', () => {
+    // Count the resize observers created while rendering
+    let observers = 0;
 
-    expect(observers).toHaveLength(0);
+    vi.stubGlobal(
+      'ResizeObserver',
+      class {
+        constructor() {
+          observers += 1;
+        }
+
+        observe() {}
+
+        disconnect() {}
+      },
+    );
+
+    render(<DesignRenderer design={design_stacked} />);
+    render(<DesignRenderer design={lockedDesign} />);
+
+    expect(observers).toBe(0);
   });
 
   it('positions the elements of an uncut band inside it', () => {
@@ -359,84 +331,54 @@ describe('DesignRenderer', () => {
     ]);
   });
 
-  it('sizes aspect-locked designs from the render width', () => {
-    // A full-height fluid element in a 3/2 locked design
-    const design: Design = {
-      ...cardDesign_1,
-      aspectRatio: '3/2',
-      elements: [{ ...coverDesignElement, rowSpan: 32, heightMode: 'fluid' }],
-    };
-    const { container } = render(
-      <DesignRenderer design={design} width={480} />,
-    );
-    const renderer = container.querySelector('.design-renderer') as HTMLElement;
-    const cover = getElementWrapper(container, coverDesignElement.id);
-
-    // 480px wide at 3/2 renders 320px tall, filled by the element
-    expect(renderer.style.height).toBe('320px');
-    expect(cover.style.top).toBe('0px');
-    expect(cover.style.height).toBe('320px');
-    expect(cover.style.width).toBe('480px');
-  });
-
-  it('measures the width of an aspect-locked design when none is given', () => {
-    const design: Design = { ...cardDesign_1, aspectRatio: '3/2' };
-    const { container } = render(<DesignRenderer design={design} />);
+  it('holds an aspect-locked design at its ratio', () => {
+    const { container } = render(<DesignRenderer design={lockedDesign} />);
     const renderer = container.querySelector('.design-renderer') as HTMLElement;
 
-    // No elements render until the width has been measured
-    expect(container.querySelectorAll('.design-renderer-element')).toHaveLength(
-      0,
-    );
-
-    // Report a measured container width
-    reportMeasuredSize(renderer, 'offsetWidth', 480);
-
-    const cover = getElementWrapper(container, coverDesignElement.id);
-
-    expect(cover.style.width).toBe('480px');
+    expect(renderer.style.aspectRatio).toBe('3 / 2');
   });
 
-  it('pins fixed-height elements in aspect-locked designs', () => {
-    // A fluid cover with a bottom-pinned bar in rows 26-31
-    const design: Design = {
-      ...cardDesign_1,
-      aspectRatio: '3/2',
-      elements: [
-        coverDesignElement,
-        {
-          ...iconDesignElement,
-          id: 'element_bar',
-          column: 0,
-          columnSpan: 48,
-          row: 26,
-          rowSpan: 6,
-          heightMode: 'fixed-bottom',
-        },
-      ],
-    };
-    const { container } = render(
-      <DesignRenderer design={design} width={480} />,
-    );
+  it('scales a fluid-height band with the locked height', () => {
+    const { container } = render(<DesignRenderer design={lockedDesign} />);
+    const cover = getElementWrapper(container, coverDesignElement.id);
+
+    // The cover grows by its sixteen rows from no basis of its own
+    expect(cover.style.flexGrow).toBe(`${coverDesignElement.rowSpan}`);
+    expect(cover.style.flexBasis).toBe('0px');
+    expect(cover.style.minHeight).toBe('0');
+  });
+
+  it('pins fixed-height bands in aspect-locked designs', () => {
+    const { container } = render(<DesignRenderer design={lockedDesign} />);
     const bar = getElementWrapper(container, 'element_bar');
+    const gap = container.querySelector(
+      '.design-renderer-spacer',
+    ) as HTMLElement;
 
-    // The bar keeps its unit height against the card's bottom edge
-    expect(bar.style.height).toBe(`${6 * Designs.constants.UnitPixelSize}px`);
-    expect(parseFloat(bar.style.top)).toBeCloseTo(
-      320 - (32 - 26) * Designs.constants.UnitPixelSize,
+    // The bar and the gap above it keep their unit height, so the
+    // bar holds its distance from the bottom edge.
+    expect(bar.style.flexGrow).toBe('0');
+    expect(bar.style.flexBasis).toBe(
+      `${6 * Designs.constants.UnitPixelSize}px`,
+    );
+    expect(gap.style.flexGrow).toBe('0');
+    expect(gap.style.flexBasis).toBe(
+      `${10 * Designs.constants.UnitPixelSize}px`,
     );
   });
 
   it('ignores the content fit in aspect-locked designs', () => {
     // The growing body element inside a locked design
     const design: Design = { ...cardDesign_1, aspectRatio: '3/2' };
-    const { container } = render(
-      <DesignRenderer design={design} width={480} />,
-    );
+    const { container } = render(<DesignRenderer design={design} />);
     const body = getElementWrapper(container, bodyDesignElement.id);
+    const band = body.closest('.design-renderer-columns') as HTMLElement;
 
-    // The body gets an engine-resolved height instead of a minimum
+    // The body stretches to its band, which holds its ten rows
     expect(body.style.minHeight).toBe('');
-    expect(body.style.height).not.toBe('');
+    expect(body.style.height).toBe('');
+    expect(band.style.flexBasis).toBe(
+      `${bodyDesignElement.rowSpan * Designs.constants.UnitPixelSize}px`,
+    );
   });
 });

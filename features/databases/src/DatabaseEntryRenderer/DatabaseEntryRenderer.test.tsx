@@ -234,11 +234,7 @@ describe('<DatabaseEntryRenderer />', () => {
     DesignsNext.Store.load([ownedBodyMappedDesign]);
 
     render(
-      <DatabaseEntryRenderer
-        entryId={designEntry.id}
-        layoutContext="card"
-        width={300}
-      />,
+      <DatabaseEntryRenderer entryId={designEntry.id} layoutContext="card" />,
     );
 
     // The design's element resolves the entry's Body value
@@ -256,7 +252,6 @@ describe('<DatabaseEntryRenderer />', () => {
         entryId={designEntry.id}
         layoutContext="card"
         design={bodyMappedDesign}
-        width={300}
       />,
     );
 

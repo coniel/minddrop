@@ -1,6 +1,13 @@
+/* The render fills its container's width, and its root box fills
+   the render, which matters when an aspect ratio fixes the height */
 .design-renderer {
-  position: relative;
+  display: flex;
+  flex-direction: column;
   width: 100%;
+}
+
+.design-renderer > * {
+  flex: 1 0 auto;
 }
 
 /* Bands stacked top to bottom, each as tall as its content */
@@ -18,10 +25,6 @@
    wraps rather than widening the row */
 .design-renderer-columns > * {
   min-width: 0;
-}
-
-.design-renderer-spacer {
-  flex: none;
 }
 
 /* Stretch element components to the wrapper's height, including

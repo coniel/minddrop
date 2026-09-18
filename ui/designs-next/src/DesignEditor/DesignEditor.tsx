@@ -212,7 +212,6 @@ export const DesignEditor: React.FC<DesignEditorProps> = ({
       >
         <DesignRenderer
           design={renderedDesign}
-          width={previewWidth}
           properties={properties}
           values={values}
         />

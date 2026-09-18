@@ -52,6 +52,7 @@ function resolveTypeTree(box: LayoutBox): TypeTree {
 
 describe('resolveLayoutTree', () => {
   it('cuts the heading design into a heading band between two spacers', () => {
+    // The heading is pinned to the top, so the gap below it scales
     const tree: LayoutBox = {
       type: 'rows',
       column: 0,
@@ -59,6 +60,7 @@ describe('resolveLayoutTree', () => {
       columnSpan: 48,
       rowSpan: 12,
       columnUnits: fluidWidth,
+      rowUnits: { fixed: 10, scaling: 2 },
       children: [
         {
           type: 'spacer',
@@ -67,6 +69,7 @@ describe('resolveLayoutTree', () => {
           columnSpan: 48,
           rowSpan: 2,
           columnUnits: fluidWidth,
+          rowUnits: { fixed: 2, scaling: 0 },
         },
         {
           type: 'element',
@@ -75,6 +78,7 @@ describe('resolveLayoutTree', () => {
           columnSpan: 48,
           rowSpan: 8,
           columnUnits: fluidWidth,
+          rowUnits: { fixed: 8, scaling: 0 },
           element: designElement_heading,
         },
         {
@@ -84,6 +88,7 @@ describe('resolveLayoutTree', () => {
           columnSpan: 48,
           rowSpan: 2,
           columnUnits: fluidWidth,
+          rowUnits: { fixed: 0, scaling: 2 },
         },
       ],
     };
@@ -99,6 +104,7 @@ describe('resolveLayoutTree', () => {
       columnSpan: 48,
       rowSpan: 32,
       columnUnits: fluidWidth,
+      rowUnits: { fixed: 32, scaling: 0 },
       children: [
         {
           type: 'element',
@@ -107,6 +113,7 @@ describe('resolveLayoutTree', () => {
           columnSpan: 48,
           rowSpan: 8,
           columnUnits: fluidWidth,
+          rowUnits: { fixed: 8, scaling: 0 },
           element: designElement_stackedHeading,
         },
         {
@@ -116,6 +123,7 @@ describe('resolveLayoutTree', () => {
           columnSpan: 48,
           rowSpan: 16,
           columnUnits: fluidWidth,
+          rowUnits: { fixed: 16, scaling: 0 },
           element: designElement_stackedBody,
         },
         {
@@ -125,6 +133,7 @@ describe('resolveLayoutTree', () => {
           columnSpan: 48,
           rowSpan: 4,
           columnUnits: fluidWidth,
+          rowUnits: { fixed: 4, scaling: 0 },
         },
         {
           type: 'element',
@@ -133,6 +142,7 @@ describe('resolveLayoutTree', () => {
           columnSpan: 48,
           rowSpan: 4,
           columnUnits: fluidWidth,
+          rowUnits: { fixed: 4, scaling: 0 },
           element: designElement_stackedFooter,
         },
       ],
@@ -166,6 +176,7 @@ describe('resolveLayoutTree', () => {
       columnSpan: 48,
       rowSpan: 16,
       columnUnits: fluidWidth,
+      rowUnits: { fixed: 16, scaling: 0 },
       elements: [coverDesignElement, titleDesignElement],
     });
   });
@@ -202,12 +213,14 @@ describe('resolveLayoutTree', () => {
       columnSpan: 24,
       rowSpan: 16,
       columnUnits: { fixed: 0, scaling: 24 },
+      rowUnits: { fixed: 16, scaling: 0 },
       elements: [cover, title],
     });
   });
 
   it('cuts a band into column boxes around an element with side gaps', () => {
     const tree = resolveLayoutTree(design_cover_title);
+    const bandRows = { fixed: 10, scaling: 0 };
 
     // The body's band: a fixed gap, the fluid body, a fixed gap
     expect(tree.type === 'rows' && tree.children[2]).toEqual({
@@ -217,6 +230,7 @@ describe('resolveLayoutTree', () => {
       columnSpan: 48,
       rowSpan: 10,
       columnUnits: fluidWidth,
+      rowUnits: bandRows,
       children: [
         {
           type: 'spacer',
@@ -225,6 +239,7 @@ describe('resolveLayoutTree', () => {
           columnSpan: 2,
           rowSpan: 10,
           columnUnits: { fixed: 2, scaling: 0 },
+          rowUnits: bandRows,
         },
         {
           type: 'element',
@@ -233,6 +248,7 @@ describe('resolveLayoutTree', () => {
           columnSpan: 44,
           rowSpan: 10,
           columnUnits: { fixed: 0, scaling: 44 },
+          rowUnits: bandRows,
           element: bodyDesignElement,
         },
         {
@@ -242,6 +258,7 @@ describe('resolveLayoutTree', () => {
           columnSpan: 2,
           rowSpan: 10,
           columnUnits: { fixed: 2, scaling: 0 },
+          rowUnits: bandRows,
         },
       ],
     });
@@ -252,6 +269,7 @@ describe('resolveLayoutTree', () => {
     // and the text absorbs the width. The icon column cuts into its
     // icons and the gaps between them.
     const iconColumnUnits = { fixed: 6, scaling: 0 };
+    const fullHeight = { fixed: 22, scaling: 0 };
 
     expect(resolveLayoutTree(design_icons_beside_text)).toEqual({
       type: 'columns',
@@ -260,6 +278,7 @@ describe('resolveLayoutTree', () => {
       columnSpan: 48,
       rowSpan: 22,
       columnUnits: { fixed: 8, scaling: 40 },
+      rowUnits: fullHeight,
       children: [
         {
           type: 'rows',
@@ -268,6 +287,7 @@ describe('resolveLayoutTree', () => {
           columnSpan: 6,
           rowSpan: 22,
           columnUnits: iconColumnUnits,
+          rowUnits: fullHeight,
           children: [
             {
               type: 'element',
@@ -276,6 +296,7 @@ describe('resolveLayoutTree', () => {
               columnSpan: 6,
               rowSpan: 6,
               columnUnits: iconColumnUnits,
+              rowUnits: { fixed: 6, scaling: 0 },
               element: designElement_besideIcon_1,
             },
             {
@@ -285,6 +306,7 @@ describe('resolveLayoutTree', () => {
               columnSpan: 6,
               rowSpan: 2,
               columnUnits: iconColumnUnits,
+              rowUnits: { fixed: 2, scaling: 0 },
             },
             {
               type: 'element',
@@ -293,6 +315,7 @@ describe('resolveLayoutTree', () => {
               columnSpan: 6,
               rowSpan: 6,
               columnUnits: iconColumnUnits,
+              rowUnits: { fixed: 6, scaling: 0 },
               element: designElement_besideIcon_2,
             },
             {
@@ -302,6 +325,7 @@ describe('resolveLayoutTree', () => {
               columnSpan: 6,
               rowSpan: 2,
               columnUnits: iconColumnUnits,
+              rowUnits: { fixed: 2, scaling: 0 },
             },
             {
               type: 'element',
@@ -310,6 +334,7 @@ describe('resolveLayoutTree', () => {
               columnSpan: 6,
               rowSpan: 6,
               columnUnits: iconColumnUnits,
+              rowUnits: { fixed: 6, scaling: 0 },
               element: designElement_besideIcon_3,
             },
           ],
@@ -321,6 +346,7 @@ describe('resolveLayoutTree', () => {
           columnSpan: 2,
           rowSpan: 22,
           columnUnits: { fixed: 2, scaling: 0 },
+          rowUnits: fullHeight,
         },
         {
           type: 'element',
@@ -329,6 +355,7 @@ describe('resolveLayoutTree', () => {
           columnSpan: 40,
           rowSpan: 22,
           columnUnits: { fixed: 0, scaling: 40 },
+          rowUnits: fullHeight,
           element: designElement_besideText,
         },
       ],
@@ -351,6 +378,36 @@ describe('resolveLayoutTree', () => {
       ['spacer', { fixed: 0, scaling: 40 }],
       ['element', { fixed: 6, scaling: 0 }],
       ['spacer', { fixed: 2, scaling: 0 }],
+    ]);
+  });
+
+  it('scales the bands of a fluid-height element and holds the pinned ones', () => {
+    // A fluid-height cover above a bottom-pinned bar, as an
+    // aspect-locked card would hold them.
+    const cover: DesignElement = { ...coverDesignElement, heightMode: 'fluid' };
+    const bar: DesignElement = {
+      ...iconDesignElement,
+      column: 0,
+      columnSpan: 48,
+      row: 26,
+      rowSpan: 6,
+      heightMode: 'fixed-bottom',
+    };
+    const design: Design = {
+      ...design_cover_title,
+      aspectRatio: '3/2',
+      elements: [cover, bar],
+    };
+    const tree = resolveLayoutTree(design);
+
+    // The cover's rows scale, the gap and the bar keep their height
+    expect(
+      tree.type === 'rows' &&
+        tree.children.map((box) => [box.type, box.rowUnits]),
+    ).toEqual([
+      ['element', { fixed: 0, scaling: 16 }],
+      ['spacer', { fixed: 10, scaling: 0 }],
+      ['element', { fixed: 6, scaling: 0 }],
     ]);
   });
 
@@ -428,6 +485,7 @@ describe('resolveLayoutTree', () => {
       columnSpan: 48,
       rowSpan: 32,
       columnUnits: fluidWidth,
+      rowUnits: { fixed: 32, scaling: 0 },
       elements: design_pinwheel.elements,
     });
   });
@@ -440,6 +498,7 @@ describe('resolveLayoutTree', () => {
       columnSpan: 48,
       rowSpan: 12,
       columnUnits: { fixed: 48, scaling: 0 },
+      rowUnits: { fixed: 12, scaling: 0 },
     });
   });
 
@@ -465,6 +524,7 @@ describe('resolveLayoutTree', () => {
       columnSpan: 48,
       rowSpan: body.rowSpan,
       columnUnits: fluidWidth,
+      rowUnits: { fixed: body.rowSpan, scaling: 0 },
       element: body,
     });
   });

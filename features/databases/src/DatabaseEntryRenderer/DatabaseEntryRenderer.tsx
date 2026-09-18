@@ -57,12 +57,6 @@ export interface DatabaseEntryRendererProps {
   design?: Design | null;
 
   /**
-   * The pixel width the entry renders at. Worth passing where many
-   * entries render at a shared width, so it is measured once.
-   */
-  width?: number;
-
-  /**
    * Optional click handler. When provided, this is called instead
    * of dispatching the default DatabaseEntries.events.OpenView.
    */
@@ -113,7 +107,6 @@ const Entry: React.FC<EntryProps> = ({
   layoutId,
   layoutContext,
   design,
-  width,
   onClick,
 }) => {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -333,7 +326,6 @@ const Entry: React.FC<EntryProps> = ({
       return (
         <DesignRenderer
           design={design}
-          width={width}
           properties={rendererProperties}
           values={designValues}
         />

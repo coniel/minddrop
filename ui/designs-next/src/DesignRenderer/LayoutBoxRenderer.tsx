@@ -1,4 +1,4 @@
-import { DesignElement, LayoutAxis, LayoutBox } from '@minddrop/designs-next';
+import { Design, LayoutAxis, LayoutBox } from '@minddrop/designs-next';
 import { resolveLayoutBoxStyle } from '../utils';
 import { LayoutAtomRenderer } from './LayoutAtomRenderer';
 import { LayoutElementRenderer } from './LayoutElementRenderer';
@@ -10,17 +10,18 @@ export interface LayoutBoxRendererProps {
   box: LayoutBox;
 
   /**
-   * The design's elements, which element children are resolved
-   * from.
+   * The design the box belongs to, which element children and the
+   * design's aspect ratio are read from.
    */
-  elements: DesignElement[];
+  design: Design;
 
   /**
    * The axis of the box holding this one, which decides how it is
    * sized: a band stretches across its rows box, a column box takes
-   * its flex share of the width.
+   * its flex share of the width. Null for the root box, which fills
+   * the render.
    */
-  axis: LayoutAxis;
+  axis: LayoutAxis | null;
 }
 
 /**
@@ -31,11 +32,15 @@ export interface LayoutBoxRendererProps {
  */
 export const LayoutBoxRenderer: React.FC<LayoutBoxRendererProps> = ({
   box,
-  elements,
+  design,
   axis,
 }) => {
   // Resolve the box's size inside the box holding it
-  const style = resolveLayoutBoxStyle(box, axis);
+  const style = resolveLayoutBoxStyle(
+    box,
+    axis,
+    design.aspectRatio !== undefined,
+  );
 
   if (box.type === 'rows' || box.type === 'columns') {
     return (
@@ -44,7 +49,7 @@ export const LayoutBoxRenderer: React.FC<LayoutBoxRendererProps> = ({
           <LayoutBoxRenderer
             key={resolveBoxKey(child)}
             box={child}
-            elements={elements}
+            design={design}
             axis={box.type}
           />
         ))}
@@ -60,13 +65,15 @@ export const LayoutBoxRenderer: React.FC<LayoutBoxRendererProps> = ({
     return (
       <LayoutElementRenderer
         element={box.element}
-        elements={elements}
+        elements={design.elements}
         style={style}
       />
     );
   }
 
-  return <LayoutAtomRenderer box={box} elements={elements} style={style} />;
+  return (
+    <LayoutAtomRenderer box={box} elements={design.elements} style={style} />
+  );
 };
 
 /**

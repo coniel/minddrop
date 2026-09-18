@@ -70,8 +70,8 @@ export interface LayoutRegion {
 }
 
 /**
- * What every box of the tree carries: its region, and how its
- * width relates to the box holding it.
+ * What every box of the tree carries: its region, and how its size
+ * relates to the box holding it.
  */
 export interface LayoutBoxBase extends LayoutRegion {
   /**
@@ -80,6 +80,14 @@ export interface LayoutBoxBase extends LayoutRegion {
    * against the elements of the box it was cut from.
    */
   columnUnits: UnitShare;
+
+  /**
+   * The box's rows split into those keeping their unit height and
+   * those scaling with the height of the box holding it, classified
+   * against the elements of the box it was cut from. Applies where
+   * the design's height is fixed by its aspect ratio.
+   */
+  rowUnits: UnitShare;
 }
 
 /**
