@@ -1034,6 +1034,21 @@
         "title": "Entry colour",
         "description": "The property entries take their colour from: the Colour property, or a select property's option colours.",
         "label": "Colour entries by"
+      },
+      "databaseDefault": "Database default",
+      "types": {
+        "card": {
+          "label": "Card design"
+        },
+        "list": {
+          "label": "List design"
+        },
+        "page": {
+          "label": "Page design"
+        },
+        "space": {
+          "label": "Space design"
+        }
       }
     }
   },

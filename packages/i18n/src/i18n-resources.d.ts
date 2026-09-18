@@ -1096,6 +1096,21 @@ declare module 'i18next' {
               description: string;
               label: string;
             };
+            databaseDefault: string;
+            types: {
+              card: {
+                label: string;
+              };
+              list: {
+                label: string;
+              };
+              page: {
+                label: string;
+              };
+              space: {
+                label: string;
+              };
+            };
           };
         };
         items: {
