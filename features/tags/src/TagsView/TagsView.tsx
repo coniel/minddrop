@@ -2,7 +2,10 @@ import { useMemo, useState } from 'react';
 import { EntityGroup, EntityGroups } from '@minddrop/entity-groups';
 import { TagGroups, Tags } from '@minddrop/tags';
 import { ListPanelView, ListPanelViewItem } from '@minddrop/ui-components';
-import { EntityGroupAddAction } from '@minddrop/ui-entity-groups';
+import {
+  EntityGroupAddAction,
+  useEntityGroupSubmenu,
+} from '@minddrop/ui-entity-groups';
 import { orderByName } from '@minddrop/utils';
 import { Views } from '@minddrop/views';
 import { NewTagMenu } from './NewTagMenu';
@@ -24,6 +27,7 @@ export const TagsView: React.FC = () => {
   const tags = Tags.useAll();
   const groups = TagGroups.useAll();
   const selectedTag = Tags.use(subview?.id ?? '');
+  const resolveGroupSubmenu = useEntityGroupSubmenu(TagGroups.constants.Type);
 
   // List the tags for the left column. Matches in match order while
   // searching, every tag by name otherwise.
@@ -36,17 +40,15 @@ export const TagsView: React.FC = () => {
   // popover.
   const items = useMemo(
     () =>
-      listedTags.map(
-        (tag): ListPanelViewItem => ({
+      listedTags.map((tag): ListPanelViewItem => {
+        const groupSubmenu = resolveGroupSubmenu(tag.id);
+        const startRenaming = () => setRenamingTagId(tag.id);
+
+        return {
           id: tag.id,
           label: tag.name,
           contentIcon: tag.icon,
-          menu: buildTagMenu(
-            tag,
-            groups,
-            TagGroups.getForItem(tag.id)[0]?.id ?? null,
-            () => setRenamingTagId(tag.id),
-          ),
+          menu: buildTagMenu(tag, groupSubmenu, startRenaming),
           popovers: ({ anchor }) => (
             <TagNamePopover
               open={renamingTagId === tag.id}
@@ -55,9 +57,9 @@ export const TagsView: React.FC = () => {
               tag={tag}
             />
           ),
-        }),
-      ),
-    [listedTags, groups, renamingTagId],
+        };
+      }),
+    [listedTags, resolveGroupSubmenu, renamingTagId],
   );
 
   // The tag whose entries the panel's content lists

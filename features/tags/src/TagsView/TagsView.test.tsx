@@ -153,16 +153,18 @@ describe('<TagsView />', () => {
     expect(Tags.get(tag_1.id).name).toBe(tag_1.name);
   });
 
-  it('deletes a tag via its context menu', async () => {
+  it('deletes a tag nothing is tagged with without asking', async () => {
     renderView();
     const user = userEvent.setup();
+    // Set if a confirmation is asked for, which this tag warrants
+    // none of: no entries are tagged with it.
+    let confirmed = false;
 
-    // Confirm the deletion as soon as the confirmation is requested
     Events.addListener(
       Events.events.OpenConfirmationDialog,
       'test-confirm',
-      (data) => {
-        data.onConfirm();
+      () => {
+        confirmed = true;
       },
     );
 
@@ -174,6 +176,8 @@ describe('<TagsView />', () => {
     await waitFor(() => {
       expect(Tags.get(tag_1.id, false)).toBeNull();
     });
+
+    expect(confirmed).toBe(false);
   });
 
   it('renames a group via its group menu', async () => {
@@ -276,7 +280,7 @@ describe('<TagsView />', () => {
 
     // Name the group and commit it with Enter
     await user.type(
-      screen.getByPlaceholderText('tags.groupName.placeholder'),
+      screen.getByPlaceholderText('entityGroups.name.placeholder'),
       'Urgent{Enter}',
     );
 
@@ -295,7 +299,7 @@ describe('<TagsView />', () => {
 
     // Name the group after one which already exists
     await user.type(
-      screen.getByPlaceholderText('tags.groupName.placeholder'),
+      screen.getByPlaceholderText('entityGroups.name.placeholder'),
       `${tagGroup_1.name}{Enter}`,
     );
 

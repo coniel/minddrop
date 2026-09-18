@@ -3,9 +3,6 @@
     "labels": {
       "tags": "Tags"
     },
-    "groupName": {
-      "placeholder": "Group name"
-    },
     "form": {
       "create": "Create",
       "nameTaken": "A tag with this name already exists"
