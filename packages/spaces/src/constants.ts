@@ -6,6 +6,11 @@ import type { UiIconName } from '@minddrop/ui-icons';
  */
 export const SpaceEntityType = 'space';
 
+/**
+ * The entity group type space groups are registered as.
+ */
+export const SpaceGroupsType = 'space-groups';
+
 export const SpacesDirName = 'spaces';
 export const SpaceFileName = 'space.json';
 

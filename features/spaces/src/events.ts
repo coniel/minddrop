@@ -14,6 +14,14 @@ export interface OpenSpaceViewEventData extends BaseOpenViewEventData {
   spaceId: string;
 }
 
+export interface OpenNewSpaceDialogEventData {
+  /**
+   * The ID of the group the created space is filed under. Omit to
+   * create it in no group.
+   */
+  groupId?: string;
+}
+
 /**
  * Data of the open spaces view event, carrying only the pane fields.
  */
@@ -21,7 +29,7 @@ export type OpenSpacesViewEventData = BaseOpenViewEventData;
 
 declare module '@minddrop/events/EventDataMap' {
   interface EventDataMap {
-    'spaces:new-space-dialog:open': void;
+    'spaces:new-space-dialog:open': OpenNewSpaceDialogEventData;
     'spaces:space-view:open': OpenSpaceViewEventData;
     'spaces:spaces-view:open': OpenSpacesViewEventData;
   }

@@ -12,6 +12,7 @@
   "dependencies": {
     "@minddrop/content-views": "workspace:*",
     "@minddrop/designs": "workspace:*",
+    "@minddrop/entity-groups": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/feature-designs": "workspace:*",
     "@minddrop/feature-views": "workspace:*",
@@ -22,6 +23,7 @@
     "@minddrop/stores": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
     "@minddrop/ui-components": "workspace:*",
+    "@minddrop/ui-entity-groups": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "@minddrop/views": "workspace:*",

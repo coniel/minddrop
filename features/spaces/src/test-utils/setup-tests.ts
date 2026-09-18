@@ -8,12 +8,17 @@ import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { initializeI18n } from '@minddrop/i18n';
 import { Spaces } from '@minddrop/spaces';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
+import { initializeEntityGroupsUi } from '@minddrop/ui-entity-groups';
 import {
   cleanupWorkspaceFixtures,
   setupWorkspaceFixtures,
 } from '@minddrop/workspaces/test-utils';
 
 initializeI18n();
+
+// Register the entity group translations. The grouped list renders
+// its chrome with them.
+initializeEntityGroupsUi();
 
 // happy-dom does not implement Element.getAnimations, which the
 // scroll area primitive polls on a timer.

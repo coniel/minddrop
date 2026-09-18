@@ -533,6 +533,9 @@ importers:
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
+      '@minddrop/entity-groups':
+        specifier: workspace:*
+        version: link:../../packages/entity-groups
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
@@ -557,9 +560,15 @@ importers:
       '@minddrop/ui-databases':
         specifier: workspace:*
         version: link:../../ui/databases
+      '@minddrop/ui-entity-groups':
+        specifier: workspace:*
+        version: link:../../ui/entity-groups
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@minddrop/views':
         specifier: workspace:*
         version: link:../../packages/views
@@ -570,6 +579,9 @@ importers:
       '@minddrop/vitest-config':
         specifier: workspace:*
         version: link:../../packages/vitest-config
+      '@minddrop/workspaces':
+        specifier: workspace:*
+        version: link:../../packages/workspaces
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -591,6 +603,9 @@ importers:
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
+      '@minddrop/entity-groups':
+        specifier: workspace:*
+        version: link:../../packages/entity-groups
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
@@ -621,6 +636,9 @@ importers:
       '@minddrop/ui-content-views':
         specifier: workspace:*
         version: link:../../ui/content-views
+      '@minddrop/ui-entity-groups':
+        specifier: workspace:*
+        version: link:../../ui/entity-groups
       '@minddrop/ui-icons':
         specifier: workspace:*
         version: link:../../ui/icons
@@ -1278,6 +1296,9 @@ importers:
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
+      '@minddrop/entity-groups':
+        specifier: workspace:*
+        version: link:../../packages/entity-groups
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
@@ -1311,6 +1332,9 @@ importers:
       '@minddrop/ui-components':
         specifier: workspace:*
         version: link:../../ui/components
+      '@minddrop/ui-entity-groups':
+        specifier: workspace:*
+        version: link:../../ui/entity-groups
       '@minddrop/ui-filters':
         specifier: workspace:*
         version: link:../../ui/filters
@@ -1440,6 +1464,9 @@ importers:
       '@minddrop/designs':
         specifier: workspace:*
         version: link:../../packages/designs
+      '@minddrop/entity-groups':
+        specifier: workspace:*
+        version: link:../../packages/entity-groups
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
@@ -1470,6 +1497,9 @@ importers:
       '@minddrop/ui-components':
         specifier: workspace:*
         version: link:../../ui/components
+      '@minddrop/ui-entity-groups':
+        specifier: workspace:*
+        version: link:../../ui/entity-groups
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
@@ -1795,6 +1825,9 @@ importers:
 
   packages/collections:
     dependencies:
+      '@minddrop/entity-groups':
+        specifier: workspace:*
+        version: link:../entity-groups
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
@@ -1838,6 +1871,9 @@ importers:
 
   packages/content-views:
     dependencies:
+      '@minddrop/entity-groups':
+        specifier: workspace:*
+        version: link:../entity-groups
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
@@ -2189,6 +2225,9 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../test-utils
+      '@minddrop/ui-icons':
+        specifier: workspace:*
+        version: link:../../ui/icons
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
@@ -2501,6 +2540,9 @@ importers:
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../databases
+      '@minddrop/entity-groups':
+        specifier: workspace:*
+        version: link:../entity-groups
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
@@ -2722,6 +2764,9 @@ importers:
       '@minddrop/designs':
         specifier: workspace:*
         version: link:../designs
+      '@minddrop/entity-groups':
+        specifier: workspace:*
+        version: link:../entity-groups
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
