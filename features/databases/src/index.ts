@@ -7,7 +7,6 @@ export * from './DatabaseMenuItem';
 export * from './DatabasesFeature';
 export * from './events';
 export * from './registerDatabaseViews';
-export * from './utils/dropContainsAddExistingEntryCard';
-export * from './utils/dropContainsNewEntryPickerCard';
+export * from './utils/dropContainsAddContentCard';
 export * from './utils/getDroppedEntryIds';
 export * from './utils/getDroppedNewEntryDatabaseIds';

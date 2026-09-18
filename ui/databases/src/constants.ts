@@ -6,10 +6,6 @@ export const DatabaseEntriesDataKey = 'database-entries';
 // serialized into drag event data transfer objects.
 export const NewDatabaseEntriesDataKey = 'new-database-entries';
 
-// Data key marking a drag as an add existing entry card, which
-// spawns an entry picker at the drop location.
-export const AddExistingEntryDataKey = 'add-existing-database-entry';
-
-// Data key marking a drag as a new entry card, which spawns a
-// database picker at the drop location for creating a new entry.
-export const NewEntryPickerDataKey = 'new-database-entry-picker';
+// Data key marking a drag as an add content card, which spawns
+// the add content picker at the drop location.
+export const AddContentDataKey = 'add-content';

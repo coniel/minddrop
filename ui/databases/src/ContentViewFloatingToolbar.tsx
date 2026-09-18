@@ -11,9 +11,8 @@ import {
   ViewFloatingToolbar,
   ViewFloatingToolbarPosition,
 } from '@minddrop/ui-primitives';
-import { useAddExistingEntryDraggable } from './useAddExistingEntryDraggable';
+import { useAddContentDraggable } from './useAddContentDraggable';
 import { useNewEntryDraggable } from './useNewEntryDraggable';
-import { useNewEntryPickerDraggable } from './useNewEntryPickerDraggable';
 
 export interface ContentViewFloatingToolbarCard {
   /**
@@ -29,8 +28,8 @@ export interface ContentViewFloatingToolbarCard {
 
 export interface ContentViewFloatingToolbarProps {
   /**
-   * The database cards to render, in order, ahead of the new
-   * entry and add existing entry cards.
+   * The database cards to render, in order, ahead of the add
+   * content card.
    */
   databaseCards: ContentViewFloatingToolbarCard[];
 
@@ -59,9 +58,8 @@ export interface ContentViewFloatingToolbarProps {
 
 /**
  * Renders a content view's floating toolbar, containing a card for
- * each of the given databases, a new entry picker card, and an
- * add existing entry card, all of which create entries in the
- * view when dragged into it.
+ * each of the given databases and an add content card, all of
+ * which add content to the view when dragged into it.
  *
  * Revealed while the view is hovered, which requires the view to
  * carry the `floating-toolbar-host` class.
@@ -78,14 +76,13 @@ export const ContentViewFloatingToolbar: React.FC<
       />
     ))}
 
-    {/* Separate the database cards from the default cards */}
+    {/** Separate the database cards from the add content card **/}
     {databaseCards.length > 0 && <ToolbarSeparator />}
 
-    <NewEntryCard />
+    {/** The add content card **/}
+    <AddContentCard />
 
-    <AddExistingEntryCard />
-
-    {/* Trailing slot, e.g. the view's options menu */}
+    {/** Trailing slot, e.g. the view's options menu **/}
     {children && (
       <>
         <ToolbarSeparator />
@@ -149,34 +146,16 @@ const DatabaseCard: React.FC<DatabaseCardProps> = ({
 };
 
 /**
- * Renders a card which spawns a database picker for creating a
- * new entry at the drop location when dragged into the view.
+ * Renders a card which spawns the add content picker at the drop
+ * location when dragged into the view.
  */
-const NewEntryCard: React.FC = () => {
-  const { isDragging, draggableProps } = useNewEntryPickerDraggable();
+const AddContentCard: React.FC = () => {
+  const { isDragging, draggableProps } = useAddContentDraggable();
 
   return (
-    <Tooltip title="databases.entries.toolbar.newEntry" side="top">
+    <Tooltip title="databases.entries.toolbar.addContent" side="top">
       <FloatingToolbarCard
         icon="plus"
-        dragging={isDragging}
-        {...draggableProps}
-      />
-    </Tooltip>
-  );
-};
-
-/**
- * Renders a card which spawns an existing entry picker at the
- * drop location when dragged into the view.
- */
-const AddExistingEntryCard: React.FC = () => {
-  const { isDragging, draggableProps } = useAddExistingEntryDraggable();
-
-  return (
-    <Tooltip title="databases.entries.toolbar.addExistingEntry" side="top">
-      <FloatingToolbarCard
-        icon="search"
         dragging={isDragging}
         {...draggableProps}
       />

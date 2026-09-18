@@ -364,8 +364,7 @@ declare module 'i18next' {
               titleConflict: string;
             };
             toolbar: {
-              newEntry: string;
-              addExistingEntry: string;
+              addContent: string;
             };
             selection: {
               count_one: string;

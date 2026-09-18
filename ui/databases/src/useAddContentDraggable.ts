@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from 'react';
 import { Selection } from '@minddrop/selection';
 import { setDragPreview } from '@minddrop/utils';
-import { AddExistingEntryDataKey } from './constants';
+import { AddContentDataKey } from './constants';
 
-export interface AddExistingEntryDragUtils {
+export interface AddContentDragUtils {
   /**
    * Whether the element is currently being dragged.
    */
@@ -20,13 +20,13 @@ export interface AddExistingEntryDragUtils {
 }
 
 /**
- * Returns drag utilities for an element which spawns an existing
- * entry picker when dropped. Does not modify the selection, as the
- * dragged element does not represent an existing entry.
+ * Returns drag utilities for an element which spawns the add
+ * content picker when dropped. Does not modify the selection, as
+ * the dragged element does not represent an existing entry.
  *
  * @returns Drag utilities.
  */
-export function useAddExistingEntryDraggable(): AddExistingEntryDragUtils {
+export function useAddContentDraggable(): AddContentDragUtils {
   const [isDragging, setIsDragging] = useState(false);
 
   const onDragStart = useCallback((event: React.DragEvent) => {
@@ -37,10 +37,10 @@ export function useAddExistingEntryDraggable(): AddExistingEntryDragUtils {
       return;
     }
 
-    // Mark the drag as an add existing entry card
+    // Mark the drag as an add content card
     event.dataTransfer.effectAllowed = 'copy';
     event.dataTransfer.setData(
-      Selection.toMimeType(AddExistingEntryDataKey),
+      Selection.toMimeType(AddContentDataKey),
       JSON.stringify(true),
     );
 

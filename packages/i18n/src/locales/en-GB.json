@@ -304,8 +304,7 @@
         "titleConflict": "An entry with this title already exists."
       },
       "toolbar": {
-        "newEntry": "New entry",
-        "addExistingEntry": "Add existing entry"
+        "addContent": "Add content"
       },
       "selection": {
         "count_one": "{{count}} selected",
