@@ -42,8 +42,20 @@ describe('getRecentDatabaseEntries', () => {
   });
 
   it('filters entries by database', () => {
-    expect(getRecentDatabaseEntries(1, [objectDatabase.id])).toEqual([
+    expect(
+      getRecentDatabaseEntries(1, { databases: [objectDatabase.id] }),
+    ).toEqual([middleEntry]);
+  });
+
+  it('leaves out the excluded entries', () => {
+    expect(getRecentDatabaseEntries(1, { exclude: [recentEntry.id] })).toEqual([
       middleEntry,
     ]);
+  });
+
+  it('fills the limit around the excluded entries', () => {
+    expect(
+      getRecentDatabaseEntries(2, { exclude: [recentEntry.id] }),
+    ).toHaveLength(2);
   });
 });

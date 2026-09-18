@@ -69,6 +69,7 @@ export * from './buildEntryScopesSql';
 export * from './buildEntrySortSql';
 export * from './searchDatabases';
 export * from './searchDatabaseEntryTemplates';
+export * from './searchDatabaseEntryCreationOptions';
 export * from './sortDatabaseEntryTemplates';
 export * from './resolveDatabasePath';
 export * from './resolveDatabaseEntryPath';
