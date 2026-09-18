@@ -68,13 +68,13 @@ export function useEntityGroupItemMenu(): EntityGroupItemMenu {
       : ([
           {
             type: 'menu-item',
-            icon: 'folder-minus',
+            icon: EntityGroups.constants.RemoveIcon,
             label: 'entityGroups.item.remove',
             onSelect: () => EntityGroups.removeItem(type, groupId, itemId),
           },
           {
             type: 'menu-item',
-            icon: 'folder-input',
+            icon: EntityGroups.constants.MoveIcon,
             label: 'entityGroups.item.move',
             submenu: resolveGroupsSubmenu('move'),
           },
@@ -83,7 +83,7 @@ export function useEntityGroupItemMenu(): EntityGroupItemMenu {
       ? ([
           {
             type: 'menu-item',
-            icon: 'folder-symlink',
+            icon: EntityGroups.constants.AddIcon,
             label: 'entityGroups.item.add',
             submenu: resolveGroupsSubmenu('add'),
           },
@@ -104,7 +104,7 @@ export function useEntityGroupItemMenu(): EntityGroupItemMenu {
       ),
       {
         type: 'menu-item',
-        icon: 'plus',
+        icon: EntityGroups.constants.NewIcon,
         label: 'entityGroups.labels.newGroup',
         onSelect: () => setNamingFor(action),
       },

@@ -1,6 +1,14 @@
 import { NotRegisteredError } from '@minddrop/stores';
 import { EntityGroupTypesRegistry } from './EntityGroupTypesRegistry';
-import { EntityGroupEntityType, UngroupedEntityGroupId } from './constants';
+import {
+  AddToEntityGroupIcon,
+  EntityGroupEntityType,
+  EntityGroupIcon,
+  MoveToEntityGroupIcon,
+  NewEntityGroupIcon,
+  RemoveFromEntityGroupIcon,
+  UngroupedEntityGroupId,
+} from './constants';
 import {
   DuplicateEntityGroupNameError,
   EntityGroupNotFoundError,
@@ -36,6 +44,11 @@ export const errors = {
 export const constants = {
   EntityType: EntityGroupEntityType,
   UngroupedId: UngroupedEntityGroupId,
+  Icon: EntityGroupIcon,
+  NewIcon: NewEntityGroupIcon,
+  RemoveIcon: RemoveFromEntityGroupIcon,
+  MoveIcon: MoveToEntityGroupIcon,
+  AddIcon: AddToEntityGroupIcon,
 };
 
 export const getConfig = EntityGroupTypesRegistry.get;

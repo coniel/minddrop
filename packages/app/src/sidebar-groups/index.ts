@@ -1,3 +1,3 @@
 export * from './constants';
-export * from './sidebarGroupsTypeConfig';
+export * from './SidebarGroupsTypeConfig';
 export * from './initializeSidebarGroups';

@@ -1,5 +1,5 @@
 import { EntityGroups } from '@minddrop/entity-groups';
-import { sidebarGroupsTypeConfig } from '../sidebarGroupsTypeConfig';
+import { SidebarGroupsTypeConfig } from '../SidebarGroupsTypeConfig';
 
 /**
  * Registers the sidebar's entity group type.
@@ -7,5 +7,5 @@ import { sidebarGroupsTypeConfig } from '../sidebarGroupsTypeConfig';
  * Must be called before the entity groups are loaded.
  */
 export function initializeSidebarGroups(): void {
-  EntityGroups.registerType(sidebarGroupsTypeConfig);
+  EntityGroups.registerType(SidebarGroupsTypeConfig);
 }

@@ -17,7 +17,7 @@ import {
  * several of them and be dragged in from anywhere in the app, and
  * the app provides the library and databases groups.
  */
-export const sidebarGroupsTypeConfig: EntityGroupTypeConfig = {
+export const SidebarGroupsTypeConfig: EntityGroupTypeConfig = {
   id: SidebarGroupsType,
   itemTypes: SidebarGroupItemTypes,
   multiMembership: true,

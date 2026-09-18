@@ -1,9 +1,9 @@
 import { EntityGroups } from '@minddrop/entity-groups';
 import { MockFileSystem } from '@minddrop/file-system';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
+import { TagGroupsTypeConfig } from '../TagGroupsTypeConfig';
 import { TagsStore } from '../TagsStore';
 import { TagGroupsType } from '../constants';
-import { tagGroupsTypeConfig } from '../tagGroupsTypeConfig';
 import { resolveTagsDirPath } from '../utils';
 import { getTagGroupFiles, tagGroups } from './tag-groups.fixtures';
 import { getTagFiles, tags } from './tags.fixtures';
@@ -31,7 +31,7 @@ export function setupTagFixtures(
 
   // Register the tag groups type, which the tag group functions
   // look up.
-  EntityGroups.registerType(tagGroupsTypeConfig);
+  EntityGroups.registerType(TagGroupsTypeConfig);
 
   if (options.loadTags !== false) {
     // Load tags into the store

@@ -6,6 +6,7 @@ import {
   DatabaseEntryTemplates,
   Databases,
 } from '@minddrop/databases';
+import { EntityGroups } from '@minddrop/entity-groups';
 import { Events } from '@minddrop/events';
 import { OpenNewContentViewViewEvent } from '@minddrop/feature-content-views';
 import { OpenNewDatabaseDialogEvent } from '@minddrop/feature-databases';
@@ -205,7 +206,7 @@ export const SidebarCreateMenu: React.FC<SidebarCreateMenuProps> = ({
       <>
         <DropdownMenuGroup>
           <DropdownSearchableMenuItem
-            icon="folder-plus"
+            icon={EntityGroups.constants.NewIcon}
             label="entityGroups.labels.group"
             onSelect={onCreateGroup}
           />

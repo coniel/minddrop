@@ -4,9 +4,9 @@ import { TagDeletedEvent } from './events';
 
 /**
  * The tag groups entity group type. A tag belongs to one group at
- * most, and the tags in none form the ungrouped group.
+ * most.
  */
-export const tagGroupsTypeConfig: EntityGroupTypeConfig = {
+export const TagGroupsTypeConfig: EntityGroupTypeConfig = {
   id: TagGroupsType,
   itemTypes: [TagEntityType],
   ungrouped: true,
