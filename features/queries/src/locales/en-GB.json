@@ -4,6 +4,7 @@
       "queries": "Queries"
     },
     "actions": {
+      "add": "Add query",
       "new": "New query"
     },
     "list": {

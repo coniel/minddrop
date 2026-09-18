@@ -5,6 +5,11 @@ import type { UiIconName } from '@minddrop/ui-icons';
  */
 export const QueryEntityType = 'query';
 
+/**
+ * The entity group type query groups are registered as.
+ */
+export const QueryGroupsType = 'query-groups';
+
 export const QueriesDirName = 'queries';
 export const QueryFileExtension = 'json';
 

@@ -3,15 +3,25 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Databases } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Events } from '@minddrop/events';
-import { Queries } from '@minddrop/queries';
-import { QueryFixtures } from '@minddrop/queries/test-utils';
-import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
+import { Queries, QueryGroups } from '@minddrop/queries';
+import {
+  QueryFixtures,
+  QueryGroupFixtures,
+} from '@minddrop/queries/test-utils';
+import {
+  render,
+  screen,
+  userEvent,
+  waitFor,
+  within,
+} from '@minddrop/test-utils';
 import { SubviewDescriptor, Views } from '@minddrop/views';
 import { cleanup, setup } from '../test-utils';
 import { QueriesView } from './QueriesView';
 
 const { objectDatabase } = DatabaseFixtures;
-const { query_2, queries } = QueryFixtures;
+const { query_1, query_2, queries } = QueryFixtures;
+const { queryGroup_1, queryGroup_2 } = QueryGroupFixtures;
 
 // Mock query execution, which requires a SQL database
 vi.mock('@minddrop/queries', async (importOriginal) => {
@@ -65,8 +75,9 @@ describe('<QueriesView />', () => {
       </SubviewHarness>,
     );
 
-    // Click the new query action
-    await user.click(screen.getByLabelText('New query'));
+    // Open the add menu and pick the new query action
+    await user.click(screen.getByLabelText('Add query'));
+    await user.click(await screen.findByText('New query'));
 
     // The new query is added to the store
     await waitFor(() => {
@@ -104,6 +115,64 @@ describe('<QueriesView />', () => {
     expect(listedQueries.length).toBe(1);
     expect(listedQueries[0]).toHaveTextContent(query_2.name);
   });
+  it('lists the queries under the groups holding them', async () => {
+    await QueryGroups.addItem(queryGroup_1.id, query_1.id);
+
+    render(
+      <SubviewHarness>
+        <QueriesView />
+      </SubviewHarness>,
+    );
+
+    expect(
+      within(getGroup(queryGroup_1.name)).getByText(query_1.name),
+    ).toBeInTheDocument();
+    expect(
+      within(getGroup('Ungrouped')).getByText(query_2.name),
+    ).toBeInTheDocument();
+  });
+
+  it("creates a query in a group from the group's add button", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <SubviewHarness>
+        <QueriesView />
+      </SubviewHarness>,
+    );
+
+    await user.click(
+      within(getGroup(queryGroup_2.name)).getByLabelText('New query'),
+    );
+
+    await waitFor(() => {
+      expect(QueryGroups.get(queryGroup_2.id).items).toHaveLength(1);
+    });
+  });
+
+  it('lists the matches without their groups while searching', async () => {
+    const user = userEvent.setup();
+
+    await QueryGroups.addItem(queryGroup_1.id, query_1.id);
+
+    render(
+      <SubviewHarness>
+        <QueriesView />
+      </SubviewHarness>,
+    );
+
+    await user.type(
+      screen.getByPlaceholderText('Search queries...'),
+      query_1.name,
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByText(queryGroup_1.name)).toBeNull();
+    });
+
+    expect(screen.queryByText('Ungrouped')).toBeNull();
+    expect(getListedNames()).toEqual([query_1.name]);
+  });
 });
 
 /**
@@ -127,3 +196,24 @@ const SubviewHarness: React.FC<{ children: React.ReactNode }> = ({
     <Views.SubviewProvider subview={subview}>{children}</Views.SubviewProvider>
   );
 };
+
+/**
+ * Returns the element of the group with the given name.
+ */
+function getGroup(name: string): HTMLElement {
+  return screen.getByText(name).closest('.entity-group') as HTMLElement;
+}
+
+/**
+ * Returns the names of every query listed in the left column, in
+ * the order they are shown.
+ */
+function getListedNames(): (string | null)[] {
+  const list = document.querySelector(
+    '.list-panel-view-list-items',
+  ) as HTMLElement;
+
+  return Array.from(list.querySelectorAll('.menu-item-label')).map(
+    (label) => label.textContent,
+  );
+}

@@ -16,6 +16,7 @@ import {
   setupQueryFixtures,
 } from '@minddrop/queries/test-utils';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
+import { initializeEntityGroupsUi } from '@minddrop/ui-entity-groups';
 import {
   cleanupWorkspaceFixtures,
   setupWorkspaceFixtures,
@@ -29,6 +30,10 @@ initializeI18n();
 I18n.registerTranslations(locales);
 Properties.initialize();
 Filters.initialize();
+
+// Register the entity group translations. The grouped list renders
+// its chrome with them.
+initializeEntityGroupsUi();
 
 export const MockFs = initializeMockFileSystem();
 

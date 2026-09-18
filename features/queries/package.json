@@ -21,6 +21,7 @@
   "dependencies": {
     "@minddrop/collections": "workspace:*",
     "@minddrop/databases": "workspace:*",
+    "@minddrop/entity-groups": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/feature-views": "workspace:*",
     "@minddrop/file-system": "workspace:*",
@@ -32,6 +33,7 @@
     "@minddrop/test-utils": "workspace:*",
     "@minddrop/ui-canvas": "workspace:*",
     "@minddrop/ui-components": "workspace:*",
+    "@minddrop/ui-entity-groups": "workspace:*",
     "@minddrop/ui-filters": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
     "@minddrop/ui-tags": "workspace:*",

@@ -1,26 +1,43 @@
 import { useMemo, useState } from 'react';
-import { Queries, Query } from '@minddrop/queries';
+import { EntityGroup, EntityGroups } from '@minddrop/entity-groups';
+import { Queries, Query, QueryGroups } from '@minddrop/queries';
 import { ListPanelView, ListPanelViewItem } from '@minddrop/ui-components';
-import { IconButton } from '@minddrop/ui-primitives';
+import {
+  EntityGroupAddAction,
+  useEntityGroupSubmenu,
+} from '@minddrop/ui-entity-groups';
+import { SubmenuContents } from '@minddrop/ui-primitives';
+import { orderByName } from '@minddrop/utils';
 import { Views } from '@minddrop/views';
 import { QueryBuilderCanvas } from '../QueryBuilderCanvas';
+import { NewQueryMenu } from './NewQueryMenu';
 
 /**
  * Renders a two column view of the queries: a searchable list of
- * queries on the left, and the selected query's builder canvas on
- * the right.
+ * queries grouped by query group on the left, and the selected
+ * query's builder canvas on the right.
  */
 export const QueriesView: React.FC = () => {
   const [query, setQuery] = useState('');
   const subview = Views.useSubview();
   const setSubview = Views.useSetSubview();
   const queries = Queries.useAll();
+  const resolveGroupSubmenu = useEntityGroupSubmenu(QueryGroups.constants.Type);
 
-  // Queries listed in the left column: fuzzy name matches when
-  // searching, all queries otherwise.
-  const items = useMemo(
-    () => (query ? Queries.search(query) : queries).map(toListItem),
+  // Queries listed in the left column: fuzzy name matches in match
+  // order while searching, every query by name otherwise.
+  const listedQueries = useMemo(
+    () => (query ? Queries.search(query) : [...queries].sort(orderByName)),
     [queries, query],
+  );
+
+  // Build the listed queries into rows carrying their group submenu
+  const items = useMemo(
+    () =>
+      listedQueries.map((listedQuery) =>
+        toListItem(listedQuery, resolveGroupSubmenu(listedQuery.id)),
+      ),
+    [listedQueries, resolveGroupSubmenu],
   );
 
   // The query rendered by the panel's content
@@ -32,13 +49,29 @@ export const QueriesView: React.FC = () => {
     [selectedQuery],
   );
 
-  // Create a new query and show it, clearing the search so the new
-  // query is visible in the list.
-  async function handleCreateQuery(): Promise<void> {
+  // Create a query filed under the group it was created from and
+  // show it. The ungrouped group files it under none.
+  async function handleCreateQuery(groupId?: string): Promise<void> {
     const createdQuery = await Queries.create();
 
+    if (groupId) {
+      await QueryGroups.addItem(groupId, createdQuery.id);
+    }
+
     setSubview({ id: createdQuery.id });
-    setQuery('');
+  }
+
+  // Returns the add control shown in a group's label row, which
+  // creates a query filed under the group.
+  function resolveGroupAddAction(group: EntityGroup): EntityGroupAddAction {
+    // A query created from the ungrouped group joins no group
+    const groupId =
+      group.id === EntityGroups.constants.UngroupedId ? undefined : group.id;
+
+    return {
+      label: 'queries.actions.new',
+      onClick: () => handleCreateQuery(groupId),
+    };
   }
 
   return (
@@ -46,6 +79,10 @@ export const QueriesView: React.FC = () => {
       icon={Queries.constants.Icon}
       title="queries.labels.queries"
       items={items}
+      groups={{
+        type: QueryGroups.constants.Type,
+        resolveAddAction: resolveGroupAddAction,
+      }}
       selectedItem={selectedItem}
       query={query}
       onQueryChange={setQuery}
@@ -53,15 +90,7 @@ export const QueriesView: React.FC = () => {
       emptyLabel="queries.list.empty"
       noResultsLabel="queries.list.noResults"
       noSelectionLabel="queries.details.noSelection"
-      addAction={
-        <IconButton
-          icon="plus"
-          size="md"
-          variant="subtle"
-          label="queries.actions.new"
-          onClick={handleCreateQuery}
-        />
-      }
+      addAction={<NewQueryMenu />}
     >
       {selectedQuery && (
         <QueryBuilderCanvas key={selectedQuery.id} queryId={selectedQuery.id} />
@@ -71,12 +100,25 @@ export const QueriesView: React.FC = () => {
 };
 
 /**
- * Returns the query as a list item.
+ * Returns the query as a list item carrying its group submenu.
  */
-function toListItem(query: Query): ListPanelViewItem {
+function toListItem(
+  query: Query,
+  groupSubmenu?: SubmenuContents,
+): ListPanelViewItem {
   return {
     id: query.id,
     label: query.name,
     contentIcon: Queries.constants.EntityDefaultIcon,
+    menu: groupSubmenu
+      ? [
+          {
+            type: 'menu-item',
+            icon: QueryGroups.constants.Icon,
+            label: 'entityGroups.labels.group',
+            submenu: groupSubmenu,
+          },
+        ]
+      : undefined,
   };
 }
