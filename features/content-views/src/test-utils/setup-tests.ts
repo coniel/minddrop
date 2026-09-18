@@ -9,12 +9,17 @@ import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { Filters } from '@minddrop/filters';
 import { initializeI18n } from '@minddrop/i18n';
+import { initializeEntityGroupsUi } from '@minddrop/ui-entity-groups';
 import {
   cleanupWorkspaceFixtures,
   setupWorkspaceFixtures,
 } from '@minddrop/workspaces/test-utils';
 
 initializeI18n();
+
+// Register the entity group translations. The grouped list renders
+// its chrome with them.
+initializeEntityGroupsUi();
 
 export const MockFs = initializeMockFileSystem();
 

@@ -32,6 +32,12 @@ export interface OpenNewContentViewViewEventData extends BaseOpenViewEventData {
    * The type of content view to create.
    */
   viewType: string;
+
+  /**
+   * The ID of the group the created view is filed under. Omit to
+   * create it in no group.
+   */
+  groupId?: string;
 }
 
 declare module '@minddrop/events/EventDataMap' {

@@ -13,7 +13,7 @@ import {
 import { cleanup, setup } from '../test-utils';
 import { initializeContentViewsFeature } from './initializeContentViewsFeature';
 
-const { contentView_gallery_1 } = ContentViewFixtures;
+const { contentView_gallery_1, contentViewGroup_1 } = ContentViewFixtures;
 
 describe('initializeContentViewsFeature', () => {
   let removeEventListeners: VoidFunction;
@@ -69,6 +69,23 @@ describe('initializeContentViewsFeature', () => {
 
       Events.dispatch(OpenNewContentViewViewEvent, {
         viewType: contentView_gallery_1.type,
+      });
+    }));
+
+  it('opens the new content view view with the group to file the view under', () =>
+    new Promise<void>((resolve) => {
+      Events.addListener(
+        Views.events.Open,
+        'test-open-new-content-view-in-group',
+        (data) => {
+          expect(data.props!.groupId).toBe(contentViewGroup_1.id);
+          resolve();
+        },
+      );
+
+      Events.dispatch(OpenNewContentViewViewEvent, {
+        viewType: contentView_gallery_1.type,
+        groupId: contentViewGroup_1.id,
       });
     }));
 

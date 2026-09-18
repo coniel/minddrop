@@ -1,4 +1,8 @@
-import { ContentView, ContentViewTypes } from '@minddrop/content-views';
+import {
+  ContentView,
+  ContentViewGroups,
+  ContentViewTypes,
+} from '@minddrop/content-views';
 import { Events } from '@minddrop/events';
 import { PanelView } from '@minddrop/ui-components';
 import { UiIconName } from '@minddrop/ui-icons';
@@ -12,6 +16,12 @@ export interface NewContentViewViewProps {
    * The type of content view to create.
    */
   viewType: string;
+
+  /**
+   * The ID of the group the created view is filed under. Omit to
+   * create it in no group.
+   */
+  groupId?: string;
 }
 
 /**
@@ -20,12 +30,18 @@ export interface NewContentViewViewProps {
  */
 export const NewContentViewView: React.FC<NewContentViewViewProps> = ({
   viewType,
+  groupId,
 }) => {
   const viewTypeConfig = ContentViewTypes.use(viewType);
   const openView = Views.useOpenView();
 
   // Open the created content view's view and close this one
-  function handleCreateView(view: ContentView) {
+  async function handleCreateView(view: ContentView) {
+    // File the view under the group it was created from
+    if (groupId) {
+      await ContentViewGroups.addItem(groupId, view.id);
+    }
+
     openView(OpenContentViewViewEvent, {
       contentViewId: view.id,
     });

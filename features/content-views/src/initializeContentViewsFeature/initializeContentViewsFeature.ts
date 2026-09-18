@@ -79,7 +79,7 @@ export function initializeContentViewsFeature(): VoidFunction {
       sourcePane: data.sourcePane,
       view: NewContentViewViewName,
       id: NewContentViewViewId,
-      props: { viewType: data.viewType },
+      props: { viewType: data.viewType, groupId: data.groupId },
       split: data.openMode === 'split',
       title: i18n.t('contentViews.labels.new'),
       icon: NEW_CONTENT_VIEW_VIEW_ICON,
