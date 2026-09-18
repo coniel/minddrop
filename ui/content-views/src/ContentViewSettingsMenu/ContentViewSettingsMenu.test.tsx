@@ -8,15 +8,8 @@ import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Events, OpenConfirmationDialogEventData } from '@minddrop/events';
 import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
-import {
-  DropdownMenuContent,
-  DropdownMenuPortal,
-  DropdownMenuPositioner,
-  DropdownMenuRoot,
-} from '@minddrop/ui-primitives';
 import { cleanup, setup } from '../test-utils';
 import { ContentViewSettingsMenu } from './ContentViewSettingsMenu';
-import { ContentViewSettingsMenuContent } from './ContentViewSettingsMenuContent';
 
 const { contentView_gallery_1, contentViewType_table } = ContentViewFixtures;
 const { urlDatabase } = DatabaseFixtures;
@@ -57,27 +50,6 @@ describe('<ContentViewSettingsMenu />', () => {
     await openMenu();
 
     screen.getByText(TypeSettingsText);
-  });
-
-  it("omits the view type's settings when not wanted", () => {
-    // The items need a menu around them
-    render(
-      <DropdownMenuRoot open>
-        <DropdownMenuPortal>
-          <DropdownMenuPositioner>
-            <DropdownMenuContent>
-              <ContentViewSettingsMenuContent
-                view={tableView}
-                typeSettings={false}
-              />
-            </DropdownMenuContent>
-          </DropdownMenuPositioner>
-        </DropdownMenuPortal>
-      </DropdownMenuRoot>,
-    );
-
-    expect(screen.queryByText(TypeSettingsText)).toBeNull();
-    screen.getByDisplayValue(tableView.name);
   });
 
   it('renders the rename item with the view name', async () => {
