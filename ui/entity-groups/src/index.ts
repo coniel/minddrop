@@ -2,6 +2,8 @@ export type * from './types';
 export * from './constants';
 export * from './initializeEntityGroupsUi';
 export * from './EntityGroupList';
+export * from './CreateEntityGroupMenuItem';
+export * from './CreateEntityGroupPopover';
 export * from './EntityGroup';
 export * from './EntityGroupItem';
 export * from './EntityGroupItemContext';
