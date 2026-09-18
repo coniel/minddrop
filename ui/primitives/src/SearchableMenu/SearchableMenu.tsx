@@ -248,9 +248,11 @@ export const SearchableMenu = React.forwardRef<
     }, [activeScope, activeIds, setHighlightedIndex]);
 
     // Whether to render items from the registry instead of
-    // rendering children directly. Active during search or when
-    // the list is virtualized (children are hidden in both cases).
-    const renderFromRegistry = isSearchActive || virtualized;
+    // rendering children directly. Children are hidden when it is.
+    // A menu which owns the search term has matched its items
+    // itself, so its children are rendered as given. A flat
+    // registry list would drop their groups and labels.
+    const renderFromRegistry = (isSearchActive && !controlled) || virtualized;
 
     // Auto-focus the search input after the popup is mounted,
     // retrying shortly after as the menu's focus management may

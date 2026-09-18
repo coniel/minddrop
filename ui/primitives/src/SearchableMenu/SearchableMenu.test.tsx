@@ -14,6 +14,8 @@ import {
   DropdownSubmenuContent,
   DropdownSubmenuTriggerItem,
 } from '../DropdownMenu';
+import { MenuGroup } from '../Menu/MenuGroup';
+import { MenuLabel } from '../Menu/MenuLabel';
 import {
   Popover,
   PopoverContent,
@@ -92,6 +94,24 @@ describe('SearchableMenu', () => {
     // The menu keeps a hidden copy of every item for registration,
     // so the listed one is the copy under test
     await waitFor(() => expect(listedItems('picked')).toHaveLength(1));
+  });
+
+  it('lists the given items as they are when the search term is controlled', async () => {
+    // A menu which owns the search term matches its items itself.
+    // It lists what it renders rather than what registered.
+    render(
+      <SearchableMenu searchTerm="Ban" onSearchTermChange={vi.fn()}>
+        <MenuGroup>
+          <MenuLabel stringLabel="Fruit" />
+          <SearchableMenuItem stringLabel="Banana" onSelect={vi.fn()} />
+        </MenuGroup>
+      </SearchableMenu>,
+    );
+
+    await waitFor(() => {
+      expect(listedItems('Banana')).toHaveLength(1);
+      expect(listedItems('Fruit')).toHaveLength(1);
+    });
   });
 
   it('closes the whole menu when a submenu item is selected', async () => {
