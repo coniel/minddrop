@@ -1,29 +1,52 @@
+import { History } from '@minddrop/history';
+import { EntryHistorySubjectType } from '../../constants';
 import { DatabasePropertyOptionRenamedEventData } from '../../events';
 import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
 import { DatabaseEntry } from '../../types';
 import { updateDatabaseEntryProperty } from '../../updateDatabaseEntryProperty';
+import { resolveDatabasePath } from '../../utils';
 
 /**
  * Called when a select property option is renamed. Rewrites the
  * option value in the entries holding it so that they stay on
- * the renamed option.
+ * the renamed option, and records the rename against them.
  */
 export async function onRenamePropertyOption(
   data: DatabasePropertyOptionRenamedEventData,
 ): Promise<void> {
   const { updated, property, oldValue, newValue } = data;
 
-  // Rewrite the option value in the entries holding it
+  // Find the entries holding the renamed option
+  const entries = getAllDatabaseEntries(updated.id).filter((entry) =>
+    holdsOption(entry, property.name, oldValue),
+  );
+
+  // Rewrite the option value in them
   await Promise.all(
-    getAllDatabaseEntries(updated.id)
-      .filter((entry) => holdsOption(entry, property.name, oldValue))
-      .map((entry) =>
-        updateDatabaseEntryProperty(
-          entry.id,
-          property.name,
-          renameEntryValue(entry.properties[property.name], oldValue, newValue),
-        ),
+    entries.map((entry) =>
+      updateDatabaseEntryProperty(
+        entry.id,
+        property.name,
+        renameEntryValue(entry.properties[property.name], oldValue, newValue),
       ),
+    ),
+  );
+
+  // Record the rename against each of them, so that their older
+  // records can be read under the label the option had at the time.
+  await Promise.all(
+    entries.map((entry) =>
+      History.record({
+        ownerPath: resolveDatabasePath(updated),
+        subjectType: EntryHistorySubjectType,
+        subjectKey: entry.title,
+        kind: 'rename',
+        target: 'value-label',
+        property: property.name,
+        from: oldValue,
+        to: newValue,
+      }),
+    ),
   );
 }
 

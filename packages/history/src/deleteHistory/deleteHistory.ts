@@ -1,17 +1,8 @@
 import { Fs } from '@minddrop/file-system';
+import { HistorySubject } from '../types';
 import { resolveSubjectHistoryDirPath } from '../utils';
 
-export interface DeleteHistoryOptions {
-  /**
-   * The absolute path of the directory holding the history.
-   */
-  ownerPath: string;
-
-  /**
-   * The key of the subject whose history to delete.
-   */
-  subjectKey: string;
-}
+export type DeleteHistoryOptions = HistorySubject;
 
 /**
  * Deletes a subject's history. Used when removing a subject frees up
@@ -22,10 +13,7 @@ export interface DeleteHistoryOptions {
 export async function deleteHistory(
   options: DeleteHistoryOptions,
 ): Promise<void> {
-  const historyDirPath = resolveSubjectHistoryDirPath(
-    options.ownerPath,
-    options.subjectKey,
-  );
+  const historyDirPath = resolveSubjectHistoryDirPath(options);
 
   // Check the subject has a history directory. It only gets one once
   // something has been recorded against it.

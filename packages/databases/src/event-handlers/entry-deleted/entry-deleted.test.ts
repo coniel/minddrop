@@ -3,6 +3,7 @@ import { Collections } from '@minddrop/collections';
 import { ContentViews } from '@minddrop/content-views';
 import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { History } from '@minddrop/history';
+import { EntryHistorySubjectType } from '../../constants';
 import {
   sqlGetEntrySyncRecords,
   sqlUpsertDatabase,
@@ -163,6 +164,7 @@ describe('onDeleteEntry', () => {
   it("closes a named entry's history, which outlives it", async () => {
     await History.record({
       ownerPath: databaseDirPath(objectDatabase),
+      subjectType: EntryHistorySubjectType,
       subjectKey: objectEntry1.title,
       kind: 'created',
     });
@@ -172,6 +174,7 @@ describe('onDeleteEntry', () => {
     expect(
       await History.read({
         ownerPath: databaseDirPath(objectDatabase),
+        subjectType: EntryHistorySubjectType,
         subjectKey: objectEntry1.title,
       }),
     ).toEqual([
@@ -185,6 +188,7 @@ describe('onDeleteEntry', () => {
 
     await History.record({
       ownerPath: databaseDirPath(objectDatabase),
+      subjectType: EntryHistorySubjectType,
       subjectKey: untitled.title,
       kind: 'created',
     });
@@ -196,6 +200,7 @@ describe('onDeleteEntry', () => {
     expect(
       await History.read({
         ownerPath: databaseDirPath(objectDatabase),
+        subjectType: EntryHistorySubjectType,
         subjectKey: untitled.title,
       }),
     ).toEqual([]);

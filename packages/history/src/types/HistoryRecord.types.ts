@@ -153,7 +153,14 @@ export interface HistorySubject {
   ownerPath: string;
 
   /**
-   * The subject's key within the owner.
+   * The type of thing the subject is, which its histories are filed
+   * under, so that an owner can hold histories of several types
+   * without their keys meeting.
+   */
+  subjectType: string;
+
+  /**
+   * The subject's key within its type.
    */
   subjectKey: string;
 }

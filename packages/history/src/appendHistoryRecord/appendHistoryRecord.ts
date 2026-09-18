@@ -17,9 +17,8 @@ import { resolveLogFilePath, resolveSubjectHistoryDirPath } from '../utils';
 export async function appendHistoryRecord(
   options: RecordHistoryOptions,
 ): Promise<HistoryRecord> {
-  const { ownerPath, subjectKey } = options;
-  const historyDirPath = resolveSubjectHistoryDirPath(ownerPath, subjectKey);
-  const logFilePath = resolveLogFilePath(ownerPath, subjectKey);
+  const historyDirPath = resolveSubjectHistoryDirPath(options);
+  const logFilePath = resolveLogFilePath(options);
 
   // Ensure the history directory exists, in case this is the
   // subject's first record.

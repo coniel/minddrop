@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { History } from '@minddrop/history';
+import { EntryHistorySubjectType } from '../constants';
 import {
   DatabaseEntryCreatedEvent,
   DatabaseEntryWrittenEvent,
@@ -19,6 +20,7 @@ import { initializeDatabaseEventHandlers } from './initializeDatabaseEventHandle
 
 const subject = {
   ownerPath: databaseDirPath(objectDatabase),
+  subjectType: EntryHistorySubjectType,
   subjectKey: objectEntry1.title,
 };
 

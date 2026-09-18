@@ -1,6 +1,6 @@
 import { Fs } from '@minddrop/file-system';
 import { LogFileExtension } from '../../constants';
-import { HistoryRecord } from '../../types';
+import { HistoryRecord, HistorySubject } from '../../types';
 import { resolveSubjectHistoryDirPath } from '../resolveSubjectHistoryDirPath';
 
 /**
@@ -11,15 +11,13 @@ import { resolveSubjectHistoryDirPath } from '../resolveSubjectHistoryDirPath';
  * archives behind, and third-party sync writes conflicted copies when
  * two devices append to the same file, so both belong in the history.
  *
- * @param ownerPath - The absolute path of the owner directory.
- * @param subjectKey - The subject's key within the owner.
+ * @param subject - The subject to read the logs of.
  * @returns The subject's records, oldest first.
  */
 export async function readLogFiles(
-  ownerPath: string,
-  subjectKey: string,
+  subject: HistorySubject,
 ): Promise<HistoryRecord[]> {
-  const historyDirPath = resolveSubjectHistoryDirPath(ownerPath, subjectKey);
+  const historyDirPath = resolveSubjectHistoryDirPath(subject);
 
   // Check if the history directory exists. No directory means nothing
   // has been recorded against the subject.

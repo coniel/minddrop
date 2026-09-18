@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { MockFs, cleanup, setup } from '../test-utils';
 import { archiveHistoryLog } from './archiveHistoryLog';
 
-const historyDirPath = 'Books/.minddrop/history/My Book';
+const historyDirPath = 'Books/.minddrop/history/entries/My Book';
 const logFilePath = `${historyDirPath}/history.json`;
 
 describe('archiveHistoryLog', () => {

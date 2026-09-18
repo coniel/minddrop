@@ -5,6 +5,7 @@ import { History } from '@minddrop/history';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
+import { EntryHistorySubjectType } from '../../constants';
 import { sqlUpsertDatabase } from '../../sql';
 import {
   MockFs,
@@ -236,6 +237,7 @@ describe('onItemAddressesChanged', () => {
     expect(
       await History.read({
         ownerPath: databaseDirPath(collectionDatabase),
+        subjectType: EntryHistorySubjectType,
         subjectKey: collectionEntry1.title,
       }),
     ).toContainEqual(
@@ -272,6 +274,7 @@ describe('onItemAddressesChanged', () => {
     expect(
       await History.read({
         ownerPath: databaseDirPath(collectionDatabase),
+        subjectType: EntryHistorySubjectType,
         subjectKey: relatedEntry2.title,
       }),
     ).toEqual([]);

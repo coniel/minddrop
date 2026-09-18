@@ -3,8 +3,12 @@ import { MockFs, cleanup, mockDate, setup } from '../test-utils';
 import { HistoryRecord } from '../types';
 import { recordHistory } from './recordHistory';
 
-const subject = { ownerPath: 'Books', subjectKey: 'My Book' };
-const logFilePath = 'Books/.minddrop/history/My Book/history.json';
+const subject = {
+  ownerPath: 'Books',
+  subjectType: 'entries',
+  subjectKey: 'My Book',
+};
+const logFilePath = 'Books/.minddrop/history/entries/My Book/history.json';
 
 /**
  * Reads the subject's active log.
@@ -52,7 +56,7 @@ describe('recordHistory', () => {
     await Promise.all([
       recordHistory({ ...subject, kind: 'created' }),
       recordHistory({
-        ownerPath: 'Books',
+        ...subject,
         subjectKey: 'My Other Book',
         kind: 'created',
       }),
@@ -61,7 +65,7 @@ describe('recordHistory', () => {
     expect(readLog()).toHaveLength(1);
     expect(
       MockFs.readJsonFile<HistoryRecord[]>(
-        'Books/.minddrop/history/My Other Book/history.json',
+        'Books/.minddrop/history/entries/My Other Book/history.json',
       ),
     ).toHaveLength(1);
   });

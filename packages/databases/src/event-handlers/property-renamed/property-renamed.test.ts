@@ -5,12 +5,14 @@ import {
   DesignElementFixtures,
   DesignFixtures,
 } from '@minddrop/designs-next/test-utils';
+import { History } from '@minddrop/history';
 import { Properties } from '@minddrop/properties';
 import { storeItem } from '@minddrop/stores/test-utils';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabaseEntryTemplatesStore } from '../../DatabaseEntryTemplatesStore';
 import { DatabasesStore } from '../../DatabasesStore';
+import { EntryHistorySubjectType } from '../../constants';
 import {
   sqlGetAllEntriesFull,
   sqlUpsertDatabase,
@@ -237,5 +239,46 @@ describe('onRenameProperty', () => {
         'References',
       ),
     );
+  });
+  it('records the rename against the entries which held the property', async () => {
+    await renameProperty(objectDatabase, 'Icon', 'Symbol');
+
+    expect(
+      await History.read({
+        ownerPath: databaseDirPath(objectDatabase),
+        subjectType: EntryHistorySubjectType,
+        subjectKey: objectEntry1.title,
+      }),
+    ).toContainEqual(
+      expect.objectContaining({
+        kind: 'rename',
+        target: 'property',
+        from: 'Icon',
+        to: 'Symbol',
+      }),
+    );
+  });
+
+  it('records nothing against entries without a value for it', async () => {
+    // An entry in the same database with no value for the property
+    const withoutIcon = {
+      ...objectEntry1,
+      id: 'database-entry_without-icon' as const,
+      title: 'Without Icon',
+      path: 'Without Icon.md',
+      properties: { Content: objectEntry1.properties.Content },
+    };
+
+    DatabaseEntriesStore.set(withoutIcon);
+
+    await renameProperty(objectDatabase, 'Icon', 'Symbol');
+
+    expect(
+      await History.read({
+        ownerPath: databaseDirPath(objectDatabase),
+        subjectType: EntryHistorySubjectType,
+        subjectKey: withoutIcon.title,
+      }),
+    ).toEqual([]);
   });
 });

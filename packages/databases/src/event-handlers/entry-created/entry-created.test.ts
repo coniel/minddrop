@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { History } from '@minddrop/history';
+import { EntryHistorySubjectType } from '../../constants';
 import { sqlGetAllEntriesFull, sqlUpsertDatabase } from '../../sql';
 import {
   cleanup,
@@ -143,6 +144,7 @@ describe('onCreateEntry', () => {
     expect(
       await History.read({
         ownerPath: databaseDirPath(objectDatabase),
+        subjectType: EntryHistorySubjectType,
         subjectKey: objectEntry1.title,
       }),
     ).toEqual([expect.objectContaining({ kind: 'created' })]);

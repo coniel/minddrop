@@ -6,6 +6,7 @@ import { Events } from '@minddrop/events';
 import { History } from '@minddrop/history';
 import { ItemReferences } from '@minddrop/item-references';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
+import { EntryHistorySubjectType } from '../../constants';
 import { sqlGetAllEntriesFull, sqlUpsertDatabase } from '../../sql';
 import {
   MockFs,
@@ -302,6 +303,7 @@ describe('onRenameEntry', () => {
     // Record something against the entry under its old title
     await History.record({
       ownerPath: databaseDirPath(objectDatabase),
+      subjectType: EntryHistorySubjectType,
       subjectKey: objectEntry1.title,
       kind: 'created',
     });
@@ -316,6 +318,7 @@ describe('onRenameEntry', () => {
     expect(
       await History.read({
         ownerPath: databaseDirPath(objectDatabase),
+        subjectType: EntryHistorySubjectType,
         subjectKey: 'Renamed',
       }),
     ).toEqual([

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { History, HistoryRecord } from '@minddrop/history';
-import { ContentCaptureGapMs } from '../../constants';
+import { ContentCaptureGapMs, EntryHistorySubjectType } from '../../constants';
 import {
   cleanup,
   databaseDirPath,
@@ -12,6 +12,7 @@ import { onEntryWritten } from './entry-written';
 
 const subject = {
   ownerPath: databaseDirPath(objectDatabase),
+  subjectType: EntryHistorySubjectType,
   subjectKey: objectEntry1.title,
 };
 

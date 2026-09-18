@@ -14,10 +14,7 @@ export async function writeHistoryContent(
   options: ContentRecordOptions,
   timestamp: Date,
 ): Promise<string> {
-  const contentDirPath = resolveContentDirPath(
-    options.ownerPath,
-    options.subjectKey,
-  );
+  const contentDirPath = resolveContentDirPath(options);
 
   // Name the file after the time the change was recorded at, in the
   // subject's own format.

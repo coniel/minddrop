@@ -3,6 +3,7 @@ import { Events } from '@minddrop/events';
 import { History } from '@minddrop/history';
 import { ItemReferences } from '@minddrop/item-references';
 import { Workspaces } from '@minddrop/workspaces';
+import { EntryHistorySubjectType } from '../../constants';
 import {
   contentCaptureKey,
   moveContentCapture,
@@ -41,6 +42,7 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
   // log the move carries across.
   await History.record({
     ownerPath: databasePath,
+    subjectType: EntryHistorySubjectType,
     subjectKey: original.title,
     kind: 'rename',
     target: 'self',
@@ -51,6 +53,7 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
   // Move the history to follow the entry to its new title
   await History.move({
     ownerPath: databasePath,
+    subjectType: EntryHistorySubjectType,
     fromKey: original.title,
     toKey: updated.title,
   });

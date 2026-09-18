@@ -4,8 +4,12 @@ import { MockFs, cleanup, mockDate, setup } from '../test-utils';
 import { HistoryRecord } from '../types';
 import { appendHistoryRecord } from './appendHistoryRecord';
 
-const subject = { ownerPath: 'Books', subjectKey: 'My Book' };
-const historyDirPath = 'Books/.minddrop/history/My Book';
+const subject = {
+  ownerPath: 'Books',
+  subjectType: 'entries',
+  subjectKey: 'My Book',
+};
+const historyDirPath = 'Books/.minddrop/history/entries/My Book';
 const logFilePath = `${historyDirPath}/history.json`;
 
 /**

@@ -4,6 +4,7 @@ import { storeItem } from '@minddrop/stores/test-utils';
 import { TagFixtures } from '@minddrop/tags/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
+import { EntryHistorySubjectType } from '../../constants';
 import { sqlGetEntryPropertyValues, sqlUpsertDatabase } from '../../sql';
 import {
   MockFs,
@@ -148,6 +149,7 @@ describe('onTagRenamed', () => {
 
     const records = await History.read({
       ownerPath: resolveDatabasePath(tagsDatabase),
+      subjectType: EntryHistorySubjectType,
       subjectKey: taggedEntry.title,
     });
 
@@ -180,6 +182,7 @@ describe('onTagRenamed', () => {
     expect(
       await History.read({
         ownerPath: resolveDatabasePath(tagsDatabase),
+        subjectType: EntryHistorySubjectType,
         subjectKey: untagged.title,
       }),
     ).toEqual([]);
