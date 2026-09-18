@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { EntityGroups } from '@minddrop/entity-groups';
 import { EntityGroupFixtures } from '@minddrop/entity-groups/test-utils';
+import { Selection } from '@minddrop/selection';
 import {
   act,
   createEvent,
@@ -9,6 +10,7 @@ import {
   screen,
 } from '@minddrop/test-utils';
 import { resetHoveredItem } from '@minddrop/ui-drag-and-drop';
+import { entityIdType } from '@minddrop/utils';
 import { EntityGroupList } from '../EntityGroupList';
 import { cleanup, dragDataTransfer, setup } from '../test-utils';
 
@@ -21,6 +23,22 @@ const {
 } = EntityGroupFixtures;
 
 const type = groupTypeConfig_exclusive.id;
+
+// A consumer's row which is draggable in its own right, as a list
+// panel view's rows are.
+const DraggableRow: React.FC<{ itemId: string }> = ({ itemId }) => {
+  const { draggableProps } = Selection.useDraggable({
+    id: itemId,
+    type: entityIdType(itemId) ?? '',
+    data: { id: itemId },
+  });
+
+  return (
+    <span data-testid={itemId} {...draggableProps}>
+      {itemId}
+    </span>
+  );
+};
 
 // The height the dropped-on item is measured at, since jsdom lays
 // nothing out. Which half of it a drop lands in decides whether the
@@ -140,6 +158,25 @@ describe('EntityGroupItem', () => {
     init();
 
     expect(getItem(plainItem_1)).toHaveAttribute('draggable', 'true');
+  });
+
+  // A consumer's own draggable stops the drag start from reaching
+  // the item, which marks the drag with the group it came out of.
+  it("takes a drop of an item dragged by the consumer's own draggable", () => {
+    render(
+      <EntityGroupList
+        type={type}
+        renderItem={(itemId) => <DraggableRow itemId={itemId} />}
+      />,
+    );
+
+    fireEvent.dragStart(screen.getByTestId(plainItem_1), { dataTransfer });
+    dropOn(getItem(addressedItem_1), 2);
+
+    expect(EntityGroups.get(type, entityGroup_exclusive_1.id).items).toEqual([
+      plainItem_1,
+      addressedItem_1,
+    ]);
   });
 
   it('reorders the group when an item is dropped within it', () => {

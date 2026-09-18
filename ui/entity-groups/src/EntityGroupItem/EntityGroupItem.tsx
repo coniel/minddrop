@@ -132,10 +132,12 @@ export const EntityGroupItem: React.FC<EntityGroupItemProps> = ({
   // whether it reorders the group or moves the item into another;
   // the mark tells a drop target, before it can read the group,
   // whether the drag is one of its own type's.
-  const handleDragStart = useCallback(
+  //
+  // Marked in the capture phase, since a consumer whose content is
+  // draggable in its own right starts the drag there and stops it
+  // from reaching this element.
+  const handleDragStartCapture = useCallback(
     (event: React.DragEvent) => {
-      draggableProps.onDragStart(event);
-
       const source: EntityGroupDragSource = { type, groupId };
 
       event.dataTransfer.setData(
@@ -147,7 +149,7 @@ export const EntityGroupItem: React.FC<EntityGroupItemProps> = ({
         JSON.stringify(true),
       );
     },
-    [type, groupId, draggableProps],
+    [type, groupId],
   );
 
   return (
@@ -156,7 +158,7 @@ export const EntityGroupItem: React.FC<EntityGroupItemProps> = ({
       {...hoveredProps}
       {...(acceptsDrop ? droppableProps : {})}
       {...draggableProps}
-      onDragStart={handleDragStart}
+      onDragStartCapture={handleDragStartCapture}
     >
       <EntityGroupItemProvider value={item}>{children}</EntityGroupItemProvider>
       <DropIndicator
