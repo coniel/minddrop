@@ -123,6 +123,7 @@ export const ActionMenuItem: FC<ActionMenuItemProps> = ({
   icon,
   secondaryIcon,
   contentIcon,
+  trailingIcon,
   onSelect,
   secondaryOnSelect,
   keyboardShortcut,
@@ -146,9 +147,10 @@ export const ActionMenuItem: FC<ActionMenuItemProps> = ({
         icon: secondaryIcon ?? icon,
         keyboardShortcut: secondaryKeyboardShortcut,
         contentIcon,
+        trailingIcon,
         stringLabel: hasSecondaryLabel ? stringSecondaryLabel : stringLabel,
       }
-    : { label, stringLabel, icon, keyboardShortcut, contentIcon };
+    : { label, stringLabel, icon, keyboardShortcut, contentIcon, trailingIcon };
 
   const item = (
     <Component

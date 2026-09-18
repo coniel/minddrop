@@ -28,6 +28,27 @@ describe('<MenuItem />', () => {
     );
   });
 
+  it("renders a menu action's trailing icon", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <MenuItem
+        stringLabel="Item"
+        menu={[
+          {
+            type: 'menu-item',
+            stringLabel: 'Rename',
+            trailingIcon: <span data-testid="trailing" />,
+          },
+        ]}
+      />,
+    );
+
+    await user.click(screen.getByLabelText('actions.options'));
+
+    screen.getByTestId('trailing');
+  });
+
   it('renders no options button without a menu', () => {
     render(<MenuItem stringLabel="Item" />);
 
