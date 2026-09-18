@@ -320,7 +320,10 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
             {addAction}
           </Group>
 
+          {/* The group list fills the column, so that the space
+              below the last group takes drops */}
           <ScrollArea
+            fillContent
             className="list-panel-view-list-items"
             sidePadding={2}
             endPadding={2}

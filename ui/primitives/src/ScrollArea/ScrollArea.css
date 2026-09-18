@@ -32,6 +32,17 @@
   }
 }
 
+/* --- Fill content --- */
+
+/* Lays the viewport out as a column, so that content sized to fill
+   the room it is given reaches the bottom of a short scroll area.
+   Content taller than the viewport is not shrunk to fit it, a
+   column flex item not shrinking below its content. */
+.scroll-area-fill-content .scroll-area-viewport {
+  display: flex;
+  flex-direction: column;
+}
+
 /* --- Padding --- */
 
 /* Whitespace kept inside the viewport, so that the content does not

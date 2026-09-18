@@ -63,6 +63,11 @@ export interface ScrollAreaProps {
    */
   sidePadding?: ScrollAreaPadding;
   /*
+   * Lays the content out as a column filling the scroll area's
+   * height, for content which takes up the room it is given.
+   */
+  fillContent?: boolean;
+  /*
    * Ref to the scrollable viewport element, for consumers which
    * scroll it programmatically.
    */
@@ -80,6 +85,7 @@ export const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
       startPadding,
       endPadding,
       sidePadding,
+      fillContent,
       viewportRef: externalViewportRef,
       className,
       style,
@@ -121,6 +127,7 @@ export const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
           startPadding,
           endPadding,
           sidePadding,
+          fillContent,
           className,
         })}
         style={style}
