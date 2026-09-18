@@ -1,4 +1,4 @@
-import type { TranslationKey } from '@minddrop/i18n';
+import type { TranslationKey, TranslationValues } from '@minddrop/i18n';
 
 export const OpenConfirmationDialogEvent = 'app:confirmation-dialog:open';
 export const SetNavToolbarWidthEvent = 'app:nav-toolbar:set-width';
@@ -75,6 +75,12 @@ export type OpenConfirmationDialogEventData = {
    * The dialog message. Strings are treated as i18n keys.
    */
   message: TranslationKey | React.ReactElement;
+
+  /**
+   * Values interpolated into the title and message translations. A
+   * `count` also picks the plural form of their keys.
+   */
+  values?: TranslationValues;
 
   /**
    * When `true`, styles the confirmation button to indicate a dangerous action.

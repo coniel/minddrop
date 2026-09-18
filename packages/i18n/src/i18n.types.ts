@@ -17,6 +17,12 @@ export type TranslationKeySuffix<Prefix extends string> =
     ? S
     : never;
 
+/**
+ * Values interpolated into a translation. A `count` also picks the
+ * plural form of the key.
+ */
+export type TranslationValues = Record<string, string | number>;
+
 export type LanguageKey = 'en-GB' | 'en-US' | 'fr-FR';
 
 export type Translations = {

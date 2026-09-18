@@ -1,5 +1,9 @@
 import { AlertDialog } from '@base-ui/react/alert-dialog';
-import { TranslationKey, useTranslation } from '@minddrop/i18n';
+import {
+  TranslationKey,
+  TranslationValues,
+  useTranslation,
+} from '@minddrop/i18n';
 import { Button } from '../Button';
 import { TranslatableNode } from '../types';
 import './ConfirmationDialog.css';
@@ -51,6 +55,12 @@ export interface ConfirmationDialogProps extends AlertDialog.Root.Props {
   stringMessage?: string;
 
   /*
+   * Values interpolated into the title and message translations. A
+   * `count` also picks the plural form of their keys.
+   */
+  values?: TranslationValues;
+
+  /*
    * When true, styles the confirm button as a destructive action.
    * @default false
    */
@@ -76,6 +86,7 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   stringTitle,
   message,
   stringMessage,
+  values,
   danger = false,
   onConfirm,
   onCancel,
@@ -89,11 +100,12 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
         <AlertDialog.Backdrop className="confirmation-dialog-backdrop" />
         <AlertDialog.Popup className="confirmation-dialog">
           <AlertDialog.Title className="confirmation-dialog-title">
-            {stringTitle ?? (typeof title === 'string' ? t(title) : title)}
+            {stringTitle ??
+              (typeof title === 'string' ? t(title, values) : title)}
           </AlertDialog.Title>
           <AlertDialog.Description className="confirmation-dialog-message">
             {stringMessage ??
-              (typeof message === 'string' ? t(message) : message)}
+              (typeof message === 'string' ? t(message, values) : message)}
           </AlertDialog.Description>
           <div className="confirmation-dialog-actions">
             <AlertDialog.Close
