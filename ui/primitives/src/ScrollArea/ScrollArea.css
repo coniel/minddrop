@@ -133,6 +133,13 @@
   --scroll-area-padding-side: var(--space-8);
 }
 
+/* The viewport's padding belongs to the scroll area: these rules set
+   all four sides on every scroll area, at a specificity a consumer's
+   own `.class .scroll-area-viewport` cannot reach, so a consumer's
+   padding is dropped without a word. Pad through the `padding` prop,
+   which goes on the viewport inline, or pad a box inside the
+   viewport. */
+
 /* Vertical scroll areas: start and end are top and bottom, the sides
    are left and right */
 .scroll-area:not(.scroll-area-horizontal) > .scroll-area-viewport {

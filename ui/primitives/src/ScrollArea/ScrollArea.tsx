@@ -9,6 +9,13 @@ export type ScrollAreaVisibility = 'hover' | 'scroll' | 'always';
 
 export type ScrollAreaPadding = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
+export interface ScrollAreaPaddingSides {
+  top?: string | number;
+  right?: string | number;
+  bottom?: string | number;
+  left?: string | number;
+}
+
 /* ============================================================
    PRIMITIVE RE-EXPORTS
    ============================================================ */
@@ -63,6 +70,12 @@ export interface ScrollAreaProps {
    */
   sidePadding?: ScrollAreaPadding;
   /*
+   * Whitespace inside the viewport per side, in any CSS length, for
+   * values off the token scale the padding steps take. A side left
+   * out keeps the step padding resolved for it.
+   */
+  padding?: ScrollAreaPaddingSides;
+  /*
    * Lays the content out as a column filling the scroll area's
    * height, for content which takes up the room it is given.
    */
@@ -85,6 +98,7 @@ export const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
       startPadding,
       endPadding,
       sidePadding,
+      padding,
       fillContent,
       viewportRef: externalViewportRef,
       className,
@@ -136,6 +150,7 @@ export const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
         <ScrollAreaPrimitive.Viewport
           ref={setViewportRef}
           className="scroll-area-viewport"
+          style={resolvePaddingStyle(padding)}
           onScroll={handleViewportScroll}
         >
           {children}
@@ -162,3 +177,26 @@ export const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
 );
 
 ScrollArea.displayName = 'ScrollArea';
+
+/**
+ * Resolves per-side padding into the viewport's styles. Set inline
+ * so that it takes the place of the padding steps' own rule, which
+ * a consumer's stylesheet cannot outweigh.
+ *
+ * @param padding - The padding sides, if any.
+ * @returns The viewport's padding styles, or undefined without padding.
+ */
+function resolvePaddingStyle(
+  padding: ScrollAreaPaddingSides | undefined,
+): React.CSSProperties | undefined {
+  if (!padding) {
+    return undefined;
+  }
+
+  return {
+    paddingTop: padding.top,
+    paddingRight: padding.right,
+    paddingBottom: padding.bottom,
+    paddingLeft: padding.left,
+  };
+}

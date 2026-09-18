@@ -1,7 +1,7 @@
 ---
 title: "A scroll area's padding belongs inside it"
 package: ui/primitives
-summary: "Pad a ScrollArea with its padding props, never the container around it: the scrollport clips whatever overhangs its edge"
+summary: 'Pad a ScrollArea with its padding props, never the container around it: the scrollport clips whatever overhangs its edge'
 paths:
   - 'ui/primitives/src/ScrollArea/ScrollArea.tsx'
   - 'ui/primitives/src/ScrollArea/ScrollArea.css'
@@ -10,7 +10,7 @@ tags: [scroll-area, layout, padding, scrollbar, clipping]
 
 # A scroll area's padding belongs inside it
 
-Whitespace around scrollable content goes on the `ScrollArea`'s `startPadding`, `endPadding` and `sidePadding` props, which apply it to the viewport, rather than on the element wrapping the scroll area or on its own root. Two things go wrong when it sits outside.
+Whitespace around scrollable content goes on the `ScrollArea`'s padding props — `startPadding`, `endPadding` and `sidePadding` on the token scale, or `padding` for per-side lengths off it — which apply it to the viewport, rather than on the element wrapping the scroll area or on its own root. Two things go wrong when it sits outside.
 
 **The scrollbar lands on the content.** The scrollbars are overlays positioned against the scroll area's own edges. Padding on a container around it insets the whole scroll area, so its content runs edge to edge inside the scrollport and the scrollbar sits on top of it. Padding inside leaves a gutter for the scrollbar to sit in.
 
