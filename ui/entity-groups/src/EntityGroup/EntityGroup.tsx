@@ -20,6 +20,7 @@ import {
   ContextMenuPositioner,
   ContextMenuRoot,
   ContextMenuTrigger,
+  DropdownMenu,
   DropdownMenuContent,
   DropdownMenuPortal,
   DropdownMenuPositioner,
@@ -40,6 +41,7 @@ import {
 import { EntityGroupItem } from '../EntityGroupItem';
 import { useEntityGroupList } from '../EntityGroupListContext';
 import { applyEntityGroupDrop } from '../applyEntityGroupDrop';
+import { EntityGroupAddAction } from '../types';
 import { useDraggedEntityGroupItemIds } from '../useDraggedEntityGroupItemIds';
 import {
   resolveEntityGroupDragSource,
@@ -277,6 +279,29 @@ export const EntityGroup: React.FC<EntityGroupProps> = ({
     addAction?.onClick?.();
   }
 
+  // Render the add control shown in the group's label row, which
+  // opens a menu for a consumer which gave one.
+  function renderAddAction(action: EntityGroupAddAction) {
+    const button = (
+      <IconButton
+        ref={addButtonRef}
+        icon="plus"
+        size="xs"
+        variant="ghost"
+        color="muted"
+        label={action.label ?? 'actions.new'}
+        tooltip={{ title: action.label ?? 'actions.new' }}
+        onClick={action.menu ? undefined : handleAddClick}
+      />
+    );
+
+    if (!action.menu) {
+      return button;
+    }
+
+    return <DropdownMenu trigger={button} content={action.menu} />;
+  }
+
   // Render the group's contents: what the app puts in one of its
   // own groups, otherwise the items the group lists, or the empty
   // state when it lists none.
@@ -330,18 +355,7 @@ export const EntityGroup: React.FC<EntityGroupProps> = ({
               actions={
                 <>
                   {/* Adds an item to the group */}
-                  {addAction && (
-                    <IconButton
-                      ref={addButtonRef}
-                      icon="plus"
-                      size="xs"
-                      variant="ghost"
-                      color="muted"
-                      label={addAction.label ?? 'actions.new'}
-                      tooltip={{ title: addAction.label ?? 'actions.new' }}
-                      onClick={handleAddClick}
-                    />
-                  )}
+                  {addAction && renderAddAction(addAction)}
 
                   {/* Opens the group's menu */}
                   {isEditable && (
