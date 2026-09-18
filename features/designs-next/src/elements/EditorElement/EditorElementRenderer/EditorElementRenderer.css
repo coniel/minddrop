@@ -4,10 +4,3 @@
   flex: 1;
   min-width: 0;
 }
-
-/* The padding goes on the scrolling box rather than the scroll area,
-   so the document scrolls all the way to the block's edges instead
-   of stopping short of them. */
-.design-editor-element > .scroll-area-viewport {
-  padding: var(--design-editor-element-padding, 0);
-}

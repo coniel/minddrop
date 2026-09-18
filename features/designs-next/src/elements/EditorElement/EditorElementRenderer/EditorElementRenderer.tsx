@@ -45,11 +45,8 @@ export const EditorElementRenderer: React.FC<
   const markdown =
     typeof property?.value === 'string' ? property.value : undefined;
 
-  // Resolve the text settings into the styles they render as. The
-  // editor declares its own typography, so those four reach the
-  // document as custom properties; the rest it inherits. The padding
-  // is a custom property too, since it goes on the scrolling box
-  // rather than on the scroll area.
+  // Resolve the text settings into the styles they render as,
+  // leaving out the padding, which the scroll area takes as a prop.
   const {
     fontFamily,
     fontSize,
@@ -59,18 +56,25 @@ export const EditorElementRenderer: React.FC<
     ...inherited
   } = resolveElementStyle(element, EditorDefaults);
 
+  // The editor declares its own typography, so those four reach the
+  // document as custom properties; the rest it inherits.
   const style = {
     ...inherited,
     '--editor-font-family': fontFamily,
     '--editor-font-size': fontSize === undefined ? undefined : `${fontSize}px`,
     '--editor-line-height': lineHeight,
     '--editor-font-weight': fontWeight,
-    '--design-editor-element-padding': padding,
   } as React.CSSProperties;
 
-  // Scroll a document past the block's height rather than clip it
+  // Scroll a document past the block's height rather than clip it.
+  // The padding lands on the scrolling box, so the document scrolls
+  // all the way to the block's edges rather than stopping short.
   return (
-    <ScrollArea className="design-editor-element" style={style}>
+    <ScrollArea
+      className="design-editor-element"
+      style={style}
+      padding={element.padding}
+    >
       {/** The editor takes its title on mount alone, so a changed
        * title remounts it **/}
       <MarkdownEditor
