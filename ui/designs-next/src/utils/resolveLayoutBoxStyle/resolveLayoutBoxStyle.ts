@@ -3,12 +3,7 @@ import { resolveContentFitStyles } from '../resolveContentFitStyles';
 
 /**
  * Resolves the styles sizing a box of a design's layout tree inside
- * the box holding it. In a column box the box takes its fixed
- * columns as a pixel basis and grows by its scaling columns. Along
- * the vertical axis a band of an aspect-locked design does the same
- * with its rows, while in a design of natural height a spacer keeps
- * its unit height, an element is bounded by its content fit, and an
- * atomic box takes its unit height as a minimum.
+ * the box holding it.
  *
  * @param box - The box to size.
  * @param axis - The axis of the box holding it, null for the root, which fills the render.
@@ -20,6 +15,7 @@ export function resolveLayoutBoxStyle(
   axis: LayoutAxis | null,
   aspectLocked: boolean,
 ): React.CSSProperties {
+  // Combine the width and height styles
   return {
     ...resolveWidthStyles(box, axis),
     ...resolveHeightStyles(box, axis, aspectLocked),
@@ -43,6 +39,8 @@ function resolveWidthStyles(
     return {};
   }
 
+  // Base the box on its fixed columns and grow it by its scaling
+  // ones.
   return {
     flexGrow: box.columnUnits.scaling,
     flexShrink: 0,
@@ -79,27 +77,30 @@ function resolveHeightStyles(
       : { height: box.rowSpan * Designs.constants.UnitPixelSize };
   }
 
+  // Bound an element by its content fit
   if (box.type === 'element') {
     return resolveContentFitStyles(box.element);
   }
 
+  // Give an atomic box its unit height as a minimum
   if (box.type === 'atom') {
     return { minHeight: box.rowSpan * Designs.constants.UnitPixelSize };
   }
 
+  // Leave a rows or column box to its content
   return {};
 }
 
 /**
  * Resolves the flex styles giving a band its share of a fixed
- * height: its fixed rows as a pixel basis, growing by its scaling
- * rows, and shrinking when the height falls short of the fixed
- * rows.
+ * height.
  *
  * @param box - The band.
  * @returns The band's flex styles.
  */
 function resolveRowShareStyles(box: LayoutBox): React.CSSProperties {
+  // Base the band on its fixed rows, grow it by its scaling ones and
+  // let it shrink when the height falls short of the fixed rows.
   return {
     flexGrow: box.rowUnits.scaling,
     flexShrink: 1,

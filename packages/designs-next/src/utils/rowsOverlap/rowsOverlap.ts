@@ -1,8 +1,7 @@
 import { LayoutRegion } from '../../types';
 
 /**
- * Checks whether two regions of the grid, such as elements, overlap
- * vertically.
+ * Checks whether two regions of the grid overlap vertically.
  *
  * @param a - The first region.
  * @param b - The second region.

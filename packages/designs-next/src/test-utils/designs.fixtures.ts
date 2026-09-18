@@ -102,8 +102,8 @@ export const design_stacked: Design = {
 
 // Three icons stacked in a column beside a growing text spanning
 // all of their rows.
-export const design_icons_beside_text: Design = {
-  id: 'design_icons-beside-text',
+export const design_iconsBesideText: Design = {
+  id: 'design_iconsBesideText',
   name: 'Icons beside text',
   type: 'card',
   columns: 48,
@@ -119,8 +119,8 @@ export const design_icons_beside_text: Design = {
 };
 
 // A cover with a title layered over it, a gap and a growing body
-export const design_cover_title: Design = {
-  id: 'design_cover-title',
+export const design_coverTitle: Design = {
+  id: 'design_coverTitle',
   name: 'Cover title',
   type: 'card',
   columns: 48,

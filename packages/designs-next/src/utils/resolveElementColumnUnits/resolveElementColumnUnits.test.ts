@@ -16,8 +16,8 @@ const coverBand: LayoutRegion = {
 
 describe('resolveElementColumnUnits', () => {
   it('scales a fluid element across its columns and fixes its gaps', () => {
-    // The title spans columns 2-29 alone in its context, the cover
-    // layered under it ignored.
+    // The cover layered under the title is ignored, so the title is
+    // alone in its context.
     expect(
       resolveElementColumnUnits(
         titleDesignElement,

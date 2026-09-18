@@ -12,7 +12,7 @@ export interface LayoutAtomRendererProps {
    * The design's elements, which element children are resolved
    * from.
    */
-  elements: DesignElement[];
+  designElements: DesignElement[];
 
   /**
    * The styles sizing the box inside the box holding it.
@@ -26,7 +26,7 @@ export interface LayoutAtomRendererProps {
  */
 export const LayoutAtomRenderer: React.FC<LayoutAtomRendererProps> = ({
   box,
-  elements,
+  designElements,
   style,
 }) => (
   <div className="design-renderer-atom" style={style}>
@@ -35,7 +35,7 @@ export const LayoutAtomRenderer: React.FC<LayoutAtomRendererProps> = ({
       <LayoutElementRenderer
         key={element.id}
         element={element}
-        elements={elements}
+        designElements={designElements}
         style={resolveAtomElementStyle(element, box)}
       />
     ))}

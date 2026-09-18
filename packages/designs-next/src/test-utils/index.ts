@@ -7,3 +7,5 @@ export * from './element-configs.fixtures';
 export * as ElementConfigFixtures from './element-configs.fixtures';
 export * from './designs.fixtures';
 export * as DesignFixtures from './designs.fixtures';
+export * from './layout-boxes.fixtures';
+export * as LayoutBoxFixtures from './layout-boxes.fixtures';

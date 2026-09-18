@@ -1,5 +1,5 @@
-/* The render fills its container's width, and its root box fills
-   the render, which matters when an aspect ratio fixes the height */
+/* The render fills its container's width. Its root box fills the
+   render, so that an aspect ratio fixing the height reaches it. */
 .design-renderer {
   display: flex;
   flex-direction: column;
@@ -10,7 +10,11 @@
   flex: 1 0 auto;
 }
 
-/* Bands stacked top to bottom, each as tall as its content */
+/* Bands stacked top to bottom, each as tall as its content. The
+   rows and column boxes are plain flex boxes rather than the Stack
+   and Group primitives: the tree has no gaps (spacers are boxes),
+   the children carry their own flex shares, and a card renders one
+   per box across a whole gallery. */
 .design-renderer-rows {
   display: flex;
   flex-direction: column;
@@ -22,9 +26,13 @@
 }
 
 /* Let a column box shrink below its content's width, so that text
-   wraps rather than widening the row */
+   wraps rather than widening the row. */
 .design-renderer-columns > * {
   min-width: 0;
+}
+
+.design-renderer-spacer {
+  flex: none;
 }
 
 /* Stretch element components to the wrapper's height, including

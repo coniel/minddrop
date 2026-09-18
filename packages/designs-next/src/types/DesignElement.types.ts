@@ -128,11 +128,10 @@ export interface DesignElement {
 
   /**
    * How the element's height behaves when the region holding it is
-   * taller than its rows, as in an aspect-locked design or a region
-   * stretched beside taller content: fluid elements scale with the
-   * region's height, fixed elements keep their unit height and stay
-   * pinned to the given region edge, or hold their place
-   * proportionally between both. Absent means fixed to the top edge.
+   * taller than its rows. Fluid elements scale with the region's
+   * height, fixed elements keep their unit height and stay pinned to
+   * the given region edge, or hold their place proportionally
+   * between both. Absent means fixed to the top edge.
    */
   heightMode?: ElementHeightMode;
 }

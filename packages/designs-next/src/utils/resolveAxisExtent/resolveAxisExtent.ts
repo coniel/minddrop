@@ -28,5 +28,6 @@ export function resolveAxisExtent(
     return { start: region.row, end: region.row + region.rowSpan };
   }
 
+  // Read the column extent
   return { start: region.column, end: region.column + region.columnSpan };
 }

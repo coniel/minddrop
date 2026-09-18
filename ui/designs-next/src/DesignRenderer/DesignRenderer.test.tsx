@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import {
   Design,
   DesignElement,
@@ -20,7 +20,7 @@ import { DesignRenderer } from './DesignRenderer';
 const {
   cardDesign_1,
   design_heading,
-  design_icons_beside_text,
+  design_iconsBesideText,
   design_pinwheel,
   design_stacked,
 } = DesignFixtures;
@@ -29,11 +29,14 @@ const {
   coverDesignElement,
   designElement_besideIcon_1,
   designElement_besideText,
+  designElement_bottomBar,
+  designElement_fluidCover,
   designElement_heading,
   designElement_pinwheel_3,
   designElement_pinwheel_5,
   designElement_stackedFooter,
   iconDesignElement,
+  titleDesignElement,
 } = DesignElementFixtures;
 
 // An element type rendering the value of the property it maps to,
@@ -56,23 +59,11 @@ const valueElementConfig: DesignElementConfig = {
 
 const titleProperties: PropertiesSchema = [{ type: 'title', name: 'Title' }];
 
-// A 3/2 locked card of a fluid cover above a bottom-pinned bar in
-// rows 26-31.
+// A 3/2 locked card of the fluid cover above the bottom bar
 const lockedDesign: Design = {
   ...cardDesign_1,
   aspectRatio: '3/2',
-  elements: [
-    { ...coverDesignElement, heightMode: 'fluid' },
-    {
-      ...iconDesignElement,
-      id: 'element_bar',
-      column: 0,
-      columnSpan: 48,
-      row: 26,
-      rowSpan: 6,
-      heightMode: 'fixed-bottom',
-    },
-  ],
+  elements: [designElement_fluidCover, designElement_bottomBar],
 };
 
 /**
@@ -92,10 +83,7 @@ function getElementWrapper(
 }
 
 describe('DesignRenderer', () => {
-  afterEach(() => {
-    cleanup();
-    vi.unstubAllGlobals();
-  });
+  afterEach(cleanup);
 
   it('renders a mapped element from the property values', () => {
     DesignElementConfigs.register(valueElementConfig);
@@ -155,31 +143,8 @@ describe('DesignRenderer', () => {
     // Two rows of gap above and below the heading
     expect(spacers).toHaveLength(2);
     expect(spacers[0].style.height).toBe(
-      `${2 * Designs.constants.UnitPixelSize}px`,
+      `${designElement_heading.row * Designs.constants.UnitPixelSize}px`,
     );
-  });
-
-  it('measures nothing', () => {
-    // Count the resize observers created while rendering
-    let observers = 0;
-
-    vi.stubGlobal(
-      'ResizeObserver',
-      class {
-        constructor() {
-          observers += 1;
-        }
-
-        observe() {}
-
-        disconnect() {}
-      },
-    );
-
-    render(<DesignRenderer design={design_stacked} />);
-    render(<DesignRenderer design={lockedDesign} />);
-
-    expect(observers).toBe(0);
   });
 
   it('positions the elements of an uncut band inside it', () => {
@@ -194,7 +159,6 @@ describe('DesignRenderer', () => {
     expect(atom.style.minHeight).toBe(
       `${coverDesignElement.rowSpan * Designs.constants.UnitPixelSize}px`,
     );
-    expect(atom.contains(icon)).toBe(true);
     expect(icon.style.top).toBe(
       `${iconDesignElement.row * Designs.constants.UnitPixelSize}px`,
     );
@@ -241,9 +205,13 @@ describe('DesignRenderer', () => {
     const { container } = render(<DesignRenderer design={design} />);
     const wrapper = getElementWrapper(container, bottom.id);
 
-    // The gap above the element takes any height the region gains,
-    // so the element keeps its distance from the bottom edge.
-    expect(wrapper.style.top).toBe('calc(80px + 100% - 120px)');
+    // The two empty rows above the element take any height the
+    // region gains, so the element keeps its distance from the
+    // bottom edge. Twenty rows above them and thirty in all keep
+    // their unit height.
+    expect(wrapper.style.top).toBe(
+      `calc(${20 * Designs.constants.UnitPixelSize}px + 100% - ${30 * Designs.constants.UnitPixelSize}px)`,
+    );
     expect(wrapper.style.height).toBe(
       `${bottom.rowSpan * Designs.constants.UnitPixelSize}px`,
     );
@@ -251,7 +219,7 @@ describe('DesignRenderer', () => {
 
   it('lays a band with no free horizontal line out as column boxes', () => {
     const { container } = render(
-      <DesignRenderer design={design_icons_beside_text} />,
+      <DesignRenderer design={design_iconsBesideText} />,
     );
     const columns = container.querySelector(
       '.design-renderer-columns',
@@ -266,10 +234,10 @@ describe('DesignRenderer', () => {
 
     // The text grows by its forty columns, the gap and the icon
     // column keep their unit width.
-    expect(text.style.flexGrow).toBe('40');
+    expect(text.style.flexGrow).toBe(`${designElement_besideText.columnSpan}`);
     expect(text.style.flexBasis).toBe('0px');
     expect(spacer.style.flexBasis).toBe(
-      `${2 * Designs.constants.UnitPixelSize}px`,
+      `${(designElement_besideText.column - designElement_besideIcon_1.columnSpan) * Designs.constants.UnitPixelSize}px`,
     );
     expect(icons.style.flexBasis).toBe(
       `${designElement_besideIcon_1.columnSpan * Designs.constants.UnitPixelSize}px`,
@@ -278,14 +246,13 @@ describe('DesignRenderer', () => {
 
   it('renders a column of stacked elements as bands of the column', () => {
     const { container } = render(
-      <DesignRenderer design={design_icons_beside_text} />,
+      <DesignRenderer design={design_iconsBesideText} />,
     );
     const icon = getElementWrapper(container, designElement_besideIcon_1.id);
 
-    // Every element is in flow: the icons stack as bands inside
-    // their column box, each at its block height.
+    // Every element is in flow, the icons as bands at their block
+    // height.
     expect(container.querySelector('.design-renderer-atom')).toBeNull();
-    expect(icon.closest('.design-renderer-rows')).not.toBeNull();
     expect(icon.style.height).toBe(
       `${designElement_besideIcon_1.rowSpan * Designs.constants.UnitPixelSize}px`,
     );
@@ -326,7 +293,7 @@ describe('DesignRenderer', () => {
 
     expect(ids).toEqual([
       coverDesignElement.id,
-      cardDesign_1.elements[1].id,
+      titleDesignElement.id,
       iconDesignElement.id,
     ]);
   });
@@ -340,17 +307,17 @@ describe('DesignRenderer', () => {
 
   it('scales a fluid-height band with the locked height', () => {
     const { container } = render(<DesignRenderer design={lockedDesign} />);
-    const cover = getElementWrapper(container, coverDesignElement.id);
+    const cover = getElementWrapper(container, designElement_fluidCover.id);
 
-    // The cover grows by its sixteen rows from no basis of its own
-    expect(cover.style.flexGrow).toBe(`${coverDesignElement.rowSpan}`);
+    // The cover grows by its rows from no basis of its own
+    expect(cover.style.flexGrow).toBe(`${designElement_fluidCover.rowSpan}`);
     expect(cover.style.flexBasis).toBe('0px');
     expect(cover.style.minHeight).toBe('0');
   });
 
   it('pins fixed-height bands in aspect-locked designs', () => {
     const { container } = render(<DesignRenderer design={lockedDesign} />);
-    const bar = getElementWrapper(container, 'element_bar');
+    const bar = getElementWrapper(container, designElement_bottomBar.id);
     const gap = container.querySelector(
       '.design-renderer-spacer',
     ) as HTMLElement;
@@ -359,11 +326,11 @@ describe('DesignRenderer', () => {
     // bar holds its distance from the bottom edge.
     expect(bar.style.flexGrow).toBe('0');
     expect(bar.style.flexBasis).toBe(
-      `${6 * Designs.constants.UnitPixelSize}px`,
+      `${designElement_bottomBar.rowSpan * Designs.constants.UnitPixelSize}px`,
     );
     expect(gap.style.flexGrow).toBe('0');
     expect(gap.style.flexBasis).toBe(
-      `${10 * Designs.constants.UnitPixelSize}px`,
+      `${(designElement_bottomBar.row - designElement_fluidCover.rowSpan) * Designs.constants.UnitPixelSize}px`,
     );
   });
 

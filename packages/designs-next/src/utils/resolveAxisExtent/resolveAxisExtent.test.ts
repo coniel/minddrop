@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { titleDesignElement } from '../../test-utils';
+import { DesignElementFixtures } from '../../test-utils';
 import { resolveAxisExtent } from './resolveAxisExtent';
+
+const { titleDesignElement } = DesignElementFixtures;
 
 describe('resolveAxisExtent', () => {
   it('reads the rows an element spans', () => {

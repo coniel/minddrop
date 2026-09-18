@@ -91,7 +91,7 @@ export const designElement_heading: DesignElement = {
 
 // Full-width fixed heading across the top of the stacked design
 export const designElement_stackedHeading: DesignElement = {
-  id: 'element_stacked-heading',
+  id: 'element_stackedHeading',
   type: TestElementType,
   column: 0,
   row: 0,
@@ -102,7 +102,7 @@ export const designElement_stackedHeading: DesignElement = {
 
 // Full-width growing body flush below the stacked heading
 export const designElement_stackedBody: DesignElement = {
-  id: 'element_stacked-body',
+  id: 'element_stackedBody',
   type: TestElementType,
   column: 0,
   row: 8,
@@ -114,7 +114,7 @@ export const designElement_stackedBody: DesignElement = {
 
 // Full-width fixed footer a gap below the stacked body
 export const designElement_stackedFooter: DesignElement = {
-  id: 'element_stacked-footer',
+  id: 'element_stackedFooter',
   type: TestElementType,
   column: 0,
   row: 28,
@@ -126,7 +126,7 @@ export const designElement_stackedFooter: DesignElement = {
 // Three fixed icons stacked in a column at the left edge, a gap of
 // two rows between them.
 export const designElement_besideIcon_1: DesignElement = {
-  id: 'element_beside-icon_1',
+  id: 'element_besideIcon_1',
   type: TestElementType,
   column: 0,
   row: 0,
@@ -137,19 +137,19 @@ export const designElement_besideIcon_1: DesignElement = {
 
 export const designElement_besideIcon_2: DesignElement = {
   ...designElement_besideIcon_1,
-  id: 'element_beside-icon_2',
+  id: 'element_besideIcon_2',
   row: 8,
 };
 
 export const designElement_besideIcon_3: DesignElement = {
   ...designElement_besideIcon_1,
-  id: 'element_beside-icon_3',
+  id: 'element_besideIcon_3',
   row: 16,
 };
 
 // Growing text beside the icon column, spanning all of its rows
 export const designElement_besideText: DesignElement = {
-  id: 'element_beside-text',
+  id: 'element_besideText',
   type: TestElementType,
   column: 8,
   row: 0,
@@ -159,8 +159,28 @@ export const designElement_besideText: DesignElement = {
   contentFit: 'grow',
 };
 
-// Five elements arranged as a pinwheel, which no horizontal or
-// vertical line crosses without cutting one of them.
+// The cover with a fluid height, scaling with a card's height
+export const designElement_fluidCover: DesignElement = {
+  ...coverDesignElement,
+  id: 'element_fluidCover',
+  heightMode: 'fluid',
+};
+
+// Full-width bar pinned to the bottom edge, in the last six rows of
+// the fixture card.
+export const designElement_bottomBar: DesignElement = {
+  id: 'element_bottomBar',
+  type: TestElementType,
+  column: 0,
+  row: 26,
+  columnSpan: 48,
+  rowSpan: 6,
+  widthMode: 'fluid',
+  heightMode: 'fixed-bottom',
+};
+
+// Five elements arranged as a pinwheel. No horizontal or vertical
+// line crosses it without cutting one of them.
 export const designElement_pinwheel_1: DesignElement = {
   id: 'element_pinwheel_1',
   type: TestElementType,

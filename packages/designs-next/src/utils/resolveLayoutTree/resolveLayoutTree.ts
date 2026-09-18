@@ -3,29 +3,26 @@ import {
   DesignElement,
   LayoutAxis,
   LayoutBox,
-  LayoutBoxBase,
+  LayoutBoxUnits,
   LayoutRegion,
 } from '../../types';
 import { columnsOverlap } from '../columnsOverlap';
+import { isSameRegion } from '../isSameRegion';
 import { resolveAxisUnits } from '../resolveAxisUnits';
 import { resolveChildElements } from '../resolveChildElements';
 import { resolveCutLines } from '../resolveCutLines';
-import { resolveScalingColumns } from '../resolveScalingColumns';
-import { resolveScalingRows } from '../resolveScalingRows';
+import { resolveRegionScalingColumns } from '../resolveRegionScalingColumns';
+import { resolveRegionScalingRows } from '../resolveRegionScalingRows';
 import { rowsOverlap } from '../rowsOverlap';
 import { sliceRegion } from '../sliceRegion';
 
-// How a box's size relates to the box holding it
-type LayoutBoxUnits = Pick<LayoutBoxBase, 'columnUnits' | 'rowUnits'>;
-
 /**
- * Compiles a design into the tree of boxes it renders as, cutting it
- * into bands at every horizontal line no element crosses and, where
- * there is none, into column boxes at every vertical one, each band
- * and column box cut the same way in turn. A region holding no
- * element is a spacer, a region one element fills is that element,
- * and a region no line cuts is atomic, holding its elements at their
- * unit rects.
+ * Compiles a design into the tree of boxes it renders as. The design
+ * is cut into bands at every horizontal line no element crosses.
+ * Where there is none, it is cut into column boxes at every vertical
+ * one. A region with no element in it is a spacer, a region one
+ * element fills is that element, and a region no line cuts is
+ * atomic, holding its elements at their unit rects.
  *
  * @param design - The design to compile.
  * @returns The root box of the tree.
@@ -43,18 +40,12 @@ export function resolveLayoutTree(design: Design): LayoutBox {
   };
 
   // Classify the design's columns and rows against its own elements
-  const units: LayoutBoxUnits = {
-    columnUnits: resolveAxisUnits(
-      resolveScalingColumns(elements, design.columns),
-      0,
-      design.columns,
-    ).span,
-    rowUnits: resolveAxisUnits(
-      resolveScalingRows(elements, design.rows),
-      0,
-      design.rows,
-    ).span,
-  };
+  const units = resolveSliceUnits(
+    region,
+    resolveRegionScalingColumns(elements, region),
+    resolveRegionScalingRows(elements, region),
+    region,
+  );
 
   // Cut the whole design
   return cutRegion(region, elements, units);
@@ -62,8 +53,8 @@ export function resolveLayoutTree(design: Design): LayoutBox {
 
 /**
  * Cuts a region into bands at the horizontal lines none of its
- * elements cross, or into column boxes at the vertical ones where
- * no horizontal line cuts it, cutting each slice in turn.
+ * elements cross, or into column boxes at the vertical ones where no
+ * horizontal line cuts it.
  *
  * @param region - The region to cut.
  * @param elements - The elements inside the region.
@@ -81,13 +72,14 @@ function cutRegion(
   }
 
   // A region one element fills is that element
-  if (elements.length === 1 && fillsRegion(elements[0], region)) {
+  if (elements.length === 1 && isSameRegion(elements[0], region)) {
     return { type: 'element', ...region, ...units, element: elements[0] };
   }
 
-  // Cut into bands at the horizontal lines the region can be cut at
+  // Find the horizontal lines the region can be cut at
   const rowLines = resolveCutLines(elements, region, 'rows');
 
+  // Compile the bands between them into a rows box
   if (rowLines.length > 0) {
     return {
       type: 'rows',
@@ -97,9 +89,10 @@ function cutRegion(
     };
   }
 
-  // Cut into column boxes at the vertical lines otherwise
+  // Find the vertical lines the region can be cut at otherwise
   const columnLines = resolveCutLines(elements, region, 'columns');
 
+  // Compile the column regions between them into a columns box
   if (columnLines.length > 0) {
     return {
       type: 'columns',
@@ -129,53 +122,60 @@ function cutSlices(
   lines: number[],
   axis: LayoutAxis,
 ): LayoutBox[] {
-  // Classify the region's columns and rows against its elements,
-  // which the slices' sizes are read from.
-  const columnScaling = resolveScalingColumns(
-    elements,
-    region.column + region.columnSpan,
-  ).slice(region.column);
-  const rowScaling = resolveScalingRows(
-    elements,
-    region.row + region.rowSpan,
-  ).slice(region.row);
+  // Classify the region's columns and rows against its elements.
+  // The slices' sizes are read from them.
+  const columnScaling = resolveRegionScalingColumns(elements, region);
+  const rowScaling = resolveRegionScalingRows(elements, region);
 
   // Cut each slice with the elements inside it
   return sliceRegion(region, lines, axis).map((slice) => {
+    // Collect the elements inside the slice
     const sliceElements = elements.filter((element) =>
       axis === 'rows'
         ? rowsOverlap(element, slice)
         : columnsOverlap(element, slice),
     );
-    const sliceUnits: LayoutBoxUnits = {
-      columnUnits: resolveAxisUnits(
-        columnScaling,
-        slice.column - region.column,
-        slice.columnSpan,
-      ).span,
-      rowUnits: resolveAxisUnits(
-        rowScaling,
-        slice.row - region.row,
-        slice.rowSpan,
-      ).span,
-    };
 
+    // Read the slice's size from the classification
+    const sliceUnits = resolveSliceUnits(
+      slice,
+      columnScaling,
+      rowScaling,
+      region,
+    );
+
+    // Cut the slice
     return cutRegion(slice, sliceElements, sliceUnits);
   });
 }
 
 /**
- * Checks whether an element covers a region exactly.
+ * Resolves how a slice's size relates to the region it was cut
+ * from, from the region's scaling classifications.
  *
- * @param element - The element.
- * @param region - The region.
- * @returns True when the element's rect is the region.
+ * @param slice - The slice.
+ * @param columnScaling - A flag per column of the region, true when the column scales.
+ * @param rowScaling - A flag per row of the region, true when the row scales.
+ * @param region - The region the slice was cut from.
+ * @returns The slice's units.
  */
-function fillsRegion(element: DesignElement, region: LayoutRegion): boolean {
-  return (
-    element.column === region.column &&
-    element.row === region.row &&
-    element.columnSpan === region.columnSpan &&
-    element.rowSpan === region.rowSpan
-  );
+function resolveSliceUnits(
+  slice: LayoutRegion,
+  columnScaling: boolean[],
+  rowScaling: boolean[],
+  region: LayoutRegion,
+): LayoutBoxUnits {
+  // Count the slice's columns and rows from the region's origin
+  return {
+    columnUnits: resolveAxisUnits(
+      columnScaling,
+      slice.column - region.column,
+      slice.columnSpan,
+    ).span,
+    rowUnits: resolveAxisUnits(
+      rowScaling,
+      slice.row - region.row,
+      slice.rowSpan,
+    ).span,
+  };
 }

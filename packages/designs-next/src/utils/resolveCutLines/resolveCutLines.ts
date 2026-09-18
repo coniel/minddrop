@@ -25,16 +25,18 @@ export function resolveCutLines(
   // The cut lines
   const lines: number[] = [];
 
-  // Keep every line inside the region which lies on an element's
-  // edge and no element straddles.
+  // Check every line inside the region
   for (let line = start + 1; line < end; line += 1) {
+    // Check whether the line lies on an element's edge
     const onEdge = extents.some(
       (extent) => extent.start === line || extent.end === line,
     );
+    // Check whether an element straddles the line
     const straddled = extents.some(
       (extent) => extent.start < line && line < extent.end,
     );
 
+    // Keep the line when it is an edge nothing crosses
     if (onEdge && !straddled) {
       lines.push(line);
     }

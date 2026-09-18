@@ -2,7 +2,7 @@ import { LayoutAxis, LayoutRegion } from '../../types';
 import { resolveAxisExtent } from '../resolveAxisExtent';
 
 /**
- * Slices a region at grid lines along an axis: horizontal lines
+ * Slices a region at grid lines along an axis. Horizontal lines
  * slice it into bands, vertical lines into column regions. Each
  * slice keeps the region's full extent along the other axis.
  *
@@ -23,12 +23,15 @@ export function sliceRegion(
 
   // Build a slice between each pair of consecutive boundaries
   return boundaries.slice(0, -1).map((sliceStart, index) => {
+    // The slice's span up to the next boundary
     const span = boundaries[index + 1] - sliceStart;
 
+    // Slice the rows
     if (axis === 'rows') {
       return { ...region, row: sliceStart, rowSpan: span };
     }
 
+    // Slice the columns
     return { ...region, column: sliceStart, columnSpan: span };
   });
 }

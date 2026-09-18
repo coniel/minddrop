@@ -1,4 +1,5 @@
-import { AxisUnits, UnitShare } from '../../types';
+import { AxisUnits } from '../../types';
+import { resolveUnitShare } from '../resolveUnitShare';
 
 /**
  * Resolves an extent along an axis of a region as unit counts split
@@ -15,21 +16,10 @@ export function resolveAxisUnits(
   start: number,
   span: number,
 ): AxisUnits {
+  // Count the units before the extent, inside it and in the region
   return {
-    before: countUnits(scaling.slice(0, start)),
-    span: countUnits(scaling.slice(start, start + span)),
-    total: countUnits(scaling),
+    before: resolveUnitShare(scaling.slice(0, start)),
+    span: resolveUnitShare(scaling.slice(start, start + span)),
+    total: resolveUnitShare(scaling),
   };
-}
-
-/**
- * Counts the fixed and scaling units among a run of flags.
- *
- * @param flags - A flag per unit, true when the unit scales.
- * @returns The unit counts.
- */
-function countUnits(flags: boolean[]): UnitShare {
-  const scaling = flags.filter(Boolean).length;
-
-  return { fixed: flags.length - scaling, scaling };
 }

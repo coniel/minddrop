@@ -14,7 +14,7 @@ export interface LayoutElementRendererProps {
    * The design's elements, which the element's children are
    * resolved from.
    */
-  elements: DesignElement[];
+  designElements: DesignElement[];
 
   /**
    * The styles sizing and positioning the element's wrapper.
@@ -28,7 +28,7 @@ export interface LayoutElementRendererProps {
  */
 export const LayoutElementRenderer: React.FC<LayoutElementRendererProps> = ({
   element,
-  elements,
+  designElements,
   style,
 }) => {
   // Look up the element's renderer, skipping unregistered types
@@ -49,7 +49,7 @@ export const LayoutElementRenderer: React.FC<LayoutElementRendererProps> = ({
     >
       <ElementComponent
         element={element}
-        childElements={Designs.resolveChildElements(elements, element.id)}
+        childElements={Designs.resolveChildElements(designElements, element.id)}
       />
     </div>
   );

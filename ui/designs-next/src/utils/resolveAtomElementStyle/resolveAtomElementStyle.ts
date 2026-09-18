@@ -2,11 +2,11 @@ import { DesignElement, Designs, LayoutAtomBox } from '@minddrop/designs-next';
 import { formatUnitLength } from '../formatUnitLength';
 
 /**
- * Resolves the styles positioning an element inside its atomic box:
- * its columns and rows as lengths of the box's width and height, so
- * that fluid columns follow the box, fixed ones keep their unit
- * width, and a pinned element holds its edge of the box when the
- * box is taller than its rows.
+ * Resolves the styles positioning an element inside its atomic box.
+ * Its columns and rows are lengths of the box's width and height, so
+ * fluid columns follow the box, fixed ones keep their unit width,
+ * and a pinned element holds its edge of the box when the box is
+ * taller than its rows.
  *
  * @param element - The element to position.
  * @param atom - The atomic box holding it.
@@ -24,6 +24,7 @@ export function resolveAtomElementStyle(
   );
   const rows = Designs.resolveElementRowUnits(element, atom.elements, atom);
 
+  // Format each edge and size as a length of the box
   return {
     left: formatUnitLength(columns.before, columns.total),
     width: formatUnitLength(columns.span, columns.total),

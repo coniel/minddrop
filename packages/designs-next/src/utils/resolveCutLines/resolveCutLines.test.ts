@@ -1,12 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import {
+import { DesignElementFixtures } from '../../test-utils';
+import { LayoutRegion } from '../../types';
+import { resolveCutLines } from './resolveCutLines';
+
+const {
   designElement_besideIcon_1,
   designElement_besideText,
   designElement_stackedBody,
   designElement_stackedHeading,
-} from '../../test-utils';
-import { LayoutRegion } from '../../types';
-import { resolveCutLines } from './resolveCutLines';
+} = DesignElementFixtures;
 
 // The region the stacked elements sit in: their rows, full width
 const stackedRegion: LayoutRegion = {
@@ -18,8 +20,8 @@ const stackedRegion: LayoutRegion = {
 
 describe('resolveCutLines', () => {
   it('keeps the horizontal lines no element straddles', () => {
-    // The heading spans rows 0-7 and the body rows 8-23, so only the
-    // line between them is free.
+    // The heading and the body touch, so only the line between them
+    // is free.
     expect(
       resolveCutLines(
         [designElement_stackedHeading, designElement_stackedBody],
@@ -40,7 +42,8 @@ describe('resolveCutLines', () => {
   });
 
   it('cuts a gap off at its edges only', () => {
-    // Rows 8-11 are empty between the heading and the body
+    // The body moved down to row 12, leaving four empty rows below
+    // the heading.
     expect(
       resolveCutLines(
         [
@@ -50,19 +53,21 @@ describe('resolveCutLines', () => {
         { ...stackedRegion, rowSpan: 28 },
         'rows',
       ),
-    ).toEqual([8, 12]);
+    ).toEqual([designElement_stackedHeading.rowSpan, 12]);
   });
 
   it('keeps the vertical lines no element straddles', () => {
-    // The icon spans columns 0-5 and the text columns 8-47, with the
-    // gap between them cut off at its edges.
+    // The gap between the icon and the text is cut off at its edges
     expect(
       resolveCutLines(
         [designElement_besideIcon_1, designElement_besideText],
         { column: 0, row: 0, columnSpan: 48, rowSpan: 22 },
         'columns',
       ),
-    ).toEqual([6, 8]);
+    ).toEqual([
+      designElement_besideIcon_1.columnSpan,
+      designElement_besideText.column,
+    ]);
   });
 
   it('cuts nowhere without elements', () => {

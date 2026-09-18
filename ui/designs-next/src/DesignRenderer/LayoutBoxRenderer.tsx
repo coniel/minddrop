@@ -1,5 +1,5 @@
 import { Design, LayoutAxis, LayoutBox } from '@minddrop/designs-next';
-import { resolveLayoutBoxStyle } from '../utils';
+import { resolveLayoutBoxKey, resolveLayoutBoxStyle } from '../utils';
 import { LayoutAtomRenderer } from './LayoutAtomRenderer';
 import { LayoutElementRenderer } from './LayoutElementRenderer';
 
@@ -17,7 +17,7 @@ export interface LayoutBoxRendererProps {
 
   /**
    * The axis of the box holding this one, which decides how it is
-   * sized: a band stretches across its rows box, a column box takes
+   * sized. A band stretches across its rows box, a column box takes
    * its flex share of the width. Null for the root box, which fills
    * the render.
    */
@@ -25,10 +25,8 @@ export interface LayoutBoxRendererProps {
 }
 
 /**
- * Renders a box of a design's layout tree as flow: bands stack in a
- * flex column, column boxes sit in a flex row, spacers keep their
- * unit size, elements take the height their content fit gives them,
- * and atomic boxes position their elements absolutely.
+ * Renders a box of a design's layout tree as flow, and its children
+ * inside it.
  */
 export const LayoutBoxRenderer: React.FC<LayoutBoxRendererProps> = ({
   box,
@@ -42,12 +40,13 @@ export const LayoutBoxRenderer: React.FC<LayoutBoxRendererProps> = ({
     design.aspectRatio !== undefined,
   );
 
+  // Nest the children of a rows or column box in a flex box
   if (box.type === 'rows' || box.type === 'columns') {
     return (
       <div className={`design-renderer-${box.type}`} style={style}>
         {box.children.map((child) => (
           <LayoutBoxRenderer
-            key={resolveBoxKey(child)}
+            key={resolveLayoutBoxKey(child)}
             box={child}
             design={design}
             axis={box.type}
@@ -57,36 +56,28 @@ export const LayoutBoxRenderer: React.FC<LayoutBoxRendererProps> = ({
     );
   }
 
+  // Render a spacer as an empty box at its size
   if (box.type === 'spacer') {
     return <div className="design-renderer-spacer" style={style} />;
   }
 
+  // Render an element box as its element
   if (box.type === 'element') {
     return (
       <LayoutElementRenderer
         element={box.element}
-        elements={design.elements}
+        designElements={design.elements}
         style={style}
       />
     );
   }
 
+  // Render an atomic box with its elements positioned inside it
   return (
-    <LayoutAtomRenderer box={box} elements={design.elements} style={style} />
+    <LayoutAtomRenderer
+      box={box}
+      designElements={design.elements}
+      style={style}
+    />
   );
 };
-
-/**
- * Resolves the key a box renders under among its siblings: the
- * element's ID for an element box, the box's position otherwise.
- *
- * @param box - The box.
- * @returns The box's key.
- */
-function resolveBoxKey(box: LayoutBox): string {
-  if (box.type === 'element') {
-    return box.element.id;
-  }
-
-  return `${box.type}-${box.row}-${box.column}`;
-}

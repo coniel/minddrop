@@ -1,7 +1,7 @@
 import { DesignElement } from './DesignElement.types';
 
 /**
- * A direction a region is cut along: rows cut it at horizontal
+ * A direction a region is cut along. Rows cut it at horizontal
  * lines into bands, columns cut it at vertical lines into column
  * boxes.
  */
@@ -70,10 +70,9 @@ export interface LayoutRegion {
 }
 
 /**
- * What every box of the tree carries: its region, and how its size
- * relates to the box holding it.
+ * How a box's size relates to the box holding it.
  */
-export interface LayoutBoxBase extends LayoutRegion {
+export interface LayoutBoxUnits {
   /**
    * The box's columns split into those keeping their unit width and
    * those scaling with the width of the box holding it, classified
@@ -89,6 +88,12 @@ export interface LayoutBoxBase extends LayoutRegion {
    */
   rowUnits: UnitShare;
 }
+
+/**
+ * What every box of the tree carries: its region, and how its size
+ * relates to the box holding it.
+ */
+export interface LayoutBoxBase extends LayoutRegion, LayoutBoxUnits {}
 
 /**
  * A region cut into bands at the horizontal lines no element
@@ -117,14 +122,14 @@ export interface LayoutColumnsBox extends LayoutBoxBase {
 }
 
 /**
- * A region holding no element, which keeps its unit size.
+ * A region with no element in it. It keeps its unit size.
  */
 export interface LayoutSpacerBox extends LayoutBoxBase {
   type: 'spacer';
 }
 
 /**
- * A region a single element fills, which sizes it.
+ * A region a single element fills. The element sizes it.
  */
 export interface LayoutElementBox extends LayoutBoxBase {
   type: 'element';

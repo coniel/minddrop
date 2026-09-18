@@ -26,10 +26,8 @@ export interface DesignRendererProps {
 }
 
 /**
- * Renders a design as flow: the design compiles to a tree of boxes
- * the browser lays out in one pass, filling the container's width,
- * with content-fitted elements taking the height their content
- * needs and an aspect-locked design holding its ratio.
+ * Renders a design as a tree of flow boxes filling its container's
+ * width.
  */
 export const DesignRenderer: React.FC<DesignRendererProps> = ({
   design,

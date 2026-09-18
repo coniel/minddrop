@@ -1,32 +1,31 @@
 import { describe, expect, it } from 'vitest';
-import {
-  DesignElementFixtures,
-  DesignFixtures,
-  captionSlotElement,
-  slottedDesignElement,
-} from '../../test-utils';
+import { DesignElementFixtures, DesignFixtures } from '../../test-utils';
 import { Design, DesignElement, LayoutBox } from '../../types';
 import { resolveLayoutTree } from './resolveLayoutTree';
 
 const {
-  design_cover_title,
+  design_coverTitle,
   design_heading,
-  design_icons_beside_text,
+  design_iconsBesideText,
   design_pinwheel,
   design_stacked,
 } = DesignFixtures;
 const {
   bodyDesignElement,
+  captionSlotElement,
   coverDesignElement,
   designElement_besideIcon_1,
   designElement_besideIcon_2,
   designElement_besideIcon_3,
   designElement_besideText,
+  designElement_bottomBar,
+  designElement_fluidCover,
   designElement_heading,
   designElement_stackedBody,
   designElement_stackedFooter,
   designElement_stackedHeading,
   iconDesignElement,
+  slottedDesignElement,
   titleDesignElement,
 } = DesignElementFixtures;
 
@@ -167,7 +166,7 @@ describe('resolveLayoutTree', () => {
   });
 
   it('keeps layered elements in one atomic band', () => {
-    const tree = resolveLayoutTree(design_cover_title);
+    const tree = resolveLayoutTree(design_coverTitle);
 
     expect(tree.type === 'rows' && tree.children[0]).toEqual({
       type: 'atom',
@@ -194,7 +193,7 @@ describe('resolveLayoutTree', () => {
       rowSpan: 16,
     };
     const design: Design = {
-      ...design_cover_title,
+      ...design_coverTitle,
       rows: 20,
       elements: [cover, title, text],
     };
@@ -219,7 +218,7 @@ describe('resolveLayoutTree', () => {
   });
 
   it('cuts a band into column boxes around an element with side gaps', () => {
-    const tree = resolveLayoutTree(design_cover_title);
+    const tree = resolveLayoutTree(design_coverTitle);
     const bandRows = { fixed: 10, scaling: 0 };
 
     // The body's band: a fixed gap, the fluid body, a fixed gap
@@ -271,7 +270,7 @@ describe('resolveLayoutTree', () => {
     const iconColumnUnits = { fixed: 6, scaling: 0 };
     const fullHeight = { fixed: 22, scaling: 0 };
 
-    expect(resolveLayoutTree(design_icons_beside_text)).toEqual({
+    expect(resolveLayoutTree(design_iconsBesideText)).toEqual({
       type: 'columns',
       column: 0,
       row: 0,
@@ -384,19 +383,10 @@ describe('resolveLayoutTree', () => {
   it('scales the bands of a fluid-height element and holds the pinned ones', () => {
     // A fluid-height cover above a bottom-pinned bar, as an
     // aspect-locked card would hold them.
-    const cover: DesignElement = { ...coverDesignElement, heightMode: 'fluid' };
-    const bar: DesignElement = {
-      ...iconDesignElement,
-      column: 0,
-      columnSpan: 48,
-      row: 26,
-      rowSpan: 6,
-      heightMode: 'fixed-bottom',
-    };
     const design: Design = {
-      ...design_cover_title,
+      ...design_coverTitle,
       aspectRatio: '3/2',
-      elements: [cover, bar],
+      elements: [designElement_fluidCover, designElement_bottomBar],
     };
     const tree = resolveLayoutTree(design);
 
@@ -436,7 +426,7 @@ describe('resolveLayoutTree', () => {
       rowSpan: 16,
     };
     const design: Design = {
-      ...design_icons_beside_text,
+      ...design_iconsBesideText,
       elements: [
         { ...designElement_stackedHeading, rowSpan: 4 },
         icon_1,

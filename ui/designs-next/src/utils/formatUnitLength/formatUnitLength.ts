@@ -11,28 +11,29 @@ import { Designs, UnitShare } from '@minddrop/designs-next';
  * @returns The CSS length.
  */
 export function formatUnitLength(share: UnitShare, total: UnitShare): string {
-  // The fixed units' pixel length
+  // Format the fixed units as pixels
   const fixedLength = `${share.fixed * Designs.constants.UnitPixelSize}px`;
 
-  // Format fixed units alone as pixels
+  // Return the fixed units alone when nothing scales
   if (share.scaling === 0 || total.scaling === 0) {
     return fixedLength;
   }
 
-  // The share of the scaling length these units take
+  // Resolve the share of the scaling length these units take
   const scalingShare = resolveScalingShare(share, total);
 
-  // Format every scaling unit of a region with no fixed unit as the
-  // full length.
+  // Return the full length for every scaling unit of a region with
+  // no fixed unit.
   if (share.fixed === 0 && scalingShare === '100%') {
     return '100%';
   }
 
-  // Format scaling units alone as their share
+  // Return the scaling share alone when there is no fixed unit
   if (share.fixed === 0) {
     return `calc(${scalingShare})`;
   }
 
+  // Add the fixed length to the scaling share
   return `calc(${fixedLength} + ${scalingShare})`;
 }
 
@@ -45,19 +46,20 @@ export function formatUnitLength(share: UnitShare, total: UnitShare): string {
  * @returns The share, as a CSS expression.
  */
 function resolveScalingShare(share: UnitShare, total: UnitShare): string {
-  // The length left for the region's scaling units
+  // Resolve the length left for the region's scaling units
   const scalingLength =
     total.fixed === 0
       ? '100%'
       : `100% - ${total.fixed * Designs.constants.UnitPixelSize}px`;
 
-  // Every scaling unit takes the whole length
+  // Return the whole length when every scaling unit takes it
   if (share.scaling === total.scaling) {
     return scalingLength;
   }
 
-  // A subtraction needs grouping before the fraction is applied
+  // Group a subtraction before the fraction is applied
   const grouped = total.fixed === 0 ? scalingLength : `(${scalingLength})`;
 
+  // Apply the fraction to the grouped length
   return `${grouped} * ${share.scaling} / ${total.scaling}`;
 }
