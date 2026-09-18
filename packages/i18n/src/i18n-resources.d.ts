@@ -28,6 +28,7 @@ declare module 'i18next' {
             empty: string;
           };
           actions: {
+            add: string;
             new: string;
             options: string;
             delete: {
@@ -1667,6 +1668,7 @@ declare module 'i18next' {
             queries: string;
           };
           actions: {
+            add: string;
             new: string;
           };
           list: {
@@ -2058,6 +2060,7 @@ declare module 'i18next' {
             spaces: string;
           };
           actions: {
+            add: string;
             new: string;
           };
           list: {
@@ -2124,9 +2127,6 @@ declare module 'i18next' {
             create: string;
             searchPlaceholder: string;
             noResults: string;
-          };
-          groupName: {
-            placeholder: string;
           };
           form: {
             create: string;
@@ -3367,6 +3367,7 @@ declare module 'i18next' {
           labels: {
             group: string;
             newGroup: string;
+            none: string;
             ungrouped: string;
             empty: string;
           };

@@ -1,7 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { EntityGroups } from '@minddrop/entity-groups';
 import { Events } from '@minddrop/events';
 import { ItemReferences } from '@minddrop/item-references';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
+import { CollectionEntityType, CollectionGroupsType } from '../constants';
+import { CollectionDeletedEvent } from '../events';
 import { MockFs, cleanup, collection_1, setup } from '../test-utils';
 import { Collection } from '../types';
 import { resolveCollectionFilePath } from '../utils';
@@ -50,5 +53,47 @@ describe('initializeCollections', () => {
     expect(written.items).toEqual(
       collection_1.items.map((id) => `address:${id}`),
     );
+  });
+
+  it('registers the collection groups type', () => {
+    // The fixtures register the type, so drop it to see the
+    // initialization put it back.
+    EntityGroups.unregisterType(CollectionGroupsType);
+
+    initializeCollections();
+
+    expect(EntityGroups.getConfig(CollectionGroupsType).id).toBe(
+      CollectionGroupsType,
+    );
+  });
+
+  it('lets a collection group hold only collections', () => {
+    initializeCollections();
+
+    expect(EntityGroups.getConfig(CollectionGroupsType).itemTypes).toEqual([
+      CollectionEntityType,
+    ]);
+  });
+
+  it('files a collection under one group at most', () => {
+    initializeCollections();
+
+    expect(
+      EntityGroups.getConfig(CollectionGroupsType).multiMembership,
+    ).toBeFalsy();
+  });
+
+  it('gives the collections in no group an ungrouped group', () => {
+    initializeCollections();
+
+    expect(EntityGroups.getConfig(CollectionGroupsType).ungrouped).toBe(true);
+  });
+
+  it('drops a deleted collection from the group holding it', () => {
+    initializeCollections();
+
+    expect(
+      EntityGroups.getConfig(CollectionGroupsType).itemDeletedEvents,
+    ).toEqual([CollectionDeletedEvent]);
   });
 });

@@ -4,6 +4,7 @@
       "collections": "Collections"
     },
     "actions": {
+      "add": "Add collection",
       "new": "New collection",
       "options": "Collection options",
       "delete": {

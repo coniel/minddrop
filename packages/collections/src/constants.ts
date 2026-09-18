@@ -5,6 +5,11 @@ import type { UiIconName } from '@minddrop/ui-icons';
  */
 export const CollectionEntityType = 'collection';
 
+/**
+ * The entity group type collection groups are registered as.
+ */
+export const CollectionGroupsType = 'collection-groups';
+
 export const CollectionsDirName = 'collections';
 export const CollectionFileExtension = 'json';
 

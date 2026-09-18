@@ -1,15 +1,26 @@
 import { useMemo, useState } from 'react';
-import { Collection, Collections } from '@minddrop/collections';
+import {
+  Collection,
+  CollectionGroups,
+  Collections,
+} from '@minddrop/collections';
+import { EntityGroup, EntityGroups } from '@minddrop/entity-groups';
 import { ListPanelView, ListPanelViewItem } from '@minddrop/ui-components';
-import { IconButton } from '@minddrop/ui-primitives';
+import {
+  EntityGroupAddAction,
+  useEntityGroupSubmenu,
+} from '@minddrop/ui-entity-groups';
+import { SubmenuContents } from '@minddrop/ui-primitives';
+import { orderByName } from '@minddrop/utils';
 import { Views } from '@minddrop/views';
 import { CollectionDetails } from './CollectionDetails';
+import { NewCollectionMenu } from './NewCollectionMenu';
 import './CollectionsView.css';
 
 /**
  * Renders a two column view of the persisted collections: a
- * searchable list of collections on the left, and the selected
- * collection's details on the right.
+ * searchable list of collections grouped by collection group on the
+ * left, and the selected collection's details on the right.
  */
 export const CollectionsView: React.FC = () => {
   const [query, setQuery] = useState('');
@@ -17,22 +28,36 @@ export const CollectionsView: React.FC = () => {
   const setSubview = Views.useSetSubview();
   const collections = Collections.useAll();
   const selectedCollection = Collections.use(subview?.id ?? '');
+  const resolveGroupSubmenu = useEntityGroupSubmenu(
+    CollectionGroups.constants.Type,
+  );
 
-  // Collections listed in the left column: fuzzy name matches when
-  // searching, all persisted collections otherwise.
-  const items = useMemo(() => {
-    // List only persisted collections, excluding virtual ones
+  // Collections listed in the left column: fuzzy name matches in
+  // match order while searching, every persisted collection by name
+  // otherwise. Virtual collections belong to their owner, so they
+  // are left out.
+  const listedCollections = useMemo(() => {
     const persisted = collections.filter((collection) => !collection.virtual);
 
-    const listed = query
-      ? Collections.search(
-          query,
-          persisted.map((collection) => collection.id),
-        )
-      : persisted;
+    if (query) {
+      return Collections.search(
+        query,
+        persisted.map((collection) => collection.id),
+      );
+    }
 
-    return listed.map(toListItem);
+    return [...persisted].sort(orderByName);
   }, [collections, query]);
+
+  // Build the listed collections into rows carrying their group
+  // submenu.
+  const items = useMemo(
+    () =>
+      listedCollections.map((collection) =>
+        toListItem(collection, resolveGroupSubmenu(collection.id)),
+      ),
+    [listedCollections, resolveGroupSubmenu],
+  );
 
   // The collection rendered by the panel's content
   const selectedItem = useMemo(
@@ -40,11 +65,29 @@ export const CollectionsView: React.FC = () => {
     [selectedCollection],
   );
 
-  // Create a new collection and show it
-  async function handleCreateCollection() {
+  // Create a collection filed under the group it was created from
+  // and show it. The ungrouped group files it under none.
+  async function handleCreateCollection(groupId?: string) {
     const collection = await Collections.create();
 
+    if (groupId) {
+      await CollectionGroups.addItem(groupId, collection.id);
+    }
+
     setSubview({ id: collection.id });
+  }
+
+  // Returns the add control shown in a group's label row, which
+  // creates a collection filed under the group.
+  function resolveGroupAddAction(group: EntityGroup): EntityGroupAddAction {
+    // A collection created from the ungrouped group joins no group
+    const groupId =
+      group.id === EntityGroups.constants.UngroupedId ? undefined : group.id;
+
+    return {
+      label: 'collections.actions.new',
+      onClick: () => handleCreateCollection(groupId),
+    };
   }
 
   return (
@@ -53,6 +96,10 @@ export const CollectionsView: React.FC = () => {
       icon={Collections.constants.Icon}
       title="collections.labels.collections"
       items={items}
+      groups={{
+        type: CollectionGroups.constants.Type,
+        resolveAddAction: resolveGroupAddAction,
+      }}
       selectedItem={selectedItem}
       query={query}
       onQueryChange={setQuery}
@@ -60,15 +107,7 @@ export const CollectionsView: React.FC = () => {
       emptyLabel="collections.list.empty"
       noResultsLabel="collections.list.noResults"
       noSelectionLabel="collections.details.noSelection"
-      addAction={
-        <IconButton
-          icon="plus"
-          size="md"
-          variant="subtle"
-          label="collections.actions.new"
-          onClick={handleCreateCollection}
-        />
-      }
+      addAction={<NewCollectionMenu />}
     >
       {selectedCollection && (
         <CollectionDetails collection={selectedCollection} />
@@ -78,12 +117,25 @@ export const CollectionsView: React.FC = () => {
 };
 
 /**
- * Returns the collection as a list item.
+ * Returns the collection as a list item carrying its group submenu.
  */
-function toListItem(collection: Collection): ListPanelViewItem {
+function toListItem(
+  collection: Collection,
+  groupSubmenu?: SubmenuContents,
+): ListPanelViewItem {
   return {
     id: collection.id,
     label: collection.name,
     contentIcon: Collections.constants.EntityDefaultIcon,
+    menu: groupSubmenu
+      ? [
+          {
+            type: 'menu-item',
+            icon: CollectionGroups.constants.Icon,
+            label: 'entityGroups.labels.group',
+            submenu: groupSubmenu,
+          },
+        ]
+      : undefined,
   };
 }
