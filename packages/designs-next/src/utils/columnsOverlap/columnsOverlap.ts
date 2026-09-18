@@ -1,13 +1,14 @@
-import { DesignElement } from '../../types';
+import { LayoutRegion } from '../../types';
 
 /**
- * Checks whether two elements overlap horizontally.
+ * Checks whether two regions of the grid, such as elements, overlap
+ * horizontally.
  *
- * @param a - The first element.
- * @param b - The second element.
- * @returns True when the elements share at least one column.
+ * @param a - The first region.
+ * @param b - The second region.
+ * @returns True when the regions share at least one column.
  */
-export function columnsOverlap(a: DesignElement, b: DesignElement): boolean {
+export function columnsOverlap(a: LayoutRegion, b: LayoutRegion): boolean {
   return (
     a.column < b.column + b.columnSpan && b.column < a.column + a.columnSpan
   );

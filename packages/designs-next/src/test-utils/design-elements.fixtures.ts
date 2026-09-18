@@ -76,3 +76,137 @@ export const designElements = [
   iconDesignElement,
   bodyDesignElement,
 ];
+
+// Full-width growing heading with two rows of gap above and below
+export const designElement_heading: DesignElement = {
+  id: 'element_heading',
+  type: TestElementType,
+  column: 0,
+  row: 2,
+  columnSpan: 48,
+  rowSpan: 8,
+  widthMode: 'fluid',
+  contentFit: 'grow',
+};
+
+// Full-width fixed heading across the top of the stacked design
+export const designElement_stackedHeading: DesignElement = {
+  id: 'element_stacked-heading',
+  type: TestElementType,
+  column: 0,
+  row: 0,
+  columnSpan: 48,
+  rowSpan: 8,
+  widthMode: 'fluid',
+};
+
+// Full-width growing body flush below the stacked heading
+export const designElement_stackedBody: DesignElement = {
+  id: 'element_stacked-body',
+  type: TestElementType,
+  column: 0,
+  row: 8,
+  columnSpan: 48,
+  rowSpan: 16,
+  widthMode: 'fluid',
+  contentFit: 'grow',
+};
+
+// Full-width fixed footer a gap below the stacked body
+export const designElement_stackedFooter: DesignElement = {
+  id: 'element_stacked-footer',
+  type: TestElementType,
+  column: 0,
+  row: 28,
+  columnSpan: 48,
+  rowSpan: 4,
+  widthMode: 'fluid',
+};
+
+// Three fixed icons stacked in a column at the left edge, a gap of
+// two rows between them.
+export const designElement_besideIcon_1: DesignElement = {
+  id: 'element_beside-icon_1',
+  type: TestElementType,
+  column: 0,
+  row: 0,
+  columnSpan: 6,
+  rowSpan: 6,
+  widthMode: 'fixed-left',
+};
+
+export const designElement_besideIcon_2: DesignElement = {
+  ...designElement_besideIcon_1,
+  id: 'element_beside-icon_2',
+  row: 8,
+};
+
+export const designElement_besideIcon_3: DesignElement = {
+  ...designElement_besideIcon_1,
+  id: 'element_beside-icon_3',
+  row: 16,
+};
+
+// Growing text beside the icon column, spanning all of its rows
+export const designElement_besideText: DesignElement = {
+  id: 'element_beside-text',
+  type: TestElementType,
+  column: 8,
+  row: 0,
+  columnSpan: 40,
+  rowSpan: 22,
+  widthMode: 'fluid',
+  contentFit: 'grow',
+};
+
+// Five elements arranged as a pinwheel, which no horizontal or
+// vertical line crosses without cutting one of them.
+export const designElement_pinwheel_1: DesignElement = {
+  id: 'element_pinwheel_1',
+  type: TestElementType,
+  column: 0,
+  row: 0,
+  columnSpan: 28,
+  rowSpan: 8,
+  widthMode: 'fluid',
+};
+
+export const designElement_pinwheel_2: DesignElement = {
+  id: 'element_pinwheel_2',
+  type: TestElementType,
+  column: 30,
+  row: 0,
+  columnSpan: 18,
+  rowSpan: 20,
+  widthMode: 'fluid',
+};
+
+export const designElement_pinwheel_3: DesignElement = {
+  id: 'element_pinwheel_3',
+  type: TestElementType,
+  column: 20,
+  row: 22,
+  columnSpan: 28,
+  rowSpan: 10,
+  widthMode: 'fluid',
+};
+
+export const designElement_pinwheel_4: DesignElement = {
+  id: 'element_pinwheel_4',
+  type: TestElementType,
+  column: 0,
+  row: 10,
+  columnSpan: 18,
+  rowSpan: 22,
+  widthMode: 'fluid',
+};
+
+export const designElement_pinwheel_5: DesignElement = {
+  id: 'element_pinwheel_5',
+  type: TestElementType,
+  column: 20,
+  row: 10,
+  columnSpan: 8,
+  rowSpan: 10,
+  widthMode: 'fluid',
+};

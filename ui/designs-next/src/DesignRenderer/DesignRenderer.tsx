@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
-import { Design, DesignElementConfigs, Designs } from '@minddrop/designs-next';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Design, Designs } from '@minddrop/designs-next';
 import { PropertiesSchema, PropertyMap } from '@minddrop/properties';
 import { DesignPropertiesProvider } from '../DesignPropertiesProvider';
-import { resolveVerticalStyles } from '../utils';
 import './DesignRenderer.css';
+import { LayoutBoxRenderer } from './LayoutBoxRenderer';
+import { LayoutElementRenderer } from './LayoutElementRenderer';
 
 export interface DesignRendererProps {
   /**
@@ -13,9 +14,10 @@ export interface DesignRendererProps {
 
   /**
    * The pixel width to render the design at. Worth passing when
-   * rendering multiple designs at a shared, known width so it is
-   * measured once. When omitted, the renderer fills its container
-   * and tracks the container's width.
+   * rendering multiple aspect-locked designs at a shared, known
+   * width so it is measured once. When omitted, the renderer fills
+   * its container, tracking the container's width where the design
+   * is aspect-locked.
    */
   width?: number;
 
@@ -34,10 +36,10 @@ export interface DesignRendererProps {
 }
 
 /**
- * Renders a design fluidly: each element's pixel rect is resolved
- * against the design's unit grid and rendered absolutely positioned,
- * with content-fitted elements stretching or shrinking the rows they
- * span to fit their content.
+ * Renders a design as flow: the design compiles to a tree of boxes
+ * the browser lays out in one pass, content-fitted elements taking
+ * the height their content needs. An aspect-locked design renders
+ * its elements absolutely against its width instead.
  */
 export const DesignRenderer: React.FC<DesignRendererProps> = ({
   design,
@@ -46,11 +48,14 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
   values,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const measuredNodesRef = useRef(new Map<string, HTMLDivElement>());
   const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
-  const [measuredHeights, setMeasuredHeights] = useState<
-    Record<string, number>
-  >({});
+
+  // Compile the design once per design, aspect-locked designs
+  // staying on the absolute path.
+  const tree = useMemo(
+    () => (design.aspectRatio ? null : Designs.resolveLayoutTree(design)),
+    [design],
+  );
 
   // Use the explicit width when given, the measured container width
   // otherwise.
@@ -67,15 +72,10 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
   const aspectHeight =
     aspectRatio && renderWidth !== null ? renderWidth / aspectRatio : null;
 
-  // Row pixel offsets with rows fitted to the measured element
-  // heights, driving row-laid-out designs only.
-  const rowLayout = design.aspectRatio
-    ? null
-    : Designs.resolveRowLayout(blocks, design.rows, measuredHeights);
-
-  // Measure the container's width when no explicit width is given
+  // Measure the container's width for an aspect-locked design when
+  // no explicit width is given.
   useEffect(() => {
-    if (width !== undefined) {
+    if (width !== undefined || !design.aspectRatio) {
       return;
     }
 
@@ -92,114 +92,47 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
     }
 
     return () => observer.disconnect();
-  }, [width]);
-
-  // Track fitted element heights so their rows can follow their
-  // content. Re-runs when the width arrives, since elements only
-  // render once it is known.
-  useEffect(() => {
-    const observer = new ResizeObserver((entries) => {
-      setMeasuredHeights((current) => {
-        const next = { ...current };
-        let changed = false;
-
-        // Record each observed element's rendered pixel height. A
-        // shrinking element's wrapper is capped at its block height,
-        // so the capped height is already the height it takes, and
-        // content growing behind the cap changes nothing.
-        entries.forEach((entry) => {
-          const target = entry.target as HTMLElement;
-          const elementId = target.dataset.elementId;
-
-          if (elementId && next[elementId] !== target.offsetHeight) {
-            next[elementId] = target.offsetHeight;
-            changed = true;
-          }
-        });
-
-        return changed ? next : current;
-      });
-    });
-
-    // Observe every rendered fitted element
-    measuredNodesRef.current.forEach((node) => observer.observe(node));
-
-    return () => observer.disconnect();
-  }, [design.elements, renderWidth]);
-
-  // Registers a fitted element's node for height measurement
-  function setMeasuredNode(elementId: string, node: HTMLDivElement | null) {
-    if (node) {
-      measuredNodesRef.current.set(elementId, node);
-    } else {
-      measuredNodesRef.current.delete(elementId);
-    }
-  }
+  }, [width, design.aspectRatio]);
 
   return (
     <DesignPropertiesProvider properties={properties} values={values}>
       <div
         ref={containerRef}
         className="design-renderer"
-        style={{ width, height: aspectHeight ?? rowLayout?.totalHeight }}
+        style={{ width, height: aspectHeight ?? undefined }}
       >
+        {tree && <LayoutBoxRenderer box={tree} elements={design.elements} />}
         {/* Array order doubles as paint order, later elements layer on top */}
-        {renderWidth !== null &&
+        {aspectHeight !== null &&
           blocks.map((element) => {
-            // Look up the element's renderer, skipping unregistered types
-            const ElementComponent = DesignElementConfigs.get(
-              element.type,
-              false,
-            )?.component;
-
-            if (!ElementComponent) {
-              return null;
-            }
-
-            // Resolve the element's pixel rect at the render width
+            // Resolve the element's pixel rect at the render width and
+            // the card height.
             const rect = Designs.resolveElementRect(
               element,
               blocks,
               design.columns,
-              renderWidth,
+              renderWidth as number,
+            );
+            const verticalRect = Designs.resolveVerticalElementRect(
+              element,
+              blocks,
+              design.rows,
+              aspectHeight,
             );
 
-            // Whether the element's height follows its content, which
-            // is measured outside aspect-locked designs.
-            const fitted =
-              element.contentFit !== undefined &&
-              element.contentFit !== 'fixed' &&
-              aspectHeight === null;
-
             return (
-              <div
+              <LayoutElementRenderer
                 key={element.id}
-                ref={
-                  fitted
-                    ? (node) => setMeasuredNode(element.id, node)
-                    : undefined
-                }
-                data-element-id={element.id}
-                className="design-renderer-element"
+                element={element}
+                elements={design.elements}
                 style={{
+                  position: 'absolute',
                   left: rect.left,
                   width: rect.width,
-                  ...resolveVerticalStyles(
-                    element,
-                    design,
-                    aspectHeight,
-                    rowLayout,
-                  ),
+                  top: verticalRect.top,
+                  height: verticalRect.height,
                 }}
-              >
-                <ElementComponent
-                  element={element}
-                  childElements={Designs.resolveChildElements(
-                    design.elements,
-                    element.id,
-                  )}
-                />
-              </div>
+              />
             );
           })}
       </div>

@@ -6,3 +6,4 @@ export * from './DesignElementProps.types';
 export * from './DesignElementSettings.types';
 export * from './DesignElementSettingControl.types';
 export * from './DesignElementGroup.types';
+export * from './LayoutBox.types';

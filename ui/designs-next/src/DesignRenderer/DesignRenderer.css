@@ -3,10 +3,28 @@
   width: 100%;
 }
 
-.design-renderer-element {
-  position: absolute;
-  /* Stretch element components to the wrapper's height, including
-     the min-height of growing elements, which a percentage height
-     cannot resolve against. */
+/* Bands stacked top to bottom, each as tall as its content */
+.design-renderer-rows {
   display: flex;
+  flex-direction: column;
+}
+
+.design-renderer-spacer {
+  flex: none;
+}
+
+/* Stretch element components to the wrapper's height, including
+   the min-height of growing elements, which a percentage height
+   cannot resolve against. */
+.design-renderer-element {
+  display: flex;
+}
+
+/* An atomic box positions its elements against itself */
+.design-renderer-atom {
+  position: relative;
+}
+
+.design-renderer-atom > .design-renderer-element {
+  position: absolute;
 }
