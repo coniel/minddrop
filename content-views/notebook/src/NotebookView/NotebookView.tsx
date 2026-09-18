@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Collections } from '@minddrop/collections';
 import {
   ContentViewTypeComponentProps,
   ContentViews,
 } from '@minddrop/content-views';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { DatabaseEntryRenderer } from '@minddrop/feature-databases';
-import { AddCollectionEntryButton } from '@minddrop/ui-components';
+import { AddContentButton, AddedContent } from '@minddrop/ui-components';
 import {
   ContentViewFilterMenu,
   ContentViewSortMenu,
@@ -125,6 +126,18 @@ export const NotebookViewComponent: React.FC<
     [view.id, setSelectedEntryId],
   );
 
+  // Handle adding content to the notebook
+  const handleContentAdded = useCallback(
+    async (content: AddedContent) => {
+      // Add the content to the notebook's collection
+      await Collections.addItems(view.dataSource.id, [content.id]);
+
+      // Select it and bring it forward
+      handleEntryAdded({ id: content.id });
+    },
+    [view.dataSource.id, handleEntryAdded],
+  );
+
   // Renders a list row for an entry
   const renderListItem = useCallback(
     (entryId: string) => (
@@ -167,11 +180,9 @@ export const NotebookViewComponent: React.FC<
 
               {/* Collection sources also support adding existing entries */}
               {view.dataSource.type === 'collection' ? (
-                <AddCollectionEntryButton
-                  collectionId={view.dataSource.id}
-                  database={false}
-                  onCreateEntry={handleEntryAdded}
-                  onAddEntry={handleEntryAdded}
+                <AddContentButton
+                  excludeIds={entries}
+                  onAdd={handleContentAdded}
                   size="md"
                   variant="ghost"
                 />

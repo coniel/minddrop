@@ -1,8 +1,7 @@
 import {
-  AddExistingEntryDataKey,
+  AddContentDataKey,
   DatabaseEntriesDataKey,
   NewDatabaseEntriesDataKey,
-  NewEntryPickerDataKey,
 } from '@minddrop/ui-databases';
 import { CanvasViewData } from './types';
 
@@ -31,6 +30,5 @@ export const UNPLACED_SECTION_GAP = 100;
 export const CANVAS_ACCEPTED_DATA_TYPES = [
   DatabaseEntriesDataKey,
   NewDatabaseEntriesDataKey,
-  AddExistingEntryDataKey,
-  NewEntryPickerDataKey,
+  AddContentDataKey,
 ];

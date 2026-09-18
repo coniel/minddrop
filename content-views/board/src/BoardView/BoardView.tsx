@@ -18,17 +18,15 @@ import {
 } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import {
-  dropContainsAddExistingEntryCard,
-  dropContainsNewEntryPickerCard,
+  dropContainsAddContentCard,
   getDroppedEntryIds,
   getDroppedNewEntryDatabaseIds,
 } from '@minddrop/feature-databases';
 import { DropEventData } from '@minddrop/selection';
+import { AddContentPicker, AddedContent } from '@minddrop/ui-components';
 import { ContentViewSettingsMenu } from '@minddrop/ui-content-views';
 import {
-  ContentViewEntryPicker,
   ContentViewFloatingToolbar,
-  ContentViewNewEntryPicker,
   DatabaseEntryContextProvider,
 } from '@minddrop/ui-databases';
 import { FlexDropContainer } from '@minddrop/ui-drag-and-drop';
@@ -45,12 +43,6 @@ import {
 import './BoardView.css';
 
 interface EntryPickerState {
-  /**
-   * The picker to render: an existing entry picker or a new
-   * entry picker.
-   */
-  type: 'existing' | 'new';
-
   /**
    * The index of the column the picker is in.
    */
@@ -230,12 +222,9 @@ export const BoardViewComponent: React.FC<
           ? rawTargetEntryIndex - 1
           : rawTargetEntryIndex;
 
-      // Picker cards spawn their picker at the drop position
-      const pickerType = droppedPickerType(data);
-
-      if (pickerType) {
+      // Picker cards spawn the picker at the drop position
+      if (dropContainsAddContentCard(data)) {
         setEntryPicker({
-          type: pickerType,
           columnIndex: targetColumnIndex,
           entryIndex: targetEntryIndex,
           isNewColumn: false,
@@ -286,17 +275,14 @@ export const BoardViewComponent: React.FC<
   // Handle dropping between columns to create a new column
   const handleColumnLayoutDrop = useCallback(
     async (data: DropEventData, _containerId: string, gapIndex: number) => {
-      // Picker cards spawn their picker in a new column
-      const pickerType = droppedPickerType(data);
-
-      if (pickerType) {
+      // Picker cards spawn the picker in a new column
+      if (dropContainsAddContentCard(data)) {
         const updated = [...reconciledColumns];
 
         updated.splice(gapIndex, 0, []);
 
         updateColumns(updated);
         setEntryPicker({
-          type: pickerType,
           columnIndex: gapIndex,
           entryIndex: 0,
           isNewColumn: true,
@@ -347,109 +333,66 @@ export const BoardViewComponent: React.FC<
     [reconciledColumns, updateColumns],
   );
 
-  // Place a picked entry at the picker position and add it to
-  // the board's collection.
-  const addPickedEntry = useCallback(
-    async (entryId: string, picker: EntryPickerState) => {
-      // Place the entry before adding it to the collection, otherwise
-      // it is briefly reconciled into the first column.
+  // Place added content at the picker position and add it to the
+  // board's collection.
+  const addContent = useCallback(
+    async (content: AddedContent, picker: EntryPickerState) => {
+      // Place the content before adding it to the collection,
+      // otherwise it is briefly reconciled into the first column.
       updateColumns(
         placeEntryInColumn(
           reconciledColumns,
-          entryId,
+          content.id,
           picker.columnIndex,
           picker.entryIndex,
         ),
       );
 
-      await Collections.addItems(view.dataSource.id, [entryId]);
+      // Ask a newly created entry's card to bring itself forward.
+      // The drop position may only have partially fit it on screen.
+      if (content.created) {
+        DatabaseEntries.requestFocus(content.id, { viewId: view.id });
+      }
+
+      // Add the content to the board's collection
+      await Collections.addItems(view.dataSource.id, [content.id]);
     },
-    [reconciledColumns, updateColumns, view.dataSource.id],
+    [reconciledColumns, updateColumns, view.id, view.dataSource.id],
   );
 
-  // Handle picking an existing entry, replacing the picker
-  const handleEntryPickerSelect = useCallback(
-    async (entryId: string) => {
+  // Handle adding content, replacing the picker
+  const handleContentAdded = useCallback(
+    async (content: AddedContent) => {
       if (!entryPicker) {
         return;
       }
 
+      // Close the picker
       setEntryPicker(null);
 
-      await addPickedEntry(entryId, entryPicker);
+      // Place the content where the picker was
+      await addContent(content, entryPicker);
     },
-    [entryPicker, addPickedEntry],
+    [entryPicker, addContent],
   );
 
-  // Handle picking an entry while keeping the picker open: the
-  // entry lands above the picker, shifting it down a slot.
-  const handleEntryPickerSecondarySelect = useCallback(
-    async (entryId: string) => {
+  // Handle adding content while keeping the picker open
+  const handleContentSecondaryAdded = useCallback(
+    async (content: AddedContent) => {
       if (!entryPicker) {
         return;
       }
 
+      // Move the picker down a slot, making room for the content
       setEntryPicker({
         ...entryPicker,
         entryIndex: entryPicker.entryIndex + 1,
       });
 
-      await addPickedEntry(entryId, entryPicker);
+      // Place the content where the picker was
+      await addContent(content, entryPicker);
     },
-    [entryPicker, addPickedEntry],
-  );
-
-  // Handle picking a database to create a new entry in, replacing
-  // the picker.
-  const handleNewEntryPickerSelect = useCallback(
-    async (databaseId: DatabaseId, templateId?: string) => {
-      if (!entryPicker) {
-        return;
-      }
-
-      setEntryPicker(null);
-
-      await createEntry(
-        databaseId,
-        (entryId) =>
-          placeEntryInColumn(
-            reconciledColumns,
-            entryId,
-            entryPicker.columnIndex,
-            entryPicker.entryIndex,
-          ),
-        templateId,
-      );
-    },
-    [entryPicker, createEntry, reconciledColumns],
-  );
-
-  // Handle picking a database while keeping the picker open: the
-  // new entry lands above the picker, shifting it down a slot.
-  const handleNewEntryPickerSecondarySelect = useCallback(
-    async (databaseId: DatabaseId, templateId?: string) => {
-      if (!entryPicker) {
-        return;
-      }
-
-      setEntryPicker({
-        ...entryPicker,
-        entryIndex: entryPicker.entryIndex + 1,
-      });
-
-      await createEntry(
-        databaseId,
-        (entryId) =>
-          placeEntryInColumn(
-            reconciledColumns,
-            entryId,
-            entryPicker.columnIndex,
-            entryPicker.entryIndex,
-          ),
-        templateId,
-      );
-    },
-    [entryPicker, createEntry, reconciledColumns],
+    [entryPicker, addContent],
   );
 
   // Handle dismissing the picker without a selection
@@ -481,27 +424,13 @@ export const BoardViewComponent: React.FC<
       return undefined;
     }
 
-    // New entry picker for creating an entry at the picker position
-    if (entryPicker.type === 'new') {
-      return (
-        <ContentViewNewEntryPicker
-          scrollIntoView
-          className="board-view-picker"
-          onSelect={handleNewEntryPickerSelect}
-          onSecondarySelect={handleNewEntryPickerSecondarySelect}
-          onDismiss={handleEntryPickerDismiss}
-        />
-      );
-    }
-
-    // Existing entry picker for adding an entry to the board
     return (
-      <ContentViewEntryPicker
+      <AddContentPicker
         scrollIntoView
         className="board-view-picker"
         excludeIds={entries}
-        onSelect={handleEntryPickerSelect}
-        onSecondarySelect={handleEntryPickerSecondarySelect}
+        onAdd={handleContentAdded}
+        onSecondaryAdd={handleContentSecondaryAdded}
         onDismiss={handleEntryPickerDismiss}
       />
     );
@@ -583,21 +512,4 @@ function toolbarCardTemplateId(
   const exists = Boolean(DatabaseEntryTemplates.get(templateId, false));
 
   return exists ? templateId : undefined;
-}
-
-// Resolve the type of picker card contained in a drop, if any
-function droppedPickerType(
-  data: DropEventData,
-): EntryPickerState['type'] | null {
-  // Add existing entry cards spawn the existing entry picker
-  if (dropContainsAddExistingEntryCard(data)) {
-    return 'existing';
-  }
-
-  // New entry cards spawn the new entry picker
-  if (dropContainsNewEntryPickerCard(data)) {
-    return 'new';
-  }
-
-  return null;
 }

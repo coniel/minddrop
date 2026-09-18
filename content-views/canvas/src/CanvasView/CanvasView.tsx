@@ -13,8 +13,7 @@ import {
 import { Events } from '@minddrop/events';
 import {
   DatabaseEntryRenderer,
-  dropContainsAddExistingEntryCard,
-  dropContainsNewEntryPickerCard,
+  dropContainsAddContentCard,
   getDroppedEntryIds,
   getDroppedNewEntryDatabaseIds,
 } from '@minddrop/feature-databases';
@@ -37,11 +36,10 @@ import {
   useCanvasStore,
   useFitOnNodesReady,
 } from '@minddrop/ui-canvas';
+import { AddContentPicker, AddedContent } from '@minddrop/ui-components';
 import { ContentViewSettingsMenu } from '@minddrop/ui-content-views';
 import {
-  ContentViewEntryPicker,
   ContentViewFloatingToolbar,
-  ContentViewNewEntryPicker,
   DatabaseEntryContextProvider,
 } from '@minddrop/ui-databases';
 import { getTransferData, uuid } from '@minddrop/utils';
@@ -71,12 +69,6 @@ import {
 import './CanvasView.css';
 
 interface EntryPickerState {
-  /**
-   * The picker to render: an existing entry picker or a new
-   * entry picker.
-   */
-  type: 'existing' | 'new';
-
   /**
    * The picker's horizontal position in canvas coordinates.
    */
@@ -589,12 +581,9 @@ const CanvasViewContent: React.FC<
         data: getTransferData(event),
       };
 
-      // Picker cards spawn their picker at the drop position
-      const pickerType = droppedPickerType(data);
-
-      if (pickerType) {
+      // Picker cards spawn the picker at the drop position
+      if (dropContainsAddContentCard(data)) {
         setEntryPicker({
-          type: pickerType,
           x: Math.round(canvasPoint.x - DEFAULT_NODE_WIDTH / 2),
           y: Math.round(canvasPoint.y),
         });
@@ -640,84 +629,63 @@ const CanvasViewContent: React.FC<
     [],
   );
 
-  // Place a picked entry at the picker position and add it to
-  // the canvas's collection.
-  const addPickedEntry = useCallback(
-    async (entryId: string, picker: EntryPickerState) => {
-      // Place the entry before adding it to the collection, otherwise
-      // it is briefly reconciled into the auto-placed grid.
+  // Place added content at the picker position and add it to the
+  // canvas's collection.
+  const addContent = useCallback(
+    async (content: AddedContent, picker: EntryPickerState) => {
+      // Place the content before adding it to the collection,
+      // otherwise it is briefly reconciled into the auto-placed
+      // grid.
       updateNodes(
-        placeEntryNode(reconciledNodes, entryId, pickerPoint(picker)),
+        placeEntryNode(reconciledNodes, content.id, pickerPoint(picker)),
       );
 
-      await Collections.addItems(view.dataSource.id, [entryId]);
+      // Focus a newly created entry's editor once its node mounts.
+      // The node is placed where the user asked for it, so it needs
+      // no revealing.
+      if (content.created) {
+        DatabaseEntries.requestFocus(content.id, { viewId: view.id });
+      }
+
+      // Add the content to the canvas's collection
+      await Collections.addItems(view.dataSource.id, [content.id]);
     },
-    [reconciledNodes, updateNodes, pickerPoint, view.dataSource.id],
+    [reconciledNodes, updateNodes, pickerPoint, view.id, view.dataSource.id],
   );
 
-  // Handle picking an existing entry, replacing the picker
-  const handleEntryPickerSelect = useCallback(
-    async (entryId: string) => {
+  // Handle adding content, replacing the picker
+  const handleContentAdded = useCallback(
+    async (content: AddedContent) => {
       if (!entryPicker) {
         return;
       }
 
+      // Close the picker
       setEntryPicker(null);
 
-      await addPickedEntry(entryId, entryPicker);
+      // Place the content where the picker was
+      await addContent(content, entryPicker);
     },
-    [entryPicker, addPickedEntry],
+    [entryPicker, addContent],
   );
 
-  // Handle picking an entry while keeping the picker open: the
-  // entry lands at the picker position, moving the picker down.
-  const handleEntryPickerSecondarySelect = useCallback(
-    async (entryId: string) => {
+  // Handle adding content while keeping the picker open
+  const handleContentSecondaryAdded = useCallback(
+    async (content: AddedContent) => {
       if (!entryPicker) {
         return;
       }
 
+      // Move the picker down, making room for the content
       setEntryPicker({
         ...entryPicker,
         y: entryPicker.y + ESTIMATED_NODE_HEIGHT + NODE_GAP,
       });
 
-      await addPickedEntry(entryId, entryPicker);
+      // Place the content where the picker was
+      await addContent(content, entryPicker);
     },
-    [entryPicker, addPickedEntry],
-  );
-
-  // Handle picking a database to create a new entry in, replacing
-  // the picker.
-  const handleNewEntryPickerSelect = useCallback(
-    async (databaseId: DatabaseId, templateId?: string) => {
-      if (!entryPicker) {
-        return;
-      }
-
-      setEntryPicker(null);
-
-      await createEntry(databaseId, pickerPoint(entryPicker), templateId);
-    },
-    [entryPicker, createEntry, pickerPoint],
-  );
-
-  // Handle picking a database while keeping the picker open: the
-  // new entry lands at the picker position, moving the picker down.
-  const handleNewEntryPickerSecondarySelect = useCallback(
-    async (databaseId: DatabaseId, templateId?: string) => {
-      if (!entryPicker) {
-        return;
-      }
-
-      setEntryPicker({
-        ...entryPicker,
-        y: entryPicker.y + ESTIMATED_NODE_HEIGHT + NODE_GAP,
-      });
-
-      await createEntry(databaseId, pickerPoint(entryPicker), templateId);
-    },
-    [entryPicker, createEntry, pickerPoint],
+    [entryPicker, addContent],
   );
 
   // Handle dismissing the picker without a selection
@@ -739,20 +707,12 @@ const CanvasViewContent: React.FC<
           width: DEFAULT_NODE_WIDTH,
         }}
       >
-        {entryPicker.type === 'new' ? (
-          <ContentViewNewEntryPicker
-            onSelect={handleNewEntryPickerSelect}
-            onSecondarySelect={handleNewEntryPickerSecondarySelect}
-            onDismiss={handleEntryPickerDismiss}
-          />
-        ) : (
-          <ContentViewEntryPicker
-            excludeIds={entries}
-            onSelect={handleEntryPickerSelect}
-            onSecondarySelect={handleEntryPickerSecondarySelect}
-            onDismiss={handleEntryPickerDismiss}
-          />
-        )}
+        <AddContentPicker
+          excludeIds={entries}
+          onAdd={handleContentAdded}
+          onSecondaryAdd={handleContentSecondaryAdded}
+          onDismiss={handleEntryPickerDismiss}
+        />
       </div>
     );
   }
@@ -846,21 +806,4 @@ function toolbarCardTemplateId(
   const exists = Boolean(DatabaseEntryTemplates.get(templateId, false));
 
   return exists ? templateId : undefined;
-}
-
-// Resolve the type of picker card contained in a drop, if any
-function droppedPickerType(
-  data: DropEventData,
-): EntryPickerState['type'] | null {
-  // Add existing entry cards spawn the existing entry picker
-  if (dropContainsAddExistingEntryCard(data)) {
-    return 'existing';
-  }
-
-  // New entry cards spawn the new entry picker
-  if (dropContainsNewEntryPickerCard(data)) {
-    return 'new';
-  }
-
-  return null;
 }

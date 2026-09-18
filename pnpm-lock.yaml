@@ -227,6 +227,9 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
+      '@minddrop/ui-components':
+        specifier: workspace:*
+        version: link:../../ui/components
       '@minddrop/ui-content-views':
         specifier: workspace:*
         version: link:../../ui/content-views
@@ -288,6 +291,9 @@ importers:
       '@minddrop/ui-canvas':
         specifier: workspace:*
         version: link:../../ui/canvas
+      '@minddrop/ui-components':
+        specifier: workspace:*
+        version: link:../../ui/components
       '@minddrop/ui-content-views':
         specifier: workspace:*
         version: link:../../ui/content-views
