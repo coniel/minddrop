@@ -175,6 +175,12 @@ export type SetViewAreaEventData = {
   viewAreaId: string;
 
   /**
+   * The id of the session the state belongs to, or null for state
+   * belonging to no session.
+   */
+  sessionId?: string | null;
+
+  /**
    * The view rendered in the main (left) pane, or null when empty.
    */
   main: ViewDescriptor | null;

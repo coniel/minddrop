@@ -6,12 +6,14 @@ const mainView: ViewDescriptor = { view: 'test:view', id: 'main-view' };
 const splitView: ViewDescriptor = { view: 'test:view', id: 'split-view' };
 
 const splitState: ViewAreaState = {
+  sessionId: 'view-session_1',
   main: mainView,
   split: splitView,
   splitRatio: 60,
 };
 
 const unsplitState: ViewAreaState = {
+  sessionId: 'view-session_1',
   main: mainView,
   split: null,
   splitRatio: 50,

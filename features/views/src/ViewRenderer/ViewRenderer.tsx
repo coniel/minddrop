@@ -17,6 +17,7 @@ interface ViewRendererProps {
 }
 
 const INITIAL_STATE: ViewAreaState = {
+  sessionId: null,
   main: null,
   split: null,
   splitRatio: Views.constants.DefaultSplitRatio,
@@ -32,9 +33,6 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const stateRef = useRef<ViewAreaState>(INITIAL_STATE);
   const [state, setState] = useState<ViewAreaState>(INITIAL_STATE);
-
-  // The active session, used to remount views and scope their transient
-  // state when switching sessions.
   const activeSessionId = ViewSessions.useActiveId(viewAreaId);
 
   // Apply a new state, optionally announcing the change so listeners
@@ -90,7 +88,12 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
 
       // Apply the incoming state
       applyState(
-        { main: data.main, split: data.split, splitRatio: data.splitRatio },
+        {
+          sessionId: data.sessionId ?? null,
+          main: data.main,
+          split: data.split,
+          splitRatio: data.splitRatio,
+        },
         true,
       );
     });
@@ -110,7 +113,15 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
   const handleCloseMain = useCallback(() => {
     const current = stateRef.current;
 
-    applyState({ main: current.split, split: null, splitRatio: 50 }, true);
+    applyState(
+      {
+        ...current,
+        main: current.split,
+        split: null,
+        splitRatio: 50,
+      },
+      true,
+    );
   }, [applyState]);
 
   // Close the split (right) pane
@@ -126,6 +137,7 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
 
     applyState(
       {
+        ...current,
         main: current.split,
         split: current.main,
         splitRatio: 100 - current.splitRatio,
@@ -180,6 +192,13 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
 
   const { main, split, splitRatio } = state;
 
+  // The session the rendered views belong to. Restored state names
+  // its own session, so that the views and the session they render
+  // under change together rather than a moment apart. State opened
+  // into a view area which has no session yet names none, and
+  // belongs to the active session by default.
+  const sessionId = state.sessionId ?? activeSessionId;
+
   // Render an empty area when there is no main view
   if (!main) {
     return <div className="view-area" />;
@@ -196,9 +215,9 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
           style={{ flex: splitRatio }}
         >
           <SessionPane
-            key={viewInstanceKey(activeSessionId, main)}
+            key={viewInstanceKey(sessionId, main)}
             viewAreaId={viewAreaId}
-            sessionId={activeSessionId}
+            sessionId={sessionId}
             pane="main"
             descriptor={main}
           />
@@ -216,9 +235,9 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
           style={{ flex: 100 - splitRatio }}
         >
           <SessionPane
-            key={viewInstanceKey(activeSessionId, split)}
+            key={viewInstanceKey(sessionId, split)}
             viewAreaId={viewAreaId}
-            sessionId={activeSessionId}
+            sessionId={sessionId}
             pane="split"
             descriptor={split}
           />
@@ -230,9 +249,9 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
   return (
     <div className="view-area">
       <SessionPane
-        key={viewInstanceKey(activeSessionId, main)}
+        key={viewInstanceKey(sessionId, main)}
         viewAreaId={viewAreaId}
-        sessionId={activeSessionId}
+        sessionId={sessionId}
         pane="main"
         descriptor={main}
       />

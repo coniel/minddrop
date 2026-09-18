@@ -2,6 +2,12 @@ import { OpenViewEventData, ViewDescriptor, Views } from '@minddrop/views';
 
 export interface ViewAreaState {
   /**
+   * The id of the session the state was restored from, or null when
+   * it belongs to no session.
+   */
+  sessionId: string | null;
+
+  /**
    * The view shown in the main (left) pane, or null when empty.
    */
   main: ViewDescriptor | null;
@@ -63,6 +69,7 @@ export function applyOpenView(
 
   // Opens from outside a pane replace the view area as a whole
   return {
+    ...current,
     main: descriptor,
     split: null,
     splitRatio: Views.constants.DefaultSplitRatio,

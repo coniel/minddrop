@@ -9,13 +9,13 @@ import { toSessionView } from '../toSessionView';
 import { updateViewSessionSet } from '../updateViewSessionSet';
 
 /**
- * Records the current view area state onto the active session, pushing
+ * Records a view area state onto the session it belongs to, pushing
  * the session's previous state onto its back history when the state
- * is a new navigation. Creates an active session first when none
- * exists.
+ * is a new navigation. State belonging to no session is recorded onto
+ * the active one, creating it first when none exists.
  *
  * @param viewAreaId - The id of the view area.
- * @param state - The current view area state.
+ * @param state - The view area state to record.
  */
 export function recordViewArea(
   viewAreaId: string,
@@ -25,23 +25,34 @@ export function recordViewArea(
   let sessions = set.sessions;
   let activeSessionId = set.activeSessionId;
 
-  // Ensure there is an active session to record onto
+  // State belonging to a session which is gone is not recorded: the
+  // session it was announced for has since been closed.
+  if (state.sessionId && !sessions.some(({ id }) => id === state.sessionId)) {
+    return;
+  }
+
+  // The session the state belongs to, which is the active one for
+  // state announced by a view area holding no session of its own.
+  let targetSessionId = state.sessionId ?? activeSessionId;
+
+  // Ensure there is a session to record onto
   if (
-    !activeSessionId ||
-    !sessions.some((session) => session.id === activeSessionId)
+    !targetSessionId ||
+    !sessions.some((session) => session.id === targetSessionId)
   ) {
     // Generate a blank session and make it the active one
     const session = generateBlankViewSession();
 
     sessions = [...sessions, session];
+    targetSessionId = session.id;
     activeSessionId = session.id;
   }
 
-  // Record the state onto the active session, leaving the others
-  // untouched.
+  // Record the state onto the session it belongs to, leaving the
+  // others untouched.
   const nextSessions = sessions.map((session) => {
-    // Leave the non-active sessions untouched
-    if (session.id !== activeSessionId) {
+    // Leave the other sessions untouched
+    if (session.id !== targetSessionId) {
       return session;
     }
 
@@ -103,8 +114,7 @@ export function recordViewArea(
       return session;
     }
 
-    // Overwrite the active session's views and split ratio with the
-    // state.
+    // Overwrite the session's views and split ratio with the state
     return {
       ...session,
       main: toSessionView(state.main),

@@ -17,6 +17,7 @@ export function toSetViewAreaEventData(
   if (!session) {
     return {
       viewAreaId,
+      sessionId: null,
       main: null,
       split: null,
       splitRatio: DefaultSplitRatio,
@@ -26,6 +27,7 @@ export function toSetViewAreaEventData(
   // Map the session's views and split ratio onto a view area state
   return {
     viewAreaId,
+    sessionId: session.id,
     main: toDescriptor(session.main),
     split: toDescriptor(session.split),
     splitRatio: session.splitRatio,

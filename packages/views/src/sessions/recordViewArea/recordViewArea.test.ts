@@ -1,7 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { MaxHistoryLength } from '../../constants';
+import { DefaultViewName, MaxHistoryLength } from '../../constants';
 import { SetViewAreaEventData } from '../../events';
 import { ViewSessionsStore } from '../ViewSessionsStore';
+import { closeViewSession } from '../closeViewSession';
 import { createViewSession } from '../createViewSession';
 import { getViewSessionSet } from '../getViewSessionSet';
 import { goBack } from '../goBack';
@@ -54,6 +55,42 @@ describe('recordViewArea', () => {
 
     expect(sessions).toHaveLength(1);
     expect(activeSessionId).not.toBeNull();
+  });
+
+  it('records the state onto the session it belongs to', () => {
+    // Two sessions, the second of which is the active one
+    createViewSession(VIEW_AREA_ID);
+    const [first] = getViewSessionSet(VIEW_AREA_ID).sessions;
+    createViewSession(VIEW_AREA_ID);
+
+    recordViewArea(VIEW_AREA_ID, {
+      ...state({ view: 'a' }),
+      sessionId: first.id,
+    });
+
+    const { sessions, activeSessionId } = getViewSessionSet(VIEW_AREA_ID);
+
+    expect(sessions[0].main?.view).toBe('a');
+    // The active session is neither written to nor changed
+    expect(sessions[1].main?.view).toBe(DefaultViewName);
+    expect(activeSessionId).toBe(sessions[1].id);
+  });
+
+  it('does not record the state of a session which has been closed', () => {
+    createViewSession(VIEW_AREA_ID);
+    const [closed] = getViewSessionSet(VIEW_AREA_ID).sessions;
+    createViewSession(VIEW_AREA_ID);
+    closeViewSession(VIEW_AREA_ID, closed.id);
+
+    recordViewArea(VIEW_AREA_ID, {
+      ...state({ view: 'a' }),
+      sessionId: closed.id,
+    });
+
+    const { sessions } = getViewSessionSet(VIEW_AREA_ID);
+
+    expect(sessions).toHaveLength(1);
+    expect(sessions[0].main?.view).toBe(DefaultViewName);
   });
 
   it('pushes the previous state onto the back history on navigation', () => {
