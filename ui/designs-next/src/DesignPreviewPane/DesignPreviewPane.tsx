@@ -119,8 +119,11 @@ export const DesignPreviewPane: React.FC<DesignPreviewPaneProps> = ({
           scheme sits inside it, resolving against its palette. */}
       <div className={`${appearance}-theme`}>
         {/* The scheme class colours the render's schemable
-            backgrounds */}
-        <div className={renderClassName}>{children}</div>
+            backgrounds. The wrapper is sized to the layout width, which
+            the render fills. */}
+        <div className={renderClassName} style={{ width }}>
+          {children}
+        </div>
       </div>
     </DesignCanvasPane>
   );

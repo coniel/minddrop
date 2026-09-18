@@ -72,6 +72,15 @@ describe('<DesignPreviewPane />', () => {
     expect(Theme.getVariant()).toBe('light');
   });
 
+  it('sizes the render wrapper to the layout width', () => {
+    const container = renderPane();
+    const wrapper = container.querySelector(
+      '.design-preview-pane-render',
+    ) as HTMLElement;
+
+    expect(wrapper.style.width).toBe('384px');
+  });
+
   it('applies the given scheme to the render', () => {
     const container = renderPane({ scheme: 'red' });
 
