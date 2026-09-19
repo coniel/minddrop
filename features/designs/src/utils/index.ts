@@ -15,6 +15,6 @@ export * from './isValidDesignStudioDrop';
 export * from './parseBadgeLabels';
 export * from './resolveBadgeColorCss';
 export * from './listMediaImages';
-export * from './readLayoutTypeDragData';
+export * from './resolveLayoutTypeDragData';
 export * from './resolveDroppedElement';
 export * from './resolveRegionFlexStyle';

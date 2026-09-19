@@ -1,5 +1,6 @@
+import { useMemo } from 'react';
 import { DesignRoleConfig } from '@minddrop/designs';
-import { Selection } from '@minddrop/selection';
+import { DragAndDrop } from '@minddrop/drag-and-drop';
 import { PaletteItem } from '../PaletteItem';
 import { DesignRolesDataKey } from '../constants';
 
@@ -15,10 +16,16 @@ export interface RolePaletteItemProps {
  * inserts an element playing the role.
  */
 export const RolePaletteItem: React.FC<RolePaletteItemProps> = ({ role }) => {
-  const { draggableProps } = Selection.useDraggable({
+  // Build the drag data for the role
+  const data = useMemo(
+    () => ({ [DesignRolesDataKey]: [{ roleId: role.id }] }),
+    [role.id],
+  );
+  // Register the item as draggable
+  const { draggableProps } = DragAndDrop.useDraggable({
     id: `role-${role.id}`,
     type: DesignRolesDataKey,
-    data: { roleId: role.id },
+    data,
   });
 
   return (

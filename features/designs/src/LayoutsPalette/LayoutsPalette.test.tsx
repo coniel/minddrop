@@ -1,11 +1,17 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
+import { DragAndDrop } from '@minddrop/drag-and-drop';
+import {
+  cleanup as cleanupDragAndDrop,
+  dragOver,
+} from '@minddrop/drag-and-drop/test-utils';
 import { cleanup as cleanupRender, render, screen } from '@minddrop/test-utils';
 import {
   DesignStudioProvider,
   DesignStudioStore,
   createDesignStudioStore,
 } from '../DesignStudioStore';
+import { DesignLayoutTypesDataKey } from '../constants';
 import { cleanup, setup } from '../test-utils';
 import { LayoutsPalette } from './LayoutsPalette';
 
@@ -16,6 +22,7 @@ describe('<LayoutsPalette />', () => {
 
   afterEach(async () => {
     cleanupRender();
+    cleanupDragAndDrop();
     await cleanup();
   });
 
@@ -46,21 +53,23 @@ describe('<LayoutsPalette />', () => {
     expect(screen.queryByText('designs.layouts.card.label')).toBeNull();
   });
 
-  it('renders the items as draggable', () => {
+  it('drags the layout type an item stands for', () => {
     const studio = createDesignStudioStore();
 
     studio.initialize(design_books);
 
-    const { container } = renderPalette(studio);
+    renderPalette(studio);
 
-    // Every item can be picked up and dropped onto the canvas
-    const items = container.querySelectorAll('.designs-palette-item');
+    // Pick the item up
+    dragOver(screen.getByText('designs.layouts.card.label'), document.body);
 
-    expect(items.length).toBe(3);
-
-    items.forEach((item) => {
-      expect(item.getAttribute('draggable')).toBe('true');
-    });
+    expect(DragAndDrop.getActiveDrag()).toEqual(
+      expect.objectContaining({
+        data: {
+          [DesignLayoutTypesDataKey]: [{ layoutType: 'card' }],
+        },
+      }),
+    );
   });
 });
 

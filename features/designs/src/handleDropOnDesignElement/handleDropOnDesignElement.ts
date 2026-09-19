@@ -42,18 +42,17 @@ export function handleDropOnDesignElement(
     return;
   }
 
-  // If native files were dropped on an image element, handle as
-  // a placeholder image drop.
+  // Read the dropped files
+  const files = drop.data.files ?? [];
+
+  // Check if files were dropped onto an image element. If so, handle
+  // them as a placeholder image drop.
   if (
     Designs.isPropertyElement(targetElement) &&
     targetElement.propertyType === 'image' &&
-    drop.event.dataTransfer.files.length > 0
+    files.length > 0
   ) {
-    handleImageFileDrop(
-      studio,
-      targetElement.id,
-      Array.from(drop.event.dataTransfer.files),
-    );
+    handleImageFileDrop(studio, targetElement.id, files);
 
     return;
   }

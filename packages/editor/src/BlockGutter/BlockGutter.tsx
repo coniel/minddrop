@@ -1,6 +1,8 @@
-import React, { RefObject, useCallback } from 'react';
+import React, { RefObject, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
+import { DraggableProps } from '@minddrop/drag-and-drop';
 import { IconButton, propsToClass } from '@minddrop/ui-primitives';
+import { composeRefs } from '@minddrop/utils';
 import { HoveredBlock } from '../useHoveredBlock';
 import './BlockGutter.css';
 
@@ -38,15 +40,9 @@ export interface BlockGutterProps {
   onSelect: (extend: boolean) => void;
 
   /**
-   * Callback fired when the handle starts being dragged.
+   * Props making the handle the drag handle of the block.
    */
-  onDragStart: (event: React.DragEvent) => void;
-
-  /**
-   * Callback fired when the handle stops being dragged, whether or
-   * not the blocks were dropped anywhere.
-   */
-  onDragEnd: (event: React.DragEvent) => void;
+  dragHandleProps: DraggableProps;
 
   /**
    * When true, the controls are faded out without being removed,
@@ -69,10 +65,16 @@ export const BlockGutter: React.FC<BlockGutterProps> = ({
   handleRef,
   onInsert,
   onSelect,
-  onDragStart,
-  onDragEnd,
+  dragHandleProps,
   hidden = false,
 }) => {
+  // Compose the positioning ref and the drag ref, as both register
+  // on the handle.
+  const handleRefs = useMemo(
+    () => composeRefs(handleRef, dragHandleProps.ref),
+    [handleRef, dragHandleProps.ref],
+  );
+
   // The controls sit outside the editable area, so their events
   // are not stopped by it and would otherwise reach the handlers
   // of whatever the editor is rendered in.
@@ -81,8 +83,7 @@ export const BlockGutter: React.FC<BlockGutterProps> = ({
   }, []);
 
   // Keeps the cursor in the editor rather than moving it to the
-  // button. Not done for the handle, where preventing the default
-  // mouse down action would stop it ever starting a drag.
+  // button.
   const handleInsertMouseDown = useCallback((event: React.MouseEvent) => {
     event.preventDefault();
   }, []);
@@ -133,16 +134,14 @@ export const BlockGutter: React.FC<BlockGutterProps> = ({
       />
 
       <IconButton
-        draggable
-        ref={handleRef}
+        {...dragHandleProps}
+        ref={handleRefs}
         className="editor-block-gutter-handle"
         icon="grip-vertical"
         size="sm"
         variant="filled"
         label="editor.blockGutter.select"
         onClick={handleSelectClick}
-        onDragStart={onDragStart}
-        onDragEnd={onDragEnd}
       />
     </div>,
     document.body,

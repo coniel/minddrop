@@ -1,5 +1,6 @@
+import { useMemo } from 'react';
 import { PropertyElementConfig } from '@minddrop/designs';
-import { Selection } from '@minddrop/selection';
+import { DragAndDrop } from '@minddrop/drag-and-drop';
 import { PaletteItem } from '../PaletteItem';
 import { DesignPropertyElementsDataKey } from '../constants';
 
@@ -18,10 +19,18 @@ export interface PropertyElementPaletteItemProps {
 export const PropertyElementPaletteItem: React.FC<
   PropertyElementPaletteItemProps
 > = ({ config }) => {
-  const { draggableProps } = Selection.useDraggable({
+  // Build the drag data for the property element
+  const data = useMemo(
+    () => ({
+      [DesignPropertyElementsDataKey]: [{ propertyType: config.propertyType }],
+    }),
+    [config.propertyType],
+  );
+  // Register the item as draggable
+  const { draggableProps } = DragAndDrop.useDraggable({
     id: `property-element-${config.propertyType}`,
     type: DesignPropertyElementsDataKey,
-    data: { propertyType: config.propertyType },
+    data,
   });
 
   return (

@@ -254,10 +254,9 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
     onDoubleClickItem?.(item);
   }
 
-  // Render an item as a selectable list row carrying its menu,
-  // draggable when the item says what it is dragged as
-  function renderItem(item: ListPanelViewItem) {
-    const row = (
+  // Render an item as a selectable list row with its menu
+  function renderRow(item: ListPanelViewItem) {
+    return (
       <MenuItem
         muted
         size="comfortable"
@@ -271,6 +270,11 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
         onDoubleClick={() => handleDoubleClickItem(item)}
       />
     );
+  }
+
+  // Render an item's row, draggable when the item has a selection item
+  function renderItem(item: ListPanelViewItem) {
+    const row = renderRow(item);
 
     if (!item.selectionItem) {
       return <React.Fragment key={item.id}>{row}</React.Fragment>;
@@ -283,12 +287,12 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
     );
   }
 
-  // Render the row of the item a group places
+  // Render the row of the item a group places. The group item drags
+  // the row itself, so the row is not made draggable on its own.
   function renderGroupedItem(itemId: string) {
     const item = itemsById.get(itemId);
 
-    // Render the row of the item the ID names
-    return item ? renderItem(item) : null;
+    return item ? renderRow(item) : null;
   }
 
   return (

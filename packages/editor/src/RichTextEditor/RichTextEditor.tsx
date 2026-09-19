@@ -11,7 +11,7 @@ import { Editable, ReactEditor, RenderElementProps, Slate } from 'slate-react';
 import { useDebouncedCallback } from 'use-debounce';
 import { Ast, Element, Frame } from '@minddrop/ast';
 import { Selection } from '@minddrop/selection';
-import { isUntitledTitle } from '@minddrop/utils';
+import { composeRefs, isUntitledTitle } from '@minddrop/utils';
 import { BlockActionsMenu, BlockActionsMenuProps } from '../BlockActionsMenu';
 import { BlockDropIndicator } from '../BlockDropIndicator';
 import { BlockFramesProvider } from '../BlockFramesContext';
@@ -186,6 +186,8 @@ export const RichTextEditor: React.FC<EditorProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const blockGutterRef = useRef<HTMLDivElement>(null);
   const blockHandleRef = useRef<HTMLButtonElement>(null);
+  // Whether a block drag was in progress on the last render
+  const wasDraggingRef = useRef(false);
 
   // The block the actions menu is open for. The controls are held
   // against it while the menu is open, which they have to outlive:
@@ -311,11 +313,16 @@ export const RichTextEditor: React.FC<EditorProps> = ({
   const {
     dropIndicator,
     isDragging,
-    handleDragStart: handleBlockDragStart,
-    handleDragOver,
-    handleDrop,
-    handleDragEnd,
+    dragHandleProps,
+    droppableProps: containerDroppableProps,
   } = useBlockDrag(editorWithPlugins, containerRef, hoveredBlock, !readOnly);
+
+  // Compose the container's ref with the drop target's, as the
+  // container takes the blocks dropped into it.
+  const containerRefs = useMemo(
+    () => composeRefs(containerRef, containerDroppableProps.ref),
+    [containerDroppableProps.ref],
+  );
 
   // Untitled titles are shown as the placeholder instead of as content
   const resolvedTitlePlaceholder = titleIsUntitled ? title : titlePlaceholder;
@@ -654,17 +661,19 @@ export const RichTextEditor: React.FC<EditorProps> = ({
     }
   }, []);
 
-  // Ends a drag started from the controls, dropping the hovered
-  // block along with it. The block has moved, so the controls would
-  // otherwise come back against where it used to be, until the
-  // pointer next moves.
-  const handleBlockDragEnd = useCallback(
-    (event: React.DragEvent) => {
-      handleDragEnd(event);
+  // Clear the hovered block as a drag started from the controls
+  // ends. The block has moved, so the controls would otherwise come
+  // back against where it used to be, until the pointer next moves.
+  useEffect(() => {
+    // Check if a drag ended since the last render. If so, clear the
+    // hovered block.
+    if (wasDraggingRef.current && !isDragging) {
       clearHoveredBlock();
-    },
-    [handleDragEnd, clearHoveredBlock],
-  );
+    }
+
+    // Remember whether a drag is in progress for the next render
+    wasDraggingRef.current = isDragging;
+  }, [isDragging, clearHoveredBlock]);
 
   // Focus the editor on mount with the caret at the end of the
   // content, or in the title when there is no content, selecting
@@ -825,7 +834,11 @@ export const RichTextEditor: React.FC<EditorProps> = ({
         <TitleContext.Provider value={titleContextValue}>
           <BlockFramesProvider>
             <BlockSelectionContext.Provider value={selectedBlockIds}>
-              <div ref={containerRef} className="editor-container">
+              <div
+                className="editor-container"
+                {...containerDroppableProps}
+                ref={containerRefs}
+              >
                 <Editable
                   autoFocus={false}
                   readOnly={readOnly}
@@ -837,8 +850,6 @@ export const RichTextEditor: React.FC<EditorProps> = ({
                   onClick={handleClick}
                   onFocus={onFocus}
                   onBlur={handleBlur}
-                  onDragOver={handleDragOver}
-                  onDrop={handleDrop}
                 />
 
                 {/* Marks where dragged blocks would drop */}
@@ -851,8 +862,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
                   handleRef={blockHandleRef}
                   onInsert={handleInsertBlock}
                   onSelect={handleSelectBlock}
-                  onDragStart={handleBlockDragStart}
-                  onDragEnd={handleBlockDragEnd}
+                  dragHandleProps={dragHandleProps}
                   hidden={isDragging}
                 />
               </div>

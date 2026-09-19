@@ -3,6 +3,14 @@ import { Transforms } from 'slate';
 import { useSlateStatic } from 'slate-react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Ast, Element } from '@minddrop/ast';
+import {
+  DragSource,
+  cancelDragWithEscape,
+  cleanup as cleanupDragAndDrop,
+  dragOver,
+  releaseDrag,
+  setup as setupDragAndDrop,
+} from '@minddrop/drag-and-drop/test-utils';
 import { SelectionItemSerializers } from '@minddrop/selection';
 import { act, fireEvent, render } from '@minddrop/test-utils';
 import { registerBlockSelectionSerializer } from '../registerBlockSelectionSerializer';
@@ -342,6 +350,8 @@ describe('RichTextEditor value changes', () => {
 
 describe('RichTextEditor block drag and drop', () => {
   beforeEach(() => {
+    setupDragAndDrop();
+
     // Serializes the dragged blocks onto the drag's data, which is
     // what carries them between editors.
     registerBlockSelectionSerializer();
@@ -354,14 +364,15 @@ describe('RichTextEditor block drag and drop', () => {
     vi.useRealTimers();
 
     cleanup();
+    cleanupDragAndDrop();
 
     SelectionItemSerializers.unregister(BLOCK_SELECTION_ITEM_TYPE);
   });
 
   // Renders an editor and collects the values it emits. Blocks have
-  // no size in jsdom, so every drop point resolves to the top of the
-  // block dragged over; which side of a block a drop lands on is
-  // covered by the getBlockDropIndex tests.
+  // no size in the environment, so every drop point resolves to the
+  // top of the block dragged over. Which side of a block a drop
+  // lands on is covered by the getBlockDropIndex tests.
   const renderEditor = () => {
     const changeValues: Element[][] = [];
 
@@ -373,27 +384,6 @@ describe('RichTextEditor block drag and drop', () => {
     );
 
     return { ...result, changeValues };
-  };
-
-  // Stands in for the browser's drag data, which jsdom does not
-  // provide.
-  const createDataTransfer = () => {
-    const data: Record<string, string> = {};
-
-    return {
-      effectAllowed: '',
-      dropEffect: '',
-      // The written data's types, which editors the drag did not
-      // start in use to recognise a block drag.
-      get types() {
-        return Object.keys(data);
-      },
-      setData: (format: string, value: string) => {
-        data[format] = value;
-      },
-      getData: (format: string) => data[format],
-      setDragImage: () => undefined,
-    };
   };
 
   // Renders two editors and collects the values each emits, used to
@@ -419,21 +409,30 @@ describe('RichTextEditor block drag and drop', () => {
     return { ...result, firstValues, secondValues };
   };
 
+  /**
+   * Drags the hovered block by its handle over the top of the given
+   * block. A drop there lands above the block.
+   *
+   * @param handle - The hovered block's drag handle.
+   * @param block - The block to drag over.
+   */
+  const dragBlockOver = (handle: HTMLElement, block: HTMLElement) => {
+    dragOver(handle, block, { clientX: 0, clientY: 0 });
+  };
+
   it('shows the drop indicator while a block is dragged over the editor', () => {
     const { getByText, getByLabelText, baseElement } = renderEditor();
-    const dataTransfer = createDataTransfer();
 
     hoverBlock(getByText(paragraphElement1PlainText));
-    fireEvent.dragStart(getByLabelText(SELECT_LABEL), { dataTransfer });
 
     expect(
       baseElement.querySelector('.editor-block-drop-indicator'),
     ).toBeNull();
 
-    fireEvent.dragOver(getByText(headingElement1PlainText), {
-      dataTransfer,
-      clientY: 1,
-    });
+    dragBlockOver(
+      getByLabelText(SELECT_LABEL),
+      getByText(headingElement1PlainText),
+    );
 
     expect(
       baseElement.querySelector('.editor-block-drop-indicator'),
@@ -442,16 +441,17 @@ describe('RichTextEditor block drag and drop', () => {
 
   it('moves the dragged block to where it is dropped', async () => {
     const { getByText, getByLabelText, changeValues } = renderEditor();
-    const dataTransfer = createDataTransfer();
 
     // Drag the first paragraph over the heading, which drops it
     // between the second paragraph and the heading.
     hoverBlock(getByText(paragraphElement1PlainText));
-    fireEvent.dragStart(getByLabelText(SELECT_LABEL), { dataTransfer });
-    fireEvent.dragOver(getByText(headingElement1PlainText), { dataTransfer });
+    dragBlockOver(
+      getByLabelText(SELECT_LABEL),
+      getByText(headingElement1PlainText),
+    );
 
     await actFlush(() => {
-      fireEvent.drop(getByText(headingElement1PlainText), { dataTransfer });
+      releaseDrag({ clientX: 0, clientY: 0 });
     });
 
     const value = changeValues[changeValues.length - 1];
@@ -466,38 +466,34 @@ describe('RichTextEditor block drag and drop', () => {
 
   it('does not move blocks dropped where they already are', async () => {
     const { getByText, getByLabelText, changeValues } = renderEditor();
-    const dataTransfer = createDataTransfer();
 
     // Dropping above the block below it leaves it where it is
     hoverBlock(getByText(paragraphElement1PlainText));
-    fireEvent.dragStart(getByLabelText(SELECT_LABEL), { dataTransfer });
-    fireEvent.dragOver(getByText(paragraphElement2PlainText), { dataTransfer });
+    dragBlockOver(
+      getByLabelText(SELECT_LABEL),
+      getByText(paragraphElement2PlainText),
+    );
 
     await actFlush(() => {
-      fireEvent.drop(getByText(paragraphElement2PlainText), { dataTransfer });
+      releaseDrag({ clientX: 0, clientY: 0 });
     });
 
-    // Starting the drag selects the block, which emits a value of
-    // its own, so the order is what is checked rather than whether
-    // anything was emitted at all.
-    changeValues.forEach((value) => {
-      expect(Ast.toPlainText([value[0]])).toBe(paragraphElement1PlainText);
-    });
+    // Selecting the block on drag start is not a content change, so
+    // a drop which moves nothing emits nothing.
+    expect(changeValues).toHaveLength(0);
   });
 
   it('hides the drop indicator once the blocks are dropped', async () => {
     const { getByText, getByLabelText, baseElement } = renderEditor();
-    const dataTransfer = createDataTransfer();
 
     hoverBlock(getByText(paragraphElement1PlainText));
-    fireEvent.dragStart(getByLabelText(SELECT_LABEL), { dataTransfer });
-    fireEvent.dragOver(getByText(headingElement1PlainText), {
-      dataTransfer,
-      clientY: 1,
-    });
+    dragBlockOver(
+      getByLabelText(SELECT_LABEL),
+      getByText(headingElement1PlainText),
+    );
 
     await actFlush(() => {
-      fireEvent.drop(getByText(headingElement1PlainText), { dataTransfer });
+      releaseDrag({ clientX: 0, clientY: 0 });
     });
 
     expect(
@@ -505,15 +501,15 @@ describe('RichTextEditor block drag and drop', () => {
     ).toBeNull();
   });
 
-  it('leaves drags it did not start to the editor', () => {
-    const { getByText, baseElement } = renderEditor();
+  it('leaves drags of anything but blocks alone', () => {
+    const { getByText, getByTestId, baseElement } = render(
+      <>
+        <DragSource data={{ 'text/plain': 'text' }} />
+        <RichTextEditor initialValue={[headingElement1]} />
+      </>,
+    );
 
-    // No block drag was started, so this is an ordinary drag of
-    // editor content.
-    fireEvent.dragOver(getByText(headingElement1PlainText), {
-      dataTransfer: createDataTransfer(),
-      clientY: 1,
-    });
+    dragOver(getByTestId('drag-source'), getByText(headingElement1PlainText));
 
     expect(
       baseElement.querySelector('.editor-block-drop-indicator'),
@@ -522,21 +518,20 @@ describe('RichTextEditor block drag and drop', () => {
 
   it('hides the indicator when the drag moves off the editor', () => {
     const { getByText, getByLabelText, baseElement } = renderEditor();
-    const dataTransfer = createDataTransfer();
 
     hoverBlock(getByText(paragraphElement1PlainText));
-    fireEvent.dragStart(getByLabelText(SELECT_LABEL), { dataTransfer });
-    fireEvent.dragOver(getByText(headingElement1PlainText), {
-      dataTransfer,
-      clientY: 1,
-    });
+    dragBlockOver(
+      getByLabelText(SELECT_LABEL),
+      getByText(headingElement1PlainText),
+    );
 
     expect(
       baseElement.querySelector('.editor-block-drop-indicator'),
     ).not.toBeNull();
 
     // Drag over somewhere else on the page
-    fireEvent.dragOver(baseElement, { dataTransfer });
+    document.elementFromPoint = () => baseElement;
+    fireEvent.pointerMove(window, { clientX: 500, clientY: 500, buttons: 1 });
 
     expect(
       baseElement.querySelector('.editor-block-drop-indicator'),
@@ -546,16 +541,17 @@ describe('RichTextEditor block drag and drop', () => {
   it('moves blocks dropped into another editor', async () => {
     const { getByText, getByLabelText, firstValues, secondValues } =
       renderTwoEditors();
-    const dataTransfer = createDataTransfer();
 
     // Drag the first editor's first paragraph over the second
     // editor's heading.
     hoverBlock(getByText(paragraphElement1PlainText));
-    fireEvent.dragStart(getByLabelText(SELECT_LABEL), { dataTransfer });
-    fireEvent.dragOver(getByText(headingElement1PlainText), { dataTransfer });
+    dragBlockOver(
+      getByLabelText(SELECT_LABEL),
+      getByText(headingElement1PlainText),
+    );
 
     await actFlush(() => {
-      fireEvent.drop(getByText(headingElement1PlainText), { dataTransfer });
+      releaseDrag({ clientX: 0, clientY: 0 });
     });
 
     // The paragraph lands above the heading in the second editor
@@ -575,32 +571,28 @@ describe('RichTextEditor block drag and drop', () => {
 
   it('shows the drop indicator in the editor being dragged into', () => {
     const { getByText, getByLabelText, baseElement } = renderTwoEditors();
-    const dataTransfer = createDataTransfer();
 
     hoverBlock(getByText(paragraphElement1PlainText));
-    fireEvent.dragStart(getByLabelText(SELECT_LABEL), { dataTransfer });
-    fireEvent.dragOver(getByText(headingElement1PlainText), {
-      dataTransfer,
-      clientY: 1,
-    });
+    dragBlockOver(
+      getByLabelText(SELECT_LABEL),
+      getByText(headingElement1PlainText),
+    );
 
     expect(
       baseElement.querySelector('.editor-block-drop-indicator'),
     ).not.toBeNull();
   });
 
-  it('hides the other editor’s indicator when the drag ends', () => {
+  it('hides the other editor’s indicator when the drag is cancelled', () => {
     const { getByText, getByLabelText, baseElement } = renderTwoEditors();
-    const dataTransfer = createDataTransfer();
 
-    // Drag over the second editor, then end the drag without a drop
+    // Drag over the second editor, then cancel the drag
     hoverBlock(getByText(paragraphElement1PlainText));
-    fireEvent.dragStart(getByLabelText(SELECT_LABEL), { dataTransfer });
-    fireEvent.dragOver(getByText(headingElement1PlainText), {
-      dataTransfer,
-      clientY: 1,
-    });
-    fireEvent.dragEnd(getByLabelText(SELECT_LABEL), { dataTransfer });
+    dragBlockOver(
+      getByLabelText(SELECT_LABEL),
+      getByText(headingElement1PlainText),
+    );
+    cancelDragWithEscape();
 
     expect(
       baseElement.querySelector('.editor-block-drop-indicator'),
@@ -609,14 +601,15 @@ describe('RichTextEditor block drag and drop', () => {
 
   it('does not accept blocks dropped into a read-only editor', async () => {
     const { getByText, getByLabelText, secondValues } = renderTwoEditors(true);
-    const dataTransfer = createDataTransfer();
 
     hoverBlock(getByText(paragraphElement1PlainText));
-    fireEvent.dragStart(getByLabelText(SELECT_LABEL), { dataTransfer });
-    fireEvent.dragOver(getByText(headingElement1PlainText), { dataTransfer });
+    dragBlockOver(
+      getByLabelText(SELECT_LABEL),
+      getByText(headingElement1PlainText),
+    );
 
     await actFlush(() => {
-      fireEvent.drop(getByText(headingElement1PlainText), { dataTransfer });
+      releaseDrag({ clientX: 0, clientY: 0 });
     });
 
     // The read-only editor is left untouched

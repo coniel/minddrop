@@ -18,7 +18,6 @@ import { DatabaseEntryContextProvider } from '@minddrop/ui-databases';
 import {
   SortableItemRenderProps,
   SortableList,
-  useDragEdgeScroll,
 } from '@minddrop/ui-drag-and-drop';
 import { Group, ScrollArea, Stack, Text } from '@minddrop/ui-primitives';
 import { ContentColor } from '@minddrop/ui-theme';
@@ -52,7 +51,6 @@ export const KanbanViewComponent: React.FC<
   ContentViewTypeComponentProps<KanbanViewOptions, KanbanViewData>
 > = ({ view, entries }) => {
   const scrollRootRef = useRef<HTMLDivElement>(null);
-  const scrollViewportRef = useRef<HTMLDivElement>(null);
 
   // The value of the column the pointer is over, whose heading
   // shows its actions.
@@ -91,9 +89,6 @@ export const KanbanViewComponent: React.FC<
   // Subscribes to the entries so that the columns re-resolve when
   // their property values change.
   const databaseEntries = DatabaseEntries.useByIds(entries);
-
-  // Scroll the board while a dragged card hovers near its edges
-  useDragEdgeScroll(scrollViewportRef);
 
   // Resolve the saved order from view data, falling back to
   // defaults.
@@ -253,8 +248,7 @@ export const KanbanViewComponent: React.FC<
   // shows its actions. Tracked in state rather than via :hover,
   // whose CSS state goes stale over scrolled content in WebKit,
   // and because the heading and its column body sit in separate
-  // rows a plain :hover could not pair. Also fed by drag over
-  // events, since mouse events do not fire while dragging cards.
+  // rows a plain :hover could not pair.
   const handleBoardMouseMove = useCallback((event: React.MouseEvent) => {
     const target = event.target instanceof Element ? event.target : null;
 
@@ -544,7 +538,6 @@ export const KanbanViewComponent: React.FC<
   return (
     <ScrollArea
       ref={scrollRootRef}
-      viewportRef={scrollViewportRef}
       className="kanban-view-scroll"
       stateKey="content"
       endPadding={boardEndPadding}
@@ -554,7 +547,6 @@ export const KanbanViewComponent: React.FC<
         className={`kanban-view ${columnClasses}`.trim()}
         onMouseMove={handleBoardMouseMove}
         onMouseLeave={handleBoardMouseLeave}
-        onDragOver={handleBoardMouseMove}
       >
         {/** Column headings, draggable to reorder the options **/}
         <SortableList

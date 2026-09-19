@@ -170,10 +170,8 @@ export function useHoveredBlock(
         return;
       }
 
-      // A press which began on the controls is dragging the block
-      // they belong to. Dropping the block would unmount the
-      // controls, and removing a drag's source element part way
-      // through aborts the drag.
+      // Check if the press began on the controls. If so, keep them,
+      // since they stay with the block they are dragging.
       if (pressedControlsRef.current) {
         return;
       }
@@ -262,12 +260,11 @@ export function useHoveredBlock(
     // editor entirely, is seen.
     document.addEventListener('pointermove', handlePointerMove);
 
-    // A drag started from the controls has to outlive the pointer
-    // press which began it, and ends with the drag rather than with
-    // the press, which a drag swallows.
+    // Track whether a press began on the controls until it is
+    // released, since a drag started from them lasts as long as the
+    // press.
     document.addEventListener('pointerdown', handlePointerDown);
     document.addEventListener('pointerup', releaseControls);
-    document.addEventListener('dragend', releaseControls);
 
     // Typing and scrolling both move the content out from under the
     // measured position, and neither is a moment to be offering
@@ -283,7 +280,6 @@ export function useHoveredBlock(
       document.removeEventListener('pointermove', handlePointerMove);
       document.removeEventListener('pointerdown', handlePointerDown);
       document.removeEventListener('pointerup', releaseControls);
-      document.removeEventListener('dragend', releaseControls);
       container.removeEventListener('keydown', clearHoveredBlock);
       window.removeEventListener('scroll', clearHoveredBlock, true);
     };

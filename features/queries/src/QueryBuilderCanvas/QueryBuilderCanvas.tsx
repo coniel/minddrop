@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Databases } from '@minddrop/databases';
+import { DragAndDrop, DragMoveData } from '@minddrop/drag-and-drop';
 import { Queries, QueryNode, QueryNodeType } from '@minddrop/queries';
-import { Selection } from '@minddrop/selection';
+import { DropEventData, Selection } from '@minddrop/selection';
 import {
   Canvas,
   CanvasConnection,
@@ -40,12 +41,16 @@ import {
 import {
   connectQueryNodeToNearest,
   getQueryMismatchedConnectionIds,
+  resolveDroppedQueryNodeType,
 } from '../utils';
 import './QueryBuilderCanvas.css';
 
 // The maximum distance from an edge at which a dragged toolbar
 // card targets it for splicing, in canvas units.
 const SPLICE_HIT_THRESHOLD = 12;
+
+// The toolbar card data types the canvas accepts drops of
+const ACCEPTED_DATA_TYPES = [QueryNodeCardDataKey, QuerySourceCardDataKey];
 
 // The shared look of query edges: plain flow lines without
 // arrowheads.
@@ -473,72 +478,55 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
     [query, queryId],
   );
 
-  // Allow dragging toolbar cards over the canvas, highlighting
-  // the connection under a dragged node card.
-  const handleDragOver = useCallback(
-    (event: React.DragEvent) => {
-      // Node cards splice into the connection they are dropped
-      // onto, so track the edge under the drag.
-      if (Selection.dragContainsType(event, [QueryNodeCardDataKey])) {
-        event.preventDefault();
-
-        const connection = getConnectionAtPoint(
-          connections,
-          canvas.getNodes(),
-          canvas.clientToCanvas({ x: event.clientX, y: event.clientY }),
-          SPLICE_HIT_THRESHOLD,
-        );
-
-        setSpliceTargetId(connection ? connection.id : null);
-
+  // Track the connection under a dragged node card. Node cards splice
+  // into the connection they are dropped onto.
+  const handleDragMove = useCallback(
+    (move: DragMoveData) => {
+      // Ignore drags of anything but node cards
+      if (!DragAndDrop.getActiveDrag()?.types.includes(QueryNodeCardDataKey)) {
         return;
       }
 
-      // Source cards never splice, since sources take no input
-      if (Selection.dragContainsType(event, [QuerySourceCardDataKey])) {
-        event.preventDefault();
-      }
+      // Find the connection under the pointer
+      const connection = getConnectionAtPoint(
+        connections,
+        canvas.getNodes(),
+        canvas.clientToCanvas({ x: move.clientX, y: move.clientY }),
+        SPLICE_HIT_THRESHOLD,
+      );
+
+      // Highlight the connection as the splice target
+      setSpliceTargetId(connection ? connection.id : null);
     },
     [connections, canvas],
   );
 
-  // Clear the splice highlight when the drag leaves the canvas
-  const handleDragLeave = useCallback((event: React.DragEvent) => {
-    // Ignore leaves into elements within the canvas
-    if (event.currentTarget.contains(event.relatedTarget as Node)) {
-      return;
-    }
-
-    setSpliceTargetId(null);
-  }, []);
-
-  // Handle dropping a toolbar card onto the canvas
+  // Create the node a dropped toolbar card stands for at the drop
+  // position.
   const handleDrop = useCallback(
-    (event: React.DragEvent, canvasPoint: CanvasPoint) => {
-      event.preventDefault();
+    (drop: DropEventData) => {
+      // Resolve the node type the dropped card creates
+      const type = resolveDroppedQueryNodeType(drop);
+      // Convert the drop point into canvas units
+      const canvasPoint = canvas.clientToCanvas({
+        x: drop.clientX,
+        y: drop.clientY,
+      });
 
+      // Clear the splice highlight
       setSpliceTargetId(null);
 
-      // Source cards create an unconfigured source node at the
-      // drop position, showing its search.
-      if (
-        event.dataTransfer.getData(Selection.toMimeType(QuerySourceCardDataKey))
-      ) {
+      if (!type) {
+        return;
+      }
+
+      // Source cards create an unconfigured source node, showing its
+      // search. Sources take no input, so they never splice.
+      if (type === 'source') {
         addNode('source', canvasPoint);
 
         return;
       }
-
-      // Node cards create their node at the drop position
-      const typeData = event.dataTransfer.getData(
-        Selection.toMimeType(QueryNodeCardDataKey),
-      );
-
-      if (!typeData) {
-        return;
-      }
-
-      const type = JSON.parse(typeData) as QueryNodeType;
 
       // Splice the node into the highlighted connection
       if (spliceTargetId) {
@@ -547,10 +535,27 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
         return;
       }
 
+      // Create the node at the drop point
       addNode(type, canvasPoint);
     },
-    [addNode, spliceNode, spliceTargetId],
+    [canvas, addNode, spliceNode, spliceTargetId],
   );
+
+  // Register the canvas as a drop target for toolbar cards
+  const { droppableProps, isDraggingOver } = Selection.useDroppable({
+    type: 'query-builder-canvas',
+    id: queryId,
+    accepts: ACCEPTED_DATA_TYPES,
+    onDragMove: handleDragMove,
+    onDrop: handleDrop,
+  });
+
+  // Clear the splice highlight once the drag leaves the canvas
+  useEffect(() => {
+    if (!isDraggingOver) {
+      setSpliceTargetId(null);
+    }
+  }, [isDraggingOver]);
 
   // Create the node picked from the node type picker at the
   // release point and connect the released drag into it.
@@ -705,55 +710,55 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
 
   return (
     <>
-      <Canvas
-        shortcutScope="focus"
-        name={query.name}
-        namePlaceholder="queries.editor.namePlaceholder"
-        onNameChange={handleNameChange}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-        onNodesFrameChange={handleNodesFrameChange}
-        selectionToolbar={renderSelectionToolbar}
-        onSelectionDelete={handleSelectionDelete}
-      >
-        {/* The graph's connections, under the nodes */}
-        <CanvasConnectionsLayer
-          connections={connections}
-          connectionDefaults={CONNECTION_DEFAULTS}
-          dropTargetConnectionId={spliceTargetId}
-          previewStyle={PREVIEW_STYLE}
-          onConnectionReconnect={handleConnectionReconnect}
-          resolveReconnectTarget={handleResolveReconnectTarget}
-        />
-
-        {/* The graph's nodes */}
-        {query.nodes.map((node) => (
-          <CanvasNode
-            key={node.id}
-            id={node.id}
-            x={node.x}
-            y={node.y}
-            width={QUERY_NODE_WIDTHS[node.type]}
-            resizeEdges="none"
-            dragMode="handle"
-            className="query-builder-node"
-            onFrameChange={(frame) => handleNodeFrameChange(node.id, frame)}
-          >
-            {renderNodeCard(node)}
-          </CanvasNode>
-        ))}
-
-        {/* Node type picker shown when a connection drag is
-            released on the empty canvas */}
-        {nodeTypePicker && (
-          <QueryNodeTypePicker
-            point={nodeTypePicker.point}
-            onPick={handlePickNodeType}
-            onClose={handleCloseNodeTypePicker}
+      {/* Takes the toolbar cards dropped onto the canvas */}
+      <div className="query-builder-canvas-drop-target" {...droppableProps}>
+        <Canvas
+          shortcutScope="focus"
+          name={query.name}
+          namePlaceholder="queries.editor.namePlaceholder"
+          onNameChange={handleNameChange}
+          onNodesFrameChange={handleNodesFrameChange}
+          selectionToolbar={renderSelectionToolbar}
+          onSelectionDelete={handleSelectionDelete}
+        >
+          {/* The graph's connections, under the nodes */}
+          <CanvasConnectionsLayer
+            connections={connections}
+            connectionDefaults={CONNECTION_DEFAULTS}
+            dropTargetConnectionId={spliceTargetId}
+            previewStyle={PREVIEW_STYLE}
+            onConnectionReconnect={handleConnectionReconnect}
+            resolveReconnectTarget={handleResolveReconnectTarget}
           />
-        )}
-      </Canvas>
+
+          {/* The graph's nodes */}
+          {query.nodes.map((node) => (
+            <CanvasNode
+              key={node.id}
+              id={node.id}
+              x={node.x}
+              y={node.y}
+              width={QUERY_NODE_WIDTHS[node.type]}
+              resizeEdges="none"
+              dragMode="handle"
+              className="query-builder-node"
+              onFrameChange={(frame) => handleNodeFrameChange(node.id, frame)}
+            >
+              {renderNodeCard(node)}
+            </CanvasNode>
+          ))}
+
+          {/* Node type picker shown when a connection drag is
+            released on the empty canvas */}
+          {nodeTypePicker && (
+            <QueryNodeTypePicker
+              point={nodeTypePicker.point}
+              onPick={handlePickNodeType}
+              onClose={handleCloseNodeTypePicker}
+            />
+          )}
+        </Canvas>
+      </div>
 
       {/* Node cards toolbar */}
       <QueryBuilderToolbar />

@@ -1,20 +1,16 @@
 import React, { useCallback, useMemo } from 'react';
 import { EntityGroups } from '@minddrop/entity-groups';
 import { DropEventData, Selection } from '@minddrop/selection';
-import { DropIndicator, useHoveredItem } from '@minddrop/ui-drag-and-drop';
+import { DropIndicator } from '@minddrop/ui-drag-and-drop';
 import { propsToClass } from '@minddrop/ui-primitives';
-import { entityIdType } from '@minddrop/utils';
+import { composeRefs, entityIdType } from '@minddrop/utils';
 import { EntityGroupItemProvider } from '../EntityGroupItemContext';
 import { useEntityGroupList } from '../EntityGroupListContext';
 import { applyEntityGroupDrop } from '../applyEntityGroupDrop';
-import { EntityGroupSourceDataKey } from '../constants';
-import { EntityGroupDragSource } from '../types';
 import { useDraggedEntityGroupItemIds } from '../useDraggedEntityGroupItemIds';
 import {
-  resolveEntityGroupDragSource,
+  resolveEntityGroupDragSourceId,
   resolveEntityGroupDrop,
-  resolveEntityGroupDropTypes,
-  resolveEntityGroupSourceTypeKey,
 } from '../utils';
 import './EntityGroupItem.css';
 
@@ -65,8 +61,8 @@ export const EntityGroupItem: React.FC<EntityGroupItemProps> = ({
   // consumer's content acts within.
   const item = useMemo(() => ({ groupId, itemId }), [groupId, itemId]);
 
-  // A dragged entity is a selection item whose ID is the entity's,
-  // typed by the entity type its ID carries.
+  // The selection item the entity is dragged as, typed by the entity
+  // type its ID names.
   const selectionItem = useMemo(
     () => ({
       id: itemId,
@@ -76,27 +72,35 @@ export const EntityGroupItem: React.FC<EntityGroupItemProps> = ({
     [itemId],
   );
 
+  // Where a drag of the item starts from. A drop reads it to tell a
+  // reorder within the group from a move into another.
+  const origin = useMemo(() => ({ type, id: groupId }), [type, groupId]);
+
+  // Check if the group is one of the app's own. An item dragged out
+  // of one is copied rather than moved, so the group keeps listing it.
+  const isProtected = EntityGroups.isProtected(groupId, config);
+
+  // Subscribe to the group
   const group = EntityGroups.use(type, groupId);
+  // The dragged items the group type accepts
   const draggedItemIds = useDraggedEntityGroupItemIds(config);
-  const { draggableProps, isDragging } = Selection.useDraggable(selectionItem);
+  // Drag the item, as a copy out of one of the app's groups
+  const { draggableProps, isDragging } = Selection.useDraggable(selectionItem, {
+    origin,
+    effect: isProtected ? 'copy' : 'move',
+  });
 
-  // Hover is tracked here rather than left to `:hover`, which a
-  // native drag freezes and the browser does not retire. The list
-  // reorders around the drop, and the frozen state surfaces on
-  // whichever item the released DOM node is reused for.
-  const { hoveredProps } = useHoveredItem(`${groupId}:${itemId}`);
-
-  // The app's groups hold what the app puts in them, and the
-  // 'ungrouped' group lists in no order, so neither takes drops.
+  // Whether the group takes drops. The app's own groups list what the
+  // app puts in them, and the ungrouped group lists in no order, so
+  // neither does.
   const isPlaced =
-    groupId !== EntityGroups.constants.UngroupedId &&
-    !EntityGroups.isProtected(groupId, config);
+    groupId !== EntityGroups.constants.UngroupedId && !isProtected;
 
-  // An item takes drops of what the group type can hold, landing
-  // them above or below itself.
+  // Whether the item takes the drag in progress. A drop lands above
+  // or below the item.
   const acceptsDrop = isPlaced && draggedItemIds.length > 0;
 
-  // Route the drop to the model call it stands for
+  // Apply the drop to the groups
   const handleDrop = useCallback(
     (drop: DropEventData) => {
       applyEntityGroupDrop(
@@ -106,7 +110,7 @@ export const EntityGroupItem: React.FC<EntityGroupItemProps> = ({
           targetIndex: index,
           targetGroupId: groupId,
           targetItems: group?.items ?? [],
-          sourceGroupId: resolveEntityGroupDragSource(drop.event, type),
+          sourceGroupId: resolveEntityGroupDragSourceId(drop.origin, type),
           itemIds: draggedItemIds,
         }),
       );
@@ -114,6 +118,7 @@ export const EntityGroupItem: React.FC<EntityGroupItemProps> = ({
     [type, index, groupId, group, draggedItemIds],
   );
 
+  // Take drops on the item
   const { droppableProps, dropIndicatorPosition, isDraggingOver } =
     Selection.useDroppable({
       type: EntityGroups.constants.EntityType,
@@ -121,46 +126,35 @@ export const EntityGroupItem: React.FC<EntityGroupItemProps> = ({
       index,
       axis: 'vertical',
       isLastChild,
-      // The group takes over what is dragged over its items as well
+      // Let the group react to drags over its items as well
       claim: false,
-      accepts: resolveEntityGroupDropTypes(config),
       onDrop: handleDrop,
     });
 
-  // Send the group the item is dragged out of along with the drag,
-  // and mark the drag with the group's type. The group tells a drop
-  // whether it reorders the group or moves the item into another;
-  // the mark tells a drop target, before it can read the group,
-  // whether the drag is one of its own type's.
-  //
-  // Marked in the capture phase, since a consumer whose content is
-  // draggable in its own right starts the drag there and stops it
-  // from reaching this element.
-  const handleDragStartCapture = useCallback(
-    (event: React.DragEvent) => {
-      const source: EntityGroupDragSource = { type, groupId };
-
-      event.dataTransfer.setData(
-        Selection.toMimeType(EntityGroupSourceDataKey),
-        JSON.stringify(source),
-      );
-      event.dataTransfer.setData(
-        Selection.toMimeType(resolveEntityGroupSourceTypeKey(type)),
-        JSON.stringify(true),
-      );
-    },
-    [type, groupId],
+  // Compose the drag and drop refs, as both register on the item
+  const ref = useMemo(
+    () =>
+      composeRefs(draggableProps.ref, acceptsDrop ? droppableProps.ref : null),
+    [draggableProps.ref, droppableProps.ref, acceptsDrop],
   );
 
   return (
     <div
-      className={propsToClass('entity-group-item', { dragging: isDragging })}
-      {...hoveredProps}
+      className={propsToClass('entity-group-item', {
+        // Collapse the item while dragged, unless a copy of it is
+        // dragged and it stays where it is.
+        dragging: isDragging && !isProtected,
+      })}
       {...(acceptsDrop ? droppableProps : {})}
       {...draggableProps}
-      onDragStartCapture={handleDragStartCapture}
+      ref={ref}
     >
-      <EntityGroupItemProvider value={item}>{children}</EntityGroupItemProvider>
+      {/* Wrapped so that the row can be clipped as it collapses */}
+      <div className="entity-group-item-content">
+        <EntityGroupItemProvider value={item}>
+          {children}
+        </EntityGroupItemProvider>
+      </div>
       <DropIndicator
         axis="horizontal"
         show={acceptsDrop && isDraggingOver}

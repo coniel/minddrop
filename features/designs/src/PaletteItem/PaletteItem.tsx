@@ -1,3 +1,4 @@
+import { DraggableProps } from '@minddrop/drag-and-drop';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { PropertyType } from '@minddrop/properties';
 import { UiIconName } from '@minddrop/ui-icons';
@@ -9,7 +10,6 @@ import {
   usePressedState,
 } from '@minddrop/ui-primitives';
 import { propertyTypeLabelMap } from '../constants';
-import { useHoveredItem } from '../useHoveredItem';
 import './PaletteItem.css';
 
 export interface PaletteItemProps {
@@ -45,7 +45,7 @@ export interface PaletteItemProps {
   /**
    * Props spread onto the item, making it draggable.
    */
-  draggableProps: Record<string, unknown>;
+  draggableProps: DraggableProps;
 }
 
 /**
@@ -62,15 +62,11 @@ export const PaletteItem: React.FC<PaletteItemProps> = ({
 }) => {
   const { t } = useTranslation();
   const { pressedProps } = usePressedState();
-  // Items track hover themselves, since a native drag leaves browser
-  // hover state stuck on the item it started from.
-  const { hoveredProps } = useHoveredItem(`palette:${label}`);
   const isBindable = compatiblePropertyTypes.length > 0;
 
   const item = (
     <div
       className="designs-palette-item"
-      {...hoveredProps}
       {...pressedProps}
       {...draggableProps}
     >

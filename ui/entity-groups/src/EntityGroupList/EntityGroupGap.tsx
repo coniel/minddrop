@@ -16,10 +16,7 @@ import {
 } from '@minddrop/ui-primitives';
 import { useEntityGroupList } from '../EntityGroupListContext';
 import { useDraggedEntityGroupItemIds } from '../useDraggedEntityGroupItemIds';
-import {
-  resolveEntityGroupDragSource,
-  resolveEntityGroupDropTypes,
-} from '../utils';
+import { resolveEntityGroupDragSourceId } from '../utils';
 import './EntityGroupGap.css';
 
 type TriggerContextMenuHandler = NonNullable<
@@ -99,6 +96,7 @@ export const EntityGroupGap: React.FC<EntityGroupGapProps> = ({
   const [name, setName] = useState('');
   const [error, setError] = useState<TranslationKey | null>(null);
   const { config, type } = useEntityGroupList();
+  // The dragged items the group type accepts
   const draggedItemIds = useDraggedEntityGroupItemIds(config);
 
   // Whether the group above is collapsed. A missing group is looked
@@ -113,26 +111,27 @@ export const EntityGroupGap: React.FC<EntityGroupGapProps> = ({
     aboveCollapsed &&
     (belowGroupId === undefined || belowCollapsed);
 
-  // The gap takes the entities the type's groups can hold, which
-  // land in a group of their own.
+  // Whether the gap takes the drag in progress. A drop stands up a
+  // group of the dropped items.
   const acceptsDrop = draggedItemIds.length > 0;
 
+  // Emit the dropped items and the group they were dragged out of
   const handleDrop = useCallback(
     (drop: DropEventData) => {
       onDropItems(
         draggedItemIds,
         index,
-        resolveEntityGroupDragSource(drop.event, type),
+        resolveEntityGroupDragSourceId(drop.origin, type),
       );
     },
     [draggedItemIds, index, type, onDropItems],
   );
 
+  // Take drops in the gap
   const { droppableProps, isDraggingOver } = Selection.useDroppable({
     type: EntityGroups.constants.EntityType,
     id: `${type}:${index}`,
     claim: false,
-    accepts: resolveEntityGroupDropTypes(config),
     onDrop: handleDrop,
   });
 
@@ -180,10 +179,9 @@ export const EntityGroupGap: React.FC<EntityGroupGapProps> = ({
       className={propsToClass('entity-group-gap', { compact, fill })}
       {...(acceptsDrop ? droppableProps : {})}
     >
-      {/* The spacing itself, which the indicator centres in. What
-          a drop there does is said beside it: a native drag
-          suspends hover, so the tooltip is opened by the drag
-          rather than the pointer. */}
+      {/* The spacing the indicator centres in. A tooltip opened by
+          the drag rather than the pointer says what a drop there
+          does. */}
       <Tooltip
         open={acceptsDrop && isDraggingOver}
         side="right"

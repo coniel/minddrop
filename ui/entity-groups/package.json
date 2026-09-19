@@ -22,6 +22,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@minddrop/drag-and-drop": "workspace:*",
     "@minddrop/entity-groups": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/selection": "workspace:*",

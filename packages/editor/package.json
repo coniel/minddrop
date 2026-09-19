@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@minddrop/ast": "workspace:*",
+    "@minddrop/drag-and-drop": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/selection": "workspace:*",

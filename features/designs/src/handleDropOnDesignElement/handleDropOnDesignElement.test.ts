@@ -59,7 +59,9 @@ const baseEvent = {
   position: 'after',
   targetId: element_text_1.id,
   targetType: 'design-element',
-  event: new Event('drop'),
+  origin: null,
+  clientX: 0,
+  clientY: 0,
 } as unknown as DropEventData<DesignStudioDropEventData>;
 
 // An image property element, the drop target of the image file
@@ -108,10 +110,8 @@ describe('handleDropOnDesignElement', () => {
       const drop = {
         ...baseEvent,
         targetId: imageElementId,
-        event: {
-          dataTransfer: {
-            files: [new File(['data'], 'photo.png', { type: 'image/png' })],
-          },
+        data: {
+          files: [new File(['data'], 'photo.png', { type: 'image/png' })],
         },
       } as unknown as DropEventData<DesignStudioDropEventData>;
 
@@ -150,10 +150,8 @@ describe('handleDropOnDesignElement', () => {
       const drop = {
         ...baseEvent,
         targetId: imageElementId,
-        event: {
-          dataTransfer: {
-            files: [new File(['data'], 'photo.png', { type: 'image/png' })],
-          },
+        data: {
+          files: [new File(['data'], 'photo.png', { type: 'image/png' })],
         },
       } as unknown as DropEventData<DesignStudioDropEventData>;
 
@@ -181,10 +179,8 @@ describe('handleDropOnDesignElement', () => {
       const drop = {
         ...baseEvent,
         targetId: imageElementId,
-        event: {
-          dataTransfer: {
-            files: [new File(['data'], 'notes.txt', { type: 'text/plain' })],
-          },
+        data: {
+          files: [new File(['data'], 'notes.txt', { type: 'text/plain' })],
         },
       } as unknown as DropEventData<DesignStudioDropEventData>;
 

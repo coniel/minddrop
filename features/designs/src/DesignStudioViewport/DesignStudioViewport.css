@@ -1,3 +1,8 @@
+/* Takes drops for the viewport without taking part in its layout */
+.designs-studio-viewport-drop-target {
+  display: contents;
+}
+
 .designs-studio-viewport {
   /* Views render on the app surface, so the canvas matches it and
      designs are previewed on the colour they will actually sit on */

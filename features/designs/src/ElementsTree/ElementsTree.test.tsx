@@ -6,7 +6,14 @@ import {
   TextElement,
 } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
-import { Selection } from '@minddrop/selection';
+import { DragAndDrop } from '@minddrop/drag-and-drop';
+import {
+  DragGestureOptions,
+  DragSource,
+  cleanup as cleanupDragAndDrop,
+  dragAndDrop,
+  dragOver,
+} from '@minddrop/drag-and-drop/test-utils';
 import {
   cleanup as cleanupRender,
   fireEvent,
@@ -38,6 +45,7 @@ describe('<ElementsTree />', () => {
 
   afterEach(async () => {
     cleanupRender();
+    cleanupDragAndDrop();
     await cleanup();
   });
 
@@ -146,6 +154,26 @@ describe('<ElementsTree />', () => {
     expect(isExpanded(containerNode)).toBe(false);
   });
 
+  it('drags a node as its element', () => {
+    const studio = createDesignStudioStore();
+
+    studio.initialize(design_books);
+
+    renderTree(studio, layout_card_1.id);
+
+    const containerNode = screen
+      .getByText('design-studio.elements.container')
+      .closest('.designs-elements-tree-node') as HTMLElement;
+
+    // Pick the node up
+    dragOver(containerNode, document.body);
+
+    expect(DragAndDrop.getActiveDrag()).toEqual(
+      expect.objectContaining({ id: element_container_1.id }),
+    );
+    expect(containerNode).toHaveAttribute('data-dragging', 'true');
+  });
+
   it('leaves the layout root undraggable', () => {
     const studio = createDesignStudioStore();
 
@@ -154,9 +182,14 @@ describe('<ElementsTree />', () => {
     const { container } = renderTree(studio, layout_card_1.id);
 
     // The root is placed by the layout, not by the user
-    const rootNode = container.querySelector('.designs-elements-tree-node');
+    const rootNode = container.querySelector(
+      '.designs-elements-tree-node',
+    ) as HTMLElement;
 
-    expect(rootNode?.getAttribute('draggable')).toBeNull();
+    // Try to pick the root up
+    dragOver(rootNode, document.body);
+
+    expect(DragAndDrop.getActiveDrag()).toBeNull();
   });
 
   it('inserts a dropped element template into the layout root', () => {
@@ -229,11 +262,16 @@ describe('<ElementsTree />', () => {
       .getByText(layout_card_1.id)
       .closest('.designs-elements-tree-node') as HTMLElement;
 
-    dropOnNode(targetNode, {
-      [DesignElementsDataKey]: [
-        studio.getDesignElement(element_container_1.id, layout_card_1.id),
-      ],
-    });
+    // Drop on the lower half of the node. The element lands below it.
+    dropOnNode(
+      targetNode,
+      {
+        [DesignElementsDataKey]: [
+          studio.getDesignElement(element_container_1.id, layout_card_1.id),
+        ],
+      },
+      { clientX: 50, clientY: 90 },
+    );
 
     const root = studio.getDesignElement<FlatParentDesignElement>(
       'root',
@@ -303,24 +341,23 @@ function isExpanded(node: HTMLElement): boolean {
 }
 
 /**
- * Fires a drop carrying the given design studio drag data on a
- * tree node.
+ * Drags the given design studio drag data onto the node and drops
+ * it there.
+ *
+ * @param node - The tree node to drop on.
+ * @param data - The drag data.
+ * @param options - The drag gesture options.
  */
-function dropOnNode(node: HTMLElement, data: Record<string, unknown>) {
-  const serialized = Object.fromEntries(
-    Object.entries(data).map(([key, value]) => [
-      Selection.toMimeType(key),
-      JSON.stringify(value),
-    ]),
-  );
+function dropOnNode(
+  node: HTMLElement,
+  data: Record<string, unknown>,
+  options?: DragGestureOptions,
+) {
+  // Render a drag source with the data
+  const { getByTestId } = render(<DragSource data={data} />);
 
-  fireEvent.drop(node, {
-    dataTransfer: {
-      types: Object.keys(serialized),
-      getData: (type: string) => serialized[type] || '',
-      files: { length: 0 },
-    },
-  });
+  // Drag the source onto the node and drop it
+  dragAndDrop(getByTestId('drag-source'), node, options);
 }
 
 /**

@@ -20,6 +20,7 @@
     "@minddrop/collections": "workspace:*",
     "@minddrop/content-views": "workspace:*",
     "@minddrop/databases": "workspace:*",
+    "@minddrop/drag-and-drop": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/feature-content-views": "workspace:*",
     "@minddrop/feature-databases": "workspace:*",

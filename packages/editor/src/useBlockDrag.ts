@@ -1,7 +1,8 @@
-import React, {
+import {
   RefObject,
   useCallback,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -9,8 +10,12 @@ import React, {
 import { Path, Element as SlateElement } from 'slate';
 import { ReactEditor } from 'slate-react';
 import { Element } from '@minddrop/ast';
-import { Selection } from '@minddrop/selection';
-import { getTransferData } from '@minddrop/utils';
+import {
+  DragMoveData,
+  DraggableProps,
+  DroppableProps,
+} from '@minddrop/drag-and-drop';
+import { DropEventData, Selection } from '@minddrop/selection';
 import { insertBlocksAt } from './insertBlocksAt';
 import { moveBlocksTo } from './moveBlocksTo';
 import { selectBlocks } from './selectBlocks';
@@ -23,6 +28,12 @@ import {
   getSelectedBlocks,
   hasBlockId,
 } from './utils';
+
+// The drag data types an editor takes drops of
+const ACCEPTED_DATA_TYPES = [BLOCK_SELECTION_ITEM_TYPE];
+
+// A disabled editor takes drops of nothing
+const NO_DATA_TYPES: string[] = [];
 
 export interface BlockDropPosition {
   /**
@@ -56,31 +67,18 @@ export interface UseBlockDrag {
   isDragging: boolean;
 
   /**
-   * Drag start handler for the hovered block's handle.
+   * Props making the hovered block's handle the drag's handle.
    */
-  handleDragStart: (event: React.DragEvent) => void;
+  dragHandleProps: DraggableProps;
 
   /**
-   * Dragover handler for the editable area, which moves the drop
-   * indicator. Returns whether the event was consumed.
+   * Props making the editor's container a drop target for blocks.
    */
-  handleDragOver: (event: React.DragEvent) => boolean;
-
-  /**
-   * Drop handler for the editable area, which moves the dragged
-   * blocks. Returns whether the event was consumed.
-   */
-  handleDrop: (event: React.DragEvent) => boolean;
-
-  /**
-   * Drag end handler for the block being dragged, which drops the
-   * drag whether or not it ended in a move.
-   */
-  handleDragEnd: (event: React.DragEvent) => void;
+  droppableProps: DroppableProps;
 }
 
 /**
- * Drags blocks to reorder them, using native drag and drop.
+ * Drags blocks to reorder them.
  *
  * The drag goes through the app's selection, so that the blocks can
  * be dropped on anything in the app which accepts them, rather than
@@ -90,17 +88,11 @@ export interface UseBlockDrag {
  * as a move: dropping them inserts them at the indicator and removes
  * them from the editor they were dragged out of.
  *
- * The dragover and drop handlers are passed to Slate's `Editable`,
- * which skips its own handling of an event when the handler it was
- * given reports having consumed it. Events belonging to any other
- * drag, such as dragging selected text, are declined and left to
- * Slate.
- *
- * @param editor An editor instance.
- * @param containerRef A ref to the element containing the editor.
- * @param hoveredBlock The block whose handle a drag would start from.
- * @param enabled Whether blocks can be dragged.
- * @returns The drag handlers and the drop indicator's position.
+ * @param editor - An editor instance.
+ * @param containerRef - A ref to the element containing the editor.
+ * @param hoveredBlock - The block whose handle a drag would start from.
+ * @param enabled - Whether blocks can be dragged.
+ * @returns The drag props and the drop indicator's position.
  */
 export function useBlockDrag(
   editor: Editor,
@@ -108,19 +100,18 @@ export function useBlockDrag(
   hoveredBlock: HoveredBlock | null,
   enabled: boolean,
 ): UseBlockDrag {
+  const editorId = useId();
   const [dropIndicator, setDropIndicator] = useState<BlockDropPosition | null>(
     null,
   );
-  const [isDragging, setIsDragging] = useState(false);
 
   // The blocks being dragged, held outside of state because their
   // paths are only read when the drag ends.
   const draggedPathsRef = useRef<Path[] | null>(null);
 
   // The insertion point the indicator marks, also used to leave the
-  // indicator alone while it is unchanged. Dragover fires
-  // continuously, and measuring on every event is enough to make
-  // the drag stutter.
+  // indicator alone while it is unchanged. Moves fire continuously,
+  // and measuring on every one is enough to make the drag stutter.
   const dropIndexRef = useRef<number | null>(null);
 
   // The hovered block as the app's selection knows it. Blocks with
@@ -138,256 +129,203 @@ export function useBlockDrag(
     };
   }, [editor, hoveredBlock]);
 
-  const { onDragStart: startSelectionDrag, onDragEnd: endSelectionDrag } =
-    Selection.useDraggable(draggedItem);
+  // Where a drag out of this editor starts from. A drop reads it to
+  // tell a drag from this editor apart from one from another.
+  const origin = useMemo(() => ({ type: 'editor', id: editorId }), [editorId]);
 
-  // Hides the indicator without dropping the drag itself, used when
-  // the drag moves off the editor but may yet come back.
-  const clearDropIndicator = useCallback(() => {
-    dropIndexRef.current = null;
-
-    setDropIndicator(null);
-  }, []);
-
-  const clearDropTarget = useCallback(() => {
-    draggedPathsRef.current = null;
-
-    clearDropIndicator();
-  }, [clearDropIndicator]);
-
-  // The drag itself only ends on dragend, which fires after the
-  // drop. Showing the controls again on the drop would flash them
-  // up against where the dragged block used to be.
-  const endBlockDrag = useCallback(() => {
-    clearDropTarget();
-
-    setIsDragging(false);
-  }, [clearDropTarget]);
-
-  const handleDragStart = useCallback(
-    (event: React.DragEvent) => {
-      if (!enabled || !hoveredBlock) {
-        return;
-      }
-
-      const isSelected = getSelectedBlocks(editor).some(
-        ([, path]) => path[0] === hoveredBlock.path[0],
-      );
-
-      // Dragging a block outside the block selection drags it on
-      // its own, and dragging one within it drags all of it.
-      if (!isSelected) {
-        selectBlocks(editor, hoveredBlock.path, hoveredBlock.path);
-      }
-
-      const paths = getSelectedBlocks(editor).map(([, path]) => path);
-
-      // The blocks may no longer be in the document
-      if (!paths.length) {
-        return;
-      }
-
-      draggedPathsRef.current = paths;
-
-      event.dataTransfer.effectAllowed = 'move';
-
-      // Serializes the selection onto the drag, which is what lets
-      // the blocks be dropped outside the editor.
-      startSelectionDrag(event);
-
-      const block = editor.children[paths[0][0]];
-      const domNode = SlateElement.isElement(block)
-        ? getBlockDomNode(editor, block)
-        : null;
-
-      // Dragging the block itself rather than the handle it was
-      // picked up by.
-      if (domNode) {
-        event.dataTransfer.setDragImage(domNode, 0, 0);
-      }
-
-      // Set once the drag has been fully set up, the drag image
-      // among it, which fading the controls out must not disturb.
-      setIsDragging(true);
-    },
-    [editor, enabled, hoveredBlock, startSelectionDrag],
-  );
-
-  const handleDragOver = useCallback(
-    (event: React.DragEvent) => {
-      const container = containerRef.current;
-
-      if (!container) {
-        return false;
-      }
-
-      // A drag this editor did not start can still be carrying
-      // blocks dragged out of another editor.
-      const foreignBlockDrag =
-        enabled &&
-        Selection.dragContainsType(event, [BLOCK_SELECTION_ITEM_TYPE]);
-
-      // Any other drag, such as of selected text, is Slate's to
-      // handle.
-      if (!draggedPathsRef.current && !foreignBlockDrag) {
-        return false;
-      }
-
-      // Marks the editor as a place the blocks can be dropped
-      event.preventDefault();
-      event.dataTransfer.dropEffect = 'move';
-
-      const index = resolveDropIndex(editor, event);
-
-      if (index === null) {
-        return true;
-      }
-
-      // Already marking this insertion point
-      if (dropIndexRef.current === index) {
-        return true;
-      }
-
-      dropIndexRef.current = index;
-
-      setDropIndicator(measureDropPosition(editor, container, index));
-
-      return true;
-    },
-    [editor, containerRef, enabled],
-  );
-
-  const handleDrop = useCallback(
-    (event: React.DragEvent) => {
-      const paths = draggedPathsRef.current;
-      const index = dropIndexRef.current;
-
-      // Blocks dragged from this editor are moved within it
-      if (paths) {
-        event.preventDefault();
-
-        clearDropTarget();
-
-        if (index !== null) {
-          moveBlocksTo(editor, paths, index);
-        }
-
-        return true;
-      }
-
-      // Blocks cannot be dropped into a read-only editor
-      if (!enabled) {
-        return false;
-      }
-
-      // Blocks dragged from another editor arrive as elements on
-      // the drag's data.
-      const data =
-        getTransferData<
-          Partial<Record<typeof BLOCK_SELECTION_ITEM_TYPE, Element[]>>
-        >(event);
-      const elements = data[BLOCK_SELECTION_ITEM_TYPE];
-
-      // Any other drop is Slate's to handle
-      if (!elements || !elements.length) {
-        return false;
-      }
-
-      event.preventDefault();
-
-      clearDropTarget();
-
-      if (index !== null) {
-        // The drag is a move, so the blocks leave the editor they
-        // were dragged out of. The dragged blocks are the app's
-        // selection, selected when the drag began.
-        Selection.delete();
-
-        // The selection painting over the arriving blocks needs the
-        // DOM focus, taken before the insertion because Slate defers
-        // it while the editor has operations pending.
-        ReactEditor.focus(editor);
-
-        insertBlocksAt(editor, elements, index);
-      }
-
-      return true;
-    },
-    [editor, enabled, clearDropTarget],
-  );
-
-  const handleDragEnd = useCallback(
-    (event: React.DragEvent) => {
-      endBlockDrag();
-      endSelectionDrag(event);
-    },
-    [endBlockDrag, endSelectionDrag],
-  );
-
-  // The indicator only follows dragover events over the editor, so
-  // a drag moving off the editor, or ending elsewhere, has to be
-  // watched for on the document. Only drags this editor started
-  // reach the dragend handler, which is bound to the drag's source.
-  useEffect(() => {
-    // A disabled editor never shows the indicator
-    if (!enabled) {
+  // Select the blocks the drag takes as it starts. A block outside
+  // the block selection is dragged on its own, one within it drags
+  // all of it.
+  const handleActivate = useCallback(() => {
+    if (!hoveredBlock) {
       return;
     }
 
-    const clearWhenOffEditor = (event: DragEvent) => {
-      // Only relevant while the indicator is showing
-      if (dropIndexRef.current === null) {
+    // Check if the hovered block is in the block selection
+    const isSelected = getSelectedBlocks(editor).some(
+      ([, path]) => path[0] === hoveredBlock.path[0],
+    );
+
+    // Check if the block is outside the selection. If so, select it
+    // on its own.
+    if (!isSelected) {
+      selectBlocks(editor, hoveredBlock.path, hoveredBlock.path);
+    }
+
+    // Remember the dragged blocks' paths
+    draggedPathsRef.current = getSelectedBlocks(editor).map(([, path]) => path);
+  }, [editor, hoveredBlock]);
+
+  // Resolve the first dragged block's element as the preview, rather
+  // than the handle it was picked up by.
+  const resolvePreview = useCallback(() => {
+    // Read the dragged paths
+    const paths = draggedPathsRef.current;
+
+    if (!paths || !paths.length) {
+      return null;
+    }
+
+    // Read the first dragged block
+    const block = editor.children[paths[0][0]];
+
+    // Return the block's DOM node
+    return SlateElement.isElement(block)
+      ? getBlockDomNode(editor, block)
+      : null;
+  }, [editor]);
+
+  // Make the hovered block draggable by its handle
+  const { draggableProps, isDragging } = Selection.useDraggable(draggedItem, {
+    origin,
+    preview: resolvePreview,
+    disabled: !enabled || draggedItem.id === '',
+    onActivate: handleActivate,
+  });
+
+  // Hide the indicator without ending the drag
+  const clearDropIndicator = useCallback(() => {
+    // Forget the insertion point
+    dropIndexRef.current = null;
+
+    // Hide the indicator
+    setDropIndicator(null);
+  }, []);
+
+  // Move the indicator to the insertion point under the pointer
+  const handleDragMove = useCallback(
+    (move: DragMoveData) => {
+      const container = containerRef.current;
+
+      if (!container) {
         return;
       }
 
-      const container = containerRef.current;
+      // Resolve the insertion point under the pointer
+      const index = resolveDropIndex(editor, move.target, move.clientY);
 
-      // The drag has moved off the editor
-      if (container && !container.contains(event.target as Node)) {
-        clearDropIndicator();
+      // Check if the pointer is over a block and the insertion point
+      // changed. If not, leave the indicator as it is.
+      if (index === null || dropIndexRef.current === index) {
+        return;
       }
-    };
 
-    document.addEventListener('dragover', clearWhenOffEditor);
-    document.addEventListener('dragend', clearDropIndicator);
+      // Remember the insertion point
+      dropIndexRef.current = index;
 
-    return () => {
-      document.removeEventListener('dragover', clearWhenOffEditor);
-      document.removeEventListener('dragend', clearDropIndicator);
-    };
-  }, [containerRef, enabled, clearDropIndicator]);
+      // Measure the indicator's position and show it
+      setDropIndicator(measureDropPosition(editor, container, index));
+    },
+    [editor, containerRef],
+  );
+
+  // Move or insert the dropped blocks at the insertion point
+  const handleDrop = useCallback(
+    (drop: DropEventData) => {
+      // Read the dragged paths and the insertion point
+      const paths = draggedPathsRef.current;
+      const index = dropIndexRef.current;
+
+      // Hide the indicator
+      clearDropIndicator();
+
+      if (index === null) {
+        return;
+      }
+
+      // Check if the blocks were dragged from this editor. If so,
+      // move them within it.
+      if (drop.origin?.id === editorId) {
+        if (paths) {
+          moveBlocksTo(editor, paths, index);
+        }
+
+        return;
+      }
+
+      // Read the dragged blocks' elements off the drag's data
+      const data = drop.data as Partial<
+        Record<typeof BLOCK_SELECTION_ITEM_TYPE, Element[]>
+      >;
+      const elements = data[BLOCK_SELECTION_ITEM_TYPE];
+
+      if (!elements || !elements.length) {
+        return;
+      }
+
+      // Delete the dragged blocks from the editor they came from.
+      // They are the app's selection, selected as the drag began.
+      Selection.delete();
+
+      // Focus the editor before the insertion, since Slate defers
+      // focus while operations are pending. The selection over the
+      // inserted blocks needs the DOM focus.
+      ReactEditor.focus(editor);
+
+      // Insert the blocks at the insertion point
+      insertBlocksAt(editor, elements, index);
+    },
+    [editor, editorId, clearDropIndicator],
+  );
+
+  // Make the editor's container a drop target for blocks
+  const { droppableProps, isDraggingOver } = Selection.useDroppable({
+    type: 'editor',
+    id: editorId,
+    accepts: enabled ? ACCEPTED_DATA_TYPES : NO_DATA_TYPES,
+    onDragMove: handleDragMove,
+    onDrop: handleDrop,
+  });
+
+  // Hide the indicator when the drag moves off the editor or ends
+  // elsewhere, since it only follows moves over the editor.
+  useEffect(() => {
+    if (!isDraggingOver) {
+      clearDropIndicator();
+    }
+  }, [isDraggingOver, clearDropIndicator]);
+
+  // Forget the dragged paths once the drag ends
+  useEffect(() => {
+    if (!isDragging) {
+      draggedPathsRef.current = null;
+    }
+  }, [isDragging]);
 
   return {
     dropIndicator,
     isDragging,
-    handleDragStart,
-    handleDragOver,
-    handleDrop,
-    handleDragEnd,
+    dragHandleProps: draggableProps,
+    droppableProps,
   };
 }
 
 /**
  * Resolves the insertion point under the pointer.
  *
- * @param editor An editor instance.
- * @param event A dragover event.
+ * @param editor - An editor instance.
+ * @param target - The element under the pointer.
+ * @param clientY - The pointer's distance from the top of the viewport.
  * @returns The insertion index, or null if the pointer is not over a block.
  */
 function resolveDropIndex(
   editor: Editor,
-  event: React.DragEvent,
+  target: Node,
+  clientY: number,
 ): number | null {
-  const block = getBlockFromDomNode(editor, event.target as Node);
+  // Find the block under the pointer
+  const block = getBlockFromDomNode(editor, target);
 
   if (!block) {
     return null;
   }
 
+  // Resolve the insertion index from the pointer's position over the
+  // block.
   return getBlockDropIndex(
     block.path[0],
     block.domNode.getBoundingClientRect(),
-    event.clientY,
+    clientY,
     getContentStartIndex(editor),
   );
 }
@@ -411,8 +349,8 @@ function measureDropPosition(
   container: HTMLElement,
   index: number,
 ): BlockDropPosition | null {
-  const blockAboveRect = getBlockRect(editor, index - 1);
-  const blockBelowRect = getBlockRect(editor, index);
+  const blockAboveRect = resolveBlockRect(editor, index - 1);
+  const blockBelowRect = resolveBlockRect(editor, index);
 
   // The blocks either side of the insertion point decide where it
   // sits, which at the ends of the document is only one of them.
@@ -425,7 +363,7 @@ function measureDropPosition(
   const containerRect = container.getBoundingClientRect();
 
   return {
-    top: getGapCentre(blockAboveRect, blockBelowRect) - containerRect.top,
+    top: resolveGapCentre(blockAboveRect, blockBelowRect) - containerRect.top,
     left: alignedRect.left - containerRect.left,
     width: alignedRect.width,
   };
@@ -439,7 +377,7 @@ function measureDropPosition(
  * @param blockBelowRect The bounds of the block below the gap.
  * @returns The gap's centre, in pixels from the top of the viewport.
  */
-function getGapCentre(
+function resolveGapCentre(
   blockAboveRect: DOMRect | null,
   blockBelowRect: DOMRect | null,
 ): number {
@@ -461,7 +399,7 @@ function getGapCentre(
  * @param index The index of the block.
  * @returns The block's bounds, or null if there is no block rendered there.
  */
-function getBlockRect(editor: Editor, index: number): DOMRect | null {
+function resolveBlockRect(editor: Editor, index: number): DOMRect | null {
   const block = index >= 0 ? editor.children[index] : undefined;
 
   if (!block || !SlateElement.isElement(block)) {

@@ -78,28 +78,6 @@ export interface CanvasProps {
   ) => void;
 
   /**
-   * Called when data is dropped onto the canvas.
-   * @param event - The drag event.
-   * @param canvasPoint - The drop point in canvas coordinates.
-   */
-  onDrop?: (
-    event: React.DragEvent<HTMLDivElement>,
-    canvasPoint: CanvasPoint,
-  ) => void;
-
-  /**
-   * Called when data is dragged over the canvas. Call
-   * preventDefault to allow dropping.
-   */
-  onDragOver?: (event: React.DragEvent<HTMLDivElement>) => void;
-
-  /**
-   * Called when a drag leaves the canvas or one of its child
-   * elements. Check relatedTarget to tell the two apart.
-   */
-  onDragLeave?: (event: React.DragEvent<HTMLDivElement>) => void;
-
-  /**
    * Whether dragging from the empty canvas background paints a
    * selection lasso. Defaults to true.
    */
@@ -151,9 +129,6 @@ export const Canvas: React.FC<CanvasProps> = ({
   onNameChange,
   nameAccessory,
   onBackgroundMouseDown,
-  onDrop,
-  onDragOver,
-  onDragLeave,
   lasso = true,
   onNodesFrameChange,
   selectionToolbar,
@@ -527,16 +502,6 @@ export const Canvas: React.FC<CanvasProps> = ({
     setPanning(false);
   }, []);
 
-  // Wrap drops to include the drop point in canvas coordinates
-  const handleDrop = useCallback(
-    (event: React.DragEvent<HTMLDivElement>) => {
-      if (onDrop) {
-        onDrop(event, clientToCanvas(event.clientX, event.clientY));
-      }
-    },
-    [onDrop, clientToCanvas],
-  );
-
   const focusScoped = shortcutScope === 'focus';
 
   return (
@@ -557,9 +522,6 @@ export const Canvas: React.FC<CanvasProps> = ({
       onKeyDown={focusScoped ? handleReactKeyDown : undefined}
       onKeyUp={focusScoped ? handleReactKeyUp : undefined}
       onBlur={focusScoped ? handleBlur : undefined}
-      onDragOver={onDragOver}
-      onDragLeave={onDragLeave}
-      onDrop={onDrop ? handleDrop : undefined}
     >
       <div
         ref={transformLayerRef}

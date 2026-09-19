@@ -20,9 +20,7 @@
     border-color 120ms ease,
     background-color 120ms ease;
 
-  /* Hover is tracked by useHoveredItem rather than :hover, which a
-     native drag leaves stuck on the item it started from */
-  &[data-hovered='true'] {
+  &:hover {
     background-color: var(--surface-raised);
     border-color: var(--border-default);
     box-shadow: var(--shadow-sm);

@@ -42,7 +42,7 @@ import {
   ContentViewFloatingToolbar,
   DatabaseEntryContextProvider,
 } from '@minddrop/ui-databases';
-import { getTransferData, uuid } from '@minddrop/utils';
+import { uuid } from '@minddrop/utils';
 import {
   CanvasConnectionChanges,
   CanvasConnectionToolbar,
@@ -559,30 +559,18 @@ const CanvasViewContent: React.FC<
     [view.id, view.dataSource.id, reconciledNodes, updateNodes],
   );
 
-  // Allow dragging accepted data types over the canvas
-  const handleDragOver = useCallback((event: React.DragEvent) => {
-    if (Selection.dragContainsType(event, CANVAS_ACCEPTED_DATA_TYPES)) {
-      event.preventDefault();
-    }
-  }, []);
-
   // Handle dropping an entry, new entry card, or picker card onto
   // the canvas.
   const handleDrop = useCallback(
-    async (event: React.DragEvent, canvasPoint: CanvasPoint) => {
-      event.preventDefault();
-
-      // Parse the drop into the shared drop event data shape
-      const data: DropEventData = {
-        event,
-        targetType: 'canvas-view',
-        targetId: view.id,
-        position: 'inside',
-        data: getTransferData(event),
-      };
+    async (drop: DropEventData) => {
+      // Convert the drop point into canvas units
+      const canvasPoint = canvas.clientToCanvas({
+        x: drop.clientX,
+        y: drop.clientY,
+      });
 
       // Picker cards spawn the picker at the drop position
-      if (dropContainsAddContentCard(data)) {
+      if (dropContainsAddContentCard(drop)) {
         setEntryPicker({
           x: Math.round(canvasPoint.x - DEFAULT_NODE_WIDTH / 2),
           y: Math.round(canvasPoint.y),
@@ -592,7 +580,7 @@ const CanvasViewContent: React.FC<
       }
 
       // Existing entries are placed at the drop position
-      const [droppedEntryId] = getDroppedEntryIds(data);
+      const [droppedEntryId] = getDroppedEntryIds(drop);
 
       if (droppedEntryId) {
         updateNodes(
@@ -604,7 +592,7 @@ const CanvasViewContent: React.FC<
 
       // New entry cards create an entry at the drop position,
       // using the card's configured template when set.
-      const [databaseId] = getDroppedNewEntryDatabaseIds(data);
+      const [databaseId] = getDroppedNewEntryDatabaseIds(drop);
 
       if (!databaseId) {
         return;
@@ -616,8 +604,16 @@ const CanvasViewContent: React.FC<
         toolbarCardTemplateId(view.options, databaseId),
       );
     },
-    [view.id, view.options, reconciledNodes, updateNodes, createEntry],
+    [canvas, view.options, reconciledNodes, updateNodes, createEntry],
   );
+
+  // Register the canvas as a drop target for entries and toolbar cards
+  const { droppableProps } = Selection.useDroppable({
+    type: 'canvas-view',
+    id: view.id,
+    accepts: CANVAS_ACCEPTED_DATA_TYPES,
+    onDrop: handleDrop,
+  });
 
   // The picker's placement point: the canvas point its card
   // would be centered on.
@@ -718,11 +714,9 @@ const CanvasViewContent: React.FC<
   }
 
   return (
-    <div className="canvas-view floating-toolbar-host">
+    <div className="canvas-view floating-toolbar-host" {...droppableProps}>
       <Canvas
         shortcutScope="focus"
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
         onNodesFrameChange={handleNodesFrameChange}
         onSelectionDelete={handleSelectionDelete}
         selectionToolbar={renderSelectionToolbar}

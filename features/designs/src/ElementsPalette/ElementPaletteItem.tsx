@@ -1,5 +1,6 @@
+import { useMemo } from 'react';
 import { DesignElementConfig } from '@minddrop/designs';
-import { Selection } from '@minddrop/selection';
+import { DragAndDrop } from '@minddrop/drag-and-drop';
 import { PaletteItem } from '../PaletteItem';
 import { DesignElementTemplatesDataKey } from '../constants';
 
@@ -16,10 +17,16 @@ export interface ElementPaletteItemProps {
 export const ElementPaletteItem: React.FC<ElementPaletteItemProps> = ({
   config,
 }) => {
-  const { draggableProps } = Selection.useDraggable({
+  // Build the drag data for the element template
+  const data = useMemo(
+    () => ({ [DesignElementTemplatesDataKey]: [config.template] }),
+    [config.template],
+  );
+  // Register the item as draggable
+  const { draggableProps } = DragAndDrop.useDraggable({
     id: `template-${config.type}`,
     type: DesignElementTemplatesDataKey,
-    data: config.template,
+    data,
   });
 
   return (

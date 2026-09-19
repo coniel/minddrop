@@ -6,7 +6,9 @@ import { dropContainsAddContentCard } from './dropContainsAddContentCard';
 // Builds a drop event data object containing the given transfer data
 function dropEventData(data: unknown): DropEventData {
   return {
-    event: {} as React.DragEvent,
+    origin: null,
+    clientX: 0,
+    clientY: 0,
     targetType: 'board-column',
     position: 'inside',
     targetId: 'board-column-0',

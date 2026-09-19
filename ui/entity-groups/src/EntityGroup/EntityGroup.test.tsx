@@ -1,9 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import {
+  dragAndDrop,
+  dragOver,
+  releaseDrag,
+} from '@minddrop/drag-and-drop/test-utils';
 import { EntityGroups } from '@minddrop/entity-groups';
 import { EntityGroupFixtures } from '@minddrop/entity-groups/test-utils';
-import { Selection } from '@minddrop/selection';
 import {
-  act,
   fireEvent,
   render,
   screen,
@@ -12,7 +15,7 @@ import {
   within,
 } from '@minddrop/test-utils';
 import { EntityGroupList } from '../EntityGroupList';
-import { cleanup, dragDataTransfer, setup } from '../test-utils';
+import { ExternalDragSource, cleanup, setup } from '../test-utils';
 import { EntityGroupAddAction } from '../types';
 
 const {
@@ -30,20 +33,13 @@ const {
   plainItem_2,
 } = EntityGroupFixtures;
 
-let dataTransfer = dragDataTransfer();
-
 // Renders an item as its ID, for the tests to find it by
 function renderItem(itemId: string) {
   return <span data-testid={itemId}>{itemId}</span>;
 }
 
 describe('EntityGroup', () => {
-  beforeEach(() => {
-    setup();
-
-    // A fresh transfer per test, since a drag carries its own
-    dataTransfer = dragDataTransfer();
-  });
+  beforeEach(setup);
 
   afterEach(cleanup);
 
@@ -204,14 +200,13 @@ describe('EntityGroup', () => {
     expect(within(group).queryByLabelText('Options')).toBeNull();
   });
 
-  // Covers the routing from a drop to the model call it stands for.
-  // The gesture in between the drag start and the drop is not one
-  // the environment can express, and is left to end-to-end tests.
   it('moves a dropped item into the group', () => {
     init(groupTypeConfig_exclusive.id);
 
-    fireEvent.dragStart(screen.getByTestId(addressedItem_2), { dataTransfer });
-    fireEvent.drop(getGroup(entityGroup_exclusive_1.name), { dataTransfer });
+    dragAndDrop(
+      screen.getByTestId(addressedItem_2),
+      getGroup(entityGroup_exclusive_1.name),
+    );
 
     expect(
       EntityGroups.get(groupTypeConfig_exclusive.id, entityGroup_exclusive_1.id)
@@ -228,15 +223,14 @@ describe('EntityGroup', () => {
 
     const group = getGroup(entityGroup_protected.name);
 
-    fireEvent.dragStart(
+    dragOver(
       within(getGroup(entityGroup_multi_1.name)).getByTestId(plainItem_1),
-      { dataTransfer },
+      group,
     );
-    fireEvent.dragOver(group, { dataTransfer });
 
     expect(getLabel(group)).not.toHaveClass('menu-label-highlighted');
 
-    fireEvent.drop(group, { dataTransfer });
+    releaseDrag();
 
     expect(
       EntityGroups.get(groupTypeConfig_multi.id, entityGroup_protected.id)
@@ -249,8 +243,7 @@ describe('EntityGroup', () => {
 
     const group = getGroup(entityGroup_exclusive_1.name);
 
-    fireEvent.dragStart(screen.getByTestId(addressedItem_2), { dataTransfer });
-    fireEvent.dragOver(group, { dataTransfer });
+    dragOver(screen.getByTestId(addressedItem_2), group);
 
     expect(getLabel(group)).toHaveClass('menu-label-highlighted');
   });
@@ -262,24 +255,25 @@ describe('EntityGroup', () => {
 
     const group = getGroup(entityGroup_exclusive_1.name);
 
-    fireEvent.dragStart(screen.getByTestId(addressedItem_2), { dataTransfer });
-    fireEvent.dragOver(within(group).getByTestId(plainItem_1), {
-      dataTransfer,
-    });
+    dragOver(
+      screen.getByTestId(addressedItem_2),
+      within(group).getByTestId(plainItem_1),
+    );
 
     expect(getLabel(group)).toHaveClass('menu-label-highlighted');
   });
 
-  // The item takes the drop for itself, so the group hears nothing
-  // of it unless it listens for the drop on its way down.
+  // The item takes the drop for itself, and the group is told the
+  // drag is over along with it.
   it('stops highlighting the label once the items are dropped on one of its items', () => {
     init(groupTypeConfig_exclusive.id);
 
     const group = getGroup(entityGroup_exclusive_1.name);
 
-    fireEvent.dragStart(screen.getByTestId(addressedItem_2), { dataTransfer });
-    fireEvent.dragOver(group, { dataTransfer });
-    fireEvent.drop(within(group).getByTestId(plainItem_1), { dataTransfer });
+    dragAndDrop(
+      screen.getByTestId(addressedItem_2),
+      within(group).getByTestId(plainItem_1),
+    );
 
     expect(getLabel(group)).not.toHaveClass('menu-label-highlighted');
   });
@@ -290,11 +284,10 @@ describe('EntityGroup', () => {
     // A type whose items can belong to several groups, so an item
     // which stayed behind would be one the drop copied rather than
     // moved.
-    fireEvent.dragStart(
+    dragAndDrop(
       within(getGroup(entityGroup_multi_1.name)).getByTestId(plainItem_1),
-      { dataTransfer },
+      getGroup(entityGroup_multi_2.name),
     );
-    fireEvent.drop(getGroup(entityGroup_multi_2.name), { dataTransfer });
 
     expect(
       EntityGroups.get(groupTypeConfig_multi.id, entityGroup_multi_2.id).items,
@@ -325,13 +318,12 @@ describe('EntityGroup', () => {
     it('adds an item dragged out of another type of group when the type takes items from outside', () => {
       initBoth();
 
-      fireEvent.dragStart(
+      dragAndDrop(
         within(getGroup(entityGroup_exclusive_2.name)).getByTestId(
           addressedItem_2,
         ),
-        { dataTransfer },
+        getGroup(entityGroup_multi_2.name),
       );
-      fireEvent.drop(getGroup(entityGroup_multi_2.name), { dataTransfer });
 
       // Added rather than moved, the other type's group being none
       // of this type's business.
@@ -352,12 +344,10 @@ describe('EntityGroup', () => {
 
       const group = getGroup(entityGroup_exclusive_empty.name);
 
-      fireEvent.dragStart(
+      dragAndDrop(
         within(getGroup(entityGroup_multi_1.name)).getByTestId(plainItem_1),
-        { dataTransfer },
+        group,
       );
-      fireEvent.dragOver(group, { dataTransfer });
-      fireEvent.drop(group, { dataTransfer });
 
       expect(
         EntityGroups.get(
@@ -368,17 +358,19 @@ describe('EntityGroup', () => {
     });
 
     it('ignores an item dragged in from no group when the type does not', () => {
-      init(groupTypeConfig_exclusive.id);
+      render(
+        <>
+          <ExternalDragSource itemId={plainItem_2} />
+          <EntityGroupList
+            type={groupTypeConfig_exclusive.id}
+            renderItem={renderItem}
+          />
+        </>,
+      );
 
       const group = getGroup(entityGroup_exclusive_empty.name);
 
-      act(() => {
-        Selection.select([{ id: plainItem_2, type: 'plain-item', data: {} }]);
-        Selection.Store.getState().setIsDragging(true);
-      });
-
-      fireEvent.dragOver(group, { dataTransfer });
-      fireEvent.drop(group, { dataTransfer });
+      dragAndDrop(screen.getByTestId(`external:${plainItem_2}`), group);
 
       expect(
         EntityGroups.get(

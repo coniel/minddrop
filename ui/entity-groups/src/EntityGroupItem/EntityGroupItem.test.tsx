@@ -1,62 +1,40 @@
+import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { DragAndDrop } from '@minddrop/drag-and-drop';
+import { dragAndDrop, dragOver } from '@minddrop/drag-and-drop/test-utils';
 import { EntityGroups } from '@minddrop/entity-groups';
 import { EntityGroupFixtures } from '@minddrop/entity-groups/test-utils';
-import { Selection } from '@minddrop/selection';
 import {
   act,
-  createEvent,
-  fireEvent,
+  createDomRect,
   render,
   screen,
+  within,
 } from '@minddrop/test-utils';
-import { resetHoveredItem } from '@minddrop/ui-drag-and-drop';
-import { entityIdType } from '@minddrop/utils';
 import { EntityGroupList } from '../EntityGroupList';
-import { cleanup, dragDataTransfer, setup } from '../test-utils';
+import { cleanup, setup } from '../test-utils';
+import { ProtectedEntityGroupProps } from '../types';
+import { EntityGroupItem } from './EntityGroupItem';
 
 const {
   addressedItem_1,
   addressedItem_2,
   entityGroup_exclusive_1,
+  entityGroup_protected,
   groupTypeConfig_exclusive,
+  groupTypeConfig_multi,
   plainItem_1,
 } = EntityGroupFixtures;
 
 const type = groupTypeConfig_exclusive.id;
 
-// A consumer's row which is draggable in its own right, as a list
-// panel view's rows are.
-const DraggableRow: React.FC<{ itemId: string }> = ({ itemId }) => {
-  const { draggableProps } = Selection.useDraggable({
-    id: itemId,
-    type: entityIdType(itemId) ?? '',
-    data: { id: itemId },
-  });
-
-  return (
-    <span data-testid={itemId} {...draggableProps}>
-      {itemId}
-    </span>
-  );
-};
-
-// The height the dropped-on item is measured at, since jsdom lays
-// nothing out. Which half of it a drop lands in decides whether the
-// dragged item goes above or below it.
+// The height the dropped-on item is measured at, since the
+// environment lays nothing out. Which half of it a drop lands in
+// decides whether the dragged item goes above or below it.
 const itemHeight = 20;
 
-let dataTransfer = dragDataTransfer();
-
 describe('EntityGroupItem', () => {
-  beforeEach(() => {
-    setup();
-
-    // The hovered item is held outside React, for the app's lifetime
-    resetHoveredItem();
-
-    // A fresh transfer per test, since a drag carries its own
-    dataTransfer = dragDataTransfer();
-  });
+  beforeEach(setup);
 
   afterEach(cleanup);
 
@@ -69,47 +47,43 @@ describe('EntityGroupItem', () => {
     );
   }
 
-  // Drops the dragged item on a row, at the given distance from its
-  // top edge. The pointer position is set on the event by hand,
-  // which the environment's drag events do not carry.
-  function dropOn(element: HTMLElement, clientY: number) {
-    const event = createEvent.drop(element, { dataTransfer });
-
-    Object.defineProperty(event, 'clientY', { value: clientY });
-
-    fireEvent(element, event);
+  /**
+   * Drags the item with the given ID and drops it on a row, at the
+   * given distance from the row's top edge.
+   *
+   * @param itemId - The ID of the item to drag.
+   * @param element - The row to drop on.
+   * @param clientY - The drop's distance from the row's top edge.
+   */
+  function dropOn(itemId: string, element: HTMLElement, clientY: number) {
+    dragAndDrop(screen.getByTestId(itemId), element, { clientX: 5, clientY });
   }
 
-  // Returns the row of the item with the given ID, measured so that
-  // the drop position can be read off the pointer position.
+  /**
+   * Returns the row of the item with the given ID, measured so that
+   * the drop position can be read off the pointer position.
+   *
+   * @param itemId - The ID of the item.
+   * @returns The item's row.
+   */
   function getItem(itemId: string): HTMLElement {
+    // Find the item's row
     const item = screen
       .getByTestId(itemId)
       .closest('.entity-group-item') as HTMLElement;
 
-    vi.spyOn(item, 'getBoundingClientRect').mockReturnValue({
-      top: 0,
-      left: 0,
-      bottom: itemHeight,
-      right: 100,
-      width: 100,
-      height: itemHeight,
-      x: 0,
-      y: 0,
-      toJSON: () => ({}),
-    });
+    // Measure the row at the item height
+    vi.spyOn(item, 'getBoundingClientRect').mockReturnValue(
+      createDomRect(0, 0, 100, itemHeight),
+    );
 
     return item;
   }
 
-  // Covers the routing from a drop to the model call it stands for.
-  // The gesture in between the drag start and the drop is not one
-  // the environment can express, and is left to end-to-end tests.
   it('lists a dropped item above the item it was dropped on', () => {
     init();
 
-    fireEvent.dragStart(screen.getByTestId(addressedItem_2), { dataTransfer });
-    dropOn(getItem(plainItem_1), 2);
+    dropOn(addressedItem_2, getItem(plainItem_1), 2);
 
     expect(EntityGroups.get(type, entityGroup_exclusive_1.id).items).toEqual([
       addressedItem_1,
@@ -121,8 +95,7 @@ describe('EntityGroupItem', () => {
   it('lists a dropped item below the item it was dropped on', () => {
     init();
 
-    fireEvent.dragStart(screen.getByTestId(addressedItem_2), { dataTransfer });
-    dropOn(getItem(plainItem_1), itemHeight - 2);
+    dropOn(addressedItem_2, getItem(plainItem_1), itemHeight - 2);
 
     expect(EntityGroups.get(type, entityGroup_exclusive_1.id).items).toEqual([
       addressedItem_1,
@@ -144,8 +117,7 @@ describe('EntityGroupItem', () => {
       />,
     );
 
-    fireEvent.dragStart(screen.getByTestId(addressedItem_2), { dataTransfer });
-    dropOn(getItem(plainItem_1), 2);
+    dropOn(addressedItem_2, getItem(plainItem_1), 2);
 
     expect(EntityGroups.get(type, entityGroup_exclusive_1.id).items).toEqual([
       addressedItem_1,
@@ -154,36 +126,66 @@ describe('EntityGroupItem', () => {
     ]);
   });
 
-  it('makes its item draggable', () => {
+  it('collapses out of the list while dragged', () => {
     init();
 
-    expect(getItem(plainItem_1)).toHaveAttribute('draggable', 'true');
+    dragOver(screen.getByTestId(plainItem_1), document.body);
+
+    expect(getItem(plainItem_1)).toHaveClass('entity-group-item-dragging');
   });
 
-  // A consumer's own draggable stops the drag start from reaching
-  // the item, which marks the drag with the group it came out of.
-  it("takes a drop of an item dragged by the consumer's own draggable", () => {
+  // The app's groups keep listing what is dragged out of them, so
+  // the drag copies the item rather than moving it.
+  it('stays in place while dragged out of a group the app provides', () => {
+    // The app's group lists its items itself
+    const ProtectedItems: React.FC<ProtectedEntityGroupProps> = ({ group }) => (
+      <EntityGroupItem itemId={plainItem_1} groupId={group.id} index={0}>
+        <span data-testid={plainItem_1}>{plainItem_1}</span>
+      </EntityGroupItem>
+    );
+
     render(
       <EntityGroupList
-        type={type}
-        renderItem={(itemId) => <DraggableRow itemId={itemId} />}
+        type={groupTypeConfig_multi.id}
+        renderItem={(itemId) => <span data-testid={itemId}>{itemId}</span>}
+        protectedGroupComponents={{
+          [entityGroup_protected.id]: ProtectedItems,
+        }}
       />,
     );
 
-    fireEvent.dragStart(screen.getByTestId(plainItem_1), { dataTransfer });
-    dropOn(getItem(addressedItem_1), 2);
+    const group = screen
+      .getByText(entityGroup_protected.name)
+      .closest('.entity-group') as HTMLElement;
+    const content = within(group).getByTestId(plainItem_1);
 
-    expect(EntityGroups.get(type, entityGroup_exclusive_1.id).items).toEqual([
-      plainItem_1,
-      addressedItem_1,
-    ]);
+    dragOver(content, document.body);
+
+    expect(DragAndDrop.getActiveDrag()).toEqual(
+      expect.objectContaining({ effect: 'copy' }),
+    );
+    expect(content.closest('.entity-group-item')).not.toHaveClass(
+      'entity-group-item-dragging',
+    );
+  });
+
+  it('marks where the dragged item would land while dragged over', () => {
+    init();
+
+    dragOver(screen.getByTestId(addressedItem_2), getItem(plainItem_1), {
+      clientX: 5,
+      clientY: 2,
+    });
+
+    expect(getItem(plainItem_1).querySelector('.drop-indicator')).toHaveClass(
+      'drop-indicator-position-before',
+    );
   });
 
   it('reorders the group when an item is dropped within it', () => {
     init();
 
-    fireEvent.dragStart(screen.getByTestId(plainItem_1), { dataTransfer });
-    dropOn(getItem(addressedItem_1), 2);
+    dropOn(plainItem_1, getItem(addressedItem_1), 2);
 
     expect(EntityGroups.get(type, entityGroup_exclusive_1.id).items).toEqual([
       plainItem_1,
@@ -204,45 +206,12 @@ describe('EntityGroupItem', () => {
       );
     });
 
-    fireEvent.dragStart(screen.getByTestId(addressedItem_1), { dataTransfer });
-    dropOn(getItem(addressedItem_2), 2);
+    dropOn(addressedItem_1, getItem(addressedItem_2), 2);
 
     expect(EntityGroups.get(type, entityGroup_exclusive_1.id).items).toEqual([
       plainItem_1,
       addressedItem_1,
       addressedItem_2,
     ]);
-  });
-
-  describe('hover', () => {
-    it('hovers the item the pointer is over', () => {
-      init();
-
-      fireEvent.pointerOver(getItem(plainItem_1));
-
-      expect(getItem(plainItem_1)).toHaveAttribute('data-hovered', 'true');
-    });
-
-    it('hovers one item at a time', () => {
-      init();
-
-      fireEvent.pointerOver(getItem(plainItem_1));
-      fireEvent.pointerOver(getItem(addressedItem_1));
-
-      expect(getItem(plainItem_1)).toHaveAttribute('data-hovered', 'false');
-    });
-
-    // The list reorders around a drop, and the browser announces
-    // whatever lands under the stationary pointer as newly entered.
-    it('hovers nothing until the pointer moves after a drag', () => {
-      init();
-
-      fireEvent.dragStart(screen.getByTestId(addressedItem_1), {
-        dataTransfer,
-      });
-      fireEvent.pointerOver(getItem(plainItem_1));
-
-      expect(getItem(plainItem_1)).toHaveAttribute('data-hovered', 'false');
-    });
   });
 });

@@ -1,13 +1,16 @@
 import { useMemo } from 'react';
+import { DragAndDrop } from '@minddrop/drag-and-drop';
 import { EntityGroupTypeConfig } from '@minddrop/entity-groups';
-import { Selection } from '@minddrop/selection';
-import { resolveAcceptedEntityGroupItemIds } from './utils';
+import {
+  resolveAcceptedEntityGroupItemIds,
+  resolveDraggedItemIds,
+} from './utils';
 
 /**
- * Returns the IDs of the entities currently being dragged which a
- * group of the type can hold. Empty while nothing is being dragged,
- * and while what is being dragged has no business in one of the
- * type's groups.
+ * Returns the IDs of the entities being dragged which the type's
+ * groups accept. Empty while nothing is being dragged, and while the
+ * type accepts none of what is being dragged. A type which takes no
+ * items from outside its groups only takes drags out of one of them.
  *
  * @param config - The config of the group type.
  * @returns The IDs of the dragged entities the type accepts.
@@ -15,17 +18,24 @@ import { resolveAcceptedEntityGroupItemIds } from './utils';
 export function useDraggedEntityGroupItemIds(
   config: EntityGroupTypeConfig,
 ): string[] {
-  const selection = Selection.use();
-  const isDragging = Selection.useIsDragging();
+  // The drag in progress, if any
+  const drag = DragAndDrop.useActiveDrag();
 
   return useMemo(() => {
-    if (!isDragging) {
+    if (!drag) {
       return [];
     }
 
+    // Check if the type takes items from outside its groups. If not,
+    // only a drag out of one of them counts.
+    if (!config.acceptsExternalItems && drag.origin?.type !== config.id) {
+      return [];
+    }
+
+    // Resolve the dragged items the type accepts
     return resolveAcceptedEntityGroupItemIds(
-      selection.map((item) => item.id),
+      resolveDraggedItemIds(drag.data, config.itemTypes),
       config,
     );
-  }, [isDragging, selection, config]);
+  }, [drag, config]);
 }

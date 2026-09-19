@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useId, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import {
   DatabaseEntries,
   DatabaseEntry,
@@ -17,7 +17,6 @@ import {
   useDatabaseEntryContext,
 } from '@minddrop/ui-databases';
 import { DesignRenderer } from '@minddrop/ui-designs-next';
-import { useHoveredItem } from '@minddrop/ui-drag-and-drop';
 import {
   ContextMenuContent,
   ContextMenuPortal,
@@ -29,7 +28,6 @@ import {
   Text,
   TransientViewStateScope,
 } from '@minddrop/ui-primitives';
-import { setDragPreview } from '@minddrop/utils';
 import { Views } from '@minddrop/views';
 import { DatabaseEntryOptionsMenu } from '../DatabaseEntryOptionsMenu';
 import './DatabaseEntryRenderer.css';
@@ -119,6 +117,11 @@ const Entry: React.FC<EntryProps> = ({
   onClick,
 }) => {
   const rootRef = useRef<HTMLDivElement>(null);
+  // Build the entry's selection item
+  const selectionItem = useMemo(
+    () => ({ id: entry.id, type: DatabaseEntriesDataKey, data: entry }),
+    [entry],
+  );
   const { t } = useTranslation();
   const database = Databases.use(entry.database);
   const databaseDesign = Designs.use(database?.designId || '');
@@ -129,17 +132,11 @@ const Entry: React.FC<EntryProps> = ({
     useDatabaseEntryContext();
   const focusRequested = DatabaseEntries.useFocusRequest(entry.id, viewId);
   const openView = Views.useOpenView();
-  const { draggableProps, isDragging } = Selection.useDraggable({
-    id: entry.id,
-    type: DatabaseEntriesDataKey,
-    data: entry,
+  // Register the drag handle as draggable, with the card as the preview
+  // since the handle is invisible.
+  const { draggableProps, isDragging } = Selection.useDraggable(selectionItem, {
+    preview: () => rootRef.current,
   });
-
-  // Cards track hover themselves, since a native drag leaves
-  // browser hover state stuck on the cards it passed over. Keyed
-  // per instance, as the same entry can render in several views.
-  const hoverId = useId();
-  const { hoveredProps } = useHoveredItem(hoverId);
 
   // The base layout type the context resolves to, used for styling
   // and click behaviour.
@@ -288,20 +285,6 @@ const Entry: React.FC<EntryProps> = ({
     });
   }, [entry.id, onClick, openView]);
 
-  // Set the card itself as the drag preview, since the drag starts
-  // from the invisible drag handle.
-  const onDragHandleDragStart = useCallback(
-    (event: React.DragEvent<HTMLDivElement>) => {
-      draggableProps.onDragStart(event);
-
-      // The handle's parent is the card root element
-      if (event.currentTarget.parentElement) {
-        setDragPreview(event, event.currentTarget.parentElement);
-      }
-    },
-    [draggableProps],
-  );
-
   // Handle keyboard activation (Enter/Space) for accessibility
   const onKeyDown = useCallback(
     (event: React.KeyboardEvent) => {
@@ -390,15 +373,10 @@ const Entry: React.FC<EntryProps> = ({
       tabIndex={isClickable ? 0 : undefined}
       onClick={isClickable ? onOpenEntry : undefined}
       onKeyDown={isClickable ? onKeyDown : undefined}
-      {...hoveredProps}
     >
       {/* Invisible drag bar along the top edge of the card */}
       {showDragHandle && (
-        <div
-          className="database-entry-drag-handle"
-          {...draggableProps}
-          onDragStart={onDragHandleDragStart}
-        />
+        <div className="database-entry-drag-handle" {...draggableProps} />
       )}
 
       {/* Hover revealed options menu button */}

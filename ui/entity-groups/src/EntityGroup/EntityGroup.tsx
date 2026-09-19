@@ -44,9 +44,8 @@ import { applyEntityGroupDrop } from '../applyEntityGroupDrop';
 import { EntityGroupAddAction } from '../types';
 import { useDraggedEntityGroupItemIds } from '../useDraggedEntityGroupItemIds';
 import {
-  resolveEntityGroupDragSource,
+  resolveEntityGroupDragSourceId,
   resolveEntityGroupDrop,
-  resolveEntityGroupDropTypes,
   resolveEntityGroupNameError,
   resolveUngroupedEntityGroupDrop,
 } from '../utils';
@@ -180,7 +179,7 @@ export const EntityGroup: React.FC<EntityGroupProps> = ({
           position: drop.position,
           targetGroupId: group.id,
           targetItems: group.items,
-          sourceGroupId: resolveEntityGroupDragSource(drop.event, type),
+          sourceGroupId: resolveEntityGroupDragSourceId(drop.origin, type),
           itemIds: draggedItemIds,
         }),
       );
@@ -193,7 +192,6 @@ export const EntityGroup: React.FC<EntityGroupProps> = ({
     id: group.id,
     // The list's gaps take over what is dragged over the group
     claim: false,
-    accepts: resolveEntityGroupDropTypes(config),
     onDrop: handleDrop,
   });
 

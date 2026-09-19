@@ -1,5 +1,11 @@
 import { createRef } from 'react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { DragAndDrop } from '@minddrop/drag-and-drop';
+import {
+  cleanup as cleanupDragAndDrop,
+  dragOver,
+  setup as setupDragAndDrop,
+} from '@minddrop/drag-and-drop/test-utils';
 import { fireEvent, render } from '@minddrop/test-utils';
 import { cleanup, paragraphElement1 } from '../test-utils';
 import { HoveredBlock } from '../useHoveredBlock';
@@ -19,29 +25,39 @@ const hoveredBlock: HoveredBlock = {
 };
 
 /**
- * Renders the gutter for the hovered block, with no-op callbacks
- * for the interactions a test is not concerned with.
- *
- * @param props The props to render with.
- * @returns The render result.
+ * Renders the gutter for the hovered block with a draggable handle.
  */
-function renderGutter(props: Partial<BlockGutterProps> = {}) {
-  return render(
+const Gutter: React.FC<Partial<BlockGutterProps>> = (props) => {
+  const { draggableProps } = DragAndDrop.useDraggable({
+    id: 'block',
+    type: 'block',
+    data: { block: [paragraphElement1] },
+  });
+
+  return (
     <BlockGutter
       block={hoveredBlock}
       controlsRef={createRef()}
       handleRef={createRef()}
       onInsert={() => undefined}
       onSelect={() => undefined}
-      onDragStart={() => undefined}
-      onDragEnd={() => undefined}
+      dragHandleProps={draggableProps}
       {...props}
-    />,
+    />
   );
+};
+
+function renderGutter(props: Partial<BlockGutterProps> = {}) {
+  return render(<Gutter {...props} />);
 }
 
 describe('BlockGutter', () => {
-  afterEach(cleanup);
+  beforeEach(setupDragAndDrop);
+
+  afterEach(() => {
+    cleanup();
+    cleanupDragAndDrop();
+  });
 
   it('renders nothing when no block is hovered', () => {
     const { queryByRole } = renderGutter({ block: null });
@@ -121,30 +137,27 @@ describe('BlockGutter', () => {
   });
 
   it('drags the block by its handle', () => {
-    // Drags started from the handle
-    const dragStarts: string[] = [];
-
-    const { getByLabelText } = renderGutter({
-      onDragStart: () => dragStarts.push('start'),
-    });
-
-    const handle = getByLabelText('Select block');
-
-    expect(handle.getAttribute('draggable')).toBe('true');
-
-    fireEvent.dragStart(handle);
-
-    expect(dragStarts).toEqual(['start']);
-  });
-
-  it('does not stop the handle starting a drag', () => {
     const { getByLabelText } = renderGutter();
 
-    // Preventing the default mouse down action would keep the
-    // handle from ever starting a drag.
-    const notPrevented = fireEvent.mouseDown(getByLabelText('Select block'));
+    dragOver(getByLabelText('Select block'), document.body);
 
-    expect(notPrevented).toBe(true);
+    expect(DragAndDrop.getActiveDrag()).toEqual(
+      expect.objectContaining({
+        data: {
+          block: [paragraphElement1],
+        },
+      }),
+    );
+  });
+
+  it('registers the handle on the menu ref alongside the drag ref', () => {
+    const handleRef = createRef<HTMLButtonElement>();
+
+    const { getByLabelText } = renderGutter({ handleRef });
+
+    // Check both refs resolve to the handle, since it is the drag
+    // handle as well.
+    expect(handleRef.current).toBe(getByLabelText('Select block'));
   });
 
   it('does not let its events reach handlers around the editor', () => {
@@ -158,15 +171,7 @@ describe('BlockGutter', () => {
         onClick={() => surroundingEvents.push('click')}
         onMouseDown={() => surroundingEvents.push('mousedown')}
       >
-        <BlockGutter
-          block={hoveredBlock}
-          controlsRef={createRef()}
-          handleRef={createRef()}
-          onInsert={() => undefined}
-          onSelect={() => undefined}
-          onDragStart={() => undefined}
-          onDragEnd={() => undefined}
-        />
+        <Gutter />
       </div>,
     );
 

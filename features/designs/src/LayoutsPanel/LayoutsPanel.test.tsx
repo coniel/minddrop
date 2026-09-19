@@ -1,7 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Designs } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
-import { Selection } from '@minddrop/selection';
+import {
+  DragSource,
+  cleanup as cleanupDragAndDrop,
+  dragAndDrop,
+} from '@minddrop/drag-and-drop/test-utils';
 import {
   cleanup as cleanupRender,
   fireEvent,
@@ -26,6 +30,7 @@ describe('<LayoutsPanel />', () => {
 
   afterEach(async () => {
     cleanupRender();
+    cleanupDragAndDrop();
     await cleanup();
   });
 
@@ -132,24 +137,18 @@ describe('<LayoutsPanel />', () => {
 });
 
 /**
- * Fires a drop event on the given element carrying the given data
- * keys, serialized the way a native drag would carry them.
+ * Drags the given design studio drag data onto the zone and drops
+ * it there.
+ *
+ * @param zone - The drop zone.
+ * @param data - The drag data.
  */
 function dropOnZone(zone: HTMLElement, data: Record<string, unknown>) {
-  const serialized = Object.fromEntries(
-    Object.entries(data).map(([key, value]) => [
-      Selection.toMimeType(key),
-      JSON.stringify(value),
-    ]),
-  );
+  // Render a drag source with the data
+  const { getByTestId } = render(<DragSource data={data} />);
 
-  fireEvent.drop(zone, {
-    dataTransfer: {
-      types: Object.keys(serialized),
-      getData: (type: string) => serialized[type] || '',
-      files: { length: 0 },
-    },
-  });
+  // Drag the source onto the zone and drop it
+  dragAndDrop(getByTestId('drag-source'), zone);
 }
 
 /**

@@ -1,7 +1,7 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { DropEventData, Selection } from '@minddrop/selection';
 import { useFlexDropGapActivation } from '@minddrop/ui-drag-and-drop';
-import { setDragPreview } from '@minddrop/utils';
+import { composeRefs } from '@minddrop/utils';
 import { useDesignStudio } from './DesignStudioStore';
 import { useLayoutId } from './LayoutIdContext';
 import { DesignElementsDataKey } from './constants';
@@ -39,11 +39,14 @@ export function useDesignElementDragDrop({
     isContainer &&
     (element as FlatContainerDesignElement).children.length === 0;
 
-  const { draggableProps, isDragging } = Selection.useDraggable({
-    id: element.id,
-    type: DesignElementsDataKey,
-    data: element,
-  });
+  // Build the element's selection item
+  const selectionItem = useMemo(
+    () => ({ id: element.id, type: DesignElementsDataKey, data: element }),
+    [element],
+  );
+
+  // Register the element as draggable
+  const { draggableProps, isDragging } = Selection.useDraggable(selectionItem);
 
   // Route drops on this element into its frame's layout,
   // regardless of which layout is active
@@ -70,18 +73,13 @@ export function useDesignElementDragDrop({
   // element's before/after drag position.
   useFlexDropGapActivation({ index, isDraggingOver, dropIndicatorPosition });
 
-  // Wrap onDragStart to manually set the drag preview.
-  // Elements inside the design canvas (which uses CSS transform)
-  // don't get a browser-generated drag ghost.
-  const onDragStart = useCallback(
-    (event: React.DragEvent) => {
-      draggableProps.onDragStart(event);
-
-      setDragPreview(event, event.currentTarget);
-    },
-    [draggableProps],
+  // Compose the drag and drop refs, since both attach to the one element
+  const ref = useMemo(
+    () => composeRefs(draggableProps.ref, droppableProps.ref),
+    [draggableProps.ref, droppableProps.ref],
   );
 
+  // Return no props when drag and drop is disabled
   if (disabled) {
     return {
       dragDropProps: {},
@@ -98,12 +96,13 @@ export function useDesignElementDragDrop({
     };
   }
 
+  // Return the drag and drop props on the composed ref
   return {
     isDragging,
     dragDropProps: {
       ...draggableProps,
       ...droppableProps,
-      onDragStart,
+      ref,
     },
   };
 }

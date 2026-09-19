@@ -5,6 +5,11 @@
   min-width: 0;
 }
 
+/* Takes drops for the canvas without taking part in its layout */
+.query-builder-canvas-drop-target {
+  display: contents;
+}
+
 /* Round node selection outlines to match the node cards */
 .query-builder-node {
   border-radius: var(--radius-md);

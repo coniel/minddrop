@@ -1,4 +1,5 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
+import { DraggableProps, DroppableProps } from '@minddrop/drag-and-drop';
 import { useTranslation } from '@minddrop/i18n';
 import { DropEventData, Selection } from '@minddrop/selection';
 import { UiIconName } from '@minddrop/ui-icons';
@@ -9,6 +10,7 @@ import {
   Icon,
   useTransientState,
 } from '@minddrop/ui-primitives';
+import { composeRefs } from '@minddrop/utils';
 import {
   useDesignStudio,
   useDesignStudioStore,
@@ -19,7 +21,6 @@ import { DesignElementsDataKey } from '../constants';
 import { handleDropOnDesignElement } from '../handleDropOnDesignElement';
 import { handleDropOnGap } from '../handleDropOnGap';
 import { FlatDesignElement } from '../types';
-import { useHoveredItem } from '../useHoveredItem';
 import { hasPagePanels } from '../utils';
 import { ElementsTreeDropZone } from './ElementsTreeDropZone';
 import { resolveNodeLabel } from './resolveNodeLabel';
@@ -85,9 +86,6 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
   const studio = useDesignStudio();
   const layoutId = useLayoutId();
   const element = useElement(elementId);
-  // Rows track hover themselves, since a native drag leaves browser
-  // hover state stuck on the rows it passed over.
-  const { hoveredProps } = useHoveredItem(`${layoutId}:${elementId}`);
   // The layout root's ID is shared between layouts, so root nodes
   // are only selected when their layout is the active one.
   const isSelected = useDesignStudioStore(
@@ -109,11 +107,13 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
     element?.type === 'root' &&
     hasPagePanels(studio, element, layoutId ?? undefined);
 
-  const { draggableProps, isDragging } = Selection.useDraggable({
-    id: elementId,
-    type: DesignElementsDataKey,
-    data: element,
-  });
+  // Build the node's selection item
+  const selectionItem = useMemo(
+    () => ({ id: elementId, type: DesignElementsDataKey, data: element }),
+    [elementId, element],
+  );
+  // Register the node as draggable
+  const { draggableProps, isDragging } = Selection.useDraggable(selectionItem);
 
   // Drops land inside the node when it holds children, and before
   // or after it otherwise.
@@ -167,6 +167,12 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
       onDrop: handleDrop,
     });
 
+  // Compose the drag and drop refs, since both attach to the one node
+  const dragDropRef = useMemo(
+    () => composeRefs(draggableProps.ref, droppableProps.ref),
+    [draggableProps.ref, droppableProps.ref],
+  );
+
   if (!element) {
     return null;
   }
@@ -186,7 +192,7 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
 
   // A panelled root offers no drag or drop at all; other fixed
   // nodes keep their drop target but drop the drag handlers.
-  function resolveDragDropProps(): Record<string, unknown> {
+  function resolveDragDropProps(): Partial<DraggableProps & DroppableProps> {
     if (isPanelledRoot) {
       return {};
     }
@@ -195,7 +201,7 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
       return droppableProps;
     }
 
-    return { ...draggableProps, ...droppableProps };
+    return { ...draggableProps, ...droppableProps, ref: dragDropRef };
   }
 
   // Selecting is the first job of a click. Once the node holds the
@@ -225,7 +231,6 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
         } as React.CSSProperties
       }
       onClick={handleClick}
-      {...hoveredProps}
       {...dragDropProps}
     >
       {children ? (

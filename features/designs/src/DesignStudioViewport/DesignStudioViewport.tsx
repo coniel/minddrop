@@ -1,15 +1,18 @@
 import { useCallback } from 'react';
-import { Selection } from '@minddrop/selection';
+import { DropEventData, Selection } from '@minddrop/selection';
 import {
   Canvas,
-  CanvasPoint,
+  useCanvas,
   useCanvasTransformLayer,
 } from '@minddrop/ui-canvas';
 import { useDesignStudio } from '../DesignStudioStore';
 import { SelectionOverlay } from '../SelectionOverlay';
 import { DesignLayoutTypesDataKey } from '../constants';
-import { readLayoutTypeDragData } from '../utils';
+import { resolveLayoutTypeDragData } from '../utils';
 import './DesignStudioViewport.css';
+
+// The data types the viewport accepts drops of
+const ACCEPTED_DATA_TYPES = [DesignLayoutTypesDataKey];
 
 export interface DesignStudioViewportProps extends React.PropsWithChildren {
   /**
@@ -41,6 +44,7 @@ export const DesignStudioViewport: React.FC<DesignStudioViewportProps> = ({
   nameAccessory,
 }) => {
   const studio = useDesignStudio();
+  const canvas = useCanvas();
   const transformLayerRef = useCanvasTransformLayer();
 
   // Clicking the empty canvas deactivates the layout and clears
@@ -49,49 +53,55 @@ export const DesignStudioViewport: React.FC<DesignStudioViewportProps> = ({
     studio.setActiveLayout(null);
   }, [studio]);
 
-  // Accept layout type drags, which the browser otherwise rejects
-  const handleDragOver = useCallback((event: React.DragEvent) => {
-    if (Selection.dragContainsType(event, [DesignLayoutTypesDataKey])) {
-      event.preventDefault();
-    }
-  }, []);
-
   // Create a layout of the dropped type, with its frame's top left
   // corner at the drop point.
   const handleDrop = useCallback(
-    (event: React.DragEvent, canvasPoint: CanvasPoint) => {
+    (drop: DropEventData) => {
+      // Read the design being edited
       const design = studio.getDesign();
 
       if (!design) {
         return;
       }
 
-      const dragData = readLayoutTypeDragData(event);
+      // Resolve the dragged layout type
+      const dragData = resolveLayoutTypeDragData(drop.data);
 
-      // Drops carrying anything else are handled by the elements
-      // they land on, not by the canvas.
       if (!dragData) {
         return;
       }
 
-      studio.addLayout(design.id, dragData.layoutType, canvasPoint);
+      // Add the layout with its top left corner at the drop point
+      studio.addLayout(
+        design.id,
+        dragData.layoutType,
+        canvas.clientToCanvas({ x: drop.clientX, y: drop.clientY }),
+      );
     },
-    [studio],
+    [studio, canvas],
   );
 
+  // Register the viewport as a drop target for layout types
+  const { droppableProps } = Selection.useDroppable({
+    type: 'design-studio-viewport',
+    id: 'viewport',
+    accepts: ACCEPTED_DATA_TYPES,
+    onDrop: handleDrop,
+  });
+
   return (
-    <Canvas
-      className="designs-studio-viewport"
-      shortcutScope="window"
-      name={name}
-      onNameChange={onNameChange}
-      nameAccessory={nameAccessory}
-      onBackgroundMouseDown={handleBackgroundMouseDown}
-      onDragOver={handleDragOver}
-      onDrop={handleDrop}
-    >
-      {children}
-      <SelectionOverlay transformLayerRef={transformLayerRef} />
-    </Canvas>
+    <div className="designs-studio-viewport-drop-target" {...droppableProps}>
+      <Canvas
+        className="designs-studio-viewport"
+        shortcutScope="window"
+        name={name}
+        onNameChange={onNameChange}
+        nameAccessory={nameAccessory}
+        onBackgroundMouseDown={handleBackgroundMouseDown}
+      >
+        {children}
+        <SelectionOverlay transformLayerRef={transformLayerRef} />
+      </Canvas>
+    </div>
   );
 };

@@ -1,9 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { dragAndDrop, dragOver } from '@minddrop/drag-and-drop/test-utils';
 import { EntityGroups } from '@minddrop/entity-groups';
 import { EntityGroupFixtures } from '@minddrop/entity-groups/test-utils';
-import { Selection } from '@minddrop/selection';
 import {
-  act,
   createEvent,
   fireEvent,
   render,
@@ -12,7 +11,7 @@ import {
   waitFor,
   within,
 } from '@minddrop/test-utils';
-import { cleanup, dragDataTransfer, setup } from '../test-utils';
+import { ExternalDragSource, cleanup, setup } from '../test-utils';
 import { EntityGroupList } from './EntityGroupList';
 
 const {
@@ -34,15 +33,8 @@ const type = groupTypeConfig_exclusive.id;
 // which only plainItem_2 is in none of them.
 const itemIds = [addressedItem_1, addressedItem_2, plainItem_1, plainItem_2];
 
-let dataTransfer = dragDataTransfer();
-
 describe('EntityGroupList', () => {
-  beforeEach(() => {
-    setup();
-
-    // A fresh transfer per test, since a drag carries its own
-    dataTransfer = dragDataTransfer();
-  });
+  beforeEach(setup);
 
   afterEach(cleanup);
 
@@ -84,22 +76,21 @@ describe('EntityGroupList', () => {
     expect(names).toEqual(exclusiveGroups.map((group) => group.name));
   });
 
-  // Covers the routing from a drop to the model call it stands for.
-  // The gesture in between the drag start and the drop is not one
-  // the environment can express, and is left to end-to-end tests,
-  // as is the pointer drag which reorders the groups themselves.
+  // The pointer drag which reorders the groups themselves is left
+  // to end-to-end tests.
   it('stands up a group where items are dropped between two others', () => {
     const { container } = init();
 
-    fireEvent.dragStart(screen.getByTestId(addressedItem_2), { dataTransfer });
-    fireEvent.drop(getGap(container, 1), { dataTransfer });
+    dragAndDrop(screen.getByTestId(addressedItem_2), getGap(container, 1));
+
+    // Find the new group's label
+    const label = screen.getByText('New group', {
+      selector: '.menu-label-text',
+    });
 
     // The group takes shape holding the dropped item, waiting for
     // its name, with its header marked as what is being named.
-    expect(screen.getByText('New group')).toBeInTheDocument();
-    expect(screen.getByText('New group').closest('.menu-label')).toHaveClass(
-      'menu-label-highlighted',
-    );
+    expect(label.closest('.menu-label')).toHaveClass('menu-label-highlighted');
     expect(screen.getByPlaceholderText('Group name')).toBeInTheDocument();
     expect(EntityGroups.getAll(type)).toHaveLength(exclusiveGroups.length);
   });
@@ -107,8 +98,7 @@ describe('EntityGroupList', () => {
   it('says what a drop in the gap does while items are dragged over it', async () => {
     const { container } = init();
 
-    fireEvent.dragStart(screen.getByTestId(addressedItem_2), { dataTransfer });
-    fireEvent.dragOver(getGap(container, 1), { dataTransfer });
+    dragOver(screen.getByTestId(addressedItem_2), getGap(container, 1));
 
     expect(
       await screen.findByText('Drop here to create a new group.'),
@@ -118,8 +108,7 @@ describe('EntityGroupList', () => {
   it('creates the named group at the position, holding the items', async () => {
     const { container } = init();
 
-    fireEvent.dragStart(screen.getByTestId(addressedItem_2), { dataTransfer });
-    fireEvent.drop(getGap(container, 1), { dataTransfer });
+    dragAndDrop(screen.getByTestId(addressedItem_2), getGap(container, 1));
 
     const nameField = screen.getByPlaceholderText('Group name');
 
@@ -151,8 +140,7 @@ describe('EntityGroupList', () => {
       />,
     );
 
-    fireEvent.dragStart(screen.getByTestId(plainItem_1), { dataTransfer });
-    fireEvent.drop(getGap(container, 0), { dataTransfer });
+    dragAndDrop(screen.getByTestId(plainItem_1), getGap(container, 0));
 
     const nameField = screen.getByPlaceholderText('Group name');
 
@@ -174,24 +162,22 @@ describe('EntityGroupList', () => {
     // added to the new group goes on being listed where it was.
     const multiType = groupTypeConfig_multi.id;
 
+    // Render the list with a drag source from elsewhere in the app.
+    // The drag has no group origin.
     const { container } = render(
-      <EntityGroupList
-        type={multiType}
-        renderItem={(itemId) => <span data-testid={itemId}>{itemId}</span>}
-      />,
+      <>
+        <ExternalDragSource itemId={addressedItem_1} />
+        <EntityGroupList
+          type={multiType}
+          renderItem={(itemId) => <span data-testid={itemId}>{itemId}</span>}
+        />
+      </>,
     );
 
-    // A drag of one of the type's entities from elsewhere in the
-    // app, which leaves the list none the wiser about where it came
-    // from.
-    act(() => {
-      Selection.select([
-        { id: addressedItem_1, type: 'addressed-item', data: {} },
-      ]);
-      Selection.Store.getState().setIsDragging(true);
-    });
-
-    fireEvent.drop(getGap(container, 0), { dataTransfer });
+    dragAndDrop(
+      screen.getByTestId(`external:${addressedItem_1}`),
+      getGap(container, 0),
+    );
 
     const nameField = screen.getByPlaceholderText('Group name');
 
@@ -254,8 +240,7 @@ describe('EntityGroupList', () => {
   it('says so when the group taking shape is named after one which exists', async () => {
     const { container } = init();
 
-    fireEvent.dragStart(screen.getByTestId(addressedItem_2), { dataTransfer });
-    fireEvent.drop(getGap(container, 1), { dataTransfer });
+    dragAndDrop(screen.getByTestId(addressedItem_2), getGap(container, 1));
 
     const nameField = screen.getByPlaceholderText('Group name');
 
@@ -288,8 +273,7 @@ describe('EntityGroupList', () => {
   it('leaves right clicks in the naming popover to the popover', () => {
     const { container } = init();
 
-    fireEvent.dragStart(screen.getByTestId(addressedItem_2), { dataTransfer });
-    fireEvent.drop(getGap(container, 1), { dataTransfer });
+    dragAndDrop(screen.getByTestId(addressedItem_2), getGap(container, 1));
 
     fireEvent.contextMenu(screen.getByPlaceholderText('Group name'));
 
@@ -397,40 +381,7 @@ describe('EntityGroupList', () => {
     it('takes the items dropped on it out of the groups holding them', async () => {
       initWithItems();
 
-      fireEvent.dragStart(screen.getByTestId(addressedItem_2), {
-        dataTransfer,
-      });
-      fireEvent.drop(getUngrouped(), { dataTransfer });
-
-      await waitFor(() => {
-        expect(
-          EntityGroups.get(type, entityGroup_exclusive_2.id).items,
-        ).toEqual([]);
-      });
-    });
-
-    it('offers no actions of its own', () => {
-      initWithItems();
-
-      expect(within(getUngrouped()).queryByLabelText('Options')).toBeNull();
-    });
-
-    it("lists the items in none of the type's groups", () => {
-      initWithItems();
-
-      const group = getUngrouped();
-
-      expect(within(group).getByTestId(plainItem_2)).toBeInTheDocument();
-      expect(within(group).queryByTestId(addressedItem_1)).toBeNull();
-    });
-
-    it('takes the items dropped on it out of the groups holding them', async () => {
-      initWithItems();
-
-      fireEvent.dragStart(screen.getByTestId(addressedItem_2), {
-        dataTransfer,
-      });
-      fireEvent.drop(getUngrouped(), { dataTransfer });
+      dragAndDrop(screen.getByTestId(addressedItem_2), getUngrouped());
 
       await waitFor(() => {
         expect(
@@ -475,8 +426,7 @@ describe('EntityGroupList', () => {
   it('takes the naming key away from the control it was opened from', () => {
     const { container } = init();
 
-    fireEvent.dragStart(screen.getByTestId(addressedItem_2), { dataTransfer });
-    fireEvent.drop(getGap(container, 1), { dataTransfer });
+    dragAndDrop(screen.getByTestId(addressedItem_2), getGap(container, 1));
 
     const nameField = screen.getByPlaceholderText('Group name');
 

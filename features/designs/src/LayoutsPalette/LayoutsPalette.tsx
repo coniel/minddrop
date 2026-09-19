@@ -1,5 +1,6 @@
+import { useMemo } from 'react';
 import { Designs, LayoutType } from '@minddrop/designs';
-import { Selection } from '@minddrop/selection';
+import { DragAndDrop } from '@minddrop/drag-and-drop';
 import { useDesignStudioStore } from '../DesignStudioStore';
 import { PaletteItem } from '../PaletteItem';
 import {
@@ -50,10 +51,16 @@ interface LayoutPaletteItemProps {
 const LayoutPaletteItem: React.FC<LayoutPaletteItemProps> = ({
   layoutType,
 }) => {
-  const { draggableProps } = Selection.useDraggable({
+  // Build the drag data for the layout type
+  const data = useMemo(
+    () => ({ [DesignLayoutTypesDataKey]: [{ layoutType }] }),
+    [layoutType],
+  );
+  // Register the item as draggable
+  const { draggableProps } = DragAndDrop.useDraggable({
     id: `layout-type-${layoutType}`,
     type: DesignLayoutTypesDataKey,
-    data: { layoutType },
+    data,
   });
 
   return (

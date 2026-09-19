@@ -1,5 +1,13 @@
 .entity-group-item {
   position: relative;
+  /* A single row grid, so that the item can collapse to nothing
+     with a transition. Heights do not animate from auto, grid rows
+     do. */
+  display: grid;
+  grid-template-rows: 1fr;
+  transition:
+    grid-template-rows var(--duration-normal) var(--ease-out),
+    opacity var(--duration-normal) var(--ease-out);
 
   /* Reaches into the space the list keeps below it, so that a drag
      crossing from one item to the next is always over one of them.
@@ -10,7 +18,30 @@
     inset: 100% 0 calc(-1 * var(--drop-indicator-gap, 0px));
   }
 
+  /* Collapses out of the list while dragged, so that the list
+     closes the gap behind the picked up item. */
   &.entity-group-item-dragging {
-    opacity: 0.5;
+    grid-template-rows: 0fr;
+    overflow: hidden;
+    opacity: 0;
   }
+}
+
+/* Lets the grid row shrink below the content's height */
+.entity-group-item-content {
+  min-height: 0;
+}
+
+/* Clipped only while collapsing. A row with a fixed height would
+   otherwise hold the grid row open, and clipping it at rest would
+   cut off its focus outline. */
+.entity-group-item-dragging .entity-group-item-content {
+  overflow: hidden;
+}
+
+/* Gives the preview a surface of its own, as it floats above the
+   one the row sat on. */
+.entity-group-item[data-drag-preview] {
+  background-color: var(--surface-overlay);
+  border-radius: var(--radius-md);
 }

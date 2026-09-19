@@ -84,10 +84,7 @@
   display: none;
 }
 
-/* Hover is tracked by useHoveredItem rather than :hover, which a
-   native drag leaves stuck on the rows it passed over */
-
-.designs-elements-tree-node[data-hovered='true'] {
+.designs-elements-tree-node:hover {
   background-color: var(--surface-accent);
 }
 
@@ -95,7 +92,7 @@
   background-color: var(--surface-primary);
 }
 
-.designs-elements-tree-node[data-selected='true'][data-hovered='true'] {
+.designs-elements-tree-node[data-selected='true']:hover {
   background-color: var(--surface-primary-hover);
 }
 

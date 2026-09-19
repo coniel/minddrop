@@ -1,83 +1,33 @@
-import React, { useCallback, useState } from 'react';
+import { useMemo } from 'react';
+import { DragAndDrop, DraggableUtils } from '@minddrop/drag-and-drop';
 import { QueryNodeType } from '@minddrop/queries';
-import { Selection } from '@minddrop/selection';
-import { setDragPreview } from '@minddrop/utils';
 import { QueryNodeCardDataKey, QuerySourceCardDataKey } from './constants';
 
-export interface QueryToolbarCardDragUtils {
-  /**
-   * Whether the card is currently being dragged.
-   */
-  isDragging: boolean;
-
-  /**
-   * Combined drag event handlers to spread onto the card.
-   */
-  draggableProps: {
-    draggable: boolean;
-    onDragStart: (event: React.DragEvent) => void;
-    onDragEnd: (event: React.DragEvent) => void;
-  };
-}
-
 /**
- * Returns drag utilities for a query builder toolbar card which
- * creates a node of the given type when dropped onto the
- * canvas. Source cards spawn a source picker instead.
+ * Returns drag utilities for a query builder toolbar card.
  *
  * @param type - The type of node the card creates.
- *
- * @returns Drag utilities.
+ * @returns The card's drag utilities.
  */
 export function useQueryToolbarCardDraggable(
   type: Exclude<QueryNodeType, 'results'>,
-): QueryToolbarCardDragUtils {
-  const [isDragging, setIsDragging] = useState(false);
-
-  const onDragStart = useCallback(
-    (event: React.DragEvent) => {
-      // Prevent parent elements from becoming the dragged element
-      event.stopPropagation();
-
-      if (!event.dataTransfer) {
-        return;
-      }
-
-      event.dataTransfer.effectAllowed = 'copy';
-
-      // Source cards spawn a source picker on drop
-      if (type === 'source') {
-        event.dataTransfer.setData(
-          Selection.toMimeType(QuerySourceCardDataKey),
-          JSON.stringify(true),
-        );
-      } else {
-        // Serialize the node type into the drag event data
-        event.dataTransfer.setData(
-          Selection.toMimeType(QueryNodeCardDataKey),
-          JSON.stringify(type),
-        );
-      }
-
-      // Set the drag preview explicitly, since the browser
-      // generated preview fails inside transformed ancestors.
-      setDragPreview(event, event.currentTarget);
-
-      setIsDragging(true);
-    },
-    [type],
+): DraggableUtils {
+  // Resolve the card's data key
+  const dataKey =
+    type === 'source' ? QuerySourceCardDataKey : QueryNodeCardDataKey;
+  // Build the drag data. Source cards send a source flag, other cards
+  // the type of node they create.
+  const data = useMemo(
+    () => ({ [dataKey]: type === 'source' ? true : type }),
+    [dataKey, type],
   );
 
-  const onDragEnd = useCallback(() => {
-    setIsDragging(false);
-  }, []);
+  // Register the card as draggable
+  const { draggableProps, isDragging } = DragAndDrop.useDraggable({
+    id: `query-toolbar-card:${type}`,
+    type: dataKey,
+    data,
+  });
 
-  return {
-    isDragging,
-    draggableProps: {
-      draggable: true,
-      onDragStart,
-      onDragEnd,
-    },
-  };
+  return { isDragging, draggableProps };
 }
