@@ -1,0 +1,24 @@
+/* Covers the viewport above everything else. Lets pointer events
+   through to the page beneath for hit testing. */
+.drag-layer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--level-drag-preview);
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* The clone of the dragged element. Positioned where the element sat
+   and translated to follow the pointer. */
+.drag-layer-preview {
+  position: absolute;
+  margin: 0;
+  transform-origin: top left;
+  transition: box-shadow var(--duration-normal) var(--ease-out);
+}
+
+/* Casts a shadow, so that the preview reads as the element itself
+   lifted off the page rather than a ghost of it. */
+.drag-layer-preview-lifted {
+  box-shadow: var(--shadow-overlay);
+}

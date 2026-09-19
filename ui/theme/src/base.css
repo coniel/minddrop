@@ -35,6 +35,16 @@ a[href] {
   cursor: pointer;
 }
 
+/* Overrides every element's own cursor and selectability for the
+   duration of a drag. Content the pointer passes over then cannot
+   take a text selection or swap the cursor. */
+html[data-dragging],
+html[data-dragging] * {
+  cursor: grabbing !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+}
+
 body {
   font-family: var(--font-ui);
   font-size: var(--font-size-base);

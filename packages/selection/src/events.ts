@@ -15,21 +15,6 @@ export type SelectionCopiedEventData = {
 };
 export type SelectionDeletedEventData = SelectionItem[];
 
-/******************************************************************************
- * Drag and drop events
- *****************************************************************************/
-
-export const SelectionDragStartedEvent = 'selection:drag:started';
-export const SelectionDragEndedEvent = 'selection:drag:ended';
-
-type DragEventData = {
-  event: DragEvent | React.DragEvent;
-  selection: SelectionItem[];
-};
-
-export type SelectionDragStartedEventData = DragEventData;
-export type SelectionDragEndedEventData = DragEventData;
-
 declare module '@minddrop/events/EventDataMap' {
   interface EventDataMap {
     'selection:items:added': SelectionItemsAddedEventData;
@@ -37,7 +22,5 @@ declare module '@minddrop/events/EventDataMap' {
     'selection:cleared': SelectionClearedEventData;
     'selection:copied': SelectionCopiedEventData;
     'selection:deleted': SelectionDeletedEventData;
-    'selection:drag:started': SelectionDragStartedEventData;
-    'selection:drag:ended': SelectionDragEndedEventData;
   }
 }

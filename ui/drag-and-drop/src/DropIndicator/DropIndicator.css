@@ -3,7 +3,8 @@
 
   position: absolute;
   pointer-events: none;
-  z-index: 999;
+  /* Above the sibling items whose gap it hangs into */
+  z-index: 1;
 
   &.drop-indicator-horizontal {
     width: 100%;

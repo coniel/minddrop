@@ -1,10 +1,9 @@
+import { DragAndDrop } from '@minddrop/drag-and-drop';
 import { NotRegisteredError } from '@minddrop/stores';
 import {
   SelectionClearedEvent,
   SelectionCopiedEvent,
   SelectionDeletedEvent,
-  SelectionDragEndedEvent,
-  SelectionDragStartedEvent,
   SelectionItemsAddedEvent,
   SelectionItemsRemovedEvent,
 } from './events';
@@ -17,8 +16,6 @@ export const events = {
   Cleared: SelectionClearedEvent,
   Copied: SelectionCopiedEvent,
   Deleted: SelectionDeletedEvent,
-  DragStarted: SelectionDragStartedEvent,
-  DragEnded: SelectionDragEndedEvent,
 } as const;
 
 export const errors = {
@@ -36,10 +33,12 @@ export { select } from './select';
 export { clearSelection as clear } from './clearSelection';
 export { copySelection as copy } from './copySelection';
 export { SelectionStore as Store } from './SelectionStore';
-export { useIsDragging } from './SelectionStore';
 export { useSelection as use } from './useSelection';
 export { useSelectionItem as useItem } from './useSelectionItem';
 export { useSelectable } from './useSelectable';
 export { useDraggable } from './useDraggable';
-export { useDroppable } from './useDroppable';
-export { dragContainsType, toMimeType } from './utils';
+export { updateSelectionItem as updateItem } from './updateSelectionItem';
+
+// Re-export the drag and drop package's drop target and drag state hooks
+export const useDroppable = DragAndDrop.useDroppable;
+export const useIsDragging = DragAndDrop.useIsDragging;

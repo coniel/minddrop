@@ -1,10 +1,9 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import {
-  selectionItem_A_1,
-  selectionItem_A_2,
-  selectionItem_B_1,
-} from '../test-utils';
+import { SelectionFixtures } from '../test-utils';
 import { SelectionStore } from './SelectionStore';
+
+const { selectionItem_A_1, selectionItem_A_2, selectionItem_B_1 } =
+  SelectionFixtures;
 
 describe('useSelectionStore', () => {
   afterEach(() => {
@@ -65,28 +64,47 @@ describe('useSelectionStore', () => {
     });
   });
 
-  describe('setIsDragging', () => {
-    it('sets the `isDragging` value', () => {
-      // Set `isDragging` to `true`
-      SelectionStore.getState().setIsDragging(true);
+  describe('updateSelectedItem', () => {
+    it('replaces the selected item with the same ID', () => {
+      SelectionStore.getState().addSelectedItems([
+        selectionItem_A_1,
+        selectionItem_A_2,
+      ]);
 
-      // `isDragging` should be `true`
-      expect(SelectionStore.getState().isDragging).toBe(true);
+      const updated = {
+        ...selectionItem_A_1,
+        data: { ...selectionItem_A_1.data, text: 'Updated' },
+      };
+
+      SelectionStore.getState().updateSelectedItem(updated);
+
+      expect(SelectionStore.getState().selectedItems).toEqual([
+        updated,
+        selectionItem_A_2,
+      ]);
+    });
+
+    it('leaves the selection alone when the item is not selected', () => {
+      SelectionStore.getState().addSelectedItems([selectionItem_A_2]);
+
+      SelectionStore.getState().updateSelectedItem(selectionItem_A_1);
+
+      expect(SelectionStore.getState().selectedItems).toEqual([
+        selectionItem_A_2,
+      ]);
     });
   });
 
   describe('clear', () => {
-    it('sets the `isDragging` value', () => {
+    it('resets the state to its initial value', () => {
       // Set state values
       SelectionStore.getState().addSelectedItems([selectionItem_A_1]);
-      SelectionStore.getState().setIsDragging(true);
 
       // Clear the state
       SelectionStore.getState().clear();
 
       // State should contain initial values
       expect(SelectionStore.getState().selectedItems).toEqual([]);
-      expect(SelectionStore.getState().isDragging).toBe(false);
     });
   });
 });

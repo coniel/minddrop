@@ -46,6 +46,7 @@
   --level-popover: 60;
   --level-toast: 65;
   --level-tooltip: 70;
+  --level-drag-preview: 80;
 
   /* ------------------------------------------------------------
      MOTION

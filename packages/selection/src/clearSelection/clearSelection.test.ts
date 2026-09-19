@@ -2,14 +2,11 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { SelectionStore } from '../SelectionStore';
 import { SelectionClearedEvent } from '../events';
-import {
-  cleanup,
-  selectionItem_A_1,
-  selectionItem_A_2,
-  selectionItem_B_1,
-  setup,
-} from '../test-utils';
+import { SelectionFixtures, cleanup, setup } from '../test-utils';
 import { clearSelection } from './clearSelection';
+
+const { selectionItem_A_1, selectionItem_A_2, selectionItem_B_1 } =
+  SelectionFixtures;
 
 const selection = [selectionItem_A_1, selectionItem_A_2, selectionItem_B_1];
 
@@ -19,8 +16,6 @@ describe('clearSelection', () => {
 
     // Add some items to the selection
     SelectionStore.getState().addSelectedItems(selection);
-    // Set `isDragging` to true
-    SelectionStore.getState().setIsDragging(true);
   });
 
   afterEach(cleanup);
@@ -31,14 +26,6 @@ describe('clearSelection', () => {
 
     // Selection should be empty
     expect(SelectionStore.getState().selectedItems).toEqual([]);
-  });
-
-  it('resets the dragging state', () => {
-    // Clear selection
-    clearSelection();
-
-    // Should set `isDragging` to false
-    expect(SelectionStore.getState().isDragging).toBe(false);
   });
 
   it('dispatches selection cleared event', () =>

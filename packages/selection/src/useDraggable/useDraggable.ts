@@ -1,112 +1,109 @@
-import React, { useCallback, useState } from 'react';
-import { Events } from '@minddrop/events';
-import { SelectionStore } from '../SelectionStore';
+import { useCallback } from 'react';
+import {
+  DragAndDrop,
+  DragEffect,
+  DragOrigin,
+  DragPress,
+  DraggableUtils,
+  UseDraggableOptions,
+} from '@minddrop/drag-and-drop';
 import { addToSelection } from '../addToSelection';
-import { SelectionDragEndedEvent, SelectionDragStartedEvent } from '../events';
-import { getSelection } from '../getSelection';
 import { isSelected } from '../isSelected';
 import { select } from '../select';
 import { SelectionItem } from '../types';
-import { serializeSelectionToDataTransfer } from '../utils';
+import { updateSelectionItem } from '../updateSelectionItem';
+import { resolveSelectionDragData } from '../utils';
 
-export interface DragUtils {
+export interface DraggableSelectionItemOptions {
   /**
-   * Callback to be applied to the item component as its
-   * onDragStart prop. Handles selecting the item,
-   * setting the drag event data as well as the dragging
-   * state.
+   * Where the drag starts from.
    */
-  onDragStart(event: DragEvent | React.DragEvent): void;
+  origin?: DragOrigin;
 
   /**
-   * Callback to be applied to the item component as its
-   * onDragEnd prop. Handles reseting the dragging state.
+   * Whether a drop moves the item from where it was dragged out of
+   * or copies it there.
+   *
+   * @default 'move'
    */
-  onDragEnd(event: DragEvent | React.DragEvent): void;
+  effect?: DragEffect;
 
   /**
-   * Whether the item is currently being dragged.
+   * The element shown following the pointer, or a function returning
+   * it when the drag starts. The source element when omitted.
    */
-  isDragging: boolean;
+  preview?: UseDraggableOptions<Record<string, unknown>>['preview'];
 
   /**
-   * Combined event handlers for the drag functionality.
-   * Useful for speading the handlers onto a component.
+   * Whether the item cannot be dragged.
+   *
+   * @default false
    */
-  draggableProps: {
-    draggable: boolean;
-    onDragStart: (event: DragEvent | React.DragEvent) => void;
-    onDragEnd: (event: DragEvent | React.DragEvent) => void;
-  };
+  disabled?: boolean;
+
+  /**
+   * Called as the drag starts, before the item is selected.
+   */
+  onActivate?: (press: DragPress) => void;
 }
 
 /**
- * Returns utility functions for adding drag and
- * drop functionality to resource UI components.
+ * Makes an element draggable as a selection item, with the
+ * serialized selection as the drag's data.
  *
  * @param selectionItem - The selection item to be dragged.
- * @returns Drag utility functions.
+ * @param options - Where the drag starts from and how it is shown.
+ * @returns The props making the element draggable and whether it is being dragged.
  */
-export function useDraggable(selectionItem: SelectionItem): DragUtils {
-  const [isDragging, setIsDragging] = useState(false);
+export function useDraggable(
+  selectionItem: SelectionItem,
+  options: DraggableSelectionItemOptions = {},
+): DraggableUtils {
+  // The drag options
+  const { origin, effect, preview, disabled, onActivate } = options;
 
-  const onDragStart = useCallback(
-    (event: DragEvent | React.DragEvent) => {
-      // Prevent parent from becoming the dragged element
-      event.stopPropagation();
+  // Select the item as the drag starts. An unselected item is
+  // selected exclusively, or added with Shift. An already selected
+  // item is updated, since the selection may have it as it was when
+  // first selected.
+  const handleActivate = useCallback(
+    (press: DragPress) => {
+      // Notify the caller
+      onActivate?.(press);
 
-      if (!isSelected(selectionItem)) {
-        if (event.shiftKey) {
-          // If the Shift key is pressed, add the item to the
-          // current selection.
-          addToSelection([selectionItem]);
-        } else {
-          // Exclusively select the item if not already selected
-          select([selectionItem]);
-        }
-      }
+      // Check if the item is already selected. If so, update it in
+      // place.
+      if (isSelected(selectionItem)) {
+        updateSelectionItem(selectionItem);
 
-      // Ensure event has a data transfer object
-      if (!event.dataTransfer) {
         return;
       }
 
-      // Serialize the selection to the event's data transfer object
-      serializeSelectionToDataTransfer(event.dataTransfer);
+      // Check if Shift was held. If so, add the item to the selection.
+      if (press.shiftKey) {
+        addToSelection([selectionItem]);
 
-      // Set the dragging state to `true`
-      SelectionStore.getState().setIsDragging(true);
-      setIsDragging(true);
+        return;
+      }
 
-      // Dispatch a 'selection:drag:started' event
-      Events.dispatch(SelectionDragStartedEvent, {
-        event,
-        selection: getSelection(),
-      });
+      // Select the item exclusively
+      select([selectionItem]);
     },
-    [selectionItem],
+    [selectionItem, onActivate],
   );
 
-  const onDragEnd = useCallback((event: DragEvent | React.DragEvent) => {
-    setIsDragging(false);
-    // Set the dragging state to `false`
-    SelectionStore.getState().setIsDragging(false);
+  // Make the element draggable, serializing the selection as the
+  // drag starts.
+  const { draggableProps, isDragging } = DragAndDrop.useDraggable({
+    id: selectionItem.id,
+    type: selectionItem.type,
+    data: resolveSelectionDragData,
+    origin,
+    effect,
+    preview,
+    disabled,
+    onActivate: handleActivate,
+  });
 
-    // Dispatch a drag ended event
-    Events.dispatch(SelectionDragEndedEvent, {
-      event,
-      selection: getSelection(),
-    });
-  }, []);
-
-  return {
-    onDragStart,
-    onDragEnd,
-    isDragging,
-    draggableProps: {
-      draggable: true,
-      onDragStart,
-      onDragEnd,
-    },
-  };
+  return { draggableProps, isDragging };
 }

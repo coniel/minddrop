@@ -9,12 +9,6 @@ interface SelectionStore {
   selectedItems: SelectionItem[];
 
   /**
-   * A boolean indicating whether the user is currently
-   * performing a drag action.
-   */
-  isDragging: boolean;
-
-  /**
    * Adds items to the selected items list.
    */
   addSelectedItems(items: SelectionItem[]): void;
@@ -25,14 +19,15 @@ interface SelectionStore {
   removeSelectedItems(items: SelectionItem[]): void;
 
   /**
+   * Replaces the selected item with the same ID as the given item.
+   * Does nothing when no such item is selected.
+   */
+  updateSelectedItem(item: SelectionItem): void;
+
+  /**
    * Clears the selected items list.
    */
   clearSelectedItems(): void;
-
-  /**
-   * Sets the `isDragging` value.
-   */
-  setIsDragging(value: boolean): void;
 
   /**
    * Clears the state, reseting it to the initial
@@ -43,7 +38,6 @@ interface SelectionStore {
 
 export const SelectionStore = create<SelectionStore>()((set) => ({
   selectedItems: [],
-  isDragging: false,
 
   addSelectedItems: (items) =>
     set((state) => ({ selectedItems: [...state.selectedItems, ...items] })),
@@ -55,16 +49,14 @@ export const SelectionStore = create<SelectionStore>()((set) => ({
       ),
     })),
 
+  updateSelectedItem: (item) =>
+    set((state) => ({
+      selectedItems: state.selectedItems.map((selectedItem) =>
+        selectedItem.id === item.id ? item : selectedItem,
+      ),
+    })),
+
   clearSelectedItems: () => set({ selectedItems: [] }),
 
-  setIsDragging: (isDragging) => set({ isDragging }),
-
-  clear: () => set({ selectedItems: [], isDragging: false }),
+  clear: () => set({ selectedItems: [] }),
 }));
-
-/**
- * Returns whether a drag operation is currently in progress.
- */
-export function useIsDragging(): boolean {
-  return SelectionStore((state) => state.isDragging);
-}

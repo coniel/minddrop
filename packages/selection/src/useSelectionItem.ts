@@ -1,5 +1,6 @@
+import { DraggableUtils } from '@minddrop/drag-and-drop';
 import { SelectionItem } from './types';
-import { DragUtils, useDraggable } from './useDraggable';
+import { useDraggable } from './useDraggable';
 import { SelectionUtils, useSelectable } from './useSelectable';
 
 /**
@@ -11,7 +12,7 @@ import { SelectionUtils, useSelectable } from './useSelectable';
  */
 export function useSelectionItem(
   item: SelectionItem,
-): SelectionUtils & DragUtils {
+): SelectionUtils & DraggableUtils {
   const selectableApi = useSelectable(item);
   const draggableApi = useDraggable(item);
 

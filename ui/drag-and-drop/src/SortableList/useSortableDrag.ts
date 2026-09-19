@@ -1,11 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { DragAndDrop } from '@minddrop/drag-and-drop';
+import { swallowNextClick } from '@minddrop/utils';
 import { ItemRect, calculateOverIndex, reorderArray } from './sortable-utils';
 
 export type SortableDirection = 'vertical' | 'horizontal';
-
-// How far the pointer has to travel, in pixels, for the press to
-// count as a drag rather than a click.
-const DRAG_THRESHOLD = 4;
 
 export interface SortableItemRenderProps {
   /**
@@ -18,7 +16,6 @@ export interface SortableItemRenderProps {
    */
   handleProps: {
     onPointerDown: (event: React.PointerEvent) => void;
-    onClickCapture: (event: React.MouseEvent) => void;
   };
 
   /**
@@ -84,7 +81,8 @@ interface DragState {
   pointerId: number;
 
   /**
-   * Whether the pointer has moved since the drag started.
+   * Whether the pointer has moved past the drag threshold since the
+   * press, even if it later returned to where it started.
    */
   moved: boolean;
 }
@@ -135,10 +133,6 @@ export function useSortableDrag({
 
   // Current dragged delta (axis-only, clamped to container)
   const dragDeltaRef = useRef(0);
-
-  // Whether the click following a pointer release is a drag's end
-  // rather than a press, and should be swallowed.
-  const suppressClickRef = useRef(false);
 
   // React state for overIndex (triggers re-render for displaced items)
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -243,7 +237,6 @@ export function useSortableDrag({
       };
 
       dragDeltaRef.current = 0;
-      suppressClickRef.current = false;
 
       // Trigger React state to show dragging/shifting classes
       setActiveIndex(index);
@@ -269,9 +262,10 @@ export function useSortableDrag({
       const currentPointer = getPointerPosition(event);
       let delta = currentPointer - state.startPointer;
 
-      // Remember that the pointer moved, even if it later returns to
-      // where it started.
-      if (delta !== 0) {
+      // Remember that the press became a drag once the pointer moves
+      // past the threshold, even if it later returns to where it
+      // started.
+      if (Math.abs(delta) > DragAndDrop.constants.DragThreshold) {
         state.moved = true;
       }
 
@@ -355,10 +349,6 @@ export function useSortableDrag({
       element.style.transform = '';
     }
 
-    // A release after the pointer moved ends a drag, not a press, so
-    // the click the browser fires for it must not reach the item.
-    suppressClickRef.current = state.moved;
-
     // If order changed, notify the consumer
     if (state.activeIndex !== state.overIndex) {
       const newOrder = reorderArray(
@@ -372,7 +362,7 @@ export function useSortableDrag({
     // Swallow the click the browser fires after a press which
     // turned out to be a drag, so that a handle which is also a
     // control does not act on it.
-    if (Math.abs(dragDeltaRef.current) > DRAG_THRESHOLD) {
+    if (state.moved) {
       swallowNextClick();
     }
 
@@ -487,15 +477,6 @@ export function useSortableDrag({
         onPointerDown: (event: React.PointerEvent) => {
           handlePointerDown(index, event);
         },
-        onClickCapture: (event: React.MouseEvent) => {
-          if (!suppressClickRef.current) {
-            return;
-          }
-
-          suppressClickRef.current = false;
-          event.preventDefault();
-          event.stopPropagation();
-        },
       },
       isDragging,
       style,
@@ -504,23 +485,4 @@ export function useSortableDrag({
   });
 
   return renderPropsMap;
-}
-
-/**
- * Swallows the click the browser fires after a drag, so that a drag
- * handle which is also a control (a collapsible label, a button)
- * does not act on the press which dragged it. Dropped again on the
- * next task, in case no click follows the drag at all.
- */
-function swallowNextClick(): void {
-  function swallow(event: MouseEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-  }
-
-  window.addEventListener('click', swallow, { capture: true, once: true });
-
-  window.setTimeout(() => {
-    window.removeEventListener('click', swallow, { capture: true });
-  });
 }

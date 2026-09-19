@@ -1,5 +1,5 @@
 import React from 'react';
-import { DropIndicatorPosition } from '@minddrop/selection';
+import { DropIndicatorPosition } from '@minddrop/drag-and-drop';
 import { propsToClass } from '@minddrop/ui-primitives';
 import './DropIndicator.css';
 

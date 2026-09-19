@@ -27,6 +27,7 @@ import { Search } from '@minddrop/search';
 import { Snapshots } from '@minddrop/snapshots';
 import { Spaces } from '@minddrop/spaces';
 import { Tags } from '@minddrop/tags';
+import { initializeDragLayer } from '@minddrop/ui-drag-and-drop';
 import { initializeEntityGroupsUi } from '@minddrop/ui-entity-groups';
 import { Icons } from '@minddrop/ui-icons';
 import {
@@ -76,6 +77,9 @@ async function runInitialization(): Promise<void> {
 
   // Restore the pointerdown withheld from the press after a drag
   initializePointerDownRecovery();
+
+  // Mount the layer showing dragged items following the pointer
+  initializeDragLayer();
 
   // Register the content icon sets, which load on first use
   Icons.initialize();

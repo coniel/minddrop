@@ -270,6 +270,9 @@ importers:
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
+      '@minddrop/drag-and-drop':
+        specifier: workspace:*
+        version: link:../../packages/drag-and-drop
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
@@ -374,6 +377,9 @@ importers:
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
+      '@minddrop/drag-and-drop':
+        specifier: workspace:*
+        version: link:../../packages/drag-and-drop
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
@@ -688,6 +694,9 @@ importers:
       '@minddrop/designs-next':
         specifier: workspace:*
         version: link:../../packages/designs-next
+      '@minddrop/drag-and-drop':
+        specifier: workspace:*
+        version: link:../../packages/drag-and-drop
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
@@ -791,6 +800,9 @@ importers:
       '@minddrop/designs':
         specifier: workspace:*
         version: link:../../packages/designs
+      '@minddrop/drag-and-drop':
+        specifier: workspace:*
+        version: link:../../packages/drag-and-drop
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
@@ -1296,6 +1308,9 @@ importers:
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
+      '@minddrop/drag-and-drop':
+        specifier: workspace:*
+        version: link:../../packages/drag-and-drop
       '@minddrop/entity-groups':
         specifier: workspace:*
         version: link:../../packages/entity-groups
@@ -2144,11 +2159,54 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  packages/drag-and-drop:
+    dependencies:
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../events
+      '@minddrop/stores':
+        specifier: workspace:*
+        version: link:../stores
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../utils
+      react:
+        specifier: ^19.2.4
+        version: 19.2.4
+      zustand:
+        specifier: ^4.3.8
+        version: 4.5.6(@types/react@19.2.14)(react@19.2.4)
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../test-utils
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
+      '@types/react':
+        specifier: ^19.2.14
+        version: 19.2.14
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.5
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   packages/editor:
     dependencies:
       '@minddrop/ast':
         specifier: workspace:*
         version: link:../ast
+      '@minddrop/drag-and-drop':
+        specifier: workspace:*
+        version: link:../drag-and-drop
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
@@ -2653,6 +2711,9 @@ importers:
 
   packages/selection:
     dependencies:
+      '@minddrop/drag-and-drop':
+        specifier: workspace:*
+        version: link:../drag-and-drop
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
@@ -3296,6 +3357,9 @@ importers:
       '@minddrop/designs-next':
         specifier: workspace:*
         version: link:../../packages/designs-next
+      '@minddrop/drag-and-drop':
+        specifier: workspace:*
+        version: link:../../packages/drag-and-drop
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
@@ -3394,12 +3458,15 @@ importers:
 
   ui/drag-and-drop:
     dependencies:
+      '@minddrop/drag-and-drop':
+        specifier: workspace:*
+        version: link:../../packages/drag-and-drop
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../../packages/events
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
-      '@minddrop/selection':
-        specifier: workspace:*
-        version: link:../../packages/selection
       '@minddrop/stores':
         specifier: workspace:*
         version: link:../../packages/stores
@@ -3431,6 +3498,9 @@ importers:
 
   ui/entity-groups:
     dependencies:
+      '@minddrop/drag-and-drop':
+        specifier: workspace:*
+        version: link:../../packages/drag-and-drop
       '@minddrop/entity-groups':
         specifier: workspace:*
         version: link:../../packages/entity-groups
@@ -3703,7 +3773,7 @@ importers:
         version: 19.2.4
       zustand:
         specifier: ^4.3.8
-        version: 4.5.6(react@19.2.4)
+        version: 4.5.6(@types/react@19.2.14)(react@19.2.4)
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
@@ -11080,14 +11150,6 @@ packages:
       react: 19.2.4
     dev: false
 
-  /use-sync-external-store@1.4.0(react@19.2.4):
-    resolution: {integrity: sha512-9WXSPC5fMv61vaupRkCKCxsPxBocVnwakBEkMIHHpkTTg6icbJtg6jzgtLDm4bl3cSHAca52rYWih0k4K3PfHw==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-    dependencies:
-      react: 19.2.4
-    dev: false
-
   /use-sync-external-store@1.6.0(react@19.2.4):
     resolution: {integrity: sha512-Pp6GSwGP/NrPIrxVFAIkOQeyw8lFenOHijQWkUTrDvrF4ALqylP2C/KCkeS9dpUM3KvYRQhna5vt7IL95+ZQ9w==}
     peerDependencies:
@@ -11749,25 +11811,6 @@ packages:
         optional: true
     dependencies:
       '@types/react': 19.2.14
-      react: 19.2.4
-      use-sync-external-store: 1.4.0(react@19.2.4)
-    dev: false
-
-  /zustand@4.5.6(react@19.2.4):
-    resolution: {integrity: sha512-ibr/n1hBzLLj5Y+yUcU7dYw8p6WnIVzdJbnX+1YpaScvZVF2ziugqHs+LAmHw4lWO9c/zRj+K1ncgWDQuthEdQ==}
-    engines: {node: '>=12.7.0'}
-    peerDependencies:
-      '@types/react': '>=16.8'
-      immer: '>=9.0.6'
-      react: '>=16.8'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      immer:
-        optional: true
-      react:
-        optional: true
-    dependencies:
       react: 19.2.4
       use-sync-external-store: 1.6.0(react@19.2.4)
     dev: false

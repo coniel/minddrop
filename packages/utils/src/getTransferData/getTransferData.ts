@@ -1,14 +1,4 @@
-import { MindDropDataKey } from '../constants';
-import { isUrl } from '../isUrl';
-
-interface StandardDataTypes {
-  'text/plain'?: string;
-  'text/html'?: string;
-  urls?: string[];
-  files?: File[];
-}
-
-type DataTypes<TCustom = object> = StandardDataTypes & TCustom;
+import { TransferData, parseTransferData } from '../parseTransferData';
 
 /**
  * Returns the data from a drag event or clipboard event, removing the
@@ -19,83 +9,36 @@ type DataTypes<TCustom = object> = StandardDataTypes & TCustom;
  */
 export function getTransferData<TCustom = object>(
   event: React.DragEvent | DragEvent | React.ClipboardEvent | ClipboardEvent,
-): DataTypes<TCustom> {
+): TransferData<TCustom> {
+  // Read the event's data transfer
   const dataTransfer =
     'dataTransfer' in event ? event.dataTransfer : event.clipboardData;
 
-  const data: Record<string, unknown> = {};
-
   if (!dataTransfer) {
-    return data as DataTypes<TCustom>;
+    return {} as TransferData<TCustom>;
   }
 
+  // The raw data entries, keyed by type
+  const entries: Record<string, string> = {};
+
+  // Read the data of every type
   for (const type of dataTransfer.types) {
-    // Skip Files type as it's handled separately below
+    // Skip the files type. Files are read off the transfer's file
+    // list.
     if (type === 'Files') {
       continue;
     }
 
-    let isJson = false;
-    let key = type;
-
-    // Check if the data key is using the MindDrop mime type format
-    if (key.includes(MindDropDataKey)) {
-      key = key.split(`${MindDropDataKey}.`)[1];
-    }
-
-    // Check if the data is JSON
-    if (key.includes('+json')) {
-      key = key.split('+json')[0];
-      isJson = true;
-    }
-
-    // Get the raw data
-    const rawData = dataTransfer.getData(type);
-
-    // Skip empty strings (but allow other falsy values from JSON)
-    if (!isJson && !rawData) {
-      continue;
-    }
-
-    // Add the data to the object, parsing it if needed
-    try {
-      data[key] = isJson ? JSON.parse(rawData) : rawData;
-    } catch (error) {
-      // If JSON parsing fails, store as string
-      console.warn(`Failed to parse JSON for type "${type}":`, error);
-      data[key] = rawData;
-    }
+    // Read the type's data
+    entries[type] = dataTransfer.getData(type);
   }
 
-  // Add files if present
-  if (dataTransfer.files && dataTransfer.files.length > 0) {
-    data.files = Array.from(dataTransfer.files);
-  }
+  // Read the transferred files
+  const files =
+    dataTransfer.files && dataTransfer.files.length > 0
+      ? Array.from(dataTransfer.files)
+      : [];
 
-  // Parse text/uri-list into URLs array
-  if (data['text/uri-list']) {
-    const uriList = data['text/uri-list'] as string;
-    const urls = uriList
-      .split(/\r?\n/) // Handle both Windows (\r\n) and Unix (\n) line endings
-      .map((url) => url.trim())
-      .filter((url) => url && !url.startsWith('#') && isUrl(url));
-
-    if (urls.length > 0) {
-      data.urls = urls;
-    }
-  }
-
-  // Check if text/plain is a URL
-  if (data['text/plain'] && typeof data['text/plain'] === 'string') {
-    const plainText = (data['text/plain'] as string).trim();
-
-    if (isUrl(plainText)) {
-      // Only set if urls doesn't already exist (text/uri-list takes precedence)
-      if (!data.urls) {
-        data.urls = [plainText];
-      }
-    }
-  }
-
-  return data as DataTypes<TCustom>;
+  // Parse the entries into transfer data
+  return parseTransferData<TCustom>(entries, files);
 }

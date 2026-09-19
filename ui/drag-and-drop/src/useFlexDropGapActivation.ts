@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { DropIndicatorPosition } from '@minddrop/selection';
+import { DropIndicatorPosition } from '@minddrop/drag-and-drop';
 import { useFlexDropContainer } from './FlexDropContainer';
 
 export interface UseFlexDropGapActivationOptions {

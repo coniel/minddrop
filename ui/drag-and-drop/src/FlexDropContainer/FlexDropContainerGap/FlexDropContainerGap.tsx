@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { DropEventData, Selection } from '@minddrop/selection';
-import { getTransferData } from '@minddrop/utils';
+import React from 'react';
+import { DragAndDrop, DropEventData } from '@minddrop/drag-and-drop';
 import './FlexDropContainerGap.css';
 
 interface FlexDropContainerGapProps {
@@ -62,68 +61,18 @@ export const FlexDropContainerGap: React.FC<FlexDropContainerGapProps> = ({
   grow = false,
   onDrop,
 }) => {
-  // Track direct drags over this gap zone
-  const [isDraggingOver, setIsDraggingOver] = useState(false);
+  // Take drops on the gap
+  const { droppableProps, isDraggingOver } = DragAndDrop.useDroppable({
+    type: 'flex-drop-container',
+    id: containerId,
+    index,
+    accepts,
+    onDrop,
+  });
 
   // Gap shows the drop line when directly dragged over OR
   // activated by a sibling element.
   const showLine = isDraggingOver || isActive;
-
-  const handleDragOver = (event: React.DragEvent) => {
-    // Ignore drags without an accepted data type, letting them
-    // fall through to ancestor drop targets.
-    if (accepts && !Selection.dragContainsType(event, accepts)) {
-      return;
-    }
-
-    event.preventDefault();
-    event.dataTransfer.dropEffect = 'move';
-    setIsDraggingOver(true);
-  };
-
-  const handleDragEnter = (event: React.DragEvent) => {
-    // Ignore drags without an accepted data type
-    if (accepts && !Selection.dragContainsType(event, accepts)) {
-      return;
-    }
-
-    event.preventDefault();
-    setIsDraggingOver(true);
-  };
-
-  const handleDragLeave = (event: React.DragEvent) => {
-    event.preventDefault();
-
-    if (
-      event.currentTarget === event.target ||
-      !event.currentTarget.contains(event.relatedTarget as Node)
-    ) {
-      setIsDraggingOver(false);
-    }
-  };
-
-  const handleDrop = (event: React.DragEvent) => {
-    // Let unaccepted drops bubble to ancestor drop targets
-    if (accepts && !Selection.dragContainsType(event, accepts)) {
-      return;
-    }
-
-    event.preventDefault();
-    event.stopPropagation();
-
-    setIsDraggingOver(false);
-
-    if (onDrop) {
-      onDrop({
-        data: getTransferData(event),
-        index,
-        targetId: containerId,
-        targetType: 'flex-drop-container',
-        event,
-        position: 'inside',
-      });
-    }
-  };
 
   // Determine the active dimension based on layout direction
   const isRow = direction === 'row';
@@ -139,12 +88,9 @@ export const FlexDropContainerGap: React.FC<FlexDropContainerGapProps> = ({
     <div
       className="flex-drop-gap"
       style={gapStyle}
-      onDragOver={handleDragOver}
-      onDragEnter={handleDragEnter}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
       data-gap-zone
       data-position={index}
+      {...droppableProps}
     >
       {/* Line indicating the drop location */}
       {showLine && (

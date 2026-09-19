@@ -1,5 +1,5 @@
+import { toMimeType } from '@minddrop/utils';
 import { SelectionItem, SelectionItemSerializer } from '../types';
-import { toMimeType } from '../utils';
 
 export const selectionItemType_A = 'type-A';
 export const selectionItemType_B = 'type-B';

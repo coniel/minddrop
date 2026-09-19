@@ -1,7 +1,7 @@
+import { toMimeType } from '@minddrop/utils';
 import { SelectionItemSerializersRegistry } from '../../SelectionItemSerializersRegistry';
 import { getSelection } from '../../getSelection';
 import { SelectionItem } from '../../types';
-import { toMimeType } from '../toMimeType';
 
 /**
  * Serializes the current selection into a format compatible with the clipboard
@@ -20,14 +20,14 @@ export function serializeSelection(): Record<string, string> {
   // Group the selection items by type
   const selectionItemsByType = selection.reduce<
     Record<string, SelectionItem[]>
-  >((acc, item) => {
-    if (!acc[item.type]) {
-      acc[item.type] = [item];
+  >((itemsByType, item) => {
+    if (!itemsByType[item.type]) {
+      itemsByType[item.type] = [item];
     } else {
-      acc[item.type].push(item);
+      itemsByType[item.type].push(item);
     }
 
-    return acc;
+    return itemsByType;
   }, {});
 
   const data: Record<string, string> = {
