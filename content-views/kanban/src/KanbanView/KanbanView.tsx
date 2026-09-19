@@ -217,20 +217,12 @@ export const KanbanViewComponent: React.FC<
           return;
         }
 
-        // Index into the column's saved order rather than its
-        // rendered list, which also holds unplaced entries the
-        // order does not. An unplaced original resolves to the
-        // top, matching the display fallback.
-        const originalIndex = (order[column.value] ?? []).indexOf(
-          data.original.id,
-        );
-
         updateOrder(
           placeEntryInColumn(
-            order,
+            columns,
             data.duplicate.id,
             column.value,
-            originalIndex + 1,
+            column.entryIds.indexOf(data.original.id) + 1,
           ),
         );
       },
@@ -242,7 +234,7 @@ export const KanbanViewComponent: React.FC<
         `kanban-view-${view.id}`,
       );
     };
-  }, [view.id, view.dataSource.id, columns, order, updateOrder]);
+  }, [view.id, view.dataSource.id, columns, updateOrder]);
 
   // Track the column or heading under the pointer, whose heading
   // shows its actions. Tracked in state rather than via :hover,
@@ -383,7 +375,9 @@ export const KanbanViewComponent: React.FC<
 
       // Position the entry before the value write, so that the
       // card does not jump to the bottom of the column first.
-      updateOrder(placeEntryInColumn(order, entryId, columnValue, entryIndex));
+      updateOrder(
+        placeEntryInColumn(columns, entryId, columnValue, entryIndex),
+      );
 
       // Write the column's value to the entry's group property
       await DatabaseEntries.updateProperty(
@@ -396,7 +390,7 @@ export const KanbanViewComponent: React.FC<
         ),
       );
     },
-    [databaseId, order, updateOrder],
+    [databaseId, columns, updateOrder],
   );
 
   // Create an entry at the top of a column via its heading's new
@@ -424,14 +418,14 @@ export const KanbanViewComponent: React.FC<
       );
 
       // Position the entry at the top of the column
-      updateOrder(placeEntryInColumn(order, entry.id, columnValue, 0));
+      updateOrder(placeEntryInColumn(columns, entry.id, columnValue, 0));
 
       // Bring the new entry's card into view, in case the column's
       // top sits off screen, and focus its editor once the card
       // mounts.
       DatabaseEntries.requestFocus(entry.id, { viewId: view.id });
     },
-    [property, databaseId, order, updateOrder, view.id],
+    [property, databaseId, columns, updateOrder, view.id],
   );
 
   // Handle dropping an entry into a column
