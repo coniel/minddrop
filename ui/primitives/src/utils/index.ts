@@ -1,6 +1,7 @@
 export * from './createKeydownClickHandler';
 export * from './generateMenu';
 export * from './joinClasses';
+export * from './isDragInProgress';
 export * from './isKeyboardInputMode';
 export * from './toKebabCase';
 export * from './extractStyleProps';

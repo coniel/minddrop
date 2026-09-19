@@ -26,9 +26,7 @@
     box-shadow: var(--shadow-sm);
   }
 
-  /* Driven by usePressedState rather than :active, which a drag
-     leaves stuck on the item it started from */
-  &[data-pressed='true'] {
+  &:active {
     cursor: grabbing;
     box-shadow: var(--shadow-md);
     border-color: var(--border-strong);

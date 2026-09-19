@@ -4,6 +4,7 @@ import { useTranslation } from '@minddrop/i18n';
 import { KeyboardShortcut } from '../KeyboardShortcut';
 import { Text } from '../Text';
 import { TranslatableNode } from '../types';
+import { isDragInProgress } from '../utils';
 import { lastInputMovedFocus } from './lastInputModality';
 import './Tooltip.css';
 
@@ -79,13 +80,9 @@ export const Tooltip: FC<TooltipProps> = ({
   ...other
 }) => {
   const { t } = useTranslation();
-  // A native drag suspends pointer events, so an open tooltip never
-  // hears the pointer leave and hangs over the page until the drop.
-  // A menu or popover opened from the trigger does the same, and
-  // reveals the tooltip again when it closes. Scrolling moves the
-  // trigger out from under the tooltip without a pointer leave
-  // either. Tracking open state here allows all three to dismiss
-  // it.
+  // Track the open state, so that a menu or popover opened from the
+  // trigger, and scrolling, can dismiss the tooltip. Both move the
+  // trigger out from under it without a pointer leave.
   const [openState, setOpenState] = useState(defaultOpen ?? false);
 
   const isOpen = open ?? openState;
@@ -108,16 +105,23 @@ export const Tooltip: FC<TooltipProps> = ({
         return;
       }
 
+      // Ignore an open request while a drag is in progress, as
+      // pointer events keep flowing through a drag and would open
+      // the tooltip.
+      if (nextOpen && isDragInProgress()) {
+        return;
+      }
+
       setOpenState(nextOpen);
       onOpenChange?.(nextOpen, eventDetails);
     },
     [onOpenChange],
   );
 
-  // Only the open tooltip watches for a drag or scroll, so these are
-  // single listeners however many tooltips are mounted. Scroll events
-  // do not bubble, so the capture phase catches them from any scroll
-  // container.
+  // Dismiss the tooltip on a press or scroll. Only the open tooltip
+  // listens, so these are single listeners however many tooltips are
+  // mounted. Scroll events do not bubble, so the capture phase
+  // catches them from any scroll container.
   useEffect(() => {
     if (!isOpen) {
       return;
@@ -127,12 +131,10 @@ export const Tooltip: FC<TooltipProps> = ({
       setOpenState(false);
     }
 
-    document.addEventListener('dragstart', handleDismiss, true);
     document.addEventListener('scroll', handleDismiss, true);
     document.addEventListener('pointerdown', handleDismiss, true);
 
     return () => {
-      document.removeEventListener('dragstart', handleDismiss, true);
       document.removeEventListener('scroll', handleDismiss, true);
       document.removeEventListener('pointerdown', handleDismiss, true);
     };

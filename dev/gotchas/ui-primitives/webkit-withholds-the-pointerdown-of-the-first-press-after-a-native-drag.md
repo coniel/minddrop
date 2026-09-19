@@ -1,7 +1,7 @@
 ---
 title: 'WebKit withholds the pointerdown of the first press after a native drag'
 package: ui/primitives
-summary: 'The first press after an HTML5 drag arrives without its pointerdown, which closes any popup it opens; initializePointerDownRecovery dispatches the missing event'
+summary: 'The first press after a native drag (now only a Slate text drag) arrives without its pointerdown, which closes any popup it opens; initializePointerDownRecovery dispatches the missing event'
 paths:
   - 'ui/primitives/src/initializePointerDownRecovery/**'
   - 'features/desktop-app/src/initializeDesktopApp/initializeDesktopApp.ts'
@@ -28,4 +28,4 @@ With no `pointerdown`, the ref stays unset, the guard does not fire, and the cli
 
 Presses commonly land on the shapes inside an icon's SVG, so anything inspecting a press target must test `instanceof Element`, not `instanceof HTMLElement`.
 
-The whole workaround is native drag's alone. A pointer-based drag never hands the session to the OS, so switching to one (the "Custom drag and drop" plan) makes it redundant: delete the initializer, its tests, its call in `initializeDesktopApp`, and this gotcha along with them.
+The workaround is native drag's alone, and the only native drag left in the app is Slate's drag of selected editor text: every other drag runs on the pointer-based engine in `packages/drag-and-drop`, which never hands the session to the OS. The initializer stays for that one case (drag selected text in an editor, then press an entry's options menu). Should text drags move onto the engine too, delete the initializer, its tests, its call in `initializeDesktopApp`, and this gotcha along with them.

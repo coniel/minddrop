@@ -18,7 +18,10 @@ class ResizeObserver {
 }
 
 describe('<Tooltip />', () => {
-  afterEach(cleanup);
+  afterEach(() => {
+    cleanup();
+    document.documentElement.removeAttribute('data-dragging');
+  });
 
   beforeAll(() => {
     // @ts-expect-error Sufficient for test
@@ -119,26 +122,34 @@ describe('<Tooltip />', () => {
     expect(button.hasAttribute('data-popup-open')).toBe(true);
   });
 
-  it('dismisses on drag start', async () => {
+  it('does not open while a drag is in progress', async () => {
     const user = userEvent.setup();
 
     render(
-      <TooltipProvider>
+      <TooltipProvider delay={0}>
         <Tooltip stringTitle="Tooltip title">
           <button type="button">tooltip</button>
         </Tooltip>
       </TooltipProvider>,
     );
 
+    // Mark the document as dragging, as a drag in progress does
+    document.documentElement.setAttribute('data-dragging', '');
+
+    await user.hover(screen.getByRole('button'));
+
+    // Wait long enough for an undelayed tooltip to have opened
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    expect(screen.queryByText('Tooltip title')).toBeNull();
+
+    // The same hover opens the tooltip once the drag is over
+    document.documentElement.removeAttribute('data-dragging');
+
+    await user.unhover(screen.getByRole('button'));
     await user.hover(screen.getByRole('button'));
 
     await waitFor(() => screen.getAllByText('Tooltip title'));
-
-    // A drag suspends pointer events, so the tooltip never hears the
-    // pointer leave and would hang over the page until the drop.
-    fireEvent.dragStart(document);
-
-    await waitFor(() => expect(screen.queryByText('Tooltip title')).toBeNull());
   });
 
   it('dismisses on scroll', async () => {

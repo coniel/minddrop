@@ -31,11 +31,11 @@ So: prefer test-first where it fits, but treat "does this test model what the br
 
 ## What the environment cannot see
 
-`vitest` runs against jsdom, which is not a browser. It does not lay anything out and it does not implement pointer semantics. Three gaps have each produced a bug here:
+`vitest` runs against happy-dom, which is not a browser. It does not lay anything out and it does not implement pointer semantics. Three gaps have each produced a bug here:
 
-- **Derived events do not fire.** `fireEvent` dispatches exactly the event named. A browser derives `click` from a press-release pair, and `mouseover`/`mouseout` pairs from movement; jsdom derives nothing. A gesture test must fire the whole sequence by hand, including the trailing `click`. `userEvent` synthesizes more of it and is the better default for multi-event gestures.
+- **Derived events do not fire.** `fireEvent` dispatches exactly the event named. A browser derives `click` from a press-release pair, and `mouseover`/`mouseout` pairs from movement; happy-dom derives nothing. A gesture test must fire the whole sequence by hand, including the trailing `click`. `userEvent` synthesizes more of it and is the better default for multi-event gestures.
 - **`getBoundingClientRect` returns zeroes.** Anything reading measured geometry silently takes its fallback path. Tests that need a real measurement stub the method on the element (see `divides pointer deltas by the measured display scale`).
-- **Third-party pointer behaviour is absent.** Base UI's popover dismissal, focus management and hover interactions do not run. A menu that closes itself in the browser stays open in jsdom.
+- **Third-party pointer behaviour is absent.** Base UI's popover dismissal, focus management and hover interactions do not run. A menu that closes itself in the browser stays open in happy-dom.
 
 When behaviour cannot be expressed in this environment, **leave it to end-to-end tests in a proper framework rather than writing a unit test that only looks like coverage**. A green test that cannot fail is worse than no test: it stops anyone looking.
 

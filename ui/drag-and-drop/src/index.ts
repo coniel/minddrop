@@ -2,5 +2,4 @@ export * from './DropIndicator';
 export * from './FlexDropContainer';
 export * from './SortableList';
 export * from './initializeDragLayer';
-export * from './useHoveredItem';
 export * from './useFlexDropGapActivation';

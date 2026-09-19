@@ -189,16 +189,9 @@
   /* --- Hover ---
      Gated on the input mode so that a stationary cursor resting on
      an item does not compete with the keyboard-driven highlight.
-     Applies by default, while the input mode is still unknown.
+     Applies by default, while the input mode is still unknown. */
 
-     A row which tracks hover itself says so with a `data-hovered`
-     attribute, and the browser's own hover is ignored within it. A
-     draggable row must: a native drag freezes `:hover` where it
-     began, and the frozen state outlives the drag on whichever row
-     the list's DOM nodes are reused for. */
-
-  :root:not([data-input-mode='keyboard']) &:hover:not([data-hovered] *),
-  :root:not([data-input-mode='keyboard']) [data-hovered='true'] & {
+  :root:not([data-input-mode='keyboard']) &:hover {
     background-color: var(--surface-accent);
   }
 
@@ -221,11 +214,7 @@
     }
   }
 
-  :root:not([data-input-mode='keyboard'])
-    &.menu-item-active:hover:not([data-hovered] *),
-  :root:not([data-input-mode='keyboard'])
-    [data-hovered='true']
-    &.menu-item-active {
+  :root:not([data-input-mode='keyboard']) &.menu-item-active:hover {
     background-color: var(--surface-accent-hover);
   }
 
@@ -242,11 +231,7 @@
     }
   }
 
-  :root:not([data-input-mode='keyboard'])
-    &.menu-item-muted:hover:not([data-hovered] *),
-  :root:not([data-input-mode='keyboard'])
-    [data-hovered='true']
-    &.menu-item-muted {
+  :root:not([data-input-mode='keyboard']) &.menu-item-muted:hover {
     color: var(--text-regular);
   }
 
@@ -260,11 +245,7 @@
     }
   }
 
-  :root:not([data-input-mode='keyboard'])
-    &.menu-item-danger:hover:not([data-hovered] *),
-  :root:not([data-input-mode='keyboard'])
-    [data-hovered='true']
-    &.menu-item-danger {
+  :root:not([data-input-mode='keyboard']) &.menu-item-danger:hover {
     color: var(--text-danger);
     background-color: var(--surface-danger-hover);
   }
@@ -382,8 +363,7 @@
     }
   }
 
-  &:hover:not([data-hovered] *) .menu-item-actions,
-  [data-hovered='true'] & .menu-item-actions,
+  &:hover .menu-item-actions,
   &[data-highlighted] .menu-item-actions,
   &.menu-item-force-actions-visible .menu-item-actions {
     opacity: 1;

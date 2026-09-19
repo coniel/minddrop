@@ -2,13 +2,7 @@ import { DraggableProps } from '@minddrop/drag-and-drop';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { PropertyType } from '@minddrop/properties';
 import { UiIconName } from '@minddrop/ui-icons';
-import {
-  ContentIcon,
-  Icon,
-  Text,
-  Tooltip,
-  usePressedState,
-} from '@minddrop/ui-primitives';
+import { ContentIcon, Icon, Text, Tooltip } from '@minddrop/ui-primitives';
 import { propertyTypeLabelMap } from '../constants';
 import './PaletteItem.css';
 
@@ -61,15 +55,10 @@ export const PaletteItem: React.FC<PaletteItemProps> = ({
   draggableProps,
 }) => {
   const { t } = useTranslation();
-  const { pressedProps } = usePressedState();
   const isBindable = compatiblePropertyTypes.length > 0;
 
   const item = (
-    <div
-      className="designs-palette-item"
-      {...pressedProps}
-      {...draggableProps}
-    >
+    <div className="designs-palette-item" {...draggableProps}>
       {icon && <Icon name={icon} className="designs-palette-item-icon" />}
       {contentIcon && (
         <ContentIcon icon={contentIcon} className="designs-palette-item-icon" />
