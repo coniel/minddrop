@@ -1,0 +1,299 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1300" viewBox="0 0 1200 1300" font-family="-apple-system, 'Helvetica Neue', Arial, sans-serif" font-size="12">
+  <title>Designs-next flow layout: from a design on its unit grid to nested flex boxes</title>
+  <defs>
+    <pattern id="grid" width="12" height="12" patternUnits="userSpaceOnUse">
+      <path d="M 12 0 L 0 0 0 12" fill="none" stroke="#e5e7eb" stroke-width="0.5"/>
+    </pattern>
+    <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#cbd5e1" stroke-width="1.5"/>
+    </pattern>
+    <style>
+      .title { font-size: 15px; font-weight: 600; fill: #111827; }
+      .note { font-size: 11.5px; fill: #4b5563; }
+      .label { font-size: 11px; fill: #1f2937; }
+      .mono { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 10.5px; fill: #1f2937; }
+      .mono-note { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 10.5px; fill: #6b7280; }
+      .element { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.5; }
+      .element-dim { fill: #eff6ff; stroke: #93c5fd; stroke-width: 1; }
+      .grid-frame { fill: url(#grid); stroke: #9ca3af; stroke-width: 1; }
+      .cut { stroke: #dc2626; stroke-width: 1.5; stroke-dasharray: 5 3; }
+      .spacer { fill: url(#hatch); stroke: #94a3b8; stroke-width: 1; }
+      .box { fill: none; stroke: #16a34a; stroke-width: 2; }
+      .box-columns { fill: none; stroke: #d97706; stroke-width: 2; }
+      .node { fill: #ffffff; stroke: #374151; stroke-width: 1.2; rx: 4; }
+      .node-rows { fill: #ecfdf5; stroke: #16a34a; stroke-width: 1.5; }
+      .node-columns { fill: #fffbeb; stroke: #d97706; stroke-width: 1.5; }
+      .node-element { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.5; }
+      .node-spacer { fill: #f1f5f9; stroke: #94a3b8; stroke-width: 1.2; }
+      .edge { stroke: #9ca3af; stroke-width: 1; fill: none; }
+      .panel { fill: #ffffff; stroke: #e5e7eb; stroke-width: 1; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="1300" fill="#f9fafb"/>
+  <text x="24" y="30" font-size="18" font-weight="700" fill="#111827">Designs-next flow layout: compiling a design into flow boxes</text>
+  <text x="24" y="50" class="note">One grid unit is 4px (UnitPixelSize). Drawn at 6px per unit. The design is 48 columns by 26 rows.</text>
+
+  <!-- ============ Panel 1: the design ============ -->
+  <g transform="translate(24, 70)">
+    <rect class="panel" width="560" height="380" rx="6"/>
+    <text x="16" y="26" class="title">1. The design on its unit grid</text>
+    <text x="16" y="44" class="note">Four elements. Row bands and column boxes will be cut along lines that nothing crosses.</text>
+    <g transform="translate(40, 70)">
+      <rect class="grid-frame" width="288" height="156"/>
+      <rect class="element" x="0" y="0" width="288" height="36"/>
+      <text x="8" y="22" class="label">heading · fluid · grow</text>
+      <rect class="element" x="0" y="48" width="36" height="36"/>
+      <text x="4" y="69" class="label" font-size="10">icon</text>
+      <rect class="element" x="0" y="96" width="36" height="36"/>
+      <text x="4" y="117" class="label" font-size="10">icon</text>
+      <rect class="element" x="48" y="48" width="240" height="96"/>
+      <text x="56" y="70" class="label">text · fluid · grow</text>
+      <!-- row/column rulers -->
+      <text x="-6" y="4" class="mono-note" text-anchor="end">0</text>
+      <text x="-6" y="40" class="mono-note" text-anchor="end">6</text>
+      <text x="-6" y="52" class="mono-note" text-anchor="end">8</text>
+      <text x="-6" y="148" class="mono-note" text-anchor="end">24</text>
+      <text x="-6" y="160" class="mono-note" text-anchor="end">26</text>
+      <text x="0" y="172" class="mono-note">0</text>
+      <text x="36" y="172" class="mono-note" text-anchor="middle">6</text>
+      <text x="48" y="172" class="mono-note" text-anchor="middle">8</text>
+      <text x="288" y="172" class="mono-note" text-anchor="end">48</text>
+    </g>
+    <g transform="translate(350, 80)">
+      <text x="0" y="0" class="mono">heading  at 0,0   48×6   fluid</text>
+      <text x="0" y="18" class="mono">icon     at 0,8    6×6   fixed-left</text>
+      <text x="0" y="36" class="mono">icon     at 0,16   6×6   fixed-left</text>
+      <text x="0" y="54" class="mono">text     at 8,8   40×16  fluid</text>
+      <text x="0" y="90" class="note">Rows and columns are counted in grid</text>
+      <text x="0" y="106" class="note">units. Nothing is measured: the tree</text>
+      <text x="0" y="122" class="note">is a pure function of these rects.</text>
+    </g>
+  </g>
+
+  <!-- ============ Panel 2: horizontal cut ============ -->
+  <g transform="translate(616, 70)">
+    <rect class="panel" width="560" height="380" rx="6"/>
+    <text x="16" y="26" class="title">2. Cut at the horizontal lines no element crosses</text>
+    <text x="16" y="44" class="note">resolveCutLines keeps a line only when an element edge lies on it and nothing</text>
+    <text x="16" y="58" class="note">straddles it, so a gap becomes one band rather than one per row.</text>
+    <g transform="translate(40, 70)">
+      <rect class="grid-frame" width="288" height="156"/>
+      <rect class="element-dim" x="0" y="0" width="288" height="36"/>
+      <rect class="element-dim" x="0" y="48" width="36" height="36"/>
+      <rect class="element-dim" x="0" y="96" width="36" height="36"/>
+      <rect class="element-dim" x="48" y="48" width="240" height="96"/>
+      <!-- cut lines at rows 6, 8, 24 -->
+      <line class="cut" x1="-12" y1="36" x2="300" y2="36"/>
+      <line class="cut" x1="-12" y1="48" x2="300" y2="48"/>
+      <line class="cut" x1="-12" y1="144" x2="300" y2="144"/>
+      <text x="-16" y="40" class="mono" text-anchor="end" fill="#dc2626">6</text>
+      <text x="-16" y="52" class="mono" text-anchor="end" fill="#dc2626">8</text>
+      <text x="-16" y="148" class="mono" text-anchor="end" fill="#dc2626">24</text>
+      <!-- spacers -->
+      <rect class="spacer" x="0" y="36" width="288" height="12"/>
+      <rect class="spacer" x="0" y="144" width="288" height="12"/>
+      <!-- rows box outline -->
+      <rect class="box" x="-3" y="-3" width="294" height="162"/>
+    </g>
+    <g transform="translate(350, 80)">
+      <text x="0" y="0" class="label" font-weight="600" fill="#16a34a">rows box, four bands:</text>
+      <text x="0" y="20" class="mono">rows  0– 6  element  heading</text>
+      <text x="0" y="38" class="mono">rows  6– 8  spacer</text>
+      <text x="0" y="56" class="mono">rows  8–24  (cut further, step 3)</text>
+      <text x="0" y="74" class="mono">rows 24–26  spacer</text>
+      <text x="0" y="104" class="note">A band holding one element that fills</text>
+      <text x="0" y="120" class="note">it exactly is that element's box. That</text>
+      <text x="0" y="136" class="note">is what terminates the recursion.</text>
+      <text x="0" y="164" class="note">Row 14 and 16 are edges of the icons,</text>
+      <text x="0" y="180" class="note">but the text straddles them, so they</text>
+      <text x="0" y="196" class="note">are not cut here.</text>
+    </g>
+  </g>
+
+  <!-- ============ Panel 3: vertical cut ============ -->
+  <g transform="translate(24, 480)">
+    <rect class="panel" width="560" height="380" rx="6"/>
+    <text x="16" y="26" class="title">3. A band with no horizontal line cuts vertically</text>
+    <text x="16" y="44" class="note">Rows 8–24 have no free horizontal line, so the same rule runs on the vertical lines.</text>
+    <g transform="translate(40, 70)">
+      <!-- the band only, rows 8-24 -->
+      <rect class="grid-frame" width="288" height="96"/>
+      <rect class="element-dim" x="0" y="0" width="36" height="36"/>
+      <rect class="element-dim" x="0" y="48" width="36" height="36"/>
+      <rect class="element" x="48" y="0" width="240" height="96"/>
+      <text x="56" y="22" class="label">text</text>
+      <line class="cut" x1="36" y1="-12" x2="36" y2="108"/>
+      <line class="cut" x1="48" y1="-12" x2="48" y2="108"/>
+      <text x="36" y="-16" class="mono" text-anchor="middle" fill="#dc2626">6</text>
+      <text x="48" y="-16" class="mono" text-anchor="middle" fill="#dc2626">8</text>
+      <rect class="spacer" x="36" y="0" width="12" height="96"/>
+      <rect class="box-columns" x="-3" y="-3" width="294" height="102"/>
+      <text x="0" y="120" class="mono-note">cols 0–6</text>
+      <text x="168" y="120" class="mono-note" text-anchor="middle">cols 8–48</text>
+    </g>
+    <g transform="translate(350, 80)">
+      <text x="0" y="0" class="label" font-weight="600" fill="#d97706">columns box, three slices:</text>
+      <text x="0" y="20" class="mono">cols 0– 6  icon column (step 4)</text>
+      <text x="0" y="38" class="mono">cols 6– 8  spacer</text>
+      <text x="0" y="56" class="mono">cols 8–48  element  text</text>
+      <text x="0" y="86" class="label" font-weight="600">columnUnits per slice</text>
+      <text x="0" y="104" class="note">resolveScalingColumns over the band's</text>
+      <text x="0" y="120" class="note">elements: the text is fluid, so its 40</text>
+      <text x="0" y="136" class="note">columns scale and every gap stays fixed.</text>
+      <text x="0" y="160" class="mono">icons  fixed 6   scaling 0</text>
+      <text x="0" y="178" class="mono">gap    fixed 2   scaling 0</text>
+      <text x="0" y="196" class="mono">text   fixed 0   scaling 40</text>
+    </g>
+  </g>
+
+  <!-- ============ Panel 4: recursion ============ -->
+  <g transform="translate(616, 480)">
+    <rect class="panel" width="560" height="380" rx="6"/>
+    <text x="16" y="26" class="title">4. Each slice cuts the same way in turn</text>
+    <text x="16" y="44" class="note">The icon column (cols 0–6, rows 8–24) tries rows first, and now its lines are free:</text>
+    <text x="16" y="58" class="note">the text is no longer in the region to straddle them.</text>
+    <g transform="translate(60, 70)">
+      <rect class="grid-frame" width="36" height="96"/>
+      <rect class="element" x="0" y="0" width="36" height="36"/>
+      <rect class="element" x="0" y="48" width="36" height="36"/>
+      <line class="cut" x1="-12" y1="36" x2="48" y2="36"/>
+      <line class="cut" x1="-12" y1="48" x2="48" y2="48"/>
+      <line class="cut" x1="-12" y1="84" x2="48" y2="84"/>
+      <text x="-16" y="40" class="mono" text-anchor="end" fill="#dc2626">14</text>
+      <text x="-16" y="52" class="mono" text-anchor="end" fill="#dc2626">16</text>
+      <text x="-16" y="88" class="mono" text-anchor="end" fill="#dc2626">22</text>
+      <rect class="spacer" x="0" y="36" width="36" height="12"/>
+      <rect class="spacer" x="0" y="84" width="36" height="12"/>
+      <rect class="box" x="-3" y="-3" width="42" height="102"/>
+      <text x="56" y="20" class="mono">element  icon</text>
+      <text x="56" y="44" class="mono">spacer   2 rows</text>
+      <text x="56" y="68" class="mono">element  icon</text>
+      <text x="56" y="92" class="mono">spacer   2 rows</text>
+    </g>
+    <g transform="translate(300, 80)">
+      <text x="0" y="0" class="label" font-weight="600">Three ways a region stops cutting</text>
+      <text x="0" y="22" class="note">· No elements: a spacer of its unit size.</text>
+      <text x="0" y="40" class="note">· One element filling it exactly: that element.</text>
+      <text x="0" y="58" class="note">· No free line in either direction: an atom.</text>
+      <text x="0" y="76" class="note">  Its elements are positioned absolutely inside it.</text>
+      <!-- tiny atom example: cover with title over it -->
+      <g transform="translate(0, 100)">
+        <rect class="grid-frame" width="120" height="48"/>
+        <rect class="element" x="0" y="0" width="120" height="48"/>
+        <rect class="element" x="8" y="28" width="70" height="14" fill="#bfdbfe"/>
+        <text x="8" y="16" class="label" font-size="10">cover</text>
+        <text x="12" y="39" class="label" font-size="9.5">title</text>
+        <rect x="-3" y="-3" width="126" height="54" fill="none" stroke="#7c3aed" stroke-width="2"/>
+        <text x="0" y="70" class="mono-note">atom: overlapping elements straddle</text>
+        <text x="0" y="86" class="mono-note">every line between them, so the cut</text>
+        <text x="0" y="102" class="mono-note">never separates them.</text>
+      </g>
+      <text x="0" y="230" class="note">Alternating is enough: a band can never have a free</text>
+      <text x="0" y="246" class="note">horizontal line its rows box did not already cut at,</text>
+      <text x="0" y="262" class="note">so every slice tries rows first, then columns.</text>
+    </g>
+  </g>
+
+  <!-- ============ Panel 5: the box tree ============ -->
+  <g transform="translate(24, 890)">
+    <rect class="panel" width="560" height="380" rx="6"/>
+    <text x="16" y="26" class="title">5. The box tree (LayoutBox)</text>
+    <text x="16" y="44" class="note">Every node carries its grid region, columnUnits and rowUnits. Memoised once per design.</text>
+    <!-- level 0 -->
+    <rect class="node node-rows" x="200" y="66" width="160" height="26" rx="4"/>
+    <text x="280" y="83" class="mono" text-anchor="middle">rows  0,0  48×26</text>
+    <!-- edges level 0 -> 1 -->
+    <path class="edge" d="M 280 92 L 280 104 M 60 104 L 500 104 M 60 104 L 60 116 M 210 104 L 210 116 M 360 104 L 360 116 M 500 104 L 500 116"/>
+    <!-- level 1 -->
+    <rect class="node node-element" x="14" y="116" width="92" height="26" rx="4"/>
+    <text x="60" y="133" class="mono" text-anchor="middle">element</text>
+    <text x="60" y="156" class="mono-note" text-anchor="middle">heading</text>
+    <rect class="node node-spacer" x="164" y="116" width="92" height="26" rx="4"/>
+    <text x="210" y="133" class="mono" text-anchor="middle">spacer</text>
+    <text x="210" y="156" class="mono-note" text-anchor="middle">rows 6–8</text>
+    <rect class="node node-columns" x="314" y="116" width="92" height="26" rx="4"/>
+    <text x="360" y="133" class="mono" text-anchor="middle">columns</text>
+    <text x="360" y="156" class="mono-note" text-anchor="middle">rows 8–24</text>
+    <rect class="node node-spacer" x="454" y="116" width="92" height="26" rx="4"/>
+    <text x="500" y="133" class="mono" text-anchor="middle">spacer</text>
+    <text x="500" y="156" class="mono-note" text-anchor="middle">rows 24–26</text>
+    <!-- edges level 1 -> 2 -->
+    <path class="edge" d="M 360 162 L 360 176 M 250 176 L 470 176 M 250 176 L 250 188 M 360 176 L 360 188 M 470 176 L 470 188"/>
+    <!-- level 2 -->
+    <rect class="node node-rows" x="204" y="188" width="92" height="26" rx="4"/>
+    <text x="250" y="205" class="mono" text-anchor="middle">rows</text>
+    <text x="250" y="228" class="mono-note" text-anchor="middle">cols 0–6</text>
+    <rect class="node node-spacer" x="314" y="188" width="92" height="26" rx="4"/>
+    <text x="360" y="205" class="mono" text-anchor="middle">spacer</text>
+    <text x="360" y="228" class="mono-note" text-anchor="middle">cols 6–8</text>
+    <rect class="node node-element" x="424" y="188" width="92" height="26" rx="4"/>
+    <text x="470" y="205" class="mono" text-anchor="middle">element</text>
+    <text x="470" y="228" class="mono-note" text-anchor="middle">text</text>
+    <!-- edges level 2 -> 3 -->
+    <path class="edge" d="M 250 234 L 250 248 M 100 248 L 400 248 M 100 248 L 100 260 M 200 248 L 200 260 M 300 248 L 300 260 M 400 248 L 400 260"/>
+    <!-- level 3 -->
+    <rect class="node node-element" x="60" y="260" width="80" height="26" rx="4"/>
+    <text x="100" y="277" class="mono" text-anchor="middle">element</text>
+    <text x="100" y="300" class="mono-note" text-anchor="middle">icon</text>
+    <rect class="node node-spacer" x="160" y="260" width="80" height="26" rx="4"/>
+    <text x="200" y="277" class="mono" text-anchor="middle">spacer</text>
+    <rect class="node node-element" x="260" y="260" width="80" height="26" rx="4"/>
+    <text x="300" y="277" class="mono" text-anchor="middle">element</text>
+    <text x="300" y="300" class="mono-note" text-anchor="middle">icon</text>
+    <rect class="node node-spacer" x="360" y="260" width="80" height="26" rx="4"/>
+    <text x="400" y="277" class="mono" text-anchor="middle">spacer</text>
+    <text x="16" y="340" class="note">Cut lines that are horizontal produce rows boxes (green), vertical ones columns boxes (amber).</text>
+    <text x="16" y="358" class="note">Regions that stop cutting are leaves: elements (blue), spacers (grey), or atoms (purple, none here).</text>
+  </g>
+
+  <!-- ============ Panel 6: the render ============ -->
+  <g transform="translate(616, 890)">
+    <rect class="panel" width="560" height="380" rx="6"/>
+    <text x="16" y="26" class="title">6. The render: nested flex boxes, one paint</text>
+    <text x="16" y="44" class="note">LayoutBoxRenderer walks the tree. resolveLayoutBoxStyle sizes each box from its units and its parent's axis.</text>
+    <g transform="translate(24, 64)">
+      <!-- .design-renderer-rows -->
+      <rect class="box" x="0" y="0" width="300" height="196"/>
+      <text x="306" y="12" class="mono-note">.design-renderer-rows</text>
+      <text x="306" y="26" class="mono-note">flex-direction: column</text>
+      <!-- heading -->
+      <rect class="element" x="6" y="6" width="288" height="40"/>
+      <text x="12" y="22" class="mono">heading (grow)</text>
+      <text x="12" y="38" class="mono">min-height: 24px · height auto</text>
+      <!-- spacer -->
+      <rect class="spacer" x="6" y="50" width="288" height="10"/>
+      <text x="306" y="59" class="mono-note">spacer  height: 8px</text>
+      <!-- columns box -->
+      <rect class="box-columns" x="6" y="64" width="288" height="112"/>
+      <text x="306" y="76" class="mono-note">.design-renderer-columns</text>
+      <text x="306" y="90" class="mono-note">flex-direction: row</text>
+      <text x="306" y="104" class="mono-note">children: min-width: 0</text>
+      <!-- icon column rows box -->
+      <rect class="box" x="10" y="68" width="30" height="104"/>
+      <rect class="element" x="12" y="70" width="26" height="26"/>
+      <rect class="spacer" x="12" y="98" width="26" height="8"/>
+      <rect class="element" x="12" y="108" width="26" height="26"/>
+      <rect class="spacer" x="12" y="136" width="26" height="8"/>
+      <!-- gap -->
+      <rect class="spacer" x="44" y="68" width="10" height="104"/>
+      <!-- text -->
+      <rect class="element" x="58" y="68" width="232" height="104"/>
+      <text x="64" y="84" class="mono">text (grow)</text>
+      <text x="64" y="100" class="mono">flex: 40 0 0px</text>
+      <text x="64" y="116" class="mono">min-height: 64px</text>
+      <!-- footer spacer -->
+      <rect class="spacer" x="6" y="180" width="288" height="10"/>
+      <text x="306" y="189" class="mono-note">spacer  height: 8px</text>
+      <!-- annotations for icon column and gap -->
+      <text x="10" y="218" class="mono">icon column  flex: 0 0 24px</text>
+      <text x="10" y="234" class="mono">gap          flex: 0 0 8px</text>
+      <text x="10" y="250" class="mono">icons        height: 24px each</text>
+    </g>
+    <g transform="translate(24, 330)">
+      <text x="0" y="0" class="note">A growing band pushes the bands below it down as its content wraps. A columns box stretches every child to</text>
+      <text x="0" y="16" class="note">the tallest. Under an aspect ratio, bands take flex: &lt;scaling rows&gt; 1 &lt;fixed rows × 4&gt;px instead of their content</text>
+      <text x="0" y="32" class="note">fit. Atom members get left/top/width/height as calc() lengths of the atom. The browser lays it all out in one pass.</text>
+    </g>
+  </g>
+</svg>
