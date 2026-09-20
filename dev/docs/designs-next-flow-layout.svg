@@ -138,12 +138,13 @@
       <text x="0" y="38" class="mono">cols 6– 8  spacer</text>
       <text x="0" y="56" class="mono">cols 8–48  element  text</text>
       <text x="0" y="86" class="label" font-weight="600">columnUnits per slice</text>
-      <text x="0" y="104" class="note">resolveScalingColumns over the band's</text>
-      <text x="0" y="120" class="note">elements: the text is fluid, so its 40</text>
-      <text x="0" y="136" class="note">columns scale and every gap stays fixed.</text>
-      <text x="0" y="160" class="mono">icons  fixed 6   scaling 0</text>
-      <text x="0" y="178" class="mono">gap    fixed 2   scaling 0</text>
-      <text x="0" y="196" class="mono">text   fixed 0   scaling 40</text>
+      <text x="0" y="104" class="note">resolveScalingColumns runs over the</text>
+      <text x="0" y="120" class="note">band's elements. The text is fluid, so</text>
+      <text x="0" y="136" class="note">its 40 columns scale and every gap</text>
+      <text x="0" y="152" class="note">keeps its unit width.</text>
+      <text x="0" y="176" class="mono">icons  fixed 6   scaling 0</text>
+      <text x="0" y="194" class="mono">gap    fixed 2   scaling 0</text>
+      <text x="0" y="212" class="mono">text   fixed 0   scaling 40</text>
     </g>
   </g>
 
@@ -174,9 +175,9 @@
     <g transform="translate(300, 80)">
       <text x="0" y="0" class="label" font-weight="600">Three ways a region stops cutting</text>
       <text x="0" y="22" class="note">· No elements: a spacer of its unit size.</text>
-      <text x="0" y="40" class="note">· One element filling it exactly: that element.</text>
-      <text x="0" y="58" class="note">· No free line in either direction: an atom.</text>
-      <text x="0" y="76" class="note">  Its elements are positioned absolutely inside it.</text>
+      <text x="0" y="40" class="note">· One element filling it: that element.</text>
+      <text x="0" y="58" class="note">· No free line either way: an atom, its</text>
+      <text x="0" y="76" class="note">  elements positioned absolutely inside it.</text>
       <!-- tiny atom example: cover with title over it -->
       <g transform="translate(0, 100)">
         <rect class="grid-frame" width="120" height="48"/>
@@ -189,9 +190,10 @@
         <text x="0" y="86" class="mono-note">every line between them, so the cut</text>
         <text x="0" y="102" class="mono-note">never separates them.</text>
       </g>
-      <text x="0" y="230" class="note">Alternating is enough: a band can never have a free</text>
-      <text x="0" y="246" class="note">horizontal line its rows box did not already cut at,</text>
-      <text x="0" y="262" class="note">so every slice tries rows first, then columns.</text>
+      <text x="0" y="230" class="note">Alternating is enough. A band can never</text>
+      <text x="0" y="246" class="note">have a free horizontal line its rows box</text>
+      <text x="0" y="262" class="note">did not already cut at, so every slice</text>
+      <text x="0" y="278" class="note">tries rows first, then columns.</text>
     </g>
   </g>
 
@@ -243,16 +245,17 @@
     <text x="300" y="300" class="mono-note" text-anchor="middle">icon</text>
     <rect class="node node-spacer" x="360" y="260" width="80" height="26" rx="4"/>
     <text x="400" y="277" class="mono" text-anchor="middle">spacer</text>
-    <text x="16" y="340" class="note">Cut lines that are horizontal produce rows boxes (green), vertical ones columns boxes (amber).</text>
-    <text x="16" y="358" class="note">Regions that stop cutting are leaves: elements (blue), spacers (grey), or atoms (purple, none here).</text>
+    <text x="16" y="340" class="note">Horizontal cut lines produce rows boxes (green), vertical ones columns boxes (amber).</text>
+    <text x="16" y="358" class="note">Leaves are elements (blue), spacers (grey) or atoms (purple, none in this design).</text>
   </g>
 
   <!-- ============ Panel 6: the render ============ -->
   <g transform="translate(616, 890)">
     <rect class="panel" width="560" height="380" rx="6"/>
     <text x="16" y="26" class="title">6. The render: nested flex boxes, one paint</text>
-    <text x="16" y="44" class="note">LayoutBoxRenderer walks the tree. resolveLayoutBoxStyle sizes each box from its units and its parent's axis.</text>
-    <g transform="translate(24, 64)">
+    <text x="16" y="44" class="note">LayoutBoxRenderer walks the tree. resolveLayoutBoxStyle sizes each box</text>
+    <text x="16" y="58" class="note">from its units and the axis of the box holding it.</text>
+    <g transform="translate(24, 72)">
       <!-- .design-renderer-rows -->
       <rect class="box" x="0" y="0" width="300" height="196"/>
       <text x="306" y="12" class="mono-note">.design-renderer-rows</text>
@@ -269,6 +272,9 @@
       <text x="306" y="76" class="mono-note">.design-renderer-columns</text>
       <text x="306" y="90" class="mono-note">flex-direction: row</text>
       <text x="306" y="104" class="mono-note">children: min-width: 0</text>
+      <text x="306" y="126" class="mono-note">icon column  flex: 0 0 24px</text>
+      <text x="306" y="140" class="mono-note">gap          flex: 0 0 8px</text>
+      <text x="306" y="154" class="mono-note">icons        height: 24px</text>
       <!-- icon column rows box -->
       <rect class="box" x="10" y="68" width="30" height="104"/>
       <rect class="element" x="12" y="70" width="26" height="26"/>
@@ -285,15 +291,13 @@
       <!-- footer spacer -->
       <rect class="spacer" x="6" y="180" width="288" height="10"/>
       <text x="306" y="189" class="mono-note">spacer  height: 8px</text>
-      <!-- annotations for icon column and gap -->
-      <text x="10" y="218" class="mono">icon column  flex: 0 0 24px</text>
-      <text x="10" y="234" class="mono">gap          flex: 0 0 8px</text>
-      <text x="10" y="250" class="mono">icons        height: 24px each</text>
     </g>
-    <g transform="translate(24, 330)">
-      <text x="0" y="0" class="note">A growing band pushes the bands below it down as its content wraps. A columns box stretches every child to</text>
-      <text x="0" y="16" class="note">the tallest. Under an aspect ratio, bands take flex: &lt;scaling rows&gt; 1 &lt;fixed rows × 4&gt;px instead of their content</text>
-      <text x="0" y="32" class="note">fit. Atom members get left/top/width/height as calc() lengths of the atom. The browser lays it all out in one pass.</text>
+    <g transform="translate(24, 292)">
+      <text x="0" y="0" class="note">A growing band pushes the bands below it down as its content wraps. A columns</text>
+      <text x="0" y="16" class="note">box stretches every child to the tallest. Under an aspect ratio, bands take</text>
+      <text x="0" y="32" class="note">flex: &lt;scaling rows&gt; 1 &lt;fixed rows × 4&gt;px instead of their content fit. Atom</text>
+      <text x="0" y="48" class="note">members get left, top, width and height as calc() lengths of the atom.</text>
+      <text x="0" y="64" class="note">The browser lays it all out in one pass.</text>
     </g>
   </g>
 </svg>
