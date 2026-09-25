@@ -18,4 +18,5 @@ export type PropertyType =
   | 'title'
   | 'toggle'
   | 'url'
-  | 'file';
+  | 'file'
+  | 'pdf';

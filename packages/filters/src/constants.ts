@@ -58,6 +58,7 @@ export const PROPERTY_FILTER_OPERATORS_BY_PROPERTY_TYPE: Record<
   icon: ['is-empty', 'is-not-empty'],
   file: ['is-empty', 'is-not-empty'],
   image: ['is-empty', 'is-not-empty'],
+  pdf: ['is-empty', 'is-not-empty'],
   number: [
     'equals',
     'not-equals',

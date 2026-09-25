@@ -6,9 +6,11 @@ import {
   genericFilePropertyName,
   imagePropertyName,
   invalidImagePropertyFile,
+  pdfPropertyName,
   rootStorageDatabase,
   setup,
   validImagePropertyFile,
+  validPdfPropertyFile,
 } from '../../test-utils';
 import { getDefaultFileProperty } from './getDefaultFileProperty';
 
@@ -127,6 +129,27 @@ describe('getDefaultFileProperty', () => {
     )!;
 
     expect(result.name).toBe(genericFilePropertyName);
+  });
+
+  it('returns the pdf property for a pdf file over the generic file property', () => {
+    DatabasesStore.update(rootStorageDatabase.id, {
+      ...rootStorageDatabase,
+      defaultProperties: {},
+      properties: [
+        ...rootStorageDatabase.properties,
+        {
+          type: 'pdf',
+          name: pdfPropertyName,
+        },
+      ],
+    });
+
+    const result = getDefaultFileProperty(
+      rootStorageDatabase.id,
+      validPdfPropertyFile.name,
+    )!;
+
+    expect(result.name).toBe(pdfPropertyName);
   });
 
   it('returns null if no matching property exists', async () => {

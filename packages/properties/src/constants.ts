@@ -3,11 +3,22 @@ import {
   LastModifiedPropertySchema,
   TitlePropertySchema,
 } from './schemas';
-import { FileBasedPropertyType, PropertyType } from './types';
+import {
+  EmbeddableFilePropertyType,
+  FileBasedPropertyType,
+  PropertyType,
+} from './types';
 
 export const FileBasedPropertyTypes: FileBasedPropertyType[] = [
   'image',
   'file',
+  'pdf',
+];
+
+// The file property types whose file can be shown in place
+export const EmbeddableFilePropertyTypes: EmbeddableFilePropertyType[] = [
+  'image',
+  'pdf',
 ];
 
 /**
@@ -58,6 +69,7 @@ export const ALL_PROPERTY_TYPES: PropertyType[] = [
   'image',
   'last-modified',
   'number',
+  'pdf',
   'select',
   'tags',
   'text',
@@ -79,6 +91,7 @@ export const TEXTUAL_PROPERTY_TYPES: PropertyType[] = [
   'image',
   'last-modified',
   'number',
+  'pdf',
   'select',
   'text',
   'title',
@@ -95,6 +108,7 @@ export const FilePropertySupportedFileExtensions: Record<
 > = {
   image: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp', 'ico'],
   file: [],
+  pdf: ['pdf'],
 };
 
 /**

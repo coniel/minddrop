@@ -1,11 +1,8 @@
 import { Fs } from '@minddrop/file-system';
 import { TEXTUAL_PROPERTY_TYPES } from '../../constants';
-import { PropertySchema, PropertyType, PropertyValue } from '../../types';
+import { PropertySchema, PropertyValue } from '../../types';
 import { formatPropertyDate } from '../formatPropertyDate';
-
-// The property types whose values name a file, shown as the file's
-// name whether the value carries a path or the name alone.
-const FileTypes: PropertyType[] = ['image', 'file'];
+import { isFileBasedProperty } from '../isFileBasedProperty';
 
 // Separator running a multi-valued property's values together
 const ValueSeparator = ', ';
@@ -53,7 +50,7 @@ export function formatPropertyValue(
   }
 
   // Show a file by its name rather than the path leading to it
-  if (FileTypes.includes(schema.type)) {
+  if (isFileBasedProperty(schema)) {
     return Fs.fileNameFromPath(text);
   }
 

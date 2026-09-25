@@ -208,6 +208,10 @@
       "name": "File",
       "description": "A file attachment."
     },
+    "pdf": {
+      "name": "PDF",
+      "description": "A PDF document."
+    },
     "collection": {
       "name": "Collection",
       "description": "A collection of referenced entries."

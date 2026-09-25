@@ -1,5 +1,5 @@
 import { Layout } from '@minddrop/designs';
-import { PropertyValue } from '@minddrop/properties';
+import { Properties, PropertyValue } from '@minddrop/properties';
 import { getDatabase } from '../../getDatabase';
 import { getDatabaseEntry } from '../../getDatabaseEntry';
 import { createEntryVirtualViews } from '../createEntryVirtualViews';
@@ -10,7 +10,8 @@ import { resolveEntryPropertyFilePath } from '../resolveEntryPropertyFilePath';
  * Returns the display-ready property values for a database entry.
  * Transforms raw stored values into their display versions:
  *
- * - Image properties: file names are replaced with full file paths
+ * - Embeddable file properties: file names are replaced with full
+ *   file paths
  * - Collection properties: entry ID arrays are replaced with
  *   virtual view IDs (creating virtual collections and views
  *   as needed)
@@ -54,8 +55,8 @@ export function entryDisplayPropertyValues(
   for (const property of database.properties) {
     const value = values[property.name];
 
-    // Replace image file names with full file paths
-    if (property.type === 'image' && typeof value === 'string') {
+    // Replace embeddable file names with full file paths
+    if (Properties.isEmbeddableFile(property) && typeof value === 'string') {
       values[property.name] = resolveEntryPropertyFilePath(
         entryId,
         property.name,

@@ -114,6 +114,7 @@ export const propertyTypeLabelMap: Record<PropertyType, TranslationKey> = {
   toggle: 'properties.toggle.name',
   url: 'properties.url.name',
   image: 'properties.image.name',
+  pdf: 'properties.pdf.name',
   select: 'properties.select.name',
   tags: 'properties.tags.name',
   icon: 'properties.icon.name',

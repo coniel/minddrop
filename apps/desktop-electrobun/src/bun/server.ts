@@ -20,6 +20,7 @@ function getMimeType(filePath: string) {
       '.gif': 'image/gif',
       '.webp': 'image/webp',
       '.avif': 'image/avif',
+      '.pdf': 'application/pdf',
     }[ext] || 'application/octet-stream'
   );
 }

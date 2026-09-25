@@ -1,5 +1,6 @@
 export * from './formatPropertyDate';
 export * from './formatPropertyValue';
+export * from './isEmbeddableFileProperty';
 export * from './isEqualPropertyValue';
 export * from './isFileBasedProperty';
 export * from './isMultiselectProperty';

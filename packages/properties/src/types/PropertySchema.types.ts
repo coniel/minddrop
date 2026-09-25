@@ -9,6 +9,7 @@ import {
   ImagePropertySchema,
   LastModifiedPropertySchema,
   NumberPropertySchema,
+  PdfPropertySchema,
   SelectPropertySchema,
   TagsPropertySchema,
   TextPropertySchema,
@@ -27,6 +28,7 @@ export type PropertySchema =
   | ImagePropertySchema
   | LastModifiedPropertySchema
   | NumberPropertySchema
+  | PdfPropertySchema
   | SelectPropertySchema
   | TagsPropertySchema
   | TextPropertySchema

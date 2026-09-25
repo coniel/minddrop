@@ -18,7 +18,9 @@ const { layout_card_2, layout_card_3, design_cards } = DesignFixtures;
 export const parentDir = workspace_1.path;
 export const genericFilePropertyName = 'File';
 export const imagePropertyName = 'Image';
+export const pdfPropertyName = 'Paper';
 export const validImagePropertyFile = new File([], 'valid-image.png');
+export const validPdfPropertyFile = new File([], 'paper.pdf');
 export const invalidImagePropertyFile = new File([], 'note.txt');
 // objectDatabase uses design_cards (layouts: [layout_card_2, layout_card_3])
 export const defaultCardLayout = layout_card_3;
@@ -300,6 +302,21 @@ export const entryTemplatesDatabase = generateDatabase({
   entryTemplates: [entryTemplate1.id, entryTemplate2.id],
 });
 
+// A database with a pdf property, loaded by the tests which need one.
+// Left out of the databases loaded by default so the counts the other
+// tests assert on stay the same.
+export const database_pdf = generateDatabase({
+  id: 'database_pdf',
+  name: 'Papers',
+  entryName: 'Paper',
+  properties: [
+    {
+      type: 'pdf',
+      name: pdfPropertyName,
+    },
+  ],
+});
+
 export const databases = [
   objectDatabase,
   urlDatabase,
@@ -348,4 +365,12 @@ export const databaseFiles: (MockFileDescriptor | string)[] = [
     commonStorageDatabase.propertyFilesDir!,
   ),
   Fs.concatPath(databaseDirPath(propertyStorageDatabase), imagePropertyName),
+];
+
+// The pdf database's files, loaded by the tests which need them
+export const databaseFiles_pdf: (MockFileDescriptor | string)[] = [
+  {
+    path: resolveDatabaseConfigFilePath(databaseDirPath(database_pdf)),
+    textContent: JSON.stringify(serializeDatabase(database_pdf), null, 2),
+  },
 ];

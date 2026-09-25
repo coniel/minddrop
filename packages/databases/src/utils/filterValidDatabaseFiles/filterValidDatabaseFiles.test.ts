@@ -1,6 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DatabasesStore } from '../../DatabasesStore';
-import { cleanup, objectDatabase, setup } from '../../test-utils';
+import {
+  cleanup,
+  objectDatabase,
+  pdfPropertyName,
+  setup,
+  validPdfPropertyFile,
+} from '../../test-utils';
 import { filterValidDatabaseFiles } from './filterValidDatabaseFiles';
 
 const pdfFile = {
@@ -49,6 +55,26 @@ describe('filterValidDatabaseFiles', () => {
 
     expect(validFiles).toEqual([pdfFile, imageFile]);
     expect(invalidFiles).toEqual([]);
+  });
+
+  it('accepts pdf files when the database has a pdf prop', () => {
+    DatabasesStore.set({
+      ...objectDatabase,
+      properties: [
+        {
+          type: 'pdf',
+          name: pdfPropertyName,
+        },
+      ],
+    });
+
+    const { validFiles, invalidFiles } = filterValidDatabaseFiles(
+      objectDatabase.id,
+      [validPdfPropertyFile, imageFile],
+    );
+
+    expect(validFiles).toEqual([validPdfPropertyFile]);
+    expect(invalidFiles).toEqual([imageFile]);
   });
 
   it('retuns valid files if the database has non-generic file props', () => {

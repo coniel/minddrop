@@ -4,13 +4,16 @@ import {
   collectionDatabase,
   commonStorageDatabase,
   databaseDirPath,
+  database_pdf,
   databases,
   entryStorageDatabase,
   objectDatabase,
+  pdfPropertyName,
   propertyStorageDatabase,
   rootStorageDatabase,
   timestampDatabase,
   urlDatabase,
+  validPdfPropertyFile,
   yamlObjectDatabase,
 } from './databases.fixtures';
 
@@ -520,10 +523,53 @@ export const databaseEntrySqlRecords: SqlEntryRecord[] = [
  * the mock file system and the assertions made against it.
  */
 export function databaseEntryFilePath(entry: DatabaseEntry): string {
-  const database = databases.find(({ id }) => id === entry.database);
+  const database = [...databases, database_pdf].find(
+    ({ id }) => id === entry.database,
+  );
 
   return `${databaseDirPath(database!)}/${entry.path}`;
 }
+
+/******************************************************************************
+ * Pdf database entries
+ *****************************************************************************/
+
+// Entries of the pdf database, loaded by the tests which need them
+export const databaseEntry_pdf_1: DatabaseEntry = {
+  id: 'database-entry_pdf_1',
+  title: 'Paper 1',
+  database: database_pdf.id,
+  path: 'Paper 1.md',
+  created: new Date('2024-01-01T00:00:00.000Z'),
+  lastModified: new Date('2024-01-01T00:00:00.000Z'),
+  properties: {
+    [pdfPropertyName]: validPdfPropertyFile.name,
+  },
+  metadata: {},
+};
+
+export const databaseEntry_pdf_1FileContents = `---
+: 
+---`;
+
+export const databaseEntry_pdf_2: DatabaseEntry = {
+  ...databaseEntry_pdf_1,
+  id: 'database-entry_pdf_2',
+  title: 'Paper 2',
+  path: 'Paper 2.md',
+};
+
+// The pdf database's entry files, loaded by the tests which need them
+export const databaseEntryFiles_pdf: (MockFileDescriptor | string)[] = [
+  {
+    path: databaseEntryFilePath(databaseEntry_pdf_1),
+    textContent: databaseEntry_pdf_1FileContents,
+  },
+  {
+    path: databaseEntryFilePath(databaseEntry_pdf_2),
+    textContent: databaseEntry_pdf_1FileContents,
+  },
+];
 
 export const databaseEntryFiles: (MockFileDescriptor | string)[] = [
   {

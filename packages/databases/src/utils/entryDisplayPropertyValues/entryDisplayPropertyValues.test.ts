@@ -1,14 +1,20 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { Layout } from '@minddrop/designs';
+import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
+import { DatabasesStore } from '../../DatabasesStore';
 import {
   cleanup,
   collectionEntry1,
+  databaseEntry_pdf_1,
+  database_pdf,
   objectEntry1,
+  pdfPropertyName,
   propertyStorageEntry1,
   relatedEntry1,
   relatedEntry2,
   setup,
+  validPdfPropertyFile,
 } from '../../test-utils';
 import { resolveEntryPropertyFilePath } from '../resolveEntryPropertyFilePath';
 import { virtualViewId } from '../virtualViewId';
@@ -121,6 +127,25 @@ describe('entryDisplayPropertyValues', () => {
     );
 
     expect(result.Image).toBe(expectedPath);
+  });
+
+  it('replaces pdf file names with full file paths', () => {
+    DatabasesStore.set(database_pdf);
+    DatabaseEntriesStore.set(databaseEntry_pdf_1);
+
+    const result = entryDisplayPropertyValues(
+      databaseEntry_pdf_1.id,
+      simpleDesign,
+      {},
+    );
+
+    const expectedPath = resolveEntryPropertyFilePath(
+      databaseEntry_pdf_1.id,
+      pdfPropertyName,
+      validPdfPropertyFile.name,
+    );
+
+    expect(result[pdfPropertyName]).toBe(expectedPath);
   });
 
   it('replaces collection values with virtual view IDs', () => {

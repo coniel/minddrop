@@ -1,5 +1,6 @@
 import {
   ALL_PROPERTY_TYPES,
+  EmbeddableFilePropertyTypes,
   FileExtensionToPropertyType,
   FilePropertySupportedFileExtensions,
   METADATA_PROPERTY_TYPES,
@@ -10,6 +11,7 @@ import {
 
 export const constants = {
   AllTypes: ALL_PROPERTY_TYPES,
+  EmbeddableFileTypes: EmbeddableFilePropertyTypes,
   MetadataSchemas: MetadataPropertySchemas,
   MetadataTypes: METADATA_PROPERTY_TYPES,
   SortableTypes: SORTABLE_PROPERTY_TYPES,
@@ -29,6 +31,7 @@ export { stringifyPropertiesToJson as toJson } from './stringifyPropertiesToJson
 export { generateDefaultProperties as defaults } from './generateDefaultProperties';
 export {
   formatPropertyValue as formatValue,
+  isEmbeddableFileProperty as isEmbeddableFile,
   isFileBasedProperty as isFileBased,
   isMultiselectProperty as isMultiselect,
   isUrlProperty as isUrl,

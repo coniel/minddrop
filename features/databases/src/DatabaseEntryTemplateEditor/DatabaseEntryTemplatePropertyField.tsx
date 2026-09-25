@@ -75,10 +75,9 @@ export const DatabaseEntryTemplatePropertyField: React.FC<
   // Open a file picker and report the picked file
   async function handlePickFile() {
     // Restrict the picker to the property type's supported extensions
-    const supportedExtensions =
-      property.type === 'image' || property.type === 'file'
-        ? Properties.constants.SupportedFileExtensions[property.type]
-        : [];
+    const supportedExtensions = Properties.isFileBased(property)
+      ? Properties.constants.SupportedFileExtensions[property.type]
+      : [];
 
     // Open the file picker
     const picked = await Fs.openFilePicker({
@@ -299,7 +298,7 @@ function renderField({
   }
 
   // File based properties use a file picker button
-  if (property.type === 'image' || property.type === 'file') {
+  if (Properties.isFileBased(property)) {
     // The displayed file name: newly picked file first, then stored value
     const fileName = displayFileName(value, pickedFilePath);
 

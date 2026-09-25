@@ -14,6 +14,7 @@ const selectProperty: PropertySchema = {
 };
 const imageProperty: PropertySchema = { type: 'image', name: 'Cover' };
 const fileProperty: PropertySchema = { type: 'file', name: 'Attachment' };
+const pdfProperty: PropertySchema = { type: 'pdf', name: 'Paper' };
 const toggleProperty: PropertySchema = { type: 'toggle', name: 'Done' };
 const iconProperty: PropertySchema = { type: 'icon', name: 'Icon' };
 
@@ -66,11 +67,14 @@ describe('formatPropertyValue', () => {
     expect(formatPropertyValue([], selectProperty)).toBeNull();
   });
 
-  it('names the file of an image or file value', () => {
+  it('names the file of an image, file or pdf value', () => {
     expect(formatPropertyValue('cover.png', imageProperty)).toBe('cover.png');
     expect(
       formatPropertyValue('/workspace/db/entry/report.pdf', fileProperty),
     ).toBe('report.pdf');
+    expect(
+      formatPropertyValue('/workspace/db/entry/paper.pdf', pdfProperty),
+    ).toBe('paper.pdf');
   });
 
   it('names each file of a multi-file value', () => {

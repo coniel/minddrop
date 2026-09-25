@@ -78,6 +78,7 @@ export const TEXT_PROPERTY_TYPES = new Set<PropertyType>([
   'icon',
   'file',
   'image',
+  'pdf',
   'title',
 ]);
 

@@ -9,6 +9,7 @@ import { IconPropertySchema } from './IconPropertySchema';
 import { ImagePropertySchema } from './ImagePropertySchema';
 import { LastModifiedPropertySchema } from './LastModifiedPropertySchema';
 import { NumberPropertySchema } from './NumberPropertySchema';
+import { PdfPropertySchema } from './PdfPropertySchema';
 import { SelectPropertySchema } from './SelectPropertySchema';
 import { TagsPropertySchema } from './TagsPropertySchema';
 import { TextPropertySchema } from './TextPropertySchema';
@@ -26,6 +27,7 @@ export * from './IconPropertySchema';
 export * from './ImagePropertySchema';
 export * from './LastModifiedPropertySchema';
 export * from './NumberPropertySchema';
+export * from './PdfPropertySchema';
 export * from './SelectPropertySchema';
 export * from './TagsPropertySchema';
 export * from './TextPropertySchema';
@@ -48,6 +50,7 @@ export const PropertySchemas = {
   created: CreatedPropertySchema,
   'last-modified': LastModifiedPropertySchema,
   file: FilePropertySchema,
+  pdf: PdfPropertySchema,
   collection: CollectionPropertySchema,
   color: ColorPropertySchema,
 } satisfies Record<PropertyType, PropertySchemaTemplate>;

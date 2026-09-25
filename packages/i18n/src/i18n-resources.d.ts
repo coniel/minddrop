@@ -265,6 +265,10 @@ declare module 'i18next' {
             name: string;
             description: string;
           };
+          pdf: {
+            name: string;
+            description: string;
+          };
           collection: {
             name: string;
             description: string;
