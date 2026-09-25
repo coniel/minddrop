@@ -67,14 +67,20 @@ export const NotebookViewComponent: React.FC<
     return entryDatabases.map((database) => database.id);
   }, [view.dataSource, entryDatabases]);
 
-  // Build a per-entry layout override map from view options
-  const entryLayoutOverrides = useMemo(
-    () =>
-      DatabaseEntries.resolveLayoutOverrides(
-        entries,
-        view.options?.layoutOverrides,
-      ),
-    [entries, view.options?.layoutOverrides],
+  // Resolve the list design each entry's row renders with. The
+  // view's override for its database, else the database default.
+  const entryListDesigns = DatabaseEntries.useDesigns(
+    entries,
+    'navigation-list',
+    view.options?.listDesignOverrides,
+  );
+
+  // Resolve the page design each entry's page renders with. The
+  // view's override for its database, else the database default.
+  const entryPageDesigns = DatabaseEntries.useDesigns(
+    entries,
+    'page',
+    view.options?.pageDesignOverrides,
   );
 
   // The selected entry's row index, kept scrolled into view
@@ -148,12 +154,12 @@ export const NotebookViewComponent: React.FC<
         <DatabaseEntryRenderer
           entryId={entryId}
           layoutContext="navigation-list"
-          layoutId={entryLayoutOverrides[entryId]?.listLayoutId}
+          design={entryListDesigns[entryId] ?? null}
           onClick={handleEntryClick}
         />
       </div>
     ),
-    [selectedEntryId, entryLayoutOverrides, handleEntryClick],
+    [selectedEntryId, entryListDesigns, handleEntryClick],
   );
 
   return (
@@ -231,7 +237,7 @@ export const NotebookViewComponent: React.FC<
                   key={selectedEntryId}
                   entryId={selectedEntryId}
                   layoutContext="page"
-                  layoutId={entryLayoutOverrides[selectedEntryId]?.pageLayoutId}
+                  design={entryPageDesigns[selectedEntryId] ?? null}
                 />
               </ScrollArea>
             </TransientViewStateScope>

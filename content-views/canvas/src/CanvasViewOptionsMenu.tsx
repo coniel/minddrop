@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { Collections } from '@minddrop/collections';
 import { ContentViewTypeSettingsMenuProps } from '@minddrop/content-views';
 import { DatabaseEntryTemplates, Databases } from '@minddrop/databases';
-import { DatabaseLayoutSelectionMenu } from '@minddrop/ui-databases';
+import { DatabaseDesignSelectionMenu } from '@minddrop/ui-databases';
 import {
   DropdownMenuPortal,
   DropdownMenuPositioner,
@@ -29,8 +29,7 @@ const BLANK_ENTRY = 'blank';
 const NO_ITEMS: string[] = [];
 
 /**
- * Renders the canvas view settings menu content with a card
- * layout picker per database and toolbar card settings.
+ * Renders the canvas view settings menu.
  */
 export const CanvasViewOptionsMenu: React.FC<
   ContentViewTypeSettingsMenuProps<CanvasViewOptions, CanvasViewData>
@@ -41,23 +40,23 @@ export const CanvasViewOptionsMenu: React.FC<
   // The databases the collection's entries belong to
   const databases = Databases.useFromEntries(collection?.items ?? NO_ITEMS);
 
-  // The layout pickers address their database by ID
+  // The design pickers address their database by ID
   const databaseIds = useMemo(
     () => databases.map((database) => database.id),
     [databases],
   );
 
-  // Set the card layout override for the database the
+  // Set the card design override for the database the
   // selection belongs to.
-  function handleLayoutChange(layoutId: string, databaseId?: string) {
+  function handleDesignChange(designId: string, databaseId?: string) {
     if (!databaseId) {
       return;
     }
 
     onUpdateOptions({
-      cardLayoutOverrides: {
-        ...options.cardLayoutOverrides,
-        [databaseId]: layoutId,
+      cardDesignOverrides: {
+        ...options.cardDesignOverrides,
+        [databaseId]: designId,
       },
     });
   }
@@ -77,12 +76,12 @@ export const CanvasViewOptionsMenu: React.FC<
 
   return (
     <>
-      {/* Card layout picker */}
-      <DatabaseLayoutSelectionMenu
+      {/* Card design picker */}
+      <DatabaseDesignSelectionMenu
         databaseId={databaseIds}
-        layoutType="card"
-        value={options.cardLayoutOverrides || {}}
-        onValueChange={handleLayoutChange}
+        designType="card"
+        value={options.cardDesignOverrides || {}}
+        onValueChange={handleDesignChange}
       />
 
       {/* Toolbar card settings, hidden when there are no cards */}

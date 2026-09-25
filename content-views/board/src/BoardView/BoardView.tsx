@@ -110,15 +110,12 @@ export const BoardViewComponent: React.FC<
     [columns, entries, duplicateOriginals],
   );
 
-  // Map each entry to the card layout its database is
-  // overridden to use.
-  const entryCardLayouts = useMemo(
-    () =>
-      DatabaseEntries.resolveLayoutOverrides(
-        entries,
-        view.options?.cardLayoutOverrides,
-      ),
-    [entries, view.options?.cardLayoutOverrides],
+  // Resolve the card design each entry renders with. The view's
+  // override for its database, else the database default.
+  const entryCardDesigns = DatabaseEntries.useDesigns(
+    entries,
+    'card',
+    view.options?.cardDesignOverrides,
   );
 
   // Derive a toolbar card for each database the board's entries
@@ -463,7 +460,7 @@ export const BoardViewComponent: React.FC<
               key={columnIndex}
               columnIndex={columnIndex}
               entryIds={columnEntries}
-              entryCardLayouts={entryCardLayouts}
+              entryCardDesigns={entryCardDesigns}
               canDelete={
                 columnEntries.length === 0 && reconciledColumns.length > 1
               }

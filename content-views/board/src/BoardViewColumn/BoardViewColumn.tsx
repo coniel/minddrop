@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { Design } from '@minddrop/designs-next';
 import { DropEventData } from '@minddrop/selection';
 import { FlexDropContainer } from '@minddrop/ui-drag-and-drop';
 import { Button } from '@minddrop/ui-primitives';
@@ -18,10 +19,10 @@ export interface BoardViewColumnProps {
   entryIds: string[];
 
   /**
-   * The card layout to render each entry with, keyed by entry ID.
-   * Entries without an override use their database default layout.
+   * The card design to render each entry with, keyed by entry ID.
+   * Entries of a database with no card design are omitted.
    */
-  entryCardLayouts: Record<string, string>;
+  entryCardDesigns: Record<string, Design>;
 
   /**
    * Whether the column can be deleted. When true, a delete
@@ -63,7 +64,7 @@ export interface BoardViewColumnProps {
 export const BoardViewColumn: React.FC<BoardViewColumnProps> = ({
   columnIndex,
   entryIds,
-  entryCardLayouts,
+  entryCardDesigns,
   canDelete,
   picker,
   pickerIndex,
@@ -91,17 +92,18 @@ export const BoardViewColumn: React.FC<BoardViewColumnProps> = ({
     onDelete(columnIndex);
   }, [columnIndex, onDelete]);
 
-  // Entry cards with the picker spliced in at its position
+  // Build a card for each entry
   const cards = entryIds.map((entryId, entryIndex) => (
     <BoardViewCard
       key={entryId}
       entryId={entryId}
-      layoutId={entryCardLayouts[entryId]}
+      design={entryCardDesigns[entryId] ?? null}
       isLastChild={entryIndex === entryIds.length - 1}
       onDrop={handleCardDrop}
     />
   ));
 
+  // Splice the picker in at its position
   if (picker && pickerIndex !== undefined) {
     cards.splice(
       pickerIndex,

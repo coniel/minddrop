@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { Design } from '@minddrop/designs-next';
 import { DatabaseEntryRenderer } from '@minddrop/feature-databases';
 import { DropEventData, Selection } from '@minddrop/selection';
 import { useFlexDropGapActivation } from '@minddrop/ui-drag-and-drop';
@@ -11,10 +12,10 @@ export interface KanbanViewCardProps {
   entryId: string;
 
   /**
-   * The ID of the card layout to render the entry with.
-   * Entries without an override use their database default layout.
+   * The design to render the entry with. Null when its database
+   * has no card design.
    */
-  layoutId?: string;
+  design: Design | null;
 
   /**
    * The index of the card within its column's drop container.
@@ -42,7 +43,7 @@ export interface KanbanViewCardProps {
  */
 export const KanbanViewCard: React.FC<KanbanViewCardProps> = ({
   entryId,
-  layoutId,
+  design,
   index = 0,
   isLastChild,
   onDrop,
@@ -75,7 +76,7 @@ export const KanbanViewCard: React.FC<KanbanViewCardProps> = ({
       <DatabaseEntryRenderer
         entryId={entryId}
         layoutContext="card"
-        layoutId={layoutId}
+        design={design}
       />
     </div>
   );

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import React from 'react';
 import { ContentViewTypeComponentProps } from '@minddrop/content-views';
+import { DatabaseEntries } from '@minddrop/databases';
 import { DatabaseEntryRenderer } from '@minddrop/feature-databases';
 import { DatabaseEntryContextProvider } from '@minddrop/ui-databases';
 import { ScrollArea } from '@minddrop/ui-primitives';
@@ -18,6 +19,14 @@ export const GalleryViewComponent: React.FC<
 
   // Track how many entries to render
   const [renderCount, setRenderCount] = useState(BATCH_SIZE);
+
+  // Resolve the card design each entry renders with. The view's
+  // override for its database, else the database default.
+  const entryCardDesigns = DatabaseEntries.useDesigns(
+    entries,
+    'card',
+    view.options?.cardDesignOverrides,
+  );
 
   // The minimum width a column may take, which the column layout
   // fits as many columns as possible into.
@@ -99,12 +108,13 @@ export const GalleryViewComponent: React.FC<
       >
         <DatabaseEntryContextProvider optionsMenu source={view.dataSource}>
           <div className="gallery-view-content">
+            {/** Entry cards **/}
             {visibleEntries.map((entryId) => (
               <DatabaseEntryRenderer
                 key={entryId}
                 entryId={entryId}
                 layoutContext="card"
-                layoutId={view.options?.cardLayoutId}
+                design={entryCardDesigns[entryId] ?? null}
               />
             ))}
           </div>

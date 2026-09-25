@@ -70,11 +70,11 @@ export interface CanvasViewToolbarCardOptions {
 
 export interface CanvasViewOptions {
   /**
-   * The card layout used to render each database's entries,
-   * keyed by database ID. Databases without an override use
-   * their default card layout.
+   * The ID of the card design each database's entries render
+   * with, keyed by database ID. Databases without an override
+   * use their default card design.
    */
-  cardLayoutOverrides?: Record<string, string>;
+  cardDesignOverrides?: Record<string, string>;
 
   /**
    * The toolbar's database card configuration, keyed by database

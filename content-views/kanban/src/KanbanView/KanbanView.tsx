@@ -159,15 +159,12 @@ export const KanbanViewComponent: React.FC<
     pendingRenameValue,
   ]);
 
-  // Map each entry to the card layout its database is overridden
-  // to use.
-  const entryCardLayouts = useMemo(
-    () =>
-      DatabaseEntries.resolveLayoutOverrides(
-        entries,
-        view.options?.cardLayoutOverrides,
-      ),
-    [entries, view.options?.cardLayoutOverrides],
+  // Resolve the card design each entry renders with. The view's
+  // override for its database, else the database default.
+  const entryCardDesigns = DatabaseEntries.useDesigns(
+    entries,
+    'card',
+    view.options?.cardDesignOverrides,
   );
 
   // Bring a just added column's heading into view, since new
@@ -565,7 +562,7 @@ export const KanbanViewComponent: React.FC<
                 key={column.value}
                 column={column}
                 scroll={columnScroll}
-                entryCardLayouts={entryCardLayouts}
+                entryCardDesigns={entryCardDesigns}
                 onDrop={handleColumnDrop}
               />
             ))}

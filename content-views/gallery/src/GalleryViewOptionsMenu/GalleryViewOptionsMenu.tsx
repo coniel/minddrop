@@ -1,6 +1,6 @@
 import { ContentViewTypeSettingsMenuProps } from '@minddrop/content-views';
 import { createI18nKeyBuilder, i18n } from '@minddrop/i18n';
-import { DatabaseLayoutSelectionMenu } from '@minddrop/ui-databases';
+import { DatabaseDesignSelectionMenu } from '@minddrop/ui-databases';
 import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
@@ -17,6 +17,16 @@ const t = createI18nKeyBuilder('contentViews.gallery.options.');
 export const GalleryViewOptionsMenu: React.FC<
   ContentViewTypeSettingsMenuProps<GalleryViewOptions>
 > = ({ view, options, onUpdateOptions }) => {
+  // Set the card design override for the source database
+  function handleDesignChange(designId: string) {
+    onUpdateOptions({
+      cardDesignOverrides: {
+        ...options.cardDesignOverrides,
+        [view.dataSource.id]: designId,
+      },
+    });
+  }
+
   return (
     <div className="gallery-view-options-menu">
       {/* Card width slider */}
@@ -45,14 +55,12 @@ export const GalleryViewOptionsMenu: React.FC<
 
       <DropdownMenuSeparator />
 
-      {/* Card layout selection */}
-      <DatabaseLayoutSelectionMenu
+      {/* Card design selection */}
+      <DatabaseDesignSelectionMenu
         databaseId={view.dataSource.id}
-        layoutType="card"
-        value={options.cardLayoutId}
-        onValueChange={(layoutId) =>
-          onUpdateOptions({ cardLayoutId: layoutId })
-        }
+        designType="card"
+        value={options.cardDesignOverrides || {}}
+        onValueChange={handleDesignChange}
       />
 
       <DropdownMenuSeparator />

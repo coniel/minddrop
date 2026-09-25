@@ -19,6 +19,7 @@
   "dependencies": {
     "@minddrop/content-views": "workspace:*",
     "@minddrop/databases": "workspace:*",
+    "@minddrop/designs-next": "workspace:*",
     "@minddrop/drag-and-drop": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/feature-databases": "workspace:*",

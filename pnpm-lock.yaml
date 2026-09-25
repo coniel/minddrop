@@ -209,6 +209,9 @@ importers:
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
+      '@minddrop/designs-next':
+        specifier: workspace:*
+        version: link:../../packages/designs-next
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
@@ -337,6 +340,9 @@ importers:
       '@minddrop/content-views':
         specifier: workspace:*
         version: link:../../packages/content-views
+      '@minddrop/databases':
+        specifier: workspace:*
+        version: link:../../packages/databases
       '@minddrop/feature-databases':
         specifier: workspace:*
         version: link:../../features/databases
@@ -353,12 +359,30 @@ importers:
         specifier: workspace:*
         version: link:../../ui/primitives
     devDependencies:
+      '@minddrop/designs':
+        specifier: workspace:*
+        version: link:../../packages/designs
+      '@minddrop/designs-next':
+        specifier: workspace:*
+        version: link:../../packages/designs-next
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../../packages/events
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../../packages/file-system
+      '@minddrop/ui-designs-next':
+        specifier: workspace:*
+        version: link:../../ui/designs-next
       '@minddrop/vitest-config':
         specifier: workspace:*
         version: link:../../packages/vitest-config
+      '@minddrop/workspaces':
+        specifier: workspace:*
+        version: link:../../packages/workspaces
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -377,6 +401,9 @@ importers:
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
+      '@minddrop/designs-next':
+        specifier: workspace:*
+        version: link:../../packages/designs-next
       '@minddrop/drag-and-drop':
         specifier: workspace:*
         version: link:../../packages/drag-and-drop

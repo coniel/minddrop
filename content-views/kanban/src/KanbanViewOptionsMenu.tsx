@@ -1,6 +1,6 @@
 import { ContentViewTypeSettingsMenuProps } from '@minddrop/content-views';
 import { createI18nKeyBuilder } from '@minddrop/i18n';
-import { DatabaseLayoutSelectionMenu } from '@minddrop/ui-databases';
+import { DatabaseDesignSelectionMenu } from '@minddrop/ui-databases';
 import {
   DropdownMenuItem,
   DropdownMenuPortal,
@@ -47,17 +47,14 @@ const columnBackgroundItems: DropdownRadioSubmenuItem[] =
   }));
 
 /**
- * Renders the kanban view settings menu content with a picker
- * for the select property the columns are generated from, the
- * column visibility and styling settings, and a card layout
- * picker.
+ * Renders the kanban view settings menu.
  */
 export const KanbanViewOptionsMenu: React.FC<
   ContentViewTypeSettingsMenuProps<KanbanViewOptions>
 > = ({ view, options, onUpdateOptions }) => {
   const { available, property, databaseId } = useKanbanGroupProperty(view);
 
-  // The database IDs the card layout picker addresses
+  // The database IDs the card design picker addresses
   const databaseIds = databaseId ? [databaseId] : [];
 
   // The column styling settings, falling back to the defaults
@@ -128,18 +125,18 @@ export const KanbanViewOptionsMenu: React.FC<
     setPendingColumnRename(view.id, value);
   }
 
-  // Set the card layout override for the database the selection
+  // Set the card design override for the database the selection
   // belongs to.
-  function handleLayoutChange(layoutId: string, layoutDatabaseId?: string) {
-    // Check that the selection names a database
-    if (!layoutDatabaseId) {
+  function handleDesignChange(designId: string, designDatabaseId?: string) {
+    // Check that the selection has a database
+    if (!designDatabaseId) {
       return;
     }
 
     onUpdateOptions({
-      cardLayoutOverrides: {
-        ...options.cardLayoutOverrides,
-        [layoutDatabaseId]: layoutId,
+      cardDesignOverrides: {
+        ...options.cardDesignOverrides,
+        [designDatabaseId]: designId,
       },
     });
   }
@@ -238,12 +235,12 @@ export const KanbanViewOptionsMenu: React.FC<
 
       <DropdownMenuSeparator />
 
-      {/** Card layout picker **/}
-      <DatabaseLayoutSelectionMenu
+      {/** Card design picker **/}
+      <DatabaseDesignSelectionMenu
         databaseId={databaseIds}
-        layoutType="card"
-        value={options.cardLayoutOverrides || {}}
-        onValueChange={handleLayoutChange}
+        designType="card"
+        value={options.cardDesignOverrides || {}}
+        onValueChange={handleDesignChange}
       />
     </>
   );

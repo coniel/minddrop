@@ -153,15 +153,12 @@ const CanvasViewContent: React.FC<
     [connections, reconciledNodes],
   );
 
-  // Map each entry to the card layout its database is
-  // overridden to use.
-  const entryCardLayouts = useMemo(
-    () =>
-      DatabaseEntries.resolveLayoutOverrides(
-        entries,
-        view.options?.cardLayoutOverrides,
-      ),
-    [entries, view.options?.cardLayoutOverrides],
+  // Resolve the card design each entry renders with. The view's
+  // override for its database, else the database default.
+  const entryCardDesigns = DatabaseEntries.useDesigns(
+    entries,
+    'card',
+    view.options?.cardDesignOverrides,
   );
 
   // Derive a toolbar card for each database the canvas's entries
@@ -749,10 +746,11 @@ const CanvasViewContent: React.FC<
                 updateNodes(updateNodeFrame(reconciledNodes, node.id, frame))
               }
             >
+              {/** Entry card **/}
               <DatabaseEntryRenderer
                 entryId={node.id}
                 layoutContext="card"
-                layoutId={entryCardLayouts[node.id]}
+                design={entryCardDesigns[node.id] ?? null}
               />
             </CanvasNode>
           ))}

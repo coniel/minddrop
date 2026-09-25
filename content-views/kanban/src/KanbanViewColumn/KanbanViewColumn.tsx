@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { Design } from '@minddrop/designs-next';
 import { DropEventData } from '@minddrop/selection';
 import { FlexDropContainer } from '@minddrop/ui-drag-and-drop';
 import { ScrollArea } from '@minddrop/ui-primitives';
@@ -20,10 +21,10 @@ export interface KanbanViewColumnProps {
   scroll: boolean;
 
   /**
-   * The card layout to render each entry with, keyed by entry ID.
-   * Entries without an override use their database default layout.
+   * The card design to render each entry with, keyed by entry ID.
+   * Entries of a database with no card design are omitted.
    */
-  entryCardLayouts: Record<string, string>;
+  entryCardDesigns: Record<string, Design>;
 
   /**
    * Callback fired when something is dropped into this column.
@@ -42,7 +43,7 @@ export interface KanbanViewColumnProps {
 export const KanbanViewColumn: React.FC<KanbanViewColumnProps> = ({
   column,
   scroll,
-  entryCardLayouts,
+  entryCardDesigns,
   onDrop,
 }) => {
   // Handle a drop into this column at a specific gap index
@@ -66,7 +67,7 @@ export const KanbanViewColumn: React.FC<KanbanViewColumnProps> = ({
     <KanbanViewCard
       key={entryId}
       entryId={entryId}
-      layoutId={entryCardLayouts[entryId]}
+      design={entryCardDesigns[entryId] ?? null}
       isLastChild={entryIndex === column.entryIds.length - 1}
       onDrop={handleCardDrop}
     />

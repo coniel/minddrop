@@ -21,8 +21,9 @@ export interface GalleryViewOptions {
   gap: GalleryGap;
 
   /**
-   * The ID of the card layout used to render entries.
-   * When not set, the database's default card layout is used.
+   * The ID of the card design each database's entries render
+   * with, keyed by database ID. Databases without an override
+   * use their default card design.
    */
-  cardLayoutId?: string;
+  cardDesignOverrides?: Record<string, string>;
 }

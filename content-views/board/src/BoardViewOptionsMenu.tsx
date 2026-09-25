@@ -5,7 +5,7 @@ import {
   ContentViews,
 } from '@minddrop/content-views';
 import { DatabaseEntryTemplates, Databases } from '@minddrop/databases';
-import { DatabaseLayoutSelectionMenu } from '@minddrop/ui-databases';
+import { DatabaseDesignSelectionMenu } from '@minddrop/ui-databases';
 import {
   DropdownMenuItem,
   DropdownMenuPortal,
@@ -34,9 +34,7 @@ const BLANK_ENTRY = 'blank';
 const NO_ITEMS: string[] = [];
 
 /**
- * Renders the board view settings menu content with a card
- * layout picker per database, toolbar card settings, and board
- * level actions.
+ * Renders the board view settings menu.
  */
 export const BoardViewOptionsMenu: React.FC<
   ContentViewTypeSettingsMenuProps<BoardViewOptions, BoardViewData>
@@ -47,23 +45,23 @@ export const BoardViewOptionsMenu: React.FC<
   // The databases the collection's entries belong to
   const databases = Databases.useFromEntries(collection?.items ?? NO_ITEMS);
 
-  // The layout pickers address their database by ID
+  // The design pickers address their database by ID
   const databaseIds = useMemo(
     () => databases.map((database) => database.id),
     [databases],
   );
 
-  // Set the card layout override for the database the
+  // Set the card design override for the database the
   // selection belongs to.
-  function handleLayoutChange(layoutId: string, databaseId?: string) {
+  function handleDesignChange(designId: string, databaseId?: string) {
     if (!databaseId) {
       return;
     }
 
     onUpdateOptions({
-      cardLayoutOverrides: {
-        ...options.cardLayoutOverrides,
-        [databaseId]: layoutId,
+      cardDesignOverrides: {
+        ...options.cardDesignOverrides,
+        [databaseId]: designId,
       },
     });
   }
@@ -102,12 +100,12 @@ export const BoardViewOptionsMenu: React.FC<
 
       <DropdownMenuSeparator />
 
-      {/* Card layout picker */}
-      <DatabaseLayoutSelectionMenu
+      {/* Card design picker */}
+      <DatabaseDesignSelectionMenu
         databaseId={databaseIds}
-        layoutType="card"
-        value={options.cardLayoutOverrides || {}}
-        onValueChange={handleLayoutChange}
+        designType="card"
+        value={options.cardDesignOverrides || {}}
+        onValueChange={handleDesignChange}
       />
 
       {/* Toolbar card settings, hidden when there are no cards */}

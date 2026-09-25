@@ -86,11 +86,11 @@ export interface KanbanViewOptions {
   columnScroll?: boolean;
 
   /**
-   * The card layout used to render each database's entries,
-   * keyed by database ID. Databases without an override use
-   * their default card layout.
+   * The ID of the card design each database's entries render
+   * with, keyed by database ID. Databases without an override
+   * use their default card design.
    */
-  cardLayoutOverrides?: Record<string, string>;
+  cardDesignOverrides?: Record<string, string>;
 }
 
 export interface KanbanViewData {

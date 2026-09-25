@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { Collections } from '@minddrop/collections';
 import { ContentViewTypeSettingsMenuProps } from '@minddrop/content-views';
 import { Databases } from '@minddrop/databases';
-import { DatabaseLayoutSelectionMenu } from '@minddrop/ui-databases';
+import { DatabaseDesignSelectionMenu } from '@minddrop/ui-databases';
 import { DropdownMenuSeparator } from '@minddrop/ui-primitives';
 import { NotebookViewOptions } from './types';
 
@@ -10,8 +10,7 @@ import { NotebookViewOptions } from './types';
 const NO_ITEMS: string[] = [];
 
 /**
- * Renders the notebook view settings menu content with
- * list and page design pickers.
+ * Renders the notebook view settings menu.
  */
 export const NotebookViewOptionsMenu: React.FC<
   ContentViewTypeSettingsMenuProps<NotebookViewOptions>
@@ -19,33 +18,24 @@ export const NotebookViewOptionsMenu: React.FC<
   // Resolve the database ID(s) based on the data source type
   const databaseIds = useDatabaseIds(view);
 
-  // Build the value for each design type from the overrides
-  const listDesignValue = useMemo(
-    () => buildLayoutValue(databaseIds, options, 'listLayoutId'),
-    [databaseIds, options],
-  );
-
-  const pageDesignValue = useMemo(
-    () => buildLayoutValue(databaseIds, options, 'pageLayoutId'),
-    [databaseIds, options],
-  );
-
-  // Update the layout override for a given database and layout type
-  function handleLayoutChange(
-    layoutKey: 'listLayoutId' | 'pageLayoutId',
-    layoutId: string,
-    databaseId?: string,
-  ) {
-    // For single database, use the data source ID directly
-    const targetDatabaseId = databaseId || (databaseIds as string);
-
+  // Set the list design override for the database the selection
+  // belongs to. Defaults to the source database.
+  function handleListDesignChange(designId: string, databaseId?: string) {
     onUpdateOptions({
-      layoutOverrides: {
-        ...options.layoutOverrides,
-        [targetDatabaseId]: {
-          ...options.layoutOverrides?.[targetDatabaseId],
-          [layoutKey]: layoutId,
-        },
+      listDesignOverrides: {
+        ...options.listDesignOverrides,
+        [databaseId ?? view.dataSource.id]: designId,
+      },
+    });
+  }
+
+  // Set the page design override for the database the selection
+  // belongs to. Defaults to the source database.
+  function handlePageDesignChange(designId: string, databaseId?: string) {
+    onUpdateOptions({
+      pageDesignOverrides: {
+        ...options.pageDesignOverrides,
+        [databaseId ?? view.dataSource.id]: designId,
       },
     });
   }
@@ -53,25 +43,21 @@ export const NotebookViewOptionsMenu: React.FC<
   return (
     <>
       {/* List design picker */}
-      <DatabaseLayoutSelectionMenu
+      <DatabaseDesignSelectionMenu
         databaseId={databaseIds}
-        layoutType="list"
-        value={listDesignValue}
-        onValueChange={(layoutId, databaseId) =>
-          handleLayoutChange('listLayoutId', layoutId, databaseId)
-        }
+        designType="list"
+        value={options.listDesignOverrides || {}}
+        onValueChange={handleListDesignChange}
       />
 
       <DropdownMenuSeparator />
 
       {/* Page design picker */}
-      <DatabaseLayoutSelectionMenu
+      <DatabaseDesignSelectionMenu
         databaseId={databaseIds}
-        layoutType="page"
-        value={pageDesignValue}
-        onValueChange={(layoutId, databaseId) =>
-          handleLayoutChange('pageLayoutId', layoutId, databaseId)
-        }
+        designType="page"
+        value={options.pageDesignOverrides || {}}
+        onValueChange={handlePageDesignChange}
       />
     </>
   );
@@ -100,35 +86,4 @@ function useDatabaseIds(
 
     return databases.map((database) => database.id);
   }, [view.dataSource, databases]);
-}
-
-/**
- * Builds the value prop for a DatabaseLayoutSelectionMenu from
- * the view's layout overrides. Returns a string for a single
- * database or a Record for multiple databases.
- */
-function buildLayoutValue(
-  databaseIds: string | string[],
-  options: NotebookViewOptions,
-  layoutKey: 'listLayoutId' | 'pageLayoutId',
-): string | Record<string, string> {
-  const overrides = options.layoutOverrides;
-
-  // Single database: return the override value directly
-  if (typeof databaseIds === 'string') {
-    return overrides?.[databaseIds]?.[layoutKey] || '';
-  }
-
-  // Multiple databases: build a map of database ID to design ID
-  const valueMap: Record<string, string> = {};
-
-  for (const databaseId of databaseIds) {
-    const override = overrides?.[databaseId]?.[layoutKey];
-
-    if (override) {
-      valueMap[databaseId] = override;
-    }
-  }
-
-  return valueMap;
 }
