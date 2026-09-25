@@ -1,14 +1,31 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { initializeI18n } from '@minddrop/i18n';
-import { DatabaseFixtures } from '../../test-utils';
+import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
+import { DatabasesStore } from '../../DatabasesStore';
+import { DatabaseFixtures, cleanup, setup } from '../../test-utils';
 import { entryPropertyValues } from './entryPropertyValues';
 
 // Initialize translations used for the implicit property names
 initializeI18n();
 
-const { objectDatabase, objectEntry1 } = DatabaseFixtures;
+const {
+  objectDatabase,
+  objectEntry1,
+  propertyStorageDatabase,
+  propertyStorageEntry1,
+  databaseDirPath,
+  database_pdf,
+  databaseEntry_pdf_1,
+  pdfPropertyName,
+  validPdfPropertyFile,
+  genericFilePropertyName,
+} = DatabaseFixtures;
 
 describe('entryPropertyValues', () => {
+  beforeEach(setup);
+
+  afterEach(cleanup);
+
   it("includes the entry's own property values", () => {
     const values = entryPropertyValues(objectEntry1, objectDatabase.properties);
 
@@ -33,5 +50,44 @@ describe('entryPropertyValues', () => {
     const values = entryPropertyValues(entry, objectDatabase.properties);
 
     expect(values.Title).toBe('Property title');
+  });
+
+  it("resolves an image value to the file's path", () => {
+    const values = entryPropertyValues(
+      propertyStorageEntry1,
+      propertyStorageDatabase.properties,
+    );
+
+    expect(values.Image).toBe(
+      `${databaseDirPath(propertyStorageDatabase)}/Image/image.png`,
+    );
+  });
+
+  it("resolves a pdf value to the file's path", () => {
+    DatabasesStore.set(database_pdf);
+    DatabaseEntriesStore.set(databaseEntry_pdf_1);
+
+    const values = entryPropertyValues(
+      databaseEntry_pdf_1,
+      database_pdf.properties,
+    );
+
+    expect(values[pdfPropertyName]).toBe(
+      `${databaseDirPath(database_pdf)}/${pdfPropertyName}/${validPdfPropertyFile.name}`,
+    );
+  });
+
+  it('leaves a generic file value as the file name', () => {
+    const entry = {
+      ...propertyStorageEntry1,
+      properties: { [genericFilePropertyName]: 'note.txt' },
+    };
+
+    const values = entryPropertyValues(
+      entry,
+      propertyStorageDatabase.properties,
+    );
+
+    expect(values[genericFilePropertyName]).toBe('note.txt');
   });
 });
