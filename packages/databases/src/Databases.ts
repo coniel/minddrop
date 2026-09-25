@@ -2,6 +2,7 @@ import {
   DatabaseEntityType,
   DatabasesIcon,
   DefaultDatabaseIcon,
+  DefaultDesignId,
   DefaultEntrySort,
   MULTI_VALUE_PROPERTY_TYPES,
 } from './constants';
@@ -82,6 +83,7 @@ export const constants = {
   LayoutContexts: LAYOUT_CONTEXTS,
   LayoutContextBaseType: layoutContextBaseType,
   MultiValuePropertyTypes: MULTI_VALUE_PROPERTY_TYPES,
+  DefaultDesignId,
 };
 
 export const templates = {
@@ -162,8 +164,9 @@ export { clearDatabaseDesignPropertyMap as clearDesignPropertyMap } from './clea
 export { setDatabaseDesign as setDesign } from './setDatabaseDesign';
 export { setDatabaseColorProperty as setColorProperty } from './setDatabaseColorProperty';
 export { setDatabaseDefaultLayout as setDefaultLayout } from './setDatabaseDefaultLayout';
-export { getDefaultDatabaseDesign as getDefaultDesign } from './getDefaultDatabaseDesign';
 export { useDefaultDatabaseDesign as useDefaultDesign } from './useDefaultDatabaseDesign';
+export { resolveDatabaseDesign as resolveDesign } from './utils';
+export { useDatabaseDesigns as useDesigns } from './useDatabaseDesigns';
 export { setDatabaseDefaultDesign as setDefaultDesign } from './setDatabaseDefaultDesign';
 
 /**

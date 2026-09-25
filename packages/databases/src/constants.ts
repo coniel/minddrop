@@ -106,6 +106,12 @@ export const INTEGER_PROPERTY_TYPES = new Set<PropertyType>([
 export const EntryFocusRequestTimeoutMs = 500;
 
 /**
+ * The design ID standing for a database's default design where a
+ * specific design may be picked instead.
+ */
+export const DefaultDesignId = 'default';
+
+/**
  * The name of the SQL index file inside a workspace's data directory.
  */
 export const SqlDatabaseFileName = 'data.db';

@@ -76,3 +76,4 @@ export { getRecentDatabaseEntries as getRecent } from './utils';
 export { searchDatabaseEntriesByTitle as searchByTitle } from './utils';
 export { resolveEntryColor as resolveColor } from './utils';
 export { resolveEntryDatabaseValues as resolveDatabaseValues } from './utils';
+export { useDatabaseEntryDesigns as useDesigns } from './useDatabaseEntryDesigns';
