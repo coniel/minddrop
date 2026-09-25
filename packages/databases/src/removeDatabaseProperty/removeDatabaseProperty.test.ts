@@ -1,5 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Events } from '@minddrop/events';
 import { DatabasesStore } from '../DatabasesStore';
+import { EntryHistoryCauses } from '../constants';
+import { DatabasePropertyRemovedEvent } from '../events';
 import {
   MockFs,
   cleanup,
@@ -37,6 +40,28 @@ describe('removeDatabaseProperty', () => {
     await removeDatabaseProperty(objectDatabase.id, propertyNameToRemove);
 
     expect(DatabasesStore).toHaveItem(objectDatabase.id, updatedDatabase);
+  });
+
+  it('dispatches the property removed event', async () => {
+    let eventData: unknown;
+
+    // Capture the dispatched event data
+    Events.addListener(DatabasePropertyRemovedEvent, 'test', (data) => {
+      eventData = data;
+    });
+
+    await removeDatabaseProperty(objectDatabase.id, propertyNameToRemove);
+
+    Events.removeListener(DatabasePropertyRemovedEvent, 'test');
+
+    expect(eventData).toMatchObject({
+      property: objectDatabase.properties[0],
+      updated: updatedDatabase,
+      action: {
+        id: expect.stringMatching(/^action_/),
+        cause: EntryHistoryCauses.PropertyRemoved,
+      },
+    });
   });
 
   it('writes the updated config to the file system', async () => {

@@ -1,5 +1,7 @@
 import { Events } from '@minddrop/events';
+import { History } from '@minddrop/history';
 import { DatabasesStore } from '../DatabasesStore';
+import { EntryHistoryCauses } from '../constants';
 import { DatabasePropertyRemovedEvent, DatabaseUpdatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { Database } from '../types';
@@ -47,6 +49,7 @@ export async function removeDatabaseProperty(
       original: config,
       updated,
       property,
+      action: History.createAction(EntryHistoryCauses.PropertyRemoved),
     });
   }
 

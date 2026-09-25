@@ -12,7 +12,7 @@ import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabaseEntryTemplatesStore } from '../../DatabaseEntryTemplatesStore';
 import { DatabasesStore } from '../../DatabasesStore';
-import { EntryHistorySubjectType } from '../../constants';
+import { EntryHistoryCauses, EntryHistorySubjectType } from '../../constants';
 import {
   sqlGetAllEntriesFull,
   sqlUpsertDatabase,
@@ -43,6 +43,9 @@ const { titleDesignElement } = DesignElementFixtures;
 
 const { workspace_1 } = WorkspaceFixtures;
 
+// The action performing the rename
+const action = History.createAction(EntryHistoryCauses.PropertyRenamed);
+
 // A design of the object database with an element mapping its
 // 'Icon' property.
 const mappedDesign: Design = {
@@ -70,7 +73,13 @@ async function renameProperty(
   DatabasesStore.update(database.id, updated);
 
   // Run the rename handler
-  await onRenameProperty({ original: database, updated, oldName, newName });
+  await onRenameProperty({
+    original: database,
+    updated,
+    oldName,
+    newName,
+    action,
+  });
 }
 
 describe('onRenameProperty', () => {
@@ -257,6 +266,36 @@ describe('onRenameProperty', () => {
         to: 'Symbol',
       }),
     );
+  });
+
+  it("stamps the rename's action on every record", async () => {
+    // A second entry in the same database with the property
+    const withIcon = {
+      ...objectEntry1,
+      id: 'database-entry_with-icon' as const,
+      title: 'With Icon',
+      path: 'With Icon.md',
+    };
+
+    DatabaseEntriesStore.set(withIcon);
+
+    await renameProperty(objectDatabase, 'Icon', 'Symbol');
+
+    const records = await Promise.all(
+      [objectEntry1, withIcon].map((entry) =>
+        History.read({
+          ownerPath: databaseDirPath(objectDatabase),
+          subjectType: EntryHistorySubjectType,
+          subjectKey: entry.title,
+        }),
+      ),
+    );
+
+    // Both entries' records should have the same action
+    expect(records.flat().map((record) => record.action)).toEqual([
+      action,
+      action,
+    ]);
   });
 
   it('records nothing against entries without a value for it', async () => {

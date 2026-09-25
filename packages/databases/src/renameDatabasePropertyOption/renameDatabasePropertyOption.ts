@@ -1,6 +1,8 @@
 import { Events } from '@minddrop/events';
+import { History } from '@minddrop/history';
 import { InvalidParameterError } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
+import { EntryHistoryCauses } from '../constants';
 import {
   DatabasePropertyOptionRenamedEvent,
   DatabaseUpdatedEvent,
@@ -92,6 +94,7 @@ export async function renameDatabasePropertyOption(
     property: updatedProperty,
     oldValue,
     newValue,
+    action: History.createAction(EntryHistoryCauses.PropertyOptionRenamed),
   });
 
   // Write the updated config to the file system

@@ -5,7 +5,7 @@ import { cleanup, setup } from '../../test-utils';
 import { readRenameEvents } from '../../utils';
 import { onDatabasePropertyRenamed } from './database-property-renamed';
 
-const { objectDatabase } = DatabaseFixtures;
+const { objectDatabase, historyAction_propertyRenamed } = DatabaseFixtures;
 
 /**
  * Returns a copy of a database with the named property renamed
@@ -35,6 +35,7 @@ describe('onDatabasePropertyRenamed', () => {
       updated: renameProperty(objectDatabase, 'Content', 'Body'),
       oldName: 'Content',
       newName: 'Body',
+      action: historyAction_propertyRenamed,
     });
 
     // The ledger should contain a property rename event recording

@@ -7,7 +7,12 @@ import { statusProperty } from '../test-utils';
 import { KanbanViewData, KanbanViewOptions } from '../types';
 import { initializeKanbanView } from './initializeKanbanView';
 
-const { entryTemplatesDatabase } = DatabaseFixtures;
+const {
+  entryTemplatesDatabase,
+  historyAction_propertyOptionRenamed,
+  historyAction_propertyRemoved,
+  historyAction_propertyRenamed,
+} = DatabaseFixtures;
 
 // A kanban view grouped by the fixture database's 'Status'
 // property, virtual so that updates skip the file system.
@@ -79,6 +84,7 @@ describe('initializeKanbanView', () => {
       updated: entryTemplatesDatabase,
       oldName: 'Status',
       newName: 'Stage',
+      action: historyAction_propertyRenamed,
     });
 
     // The handler runs queued rather than during the dispatch
@@ -99,6 +105,7 @@ describe('initializeKanbanView', () => {
       original: entryTemplatesDatabase,
       updated: entryTemplatesDatabase,
       property: { type: 'select', name: 'Status', options: [] },
+      action: historyAction_propertyRemoved,
     });
 
     // The handler runs queued rather than during the dispatch
@@ -121,6 +128,7 @@ describe('initializeKanbanView', () => {
       property: renamedOptionProperty,
       oldValue: 'Todo',
       newValue: 'Doing',
+      action: historyAction_propertyOptionRenamed,
     });
 
     // The handler runs queued rather than during the dispatch

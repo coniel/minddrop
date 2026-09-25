@@ -23,7 +23,7 @@ import {
 export async function onRenameProperty(
   data: DatabasePropertyRenamedEventData,
 ): Promise<void> {
-  const { original, updated: database, oldName, newName } = data;
+  const { original, updated: database, oldName, newName, action } = data;
 
   // Rename in SQL
   sqlRenameProperty(database.id, oldName, newName);
@@ -55,9 +55,8 @@ export async function onRenameProperty(
     newName,
   );
 
-  // Record the rename against each entry which held a value for the
-  // property, so that its older records can be read under the name
-  // the property had at the time.
+  // Record the rename against each entry which had a value for the
+  // property.
   await Promise.all(
     renamedEntries.map((entry) =>
       History.record({
@@ -68,6 +67,7 @@ export async function onRenameProperty(
         target: 'property',
         from: oldName,
         to: newName,
+        action,
       }),
     ),
   );

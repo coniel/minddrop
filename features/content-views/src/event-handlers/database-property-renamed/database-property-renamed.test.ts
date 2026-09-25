@@ -6,7 +6,7 @@ import { cleanup, setup } from '../../test-utils';
 import { onDatabasePropertyRenamed } from './database-property-renamed';
 
 const { contentView_gallery_1 } = ContentViewFixtures;
-const { objectDatabase } = DatabaseFixtures;
+const { objectDatabase, historyAction_propertyRenamed } = DatabaseFixtures;
 
 // A view over the fixture database sorted by its 'Content'
 // property. Virtual, so that updates skip the file system.
@@ -51,6 +51,7 @@ describe('onDatabasePropertyRenamed', () => {
       updated: objectDatabase,
       oldName: 'Content',
       newName: 'Body',
+      action: historyAction_propertyRenamed,
     });
 
     // The sort property should follow the rename
@@ -65,6 +66,7 @@ describe('onDatabasePropertyRenamed', () => {
       updated: objectDatabase,
       oldName: 'Content',
       newName: 'Body',
+      action: historyAction_propertyRenamed,
     });
 
     // Metadata sorts name their target by type, so the matching
@@ -80,6 +82,7 @@ describe('onDatabasePropertyRenamed', () => {
       updated: objectDatabase,
       oldName: 'Content',
       newName: 'Body',
+      action: historyAction_propertyRenamed,
     });
 
     // The other database has a property of its own under that name

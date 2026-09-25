@@ -30,6 +30,17 @@ export const PropertyFilesDirNameKey = 'databases.propertyFilesDirName';
 export const EntryHistorySubjectType = 'entries';
 
 /**
+ * The causes an entry's history records name for the actions
+ * reaching entries from outside their own edits. Persisted in the
+ * entries' history files.
+ */
+export const EntryHistoryCauses = {
+  PropertyRenamed: 'databases:property-renamed',
+  PropertyOptionRenamed: 'databases:property-option-renamed',
+  PropertyRemoved: 'databases:property-removed',
+} as const;
+
+/**
  * How long an entry must go uncaptured before the next write to it
  * captures its content again, so that a burst of saves costs one
  * capture at its start rather than one per save.

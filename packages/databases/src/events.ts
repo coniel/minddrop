@@ -1,3 +1,4 @@
+import { HistoryAction } from '@minddrop/history';
 import { PropertySchema, SelectPropertySchema } from '@minddrop/properties';
 import { BaseOpenViewEventData } from '@minddrop/views';
 import {
@@ -63,6 +64,11 @@ export interface DatabasePropertyRemovedEventData {
    * The property that was removed.
    */
   property: PropertySchema;
+
+  /**
+   * The action performing the removal.
+   */
+  action: HistoryAction;
 }
 
 export interface DatabasePropertyRenamedEventData {
@@ -85,6 +91,11 @@ export interface DatabasePropertyRenamedEventData {
    * The new property name.
    */
   newName: string;
+
+  /**
+   * The action performing the rename.
+   */
+  action: HistoryAction;
 }
 
 // Property option events
@@ -116,6 +127,11 @@ export interface DatabasePropertyOptionRenamedEventData {
    * The new option value.
    */
   newValue: string;
+
+  /**
+   * The action performing the rename.
+   */
+  action: HistoryAction;
 }
 
 // Entry template events

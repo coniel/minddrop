@@ -3,6 +3,7 @@ import { Events } from '@minddrop/events';
 import { storeItem } from '@minddrop/stores/test-utils';
 import { InvalidParameterError } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
+import { EntryHistoryCauses } from '../constants';
 import { DatabasePropertyOptionRenamedEvent } from '../events';
 import { MockFs, cleanup, objectDatabase, setup } from '../test-utils';
 import { resolveDatabasePath } from '../utils';
@@ -114,6 +115,10 @@ describe('renameDatabasePropertyOption', () => {
       oldValue: 'Todo',
       newValue: 'Doing',
       property: { name: 'Status' },
+      action: {
+        id: expect.stringMatching(/^action_/),
+        cause: EntryHistoryCauses.PropertyOptionRenamed,
+      },
     });
   });
 });
