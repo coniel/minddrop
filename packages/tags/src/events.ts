@@ -1,3 +1,4 @@
+import { HistoryAction } from '@minddrop/history';
 import { Tag } from './types';
 
 export const TagCreatedEvent = 'tags:tag:created';
@@ -29,9 +30,19 @@ export type TagUpdatedEventData = {
 export type TagRenamedEventData = {
   original: Tag;
   updated: Tag;
+
+  /**
+   * The action performing the rename.
+   */
+  action: HistoryAction;
 };
 
-export type TagDeletedEventData = Tag;
+export interface TagDeletedEventData extends Tag {
+  /**
+   * The action performing the deletion.
+   */
+  action: HistoryAction;
+}
 
 export type TagsLoadedEventData = Tag[];
 

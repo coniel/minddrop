@@ -1,6 +1,8 @@
 import { Events } from '@minddrop/events';
+import { History } from '@minddrop/history';
 import { Icons } from '@minddrop/ui-icons';
 import { TagsStore } from '../TagsStore';
+import { TagHistoryCauses } from '../constants';
 import { TagRenamedEvent, TagUpdatedEvent } from '../events';
 import { getTag } from '../getTag';
 import { Tag, UpdateTagData } from '../types';
@@ -68,6 +70,7 @@ export async function updateTag(
     Events.dispatch(TagRenamedEvent, {
       original: tag,
       updated: updatedTag,
+      action: History.createAction(TagHistoryCauses.TagRenamed),
     });
   }
 

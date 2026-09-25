@@ -27,3 +27,12 @@ export const TagGroupsIcon: UiIconName = 'tags';
  * The default icon assigned to newly created tags.
  */
 export const DefaultTagIcon = 'lucide:tag:default';
+
+/**
+ * The causes a tag action names on the history records it makes.
+ * Persisted in history files.
+ */
+export const TagHistoryCauses = {
+  TagRenamed: 'tags:tag-renamed',
+  TagDeleted: 'tags:tag-deleted',
+} as const;

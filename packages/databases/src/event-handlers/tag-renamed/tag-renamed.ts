@@ -1,12 +1,17 @@
 import { History } from '@minddrop/history';
+import { Properties } from '@minddrop/properties';
 import { TagRenamedEventData } from '@minddrop/tags';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { EntryHistorySubjectType } from '../../constants';
 import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
 import { getAllDatabases } from '../../getAllDatabases';
 import { sqlUpsertEntries } from '../../sql';
-import { DatabaseEntry, SqlEntryRecord } from '../../types';
-import { convertEntryToSqlRecord, resolveDatabasePath } from '../../utils';
+import { SqlEntryRecord } from '../../types';
+import {
+  convertEntryToSqlRecord,
+  resolveDatabasePath,
+  rewriteEntryPropertyValues,
+} from '../../utils';
 import { writeDatabaseEntry } from '../../writeDatabaseEntry';
 
 /**
@@ -15,14 +20,15 @@ import { writeDatabaseEntry } from '../../writeDatabaseEntry';
  * it, persisting the entries to disk and SQL.
  */
 export async function onTagRenamed(data: TagRenamedEventData): Promise<void> {
-  const { original, updated } = data;
+  const { original, updated, action } = data;
 
   // Rewrite matching entries database by database
   for (const database of getAllDatabases()) {
-    // The names of the database's tags properties
-    const tagsPropertyNames = database.properties
-      .filter((property) => property.type === 'tags')
-      .map((property) => property.name);
+    // Resolve the names of the database's tags properties
+    const tagsPropertyNames = Properties.resolveNamesOfType(
+      database.properties,
+      'tags',
+    );
 
     // Skip databases without tags properties
     if (tagsPropertyNames.length === 0) {
@@ -33,12 +39,11 @@ export async function onTagRenamed(data: TagRenamedEventData): Promise<void> {
     const updatedRecords: SqlEntryRecord[] = [];
 
     for (const entry of getAllDatabaseEntries(database.id)) {
-      // Rewrite the entry's tags values
-      const rewritten = renameEntryTag(
+      // Rename the tag in the entry's tags values
+      const rewritten = rewriteEntryPropertyValues(
         entry,
         tagsPropertyNames,
-        original.name,
-        updated.name,
+        (value) => Properties.renameValue(value, original.name, updated.name),
       );
 
       // Skip entries which do not reference the renamed tag
@@ -54,16 +59,17 @@ export async function onTagRenamed(data: TagRenamedEventData): Promise<void> {
 
       // Record the rename against each property which held the tag
       await Promise.all(
-        rewritten.properties.map((property) =>
+        rewritten.changes.map((change) =>
           History.record({
             ownerPath: resolveDatabasePath(database),
             subjectType: EntryHistorySubjectType,
             subjectKey: entry.title,
             kind: 'rename',
             target: 'value-label',
-            property,
+            property: change.property,
             from: original.name,
             to: updated.name,
+            action,
           }),
         ),
       );
@@ -77,41 +83,4 @@ export async function onTagRenamed(data: TagRenamedEventData): Promise<void> {
       sqlUpsertEntries(database.id, updatedRecords);
     }
   }
-}
-
-/**
- * Returns a copy of the entry with the old tag name mapped to the
- * new one in its tags property values, alongside the properties
- * which held it, or null when no value references the old name.
- */
-function renameEntryTag(
-  entry: DatabaseEntry,
-  tagsPropertyNames: string[],
-  oldName: string,
-  newName: string,
-): { entry: DatabaseEntry; properties: string[] } | null {
-  const changedProperties: string[] = [];
-  const properties = { ...entry.properties };
-
-  for (const propertyName of tagsPropertyNames) {
-    const value = properties[propertyName];
-
-    // Skip values which do not reference the old name
-    if (!Array.isArray(value) || !value.includes(oldName)) {
-      continue;
-    }
-
-    // Map the old name to the new one, deduping in case the new
-    // name was already present.
-    const renamed = value.map((name) => (name === oldName ? newName : name));
-    properties[propertyName] = [...new Set(renamed)];
-    changedProperties.push(propertyName);
-  }
-
-  // Check whether any of the entry's properties held the tag
-  if (!changedProperties.length) {
-    return null;
-  }
-
-  return { entry: { ...entry, properties }, properties: changedProperties };
 }

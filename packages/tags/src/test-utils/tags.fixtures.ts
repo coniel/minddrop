@@ -1,7 +1,8 @@
 import { MockFileDescriptor } from '@minddrop/file-system';
+import { HistoryAction } from '@minddrop/history';
 import { Icons } from '@minddrop/ui-icons';
 import { ContentColor } from '@minddrop/ui-theme';
-import { DefaultTagIcon } from '../constants';
+import { DefaultTagIcon, TagHistoryCauses } from '../constants';
 import { Tag, TagId } from '../types';
 
 function generateTagFixture(number: number, color: ContentColor): Tag {
@@ -20,6 +21,16 @@ export const tag_2 = generateTagFixture(2, 'red');
 export const tag_3 = generateTagFixture(3, 'green');
 
 export const tags = [tag_1, tag_2, tag_3];
+
+export const historyAction_tagRenamed: HistoryAction = {
+  id: 'action_tagRenamed',
+  cause: TagHistoryCauses.TagRenamed,
+};
+
+export const historyAction_tagDeleted: HistoryAction = {
+  id: 'action_tagDeleted',
+  cause: TagHistoryCauses.TagDeleted,
+};
 
 // Spelled out rather than resolved, so that the fixtures pin the paths
 // down instead of agreeing with whatever the path utils produce.

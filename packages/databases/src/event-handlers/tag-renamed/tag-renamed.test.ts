@@ -20,7 +20,7 @@ import {
 import { resolveDatabaseEntryPath, resolveDatabasePath } from '../../utils';
 import { onTagRenamed } from './tag-renamed';
 
-const { tag_1 } = TagFixtures;
+const { tag_1, historyAction_tagRenamed } = TagFixtures;
 
 // A database with a tags property
 const tagsDatabase = {
@@ -63,7 +63,7 @@ describe('onTagRenamed', () => {
     DatabaseEntriesStore.set(taggedEntry);
 
     // Add the database's SQL record so entry upserts satisfy the
-    // foreign key, dropping the statement from the recording.
+    // foreign key. The statement is then dropped from the recording.
     sqlUpsertDatabase(tagsDatabase, { silent: true });
     clearRecordedSqlStatements();
 
@@ -78,7 +78,11 @@ describe('onTagRenamed', () => {
   });
 
   it('rewrites the tag name in referencing entries', async () => {
-    await onTagRenamed({ original: originalTag, updated: renamedTag });
+    await onTagRenamed({
+      original: originalTag,
+      updated: renamedTag,
+      action: historyAction_tagRenamed,
+    });
 
     // The entry's value should carry the new name in place of the
     // old one.
@@ -92,7 +96,11 @@ describe('onTagRenamed', () => {
       properties: { ...taggedEntry.properties, Tags: ['Urgent', 'Later'] },
     });
 
-    await onTagRenamed({ original: originalTag, updated: renamedTag });
+    await onTagRenamed({
+      original: originalTag,
+      updated: renamedTag,
+      action: historyAction_tagRenamed,
+    });
 
     // The mapped name should collapse into the existing one
     const entry = storeItem(DatabaseEntriesStore, taggedEntry.id);
@@ -100,7 +108,11 @@ describe('onTagRenamed', () => {
   });
 
   it('writes the rewritten entry to the file system', async () => {
-    await onTagRenamed({ original: originalTag, updated: renamedTag });
+    await onTagRenamed({
+      original: originalTag,
+      updated: renamedTag,
+      action: historyAction_tagRenamed,
+    });
 
     // The entry file should contain the new name and not the old
     const contents = MockFs.readTextFile(
@@ -111,7 +123,11 @@ describe('onTagRenamed', () => {
   });
 
   it('updates the SQL records with the rewritten values', async () => {
-    await onTagRenamed({ original: originalTag, updated: renamedTag });
+    await onTagRenamed({
+      original: originalTag,
+      updated: renamedTag,
+      action: historyAction_tagRenamed,
+    });
 
     // The entry's SQL property values should carry the new name
     const values = sqlGetEntryPropertyValues(taggedEntry.id).map(
@@ -126,6 +142,7 @@ describe('onTagRenamed', () => {
     await onTagRenamed({
       original: { ...tag_1, name: 'Unused' },
       updated: { ...tag_1, name: 'Still Unused' },
+      action: historyAction_tagRenamed,
     });
 
     // The entry should be unchanged
@@ -137,7 +154,11 @@ describe('onTagRenamed', () => {
   });
 
   it('ignores entries of databases without tags properties', async () => {
-    await onTagRenamed({ original: originalTag, updated: renamedTag });
+    await onTagRenamed({
+      original: originalTag,
+      updated: renamedTag,
+      action: historyAction_tagRenamed,
+    });
 
     // The tagless database's entry should be unchanged
     const entry = storeItem(DatabaseEntriesStore, objectEntry1.id);
@@ -145,7 +166,11 @@ describe('onTagRenamed', () => {
   });
 
   it('records the rename against the property holding the tag', async () => {
-    await onTagRenamed({ original: originalTag, updated: renamedTag });
+    await onTagRenamed({
+      original: originalTag,
+      updated: renamedTag,
+      action: historyAction_tagRenamed,
+    });
 
     const records = await History.read({
       ownerPath: resolveDatabasePath(tagsDatabase),
@@ -164,6 +189,41 @@ describe('onTagRenamed', () => {
     );
   });
 
+  it("stamps the rename's action on every record", async () => {
+    // A second entry in the same database with the tag
+    const secondEntry = {
+      ...taggedEntry,
+      id: 'database-entry_second-tagged-entry' as const,
+      title: 'Second Tagged Entry',
+      path: 'Second Tagged Entry.md',
+    };
+
+    DatabaseEntriesStore.set(secondEntry);
+
+    await onTagRenamed({
+      original: originalTag,
+      updated: renamedTag,
+      action: historyAction_tagRenamed,
+    });
+
+    const records = await Promise.all(
+      [taggedEntry, secondEntry].map((entry) =>
+        History.read({
+          ownerPath: resolveDatabasePath(tagsDatabase),
+          subjectType: EntryHistorySubjectType,
+          subjectKey: entry.title,
+        }),
+      ),
+    );
+    const actions = records.flat().map((record) => record.action);
+
+    // Both records should carry the event's action
+    expect(actions).toEqual([
+      historyAction_tagRenamed,
+      historyAction_tagRenamed,
+    ]);
+  });
+
   it('records nothing against entries which do not hold the tag', async () => {
     // An entry in the same database whose tags do not include the
     // renamed one.
@@ -177,7 +237,11 @@ describe('onTagRenamed', () => {
 
     DatabaseEntriesStore.set(untagged);
 
-    await onTagRenamed({ original: originalTag, updated: renamedTag });
+    await onTagRenamed({
+      original: originalTag,
+      updated: renamedTag,
+      action: historyAction_tagRenamed,
+    });
 
     expect(
       await History.read({

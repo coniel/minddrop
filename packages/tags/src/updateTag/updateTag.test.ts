@@ -3,6 +3,7 @@ import { Events } from '@minddrop/events';
 import { storeItem } from '@minddrop/stores/test-utils';
 import { InvalidParameterError } from '@minddrop/utils';
 import { TagsStore } from '../TagsStore';
+import { TagHistoryCauses } from '../constants';
 import { TagRenamedEvent, TagUpdatedEvent } from '../events';
 import { MockFs, cleanup, mockDate, setup, tag_1, tag_2 } from '../test-utils';
 import { Tag } from '../types';
@@ -83,6 +84,10 @@ describe('updateTag', () => {
       Events.addListener(TagRenamedEvent, 'test-tag-renamed', (payload) => {
         expect(payload.original).toEqual(tag_1);
         expect(payload.updated).toEqual(updatedTag);
+        expect(payload.action).toEqual({
+          id: expect.stringMatching(/^action_/),
+          cause: TagHistoryCauses.TagRenamed,
+        });
         done();
       });
 

@@ -4,7 +4,7 @@ import { cleanup, setup } from '../../test-utils';
 import { readRenameEvents } from '../../utils';
 import { onTagRenamed } from './tag-renamed';
 
-const { tag_1 } = TagFixtures;
+const { tag_1, historyAction_tagRenamed } = TagFixtures;
 
 describe('onTagRenamed', () => {
   beforeEach(setup);
@@ -14,6 +14,7 @@ describe('onTagRenamed', () => {
     await onTagRenamed({
       original: tag_1,
       updated: { ...tag_1, name: 'Renamed Tag' },
+      action: historyAction_tagRenamed,
     });
 
     // The ledger should contain a tag rename event recording the

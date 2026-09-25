@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { TagsStore } from '../TagsStore';
+import { TagHistoryCauses } from '../constants';
 import { TagDeletedEvent } from '../events';
 import { MockFs, cleanup, setup, tag_1 } from '../test-utils';
 import { resolveTagFilePath } from '../utils';
@@ -26,7 +27,13 @@ describe('deleteTag', () => {
   it('dispatches the tag deleted event', async () =>
     new Promise<void>((done) => {
       Events.addListener(TagDeletedEvent, 'test-tag-deleted', (payload) => {
-        expect(payload).toEqual(tag_1);
+        expect(payload).toEqual({
+          ...tag_1,
+          action: {
+            id: expect.stringMatching(/^action_/),
+            cause: TagHistoryCauses.TagDeleted,
+          },
+        });
         done();
       });
 

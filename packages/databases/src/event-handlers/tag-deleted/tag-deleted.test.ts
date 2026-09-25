@@ -1,8 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { History } from '@minddrop/history';
 import { storeItem } from '@minddrop/stores/test-utils';
 import { TagFixtures } from '@minddrop/tags/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
+import { EntryHistorySubjectType } from '../../constants';
 import { sqlGetEntryPropertyValues, sqlUpsertDatabase } from '../../sql';
 import {
   MockFs,
@@ -18,7 +20,7 @@ import {
 import { resolveDatabaseEntryPath, resolveDatabasePath } from '../../utils';
 import { onTagDeleted } from './tag-deleted';
 
-const { tag_1 } = TagFixtures;
+const { tag_1, historyAction_tagDeleted } = TagFixtures;
 
 // A database with a tags property
 const tagsDatabase = {
@@ -45,8 +47,12 @@ const taggedEntry = {
   },
 };
 
-// The deleted tag
-const deletedTag = { ...tag_1, name: 'Urgent' };
+// The deleted tag, as the tag deleted event carries it
+const deletedTag = {
+  ...tag_1,
+  name: 'Urgent',
+  action: historyAction_tagDeleted,
+};
 
 describe('onTagDeleted', () => {
   beforeEach(() => {
@@ -60,7 +66,7 @@ describe('onTagDeleted', () => {
     DatabaseEntriesStore.set(taggedEntry);
 
     // Add the database's SQL record so entry upserts satisfy the
-    // foreign key, dropping the statement from the recording.
+    // foreign key. The statement is then dropped from the recording.
     sqlUpsertDatabase(tagsDatabase, { silent: true });
     clearRecordedSqlStatements();
 
@@ -107,7 +113,7 @@ describe('onTagDeleted', () => {
 
   it('does nothing when no entry references the tag', async () => {
     // Delete a tag no entry references
-    await onTagDeleted({ ...tag_1, name: 'Unused' });
+    await onTagDeleted({ ...deletedTag, name: 'Unused' });
 
     // The entry should be unchanged
     const entry = storeItem(DatabaseEntriesStore, taggedEntry.id);
@@ -123,5 +129,77 @@ describe('onTagDeleted', () => {
     // The tagless database's entry should be unchanged
     const entry = storeItem(DatabaseEntriesStore, objectEntry1.id);
     expect(entry).toEqual(objectEntry1);
+  });
+
+  it('records the dropped values against the entries with the tag', async () => {
+    await onTagDeleted(deletedTag);
+
+    expect(
+      await History.read({
+        ownerPath: resolveDatabasePath(tagsDatabase),
+        subjectType: EntryHistorySubjectType,
+        subjectKey: taggedEntry.title,
+      }),
+    ).toContainEqual(
+      expect.objectContaining({
+        kind: 'property',
+        changes: [{ property: 'Tags', from: ['Urgent', 'Home'], to: ['Home'] }],
+        action: historyAction_tagDeleted,
+      }),
+    );
+  });
+
+  it("stamps the deletion's action on every record", async () => {
+    // A second entry in the same database with the tag
+    const secondEntry = {
+      ...taggedEntry,
+      id: 'database-entry_second-tagged-entry' as const,
+      title: 'Second Tagged Entry',
+      path: 'Second Tagged Entry.md',
+    };
+
+    DatabaseEntriesStore.set(secondEntry);
+
+    await onTagDeleted(deletedTag);
+
+    const records = await Promise.all(
+      [taggedEntry, secondEntry].map((entry) =>
+        History.read({
+          ownerPath: resolveDatabasePath(tagsDatabase),
+          subjectType: EntryHistorySubjectType,
+          subjectKey: entry.title,
+        }),
+      ),
+    );
+    const actions = records.flat().map((record) => record.action);
+
+    // Both records should carry the event's action
+    expect(actions).toEqual([
+      historyAction_tagDeleted,
+      historyAction_tagDeleted,
+    ]);
+  });
+
+  it('records nothing against entries without the tag', async () => {
+    // An entry in the same database without the deleted tag
+    const untagged = {
+      ...taggedEntry,
+      id: 'database-entry_untagged-entry' as const,
+      title: 'Untagged Entry',
+      path: 'Untagged Entry.md',
+      properties: { ...taggedEntry.properties, Tags: ['Home'] },
+    };
+
+    DatabaseEntriesStore.set(untagged);
+
+    await onTagDeleted(deletedTag);
+
+    expect(
+      await History.read({
+        ownerPath: resolveDatabasePath(tagsDatabase),
+        subjectType: EntryHistorySubjectType,
+        subjectKey: untagged.title,
+      }),
+    ).toEqual([]);
   });
 });
