@@ -212,8 +212,7 @@ const Entry: React.FC<EntryProps> = ({
     [entry.id, entry.properties, layout, propertyMap],
   );
 
-  // The entry's property values, which the design's mapped
-  // elements render.
+  // Resolve the entry's property values when rendering with a design
   const designValues = useMemo(
     () =>
       design
@@ -237,6 +236,7 @@ const Entry: React.FC<EntryProps> = ({
     return () => cancelAnimationFrame(frame);
   }, [focusRequested]);
 
+  // Update the entry's property with a changed value
   const onUpdatePropertyValue = useCallback(
     (name: string, value: PropertyValue) => {
       DatabaseEntries.updateProperty(entry.id, name, value);
@@ -244,6 +244,7 @@ const Entry: React.FC<EntryProps> = ({
     [entry.id],
   );
 
+  // Validate a new title value
   const onValidatePropertyValue = useCallback(
     (name: string, value: PropertyValue) => {
       // Look up the schema to determine the property type
@@ -309,6 +310,7 @@ const Entry: React.FC<EntryProps> = ({
   // schemable roles resolve against it.
   const entryColor = DatabaseEntries.resolveColor(database, entry);
 
+  // Join the entry's modifier classes
   const className = [
     'database-entry',
     `database-entry-${baseType}`,
@@ -319,8 +321,12 @@ const Entry: React.FC<EntryProps> = ({
     .filter(Boolean)
     .join(' ');
 
-  // Renders the entry with the database's design, falling back to
-  // its legacy layout, then to a minimal title-only text.
+  /**
+   * Renders the entry with the database's design. Falls back to its
+   * legacy layout, then to a title-only text.
+   *
+   * @returns The entry content.
+   */
   function renderContent() {
     if (design) {
       return (
@@ -328,6 +334,8 @@ const Entry: React.FC<EntryProps> = ({
           design={design}
           properties={rendererProperties}
           values={designValues}
+          onValueChange={onUpdatePropertyValue}
+          validateValue={onValidatePropertyValue}
         />
       );
     }

@@ -7,8 +7,6 @@ import {
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Designs } from '@minddrop/designs';
 import {
-  DesignElementComponent,
-  DesignElementConfig,
   DesignElementConfigs,
   Designs as DesignsNext,
 } from '@minddrop/designs-next';
@@ -18,13 +16,15 @@ import {
   DesignFixtures as DesignNextFixtures,
 } from '@minddrop/designs-next/test-utils';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { act, fireEvent, render, screen, waitFor } from '@minddrop/test-utils';
 import { DatabaseEntryContextProvider } from '@minddrop/ui-databases';
-import { useElementValue } from '@minddrop/ui-designs-next';
-import { cleanup, setup } from '../test-utils';
+import { StandInElementFixtures } from '@minddrop/ui-designs-next/test-utils';
+import { MockFs, cleanup, setup } from '../test-utils';
 import { DatabaseEntryRenderer } from './DatabaseEntryRenderer';
 
-const { objectEntry1, objectDatabase, defaultCardLayout } = DatabaseFixtures;
+const { objectEntry1, objectDatabase, defaultCardLayout, databaseDirPath } =
+  DatabaseFixtures;
 const {
   layout_list_1,
   layout_card_1,
@@ -34,24 +34,7 @@ const {
 } = DesignFixtures;
 const { ownedCardDesign_1 } = DesignNextFixtures;
 const { titleDesignElement } = DesignElementFixtures;
-
-// An element type rendering the value of the property it maps to,
-// standing in for the real content elements.
-const ValueElementType = 'value';
-
-const ValueElement: DesignElementComponent = ({ element }) => (
-  <div>{useElementValue(element)}</div>
-);
-
-const valueElementConfig: DesignElementConfig = {
-  type: ValueElementType,
-  label: 'designsNext.elements.text.label',
-  icon: 'text',
-  group: 'content',
-  component: ValueElement,
-  defaultColumnSpan: 12,
-  defaultRowSpan: 4,
-};
+const { elementConfig_value, elementConfig_edit } = StandInElementFixtures;
 
 // A database with a text property, whose value only a design
 // renders: neither the layout fixtures nor the title-only fallback
@@ -68,7 +51,7 @@ const designEntry = {
   ...objectEntry1,
   id: 'database-entry_design-entry' as const,
   database: designDatabase.id,
-  path: `${objectDatabase.path}-design/Entry.md`,
+  path: 'Entry.md',
   title: 'Design Entry',
   properties: { Body: 'Design value' },
 };
@@ -77,9 +60,60 @@ const designEntry = {
 const bodyMappedDesign = {
   ...ownedCardDesign_1,
   elements: [
-    { ...titleDesignElement, type: ValueElementType, property: 'Body' },
+    { ...titleDesignElement, type: elementConfig_value.type, property: 'Body' },
   ],
 };
+
+// A second entry in the design database. Its title is invalid for
+// the other entries.
+const otherDesignEntry = {
+  ...designEntry,
+  id: 'database-entry_other-design-entry' as const,
+  path: 'Other Entry.md',
+  title: 'Other Entry',
+};
+
+/**
+ * Builds a card design whose only element writes and validates the
+ * given content against the Body property.
+ *
+ * @param content - The content the element writes.
+ * @returns The design.
+ */
+function bodyEditDesign(content: string) {
+  return {
+    ...ownedCardDesign_1,
+    elements: [
+      {
+        ...titleDesignElement,
+        type: elementConfig_edit.type,
+        property: 'Body',
+        content,
+      },
+    ],
+  };
+}
+
+/**
+ * Builds a card design whose only element writes and validates the
+ * given content against the entry title.
+ *
+ * @param content - The content the element writes.
+ * @returns The design.
+ */
+function titleEditDesign(content: string) {
+  return {
+    ...ownedCardDesign_1,
+    elements: [
+      {
+        ...titleDesignElement,
+        type: elementConfig_edit.type,
+        property: 'Title',
+        content,
+      },
+    ],
+  };
+}
 
 // The same design, owned by the entry's database
 const ownedBodyMappedDesign = {
@@ -195,8 +229,9 @@ describe('<DatabaseEntryRenderer />', () => {
     // Load the entry into the store so the renderer can resolve it
     DatabaseEntries.Store.load([objectEntry1]);
 
-    // Register the element type the designs render
-    DesignElementConfigs.register(valueElementConfig);
+    // Register the element types the designs render
+    DesignElementConfigs.register(elementConfig_value);
+    DesignElementConfigs.register(elementConfig_edit);
   });
 
   afterEach(async () => {
@@ -275,6 +310,76 @@ describe('<DatabaseEntryRenderer />', () => {
 
     // Layout fixture renders its ID as content
     screen.getByText(defaultCardLayout.id);
+  });
+
+  it("writes a design element's value to the entry", async () => {
+    Databases.Store.load([designDatabase]);
+    DatabaseEntries.Store.load([designEntry]);
+    // Add the database's directory and load the serializers. The
+    // update writes the entry file through them.
+    MockFs.addFiles([databaseDirPath(designDatabase)]);
+    DatabaseEntrySerializers.loadCoreSerializers();
+
+    render(
+      <DatabaseEntryRenderer
+        entryId={designEntry.id}
+        layoutContext="card"
+        design={bodyEditDesign('Edited value')}
+      />,
+    );
+
+    fireEvent.click(screen.getByText('edit'));
+
+    await waitFor(() => {
+      expect(
+        storeItem(DatabaseEntries.Store, designEntry.id).properties.Body,
+      ).toBe('Edited value');
+    });
+  });
+
+  it("rejects a design element's title which another entry has", () => {
+    Databases.Store.load([designDatabase]);
+    DatabaseEntries.Store.load([designEntry, otherDesignEntry]);
+
+    render(
+      <DatabaseEntryRenderer
+        entryId={designEntry.id}
+        layoutContext="card"
+        design={titleEditDesign(otherDesignEntry.title)}
+      />,
+    );
+
+    expect(screen.getByTestId('validation').textContent).not.toBe('valid');
+  });
+
+  it("accepts a design element's title which no entry has", () => {
+    Databases.Store.load([designDatabase]);
+    DatabaseEntries.Store.load([designEntry, otherDesignEntry]);
+
+    render(
+      <DatabaseEntryRenderer
+        entryId={designEntry.id}
+        layoutContext="card"
+        design={titleEditDesign('Unused title')}
+      />,
+    );
+
+    expect(screen.getByTestId('validation').textContent).toBe('valid');
+  });
+
+  it('validates only the title of a design element', () => {
+    Databases.Store.load([designDatabase]);
+    DatabaseEntries.Store.load([designEntry, otherDesignEntry]);
+
+    render(
+      <DatabaseEntryRenderer
+        entryId={designEntry.id}
+        layoutContext="card"
+        design={bodyEditDesign(otherDesignEntry.title)}
+      />,
+    );
+
+    expect(screen.getByTestId('validation').textContent).toBe('valid');
   });
 
   it('returns null if the entry does not exist', () => {
