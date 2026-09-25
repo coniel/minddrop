@@ -14,12 +14,6 @@ import { orderByCreated, reconcileIdOrder } from '@minddrop/utils';
 
 const designTypeI18nKey = createI18nKeyBuilder('databases.design.types.');
 
-/**
- * Value representing the database's default design. Consumers
- * should treat this as "no override, use the database default".
- */
-export const DATABASE_DEFAULT_DESIGN = 'default';
-
 export interface DatabaseDesignSelectionMenuProps {
   /**
    * One or more database IDs whose designs to list. When multiple
@@ -34,11 +28,9 @@ export interface DatabaseDesignSelectionMenuProps {
   designType: DesignType;
 
   /**
-   * The currently selected design ID. When not set or set to
-   * 'default', the "Database default" option is shown as active.
-   *
-   * When multiple database IDs are provided, a Record keyed by
-   * database ID can be used to track per-database selections.
+   * The currently selected design ID, or the selected design IDs
+   * keyed by database ID. When not set or set to 'default', the
+   * "Database default" option is shown as active.
    */
   value?: string | Record<string, string>;
 
@@ -118,37 +110,31 @@ export const DatabaseDesignSelectionMenu: React.FC<
     return null;
   }
 
-  // Multiple databases: render a labeled group with a submenu per database
+  // Render a submenu per database when there are multiple databases
   if (isMulti) {
     return (
       <MenuGroup>
+        {/** Design type label **/}
         <MenuLabel label={designTypeI18nKey(designType, 'label')} />
-        {databaseDesigns.map(({ database, designs }) => {
-          // Resolve the per-database value from the value map or string
-          const databaseValue =
-            typeof value === 'object'
-              ? value[database.id] || DATABASE_DEFAULT_DESIGN
-              : value || DATABASE_DEFAULT_DESIGN;
-
-          return (
-            <SubmenuMode
-              key={database.id}
-              stringLabel={database.name}
-              designs={designs}
-              value={databaseValue}
-              onValueChange={(designId) =>
-                onValueChange?.(designId, database.id)
-              }
-            />
-          );
-        })}
+        {/** One submenu per database **/}
+        {databaseDesigns.map(({ database, designs }) => (
+          <SubmenuMode
+            key={database.id}
+            stringLabel={database.name}
+            designs={designs}
+            value={resolveSelectedDesignId(value, database.id)}
+            onValueChange={(designId) => onValueChange?.(designId, database.id)}
+          />
+        ))}
       </MenuGroup>
     );
   }
 
   // Resolve the active value for single-database modes
-  const resolvedValue =
-    (typeof value === 'string' ? value : undefined) || DATABASE_DEFAULT_DESIGN;
+  const resolvedValue = resolveSelectedDesignId(
+    value,
+    databaseDesigns[0].database.id,
+  );
 
   // Single database, submenu mode
   if (submenu) {
@@ -171,7 +157,7 @@ export const DatabaseDesignSelectionMenu: React.FC<
         onValueChange={(designId) => onValueChange?.(designId)}
       >
         <DropdownMenuRadioItem
-          value={DATABASE_DEFAULT_DESIGN}
+          value={Databases.constants.DefaultDesignId}
           label="databases.design.databaseDefault"
         />
         {databaseDesigns[0].designs.map((design) => (
@@ -185,6 +171,21 @@ export const DatabaseDesignSelectionMenu: React.FC<
     </MenuGroup>
   );
 };
+
+// Resolves a database's selected design ID from the value prop.
+// Returns the database default when none is selected.
+function resolveSelectedDesignId(
+  value: DatabaseDesignSelectionMenuProps['value'],
+  databaseId: string,
+): string {
+  // Read the database's entry from a value map
+  if (typeof value === 'object') {
+    return value[databaseId] || Databases.constants.DefaultDesignId;
+  }
+
+  // A single value applies to every database
+  return value || Databases.constants.DefaultDesignId;
+}
 
 interface SubmenuModeProps {
   label?: TranslationKey;
@@ -208,7 +209,7 @@ function SubmenuMode({
   const items = useMemo<DropdownRadioSubmenuItem[]>(
     () => [
       {
-        value: DATABASE_DEFAULT_DESIGN,
+        value: Databases.constants.DefaultDesignId,
         label: 'databases.design.databaseDefault' as const,
       },
       ...designs.map((design) => ({

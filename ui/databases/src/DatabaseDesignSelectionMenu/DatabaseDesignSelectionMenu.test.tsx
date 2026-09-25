@@ -8,8 +8,8 @@ import { Button, DropdownMenu } from '@minddrop/ui-primitives';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { cleanup, setup } from '../test-utils';
 import {
-  DATABASE_DEFAULT_DESIGN,
   DatabaseDesignSelectionMenu,
+  DatabaseDesignSelectionMenuProps,
 } from './DatabaseDesignSelectionMenu';
 
 const { objectDatabase } = DatabaseFixtures;
@@ -43,9 +43,12 @@ let selectedDesignId: string | null;
  * design it reports.
  *
  * @param designType - The design type to list.
- * @param value - The selected design ID.
+ * @param value - The selected design ID, or the selected design IDs keyed by database ID.
  */
-async function renderMenu(designType: DesignType, value?: string) {
+async function renderMenu(
+  designType: DesignType,
+  value?: DatabaseDesignSelectionMenuProps['value'],
+) {
   selectedDesignId = null;
 
   render(
@@ -100,6 +103,17 @@ describe('<DatabaseDesignSelectionMenu />', () => {
     ]);
   });
 
+  it("marks the database's design from a record value as selected", async () => {
+    await renderMenu('card', { [objectDatabase.id]: secondCardDesign.id });
+
+    expect(
+      screen.getByRole('menuitem', { name: secondCardDesign.name }),
+    ).toHaveAttribute('data-checked');
+    expect(
+      screen.getByRole('menuitem', { name: cardDesign.name }),
+    ).not.toHaveAttribute('data-checked');
+  });
+
   it('reports the design picked', async () => {
     await renderMenu('card');
 
@@ -113,7 +127,7 @@ describe('<DatabaseDesignSelectionMenu />', () => {
 
     await userEvent.click(screen.getByText('Database default'));
 
-    expect(selectedDesignId).toBe(DATABASE_DEFAULT_DESIGN);
+    expect(selectedDesignId).toBe(Databases.constants.DefaultDesignId);
   });
 
   it('renders nothing for a database owning no design of the type', async () => {
