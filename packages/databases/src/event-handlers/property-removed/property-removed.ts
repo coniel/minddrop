@@ -1,12 +1,15 @@
 import { Collections } from '@minddrop/collections';
 import { Designs } from '@minddrop/designs-next';
 import { Fs } from '@minddrop/file-system';
+import { History } from '@minddrop/history';
 import {
   Properties,
   PropertySchema,
   PropertyValue,
 } from '@minddrop/properties';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
+import { clearDatabaseEntriesProperty } from '../../clearDatabaseEntriesProperty';
+import { EntryHistorySubjectType } from '../../constants';
 import { DatabasePropertyRemovedEventData } from '../../events';
 import { getDatabaseEntryTemplates } from '../../getDatabaseEntryTemplates';
 import { sqlReindexDatabaseEntries } from '../../sql';
@@ -21,15 +24,34 @@ import {
 
 /**
  * Called when a property is removed from a database. Clears the
- * property from everything holding or mapping it.
+ * property from everything that has or maps it.
  */
 export async function onRemoveProperty(
   data: DatabasePropertyRemovedEventData,
 ): Promise<void> {
-  const { updated: database, property } = data;
+  const { updated: database, property, action } = data;
+
+  // Drop the property's value from the database's entries. The files
+  // a file based property stored for them are deliberately left in
+  // place.
+  const cleared = await clearDatabaseEntriesProperty(database.id, property);
 
   // Re-index all entries in SQL without the removed property
   sqlReindexDatabaseEntries(database);
+
+  // Record the value dropped from each entry
+  await Promise.all(
+    cleared.map(({ entry, value }) =>
+      History.record({
+        ownerPath: resolveDatabasePath(database),
+        subjectType: EntryHistorySubjectType,
+        subjectKey: entry.title,
+        kind: 'property',
+        changes: [{ property: property.name, from: value, to: null }],
+        action,
+      }),
+    ),
+  );
 
   // Drop the property's value from the database's entry templates
   await removePropertyFromEntryTemplates(database, property);
