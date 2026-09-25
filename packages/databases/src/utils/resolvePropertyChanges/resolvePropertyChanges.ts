@@ -1,5 +1,9 @@
 import { PropertyChange } from '@minddrop/history';
-import { PropertiesSchema, PropertyMap } from '@minddrop/properties';
+import {
+  Properties,
+  PropertiesSchema,
+  PropertyMap,
+} from '@minddrop/properties';
 
 // The property types whose values follow from the change being made
 // rather than describing it.
@@ -35,7 +39,9 @@ export function resolvePropertyChanges(
   }));
 
   // Keep only the properties which actually moved
-  return changes.filter((change) => !isEqual(change.from, change.to));
+  return changes.filter(
+    (change) => !Properties.isEqualValue(change.from, change.to),
+  );
 }
 
 /**
@@ -45,24 +51,4 @@ function isTimestamp(schema: PropertiesSchema, name: string): boolean {
   const property = schema.find((property) => property.name === name);
 
   return !!property && TimestampPropertyTypes.includes(property.type);
-}
-
-/**
- * Compares two property values, which may be dates or lists.
- */
-function isEqual(from: unknown, to: unknown): boolean {
-  // Dates compare by their time rather than by identity
-  if (from instanceof Date && to instanceof Date) {
-    return from.getTime() === to.getTime();
-  }
-
-  // Lists compare by their members in order
-  if (Array.isArray(from) && Array.isArray(to)) {
-    return (
-      from.length === to.length &&
-      from.every((member, index) => member === to[index])
-    );
-  }
-
-  return from === to;
 }

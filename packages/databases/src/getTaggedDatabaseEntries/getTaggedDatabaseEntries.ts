@@ -1,3 +1,4 @@
+import { Properties } from '@minddrop/properties';
 import { getAllDatabaseEntries } from '../getAllDatabaseEntries';
 import { getAllDatabases } from '../getAllDatabases';
 import { DatabaseEntry } from '../types';
@@ -11,10 +12,11 @@ import { DatabaseEntry } from '../types';
  */
 export function getTaggedDatabaseEntries(tagName: string): DatabaseEntry[] {
   return getAllDatabases().flatMap((database) => {
-    // The names of the database's tags properties
-    const tagsPropertyNames = database.properties
-      .filter((property) => property.type === 'tags')
-      .map((property) => property.name);
+    // Resolve the names of the database's tags properties
+    const tagsPropertyNames = Properties.resolveNamesOfType(
+      database.properties,
+      'tags',
+    );
 
     // Skip databases without tags properties
     if (tagsPropertyNames.length === 0) {

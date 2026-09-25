@@ -32,9 +32,13 @@ export { generateDefaultProperties as defaults } from './generateDefaultProperti
 export {
   formatPropertyValue as formatValue,
   isEmbeddableFileProperty as isEmbeddableFile,
+  isEqualPropertyValue as isEqualValue,
   isFileBasedProperty as isFileBased,
   isMultiselectProperty as isMultiselect,
   isUrlProperty as isUrl,
+  removePropertyValue as removeValue,
+  renamePropertyValue as renameValue,
   renameSchemaProperty as rename,
   resolveNewOptionColor,
+  resolvePropertyNamesOfType as resolveNamesOfType,
 } from './utils';

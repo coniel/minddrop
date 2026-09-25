@@ -5,5 +5,8 @@ export * from './isEqualPropertyValue';
 export * from './isFileBasedProperty';
 export * from './isMultiselectProperty';
 export * from './isUrlProperty';
+export * from './removePropertyValue';
+export * from './renamePropertyValue';
 export * from './renameSchemaProperty';
+export * from './resolvePropertyNamesOfType';
 export * from './resolveNewOptionColor';

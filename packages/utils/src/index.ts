@@ -23,6 +23,7 @@ export * from './getTransferData';
 export * from './parseTransferData';
 export * from './isDomainMatch';
 export * from './isEntityId';
+export * from './isSameValue';
 export * from './isImageUrl';
 export * from './isEditableTarget';
 export * from './isInteractiveTarget';
