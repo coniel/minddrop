@@ -18,6 +18,8 @@ const { layout_card_2, layout_card_3, design_cards } = DesignFixtures;
 export const parentDir = workspace_1.path;
 export const genericFilePropertyName = 'File';
 export const imagePropertyName = 'Image';
+export const notesPropertyName = 'Notes';
+export const countPropertyName = 'Count';
 export const pdfPropertyName = 'Paper';
 export const validImagePropertyFile = new File([], 'valid-image.png');
 export const validPdfPropertyFile = new File([], 'paper.pdf');
@@ -247,7 +249,7 @@ export const entryTemplate1: DatabaseEntryTemplate = {
   name: 'Template One',
   defaultTitle: 'Templated entry',
   properties: {
-    Notes: 'Prefilled notes',
+    [notesPropertyName]: 'Prefilled notes',
     [imagePropertyName]: 'template-image.png',
   },
   created: new Date('2024-01-01T00:00:00.000Z'),
@@ -272,11 +274,11 @@ export const entryTemplatesDatabase = generateDatabase({
   properties: [
     {
       type: 'text',
-      name: 'Notes',
+      name: notesPropertyName,
     },
     {
       type: 'number',
-      name: 'Count',
+      name: countPropertyName,
     },
     {
       type: 'select',

@@ -9,6 +9,7 @@ export * from './setup-sql';
 export * from './createMockBackendAdapter';
 export * from './createRecordingSqlAdapter';
 export * from './fixtures';
+export * from './withoutDatabaseProperty';
 export { clearEntryFocusRequest } from '../EntryFocusRequestStore';
 export { registerDatabaseEntryFilterAdapter } from '../registerDatabaseEntryFilterAdapter';
 

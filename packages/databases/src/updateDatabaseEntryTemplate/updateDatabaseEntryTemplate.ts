@@ -1,5 +1,4 @@
 import { Events } from '@minddrop/events';
-import { Fs } from '@minddrop/file-system';
 import { Properties } from '@minddrop/properties';
 import { InvalidParameterError } from '@minddrop/utils';
 import { DatabaseEntryTemplatesStore } from '../DatabaseEntryTemplatesStore';
@@ -7,15 +6,12 @@ import { copyEntryTemplateFiles } from '../copyEntryTemplateFiles';
 import { DatabaseEntryTemplateUpdatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntryTemplate } from '../getDatabaseEntryTemplate';
+import { removeDatabaseEntryTemplateFile } from '../removeDatabaseEntryTemplateFile';
 import {
   DatabaseEntryTemplate,
   UpdateDatabaseEntryTemplateData,
 } from '../types';
-import {
-  pruneEmptyPropertyValues,
-  resolveDatabasePath,
-  resolveEntryTemplateFilePath,
-} from '../utils';
+import { pruneEmptyPropertyValues, resolveDatabasePath } from '../utils';
 import { writeDatabaseEntryTemplate } from '../writeDatabaseEntryTemplate';
 
 /**
@@ -96,18 +92,14 @@ export async function updateDatabaseEntryTemplate(
     // Whether a new file was provided for the property
     const replaced = propertySchema.name in files;
 
+    // Check if the value was cleared or replaced. If so, delete the
+    // previously stored file.
     if (cleared || replaced) {
-      // Path to the previously stored file
-      const oldFilePath = resolveEntryTemplateFilePath(
+      await removeDatabaseEntryTemplateFile(
         resolveDatabasePath(database),
         templateId,
         oldFileName,
       );
-
-      // Delete the previously stored file
-      if (await Fs.exists(oldFilePath)) {
-        await Fs.removeFile(oldFilePath);
-      }
     }
   }
 

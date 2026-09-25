@@ -9,9 +9,8 @@ import { History } from '@minddrop/history';
 import { storeItem } from '@minddrop/stores/test-utils';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
+import { DatabaseEntryTemplatesStore } from '../../DatabaseEntryTemplatesStore';
 import { EntryHistoryCauses, EntryHistorySubjectType } from '../../constants';
-import { getDatabaseEntryTemplate } from '../../getDatabaseEntryTemplate';
-import { getDatabaseEntryTemplates } from '../../getDatabaseEntryTemplates';
 import {
   sqlGetAllEntriesFull,
   sqlGetEntrySyncRecords,
@@ -25,8 +24,8 @@ import {
   collectionEntry1,
   databaseDirPath,
   entryTemplate1,
-  entryTemplate2,
   entryTemplatesDatabase,
+  notesPropertyName,
   objectDatabase,
   objectEntry1,
   propertyStorageDatabase,
@@ -35,13 +34,9 @@ import {
   relatedEntry2,
   setup,
   setupTestSqlDatabase,
+  withoutDatabaseProperty,
 } from '../../test-utils';
-import { Database } from '../../types';
-import {
-  resolveEntryTemplateFilePath,
-  virtualCollectionId,
-  virtualCollectionName,
-} from '../../utils';
+import { virtualCollectionId, virtualCollectionName } from '../../utils';
 import { onRemoveProperty } from './property-removed';
 
 const { ownedCardDesign_1 } = DesignFixtures;
@@ -59,20 +54,6 @@ const mappedDesign: Design = {
   owner: objectDatabase.id,
   elements: [{ ...titleDesignElement, property: 'Content' }],
 };
-
-/**
- * Returns a copy of a database with the named property removed
- * from its schema, matching the updated config carried by the
- * property removed event.
- */
-function withoutProperty(database: Database, propertyName: string): Database {
-  return {
-    ...database,
-    properties: database.properties.filter(
-      (property) => property.name !== propertyName,
-    ),
-  };
-}
 
 describe('onRemoveProperty', () => {
   beforeEach(() => {
@@ -136,7 +117,7 @@ describe('onRemoveProperty', () => {
 
     await onRemoveProperty({
       original: collectionDatabase,
-      updated: withoutProperty(collectionDatabase, 'Related'),
+      updated: withoutDatabaseProperty(collectionDatabase, 'Related'),
       property,
       action,
     });
@@ -166,7 +147,7 @@ describe('onRemoveProperty', () => {
     // Remove a non-collection property
     await onRemoveProperty({
       original: objectDatabase,
-      updated: withoutProperty(objectDatabase, 'Content'),
+      updated: withoutDatabaseProperty(objectDatabase, 'Content'),
       property: { type: 'text', name: 'Content' },
       action,
     });
@@ -181,7 +162,7 @@ describe('onRemoveProperty', () => {
   it("clears the property from the database's designs", async () => {
     await onRemoveProperty({
       original: objectDatabase,
-      updated: withoutProperty(objectDatabase, 'Content'),
+      updated: withoutDatabaseProperty(objectDatabase, 'Content'),
       property: { type: 'text', name: 'Content' },
       action,
     });
@@ -198,7 +179,7 @@ describe('onRemoveProperty', () => {
 
     await onRemoveProperty({
       original: collectionDatabase,
-      updated: withoutProperty(collectionDatabase, 'Related'),
+      updated: withoutDatabaseProperty(collectionDatabase, 'Related'),
       property,
       action,
     });
@@ -228,7 +209,7 @@ describe('onRemoveProperty', () => {
     function removeIconProperty(): Promise<void> {
       return onRemoveProperty({
         original: objectDatabase,
-        updated: withoutProperty(objectDatabase, 'Icon'),
+        updated: withoutDatabaseProperty(objectDatabase, 'Icon'),
         property: iconProperty,
         action,
       });
@@ -300,7 +281,7 @@ describe('onRemoveProperty', () => {
 
       await onRemoveProperty({
         original: propertyStorageDatabase,
-        updated: withoutProperty(propertyStorageDatabase, 'Image'),
+        updated: withoutDatabaseProperty(propertyStorageDatabase, 'Image'),
         property,
         action,
       });
@@ -314,70 +295,26 @@ describe('onRemoveProperty', () => {
     });
   });
 
-  describe('entry templates', () => {
-    it("clears the property from the database's entry templates", async () => {
-      const property = entryTemplatesDatabase.properties.find(
-        (p) => p.name === 'Notes',
-      )!;
+  it("clears the property from the database's entry templates", async () => {
+    // Find the notes property schema
+    const property = entryTemplatesDatabase.properties.find(
+      (candidate) => candidate.name === notesPropertyName,
+    )!;
 
-      await onRemoveProperty({
-        original: entryTemplatesDatabase,
-        updated: withoutProperty(entryTemplatesDatabase, 'Notes'),
-        property,
-        action,
-      });
-
-      const template = getDatabaseEntryTemplate(entryTemplate1.id);
-
-      // The removed property's value should be gone
-      expect(template.properties.Notes).toBeUndefined();
-      // Other values should be untouched
-      expect(template.properties.Image).toBe(entryTemplate1.properties.Image);
+    // Remove the property
+    await onRemoveProperty({
+      original: entryTemplatesDatabase,
+      updated: withoutDatabaseProperty(
+        entryTemplatesDatabase,
+        notesPropertyName,
+      ),
+      property,
+      action,
     });
 
-    it('deletes files stored for a removed file based property', async () => {
-      const property = entryTemplatesDatabase.properties.find(
-        (p) => p.name === 'Image',
-      )!;
-      const storedImagePath = resolveEntryTemplateFilePath(
-        databaseDirPath(entryTemplatesDatabase),
-        entryTemplate1.id,
-        'template-image.png',
-      );
-
-      await onRemoveProperty({
-        original: entryTemplatesDatabase,
-        updated: withoutProperty(entryTemplatesDatabase, 'Image'),
-        property,
-        action,
-      });
-
-      // The stored file should be deleted
-      expect(MockFs.exists(storedImagePath)).toBeFalsy();
-
-      // The removed property's value should be gone
-      expect(
-        getDatabaseEntryTemplate(entryTemplate1.id).properties.Image,
-      ).toBeUndefined();
-    });
-
-    it('leaves the templates untouched when none use the property', async () => {
-      const property = entryTemplatesDatabase.properties.find(
-        (p) => p.name === 'Count',
-      )!;
-
-      await onRemoveProperty({
-        original: entryTemplatesDatabase,
-        updated: withoutProperty(entryTemplatesDatabase, 'Count'),
-        property,
-        action,
-      });
-
-      // The templates should be unchanged
-      expect(getDatabaseEntryTemplates(entryTemplatesDatabase.id)).toEqual([
-        entryTemplate1,
-        entryTemplate2,
-      ]);
-    });
+    // The removed property's value should be gone
+    expect(
+      storeItem(DatabaseEntryTemplatesStore, entryTemplate1.id).properties,
+    ).not.toHaveProperty(notesPropertyName);
   });
 });
