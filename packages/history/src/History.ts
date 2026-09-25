@@ -1,3 +1,4 @@
+export { createHistoryAction as createAction } from './createHistoryAction';
 export { recordHistory as record } from './recordHistory';
 export { readHistory as read } from './readHistory';
 export { readHistoryContent as readContent } from './readHistoryContent';

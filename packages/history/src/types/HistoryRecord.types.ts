@@ -18,6 +18,18 @@ export interface PropertyChange {
   to: PropertyValue;
 }
 
+export interface HistoryAction {
+  /**
+   * Groups every record made by one action.
+   */
+  id: string;
+
+  /**
+   * What was done, named by the package which did it.
+   */
+  cause: string;
+}
+
 interface BaseHistoryRecord {
   /**
    * When the change happened.
@@ -25,11 +37,10 @@ interface BaseHistoryRecord {
   timestamp: Date;
 
   /**
-   * The automation run the change was made during, present only for
-   * changes made by one. Groups a run's records into the set
-   * reverting it restores.
+   * The action which caused the change. Absent when the change was an
+   * edit of the subject itself.
    */
-  runId?: string;
+  action?: HistoryAction;
 }
 
 export interface CreatedRecord extends BaseHistoryRecord {

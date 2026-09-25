@@ -15,10 +15,10 @@ import { writeHistoryContent } from '../writeHistoryContent';
 export async function buildHistoryRecord(
   options: RecordHistoryOptions,
 ): Promise<HistoryRecord> {
-  const { runId } = options;
+  const { action } = options;
 
-  // Build the fields every record carries, whatever its kind
-  const base = { timestamp: new Date(), ...(runId ? { runId } : {}) };
+  // Build the fields every record has, whatever its kind
+  const base = { timestamp: new Date(), ...(action ? { action } : {}) };
 
   // Store a content change's contents and record where they went
   if (options.kind === 'content') {

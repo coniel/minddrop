@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { createHistoryAction } from '../createHistoryAction';
 import { MockFs, cleanup, mockDate, setup } from '../test-utils';
 import { HistoryRecord } from '../types';
 import { buildHistoryRecord } from './buildHistoryRecord';
@@ -28,14 +29,16 @@ describe('buildHistoryRecord', () => {
     expect(record).toEqual({ timestamp: mockDate, kind: 'created' });
   });
 
-  it('records the automation run a change was made during', async () => {
+  it('records the action a change was made by', async () => {
+    const action = createHistoryAction('property-removed');
+
     const record = await buildHistoryRecord({
       ...subject,
       kind: 'created',
-      runId: 'run-1',
+      action,
     });
 
-    expect(record).toHaveProperty('runId', 'run-1');
+    expect(record).toHaveProperty('action', action);
   });
 
   it('builds a property change', async () => {
