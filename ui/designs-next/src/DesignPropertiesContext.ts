@@ -1,5 +1,9 @@
 import { createContext } from 'react';
-import { PropertiesSchema, PropertyMap } from '@minddrop/properties';
+import {
+  PropertiesSchema,
+  PropertyMap,
+  PropertyValue,
+} from '@minddrop/properties';
 
 export interface DesignPropertiesContextValue {
   /**
@@ -12,6 +16,18 @@ export interface DesignPropertiesContextValue {
    * property name.
    */
   values: PropertyMap;
+
+  /**
+   * Called with a property's name and new value when an element
+   * changes it. Absent when the render is read only.
+   */
+  onValueChange?: (name: string, value: PropertyValue) => void;
+
+  /**
+   * Validates a property's new value before an element commits it.
+   * Returns a translated error message when it is invalid.
+   */
+  validateValue?: (name: string, value: PropertyValue) => string | undefined;
 }
 
 /**

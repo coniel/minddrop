@@ -5,7 +5,8 @@
   "type": "module",
   "types": "src/index",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./test-utils": "./src/test-utils/index.ts"
   },
   "scripts": {
     "lint": "eslint .  --max-warnings 0",

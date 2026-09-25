@@ -1,9 +1,16 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { DesignElement } from '@minddrop/designs-next';
 import { titleDesignElement } from '@minddrop/designs-next/test-utils';
-import { PropertiesSchema, PropertyMap } from '@minddrop/properties';
-import { render, screen } from '@minddrop/test-utils';
-import { DesignPropertiesProvider } from '../DesignPropertiesProvider';
+import {
+  PropertiesSchema,
+  PropertyMap,
+  PropertyValue,
+} from '@minddrop/properties';
+import { fireEvent, render, screen } from '@minddrop/test-utils';
+import {
+  DesignPropertiesProvider,
+  DesignPropertiesProviderProps,
+} from '../DesignPropertiesProvider';
 import { cleanup } from '../test-utils';
 import { useElementProperty } from './useElementProperty';
 
@@ -17,10 +24,17 @@ const values: PropertyMap = {
   Summary: null,
 };
 
+interface ProbeProps {
+  /**
+   * The element to resolve the property of.
+   */
+  element: DesignElement;
+}
+
 /**
  * Renders the type and value the hook resolves for an element.
  */
-const PropertyProbe: React.FC<{ element: DesignElement }> = ({ element }) => {
+const PropertyProbe: React.FC<ProbeProps> = ({ element }) => {
   const property = useElementProperty(element);
 
   return (
@@ -31,16 +45,50 @@ const PropertyProbe: React.FC<{ element: DesignElement }> = ({ element }) => {
 };
 
 /**
+ * Renders an update button for the element's property and the
+ * validation of another value. Renders 'read only' when the property
+ * cannot be updated.
+ */
+const EditProbe: React.FC<ProbeProps> = ({ element }) => {
+  const property = useElementProperty(element);
+
+  if (!property?.updateValue) {
+    return <div data-testid="edit">read only</div>;
+  }
+
+  return (
+    <div data-testid="edit">
+      <button onClick={() => property.updateValue?.('Edited')}>update</button>
+      {property.validateValue?.('Taken')}
+    </div>
+  );
+};
+
+/**
  * Renders the probe on an element mapped to the given property.
  *
  * @param property - The property the element maps to.
+ * @param callbacks - The provider's update and validation callbacks.
  */
-function renderProbe(property?: string) {
+function renderProbe(
+  property?: string,
+  callbacks?: Pick<
+    DesignPropertiesProviderProps,
+    'onValueChange' | 'validateValue'
+  >,
+) {
+  // Map the element to the property
   const element: DesignElement = { ...titleDesignElement, property };
 
+  // Render the probes inside a provider
   render(
-    <DesignPropertiesProvider properties={properties} values={values}>
+    <DesignPropertiesProvider
+      properties={properties}
+      values={values}
+      {...callbacks}
+    >
       <PropertyProbe element={element} />
+      <EditProbe element={element} />
     </DesignPropertiesProvider>,
   );
 }
@@ -56,6 +104,36 @@ describe('useElementProperty', () => {
     expect(screen.getByTestId('property').textContent).toBe(
       'content:# The entry document',
     );
+  });
+
+  it('updates the mapped property through the provider callback', () => {
+    // The change the provider is handed
+    let change: [string, PropertyValue] | null = null;
+
+    renderProbe('Notes', {
+      onValueChange: (name, value) => {
+        change = [name, value];
+      },
+    });
+
+    fireEvent.click(screen.getByText('update'));
+
+    expect(change).toEqual(['Notes', 'Edited']);
+  });
+
+  it('validates a value through the provider callback', () => {
+    renderProbe('Notes', {
+      onValueChange: () => {},
+      validateValue: (name, value) => `${name} is already ${value}`,
+    });
+
+    expect(screen.getByText('Notes is already Taken')).toBeInTheDocument();
+  });
+
+  it('resolves no update callback without a provider callback', () => {
+    renderProbe('Notes');
+
+    expect(screen.getByText('read only')).toBeInTheDocument();
   });
 
   it('resolves a null value when the property has none', () => {

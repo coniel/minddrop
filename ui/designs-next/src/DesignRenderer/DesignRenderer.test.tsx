@@ -2,8 +2,6 @@ import { afterEach, describe, expect, it } from 'vitest';
 import {
   Design,
   DesignElement,
-  DesignElementComponent,
-  DesignElementConfig,
   DesignElementConfigs,
   Designs,
 } from '@minddrop/designs-next';
@@ -11,10 +9,9 @@ import {
   DesignElementFixtures,
   DesignFixtures,
 } from '@minddrop/designs-next/test-utils';
-import { PropertiesSchema } from '@minddrop/properties';
-import { render } from '@minddrop/test-utils';
-import { cleanup } from '../test-utils';
-import { useElementValue } from '../useElementValue';
+import { PropertiesSchema, PropertyValue } from '@minddrop/properties';
+import { fireEvent, render, screen } from '@minddrop/test-utils';
+import { StandInElementFixtures, cleanup } from '../test-utils';
 import { DesignRenderer } from './DesignRenderer';
 
 const {
@@ -39,25 +36,22 @@ const {
   titleDesignElement,
 } = DesignElementFixtures;
 
-// An element type rendering the value of the property it maps to,
-// standing in for the real content elements.
-const ValueElementType = 'value';
-
-const ValueElement: DesignElementComponent = ({ element }) => (
-  <div>{useElementValue(element)}</div>
-);
-
-const valueElementConfig: DesignElementConfig = {
-  type: ValueElementType,
-  label: 'designsNext.elements.text.label',
-  icon: 'text',
-  group: 'content',
-  component: ValueElement,
-  defaultColumnSpan: 12,
-  defaultRowSpan: 4,
-};
+const { elementConfig_value, elementConfig_edit } = StandInElementFixtures;
 
 const titleProperties: PropertiesSchema = [{ type: 'title', name: 'Title' }];
+
+// A design whose only element writes 'Edited' to the Title property
+const editDesign: Design = {
+  ...design_heading,
+  elements: [
+    {
+      ...designElement_heading,
+      type: elementConfig_edit.type,
+      property: 'Title',
+      content: 'Edited',
+    },
+  ],
+};
 
 // A 3/2 locked card of the fluid cover above the bottom bar
 const lockedDesign: Design = {
@@ -86,12 +80,16 @@ describe('DesignRenderer', () => {
   afterEach(cleanup);
 
   it('renders a mapped element from the property values', () => {
-    DesignElementConfigs.register(valueElementConfig);
+    DesignElementConfigs.register(elementConfig_value);
 
     const design: Design = {
       ...design_heading,
       elements: [
-        { ...designElement_heading, type: ValueElementType, property: 'Title' },
+        {
+          ...designElement_heading,
+          type: elementConfig_value.type,
+          property: 'Title',
+        },
       ],
     };
 
@@ -104,6 +102,44 @@ describe('DesignRenderer', () => {
     );
 
     expect(container.textContent).toBe('The entry title');
+  });
+
+  it("hands an element's value change to the callback", () => {
+    DesignElementConfigs.register(elementConfig_edit);
+
+    // The change the renderer is handed
+    let change: [string, PropertyValue] | null = null;
+
+    render(
+      <DesignRenderer
+        design={editDesign}
+        properties={titleProperties}
+        values={{ Title: 'The entry title' }}
+        onValueChange={(name, value) => {
+          change = [name, value];
+        }}
+      />,
+    );
+
+    fireEvent.click(screen.getByText('edit'));
+
+    expect(change).toEqual(['Title', 'Edited']);
+  });
+
+  it("validates an element's value through the callback", () => {
+    DesignElementConfigs.register(elementConfig_edit);
+
+    render(
+      <DesignRenderer
+        design={editDesign}
+        properties={titleProperties}
+        values={{ Title: 'The entry title' }}
+        onValueChange={() => {}}
+        validateValue={(name, value) => `${name} rejects ${value}`}
+      />,
+    );
+
+    expect(screen.getByText('Title rejects Edited')).toBeInTheDocument();
   });
 
   it('renders a wrapper per element', () => {

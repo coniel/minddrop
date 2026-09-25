@@ -1,19 +1,11 @@
 import { useMemo } from 'react';
-import { PropertiesSchema, PropertyMap } from '@minddrop/properties';
-import { DesignPropertiesContext } from './DesignPropertiesContext';
+import {
+  DesignPropertiesContext,
+  DesignPropertiesContextValue,
+} from './DesignPropertiesContext';
 
-export interface DesignPropertiesProviderProps {
-  /**
-   * The schemas of the properties the design's elements map to.
-   */
-  properties?: PropertiesSchema;
-
-  /**
-   * The property values the design's elements render, keyed by
-   * property name.
-   */
-  values?: PropertyMap;
-
+export interface DesignPropertiesProviderProps
+  extends Partial<DesignPropertiesContextValue> {
   /**
    * The design render the properties apply to.
    */
@@ -21,16 +13,21 @@ export interface DesignPropertiesProviderProps {
 }
 
 /**
- * Provides the properties a design's elements render the values of.
- * Wrap a design render to fill its mapped elements with an entry's
- * values.
+ * Provides the properties a design's elements render the values of,
+ * and the callbacks updating them.
  */
 export const DesignPropertiesProvider: React.FC<
   DesignPropertiesProviderProps
-> = ({ properties, values, children }) => {
+> = ({ properties, values, onValueChange, validateValue, children }) => {
+  // Build the context value
   const value = useMemo(
-    () => ({ properties: properties ?? [], values: values ?? {} }),
-    [properties, values],
+    () => ({
+      properties: properties ?? [],
+      values: values ?? {},
+      onValueChange,
+      validateValue,
+    }),
+    [properties, values, onValueChange, validateValue],
   );
 
   return (

@@ -1,6 +1,10 @@
 import { useMemo } from 'react';
 import { Design, Designs } from '@minddrop/designs-next';
-import { PropertiesSchema, PropertyMap } from '@minddrop/properties';
+import {
+  PropertiesSchema,
+  PropertyMap,
+  PropertyValue,
+} from '@minddrop/properties';
 import { DesignPropertiesProvider } from '../DesignPropertiesProvider';
 import './DesignRenderer.css';
 import { LayoutBoxRenderer } from './LayoutBoxRenderer';
@@ -13,7 +17,7 @@ export interface DesignRendererProps {
 
   /**
    * The schemas of the properties the design's elements map to.
-   * Needed alongside the values, which are read against their
+   * Needed alongside the values. They are read against their
    * schema.
    */
   properties?: PropertiesSchema;
@@ -23,6 +27,19 @@ export interface DesignRendererProps {
    * by property name.
    */
   values?: PropertyMap;
+
+  /**
+   * Called with a property's name and new value when a mapped
+   * element changes it. Omit to render the design read only.
+   */
+  onValueChange?: (name: string, value: PropertyValue) => void;
+
+  /**
+   * Validates a property's new value before a mapped element
+   * commits it. Returns a translated error message when it is
+   * invalid.
+   */
+  validateValue?: (name: string, value: PropertyValue) => string | undefined;
 }
 
 /**
@@ -33,12 +50,19 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
   design,
   properties,
   values,
+  onValueChange,
+  validateValue,
 }) => {
   // Compile the design once per design
   const tree = useMemo(() => Designs.resolveLayoutTree(design), [design]);
 
   return (
-    <DesignPropertiesProvider properties={properties} values={values}>
+    <DesignPropertiesProvider
+      properties={properties}
+      values={values}
+      onValueChange={onValueChange}
+      validateValue={validateValue}
+    >
       <div
         className="design-renderer"
         style={{ aspectRatio: design.aspectRatio }}
