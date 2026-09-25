@@ -1,20 +1,15 @@
 import { Collections } from '@minddrop/collections';
 import { Designs } from '@minddrop/designs-next';
-import { History } from '@minddrop/history';
 import { Properties } from '@minddrop/properties';
-import { EntryHistorySubjectType } from '../../constants';
 import { DatabasePropertyRenamedEventData } from '../../events';
 import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
+import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
 import { renameDatabaseEntriesProperty } from '../../renameDatabaseEntriesProperty';
 import { renameDatabaseEntryTemplatesProperty } from '../../renameDatabaseEntryTemplatesProperty';
 import { renamePropertyFileDir } from '../../renamePropertyFileDir';
 import { sqlRenameProperty } from '../../sql';
 import { updateDatabaseDesignsElements } from '../../updateDatabaseDesignsElements';
-import {
-  resolveDatabasePath,
-  virtualCollectionId,
-  virtualCollectionName,
-} from '../../utils';
+import { virtualCollectionId, virtualCollectionName } from '../../utils';
 
 /**
  * Called when a database property is renamed. Carries the new name
@@ -59,10 +54,7 @@ export async function onRenameProperty(
   // property.
   await Promise.all(
     renamedEntries.map((entry) =>
-      History.record({
-        ownerPath: resolveDatabasePath(database),
-        subjectType: EntryHistorySubjectType,
-        subjectKey: entry.title,
+      recordDatabaseEntryHistory(database, entry, {
         kind: 'rename',
         target: 'property',
         from: oldName,

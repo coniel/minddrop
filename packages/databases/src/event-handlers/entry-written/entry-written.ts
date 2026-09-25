@@ -1,13 +1,12 @@
 import { Fs } from '@minddrop/file-system';
-import { History } from '@minddrop/history';
-import { EntryHistorySubjectType } from '../../constants';
 import {
-  ContentCapture,
   contentCaptureKey,
   getContentCapture,
   recordContentCapture,
 } from '../../contentCaptureRegistry';
 import { DatabaseEntryWrittenEventData } from '../../events';
+import { readDatabaseEntryLastContentCapture } from '../../readDatabaseEntryLastContentCapture';
+import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
 import {
   resolveContentCaptureGap,
   resolveDatabaseEntryPath,
@@ -36,7 +35,8 @@ export async function onEntryWritten(
   // Fall back to the entry's history for a capture made in an earlier
   // session.
   const lastCapture =
-    getContentCapture(key) ?? (await readLastCapture(databasePath, entry));
+    getContentCapture(key) ??
+    (await readDatabaseEntryLastContentCapture(database, entry));
 
   // Check whether the content has already been captured, which makes
   // capturing idempotent.
@@ -55,42 +55,11 @@ export async function onEntryWritten(
   }
 
   // Record the content the write replaced
-  await History.record({
-    ownerPath: databasePath,
-    subjectType: EntryHistorySubjectType,
-    subjectKey: entry.title,
+  await recordDatabaseEntryHistory(database, entry, {
     kind: 'content',
     contents: previousContents,
     extension: Fs.getFileExtension(resolveDatabaseEntryPath(entry, database)),
   });
 
   recordContentCapture(key, { capturedAt, contentHash });
-}
-
-/**
- * Reads an entry's most recent content capture from its history, for
- * entries last captured in an earlier session.
- */
-async function readLastCapture(
-  databasePath: string,
-  entry: { title: string },
-): Promise<ContentCapture | null> {
-  // Read the entry's history
-  const records = await History.read({
-    ownerPath: databasePath,
-    subjectType: EntryHistorySubjectType,
-    subjectKey: entry.title,
-  });
-
-  // Find the most recent content record. The history is read oldest
-  // first, so the last one is the most recent.
-  const captures = records.filter((record) => record.kind === 'content');
-  const last = captures[captures.length - 1];
-
-  // Check the entry has had its content captured before
-  if (!last) {
-    return null;
-  }
-
-  return { capturedAt: last.timestamp, contentHash: last.contentHash };
 }

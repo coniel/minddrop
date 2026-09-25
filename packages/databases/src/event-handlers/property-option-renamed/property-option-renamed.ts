@@ -1,9 +1,8 @@
-import { History } from '@minddrop/history';
-import { EntryHistorySubjectType } from '../../constants';
 import { DatabasePropertyOptionRenamedEventData } from '../../events';
+import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
 import { renameDatabaseEntriesPropertyOption } from '../../renameDatabaseEntriesPropertyOption';
 import { sqlUpsertEntries } from '../../sql';
-import { convertEntryToSqlRecord, resolveDatabasePath } from '../../utils';
+import { convertEntryToSqlRecord } from '../../utils';
 
 /**
  * Called when a select property option is renamed. Rewrites the
@@ -33,10 +32,7 @@ export async function onRenamePropertyOption(
   // Record the rename against each of them
   await Promise.all(
     entries.map((entry) =>
-      History.record({
-        ownerPath: resolveDatabasePath(database),
-        subjectType: EntryHistorySubjectType,
-        subjectKey: entry.title,
+      recordDatabaseEntryHistory(database, entry, {
         kind: 'rename',
         target: 'value-label',
         property: property.name,

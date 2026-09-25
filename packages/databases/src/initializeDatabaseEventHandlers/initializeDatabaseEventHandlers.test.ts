@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { History } from '@minddrop/history';
-import { EntryHistorySubjectType } from '../constants';
 import {
   DatabaseEntryCreatedEvent,
   DatabaseEntryWrittenEvent,
@@ -10,19 +9,13 @@ import { sqlUpsertDatabase } from '../sql';
 import {
   cleanup,
   cleanupTestSqlDatabase,
-  databaseDirPath,
   objectDatabase,
   objectEntry1,
   setup,
   setupTestSqlDatabase,
 } from '../test-utils';
+import { resolveDatabaseEntryHistorySubject } from '../utils';
 import { initializeDatabaseEventHandlers } from './initializeDatabaseEventHandlers';
-
-const subject = {
-  ownerPath: databaseDirPath(objectDatabase),
-  subjectType: EntryHistorySubjectType,
-  subjectKey: objectEntry1.title,
-};
 
 describe('initializeDatabaseEventHandlers', () => {
   beforeEach(() => {
@@ -56,9 +49,11 @@ describe('initializeDatabaseEventHandlers', () => {
 
     // The record lands as an unawaited event side effect
     await vi.waitFor(async () => {
-      expect(await History.read(subject)).toEqual([
-        expect.objectContaining({ kind: 'created' }),
-      ]);
+      expect(
+        await History.read(
+          resolveDatabaseEntryHistorySubject(objectDatabase, objectEntry1),
+        ),
+      ).toEqual([expect.objectContaining({ kind: 'created' })]);
     });
   });
 
@@ -72,9 +67,11 @@ describe('initializeDatabaseEventHandlers', () => {
 
     // The record lands as an unawaited event side effect
     await vi.waitFor(async () => {
-      expect(await History.read(subject)).toEqual([
-        expect.objectContaining({ kind: 'content' }),
-      ]);
+      expect(
+        await History.read(
+          resolveDatabaseEntryHistorySubject(objectDatabase, objectEntry1),
+        ),
+      ).toEqual([expect.objectContaining({ kind: 'content' })]);
     });
   });
 });

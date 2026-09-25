@@ -3,7 +3,6 @@ import { Events } from '@minddrop/events';
 import { History } from '@minddrop/history';
 import { ItemReferences } from '@minddrop/item-references';
 import { Workspaces } from '@minddrop/workspaces';
-import { EntryHistorySubjectType } from '../../constants';
 import {
   contentCaptureKey,
   moveContentCapture,
@@ -11,10 +10,12 @@ import {
 import { DatabaseEntryRenamedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
 import { moveEntryMetadataFile } from '../../moveEntryMetadataFile';
+import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
 import { sqlUpsertEntries } from '../../sql';
 import {
   convertEntryToSqlRecord,
   databaseEntryAddress,
+  resolveDatabaseEntryHistorySubject,
   resolveDatabasePath,
   virtualCollectionId,
   virtualCollectionName,
@@ -40,20 +41,23 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
 
   // Record the rename before moving the history, so it lands in the
   // log the move carries across.
-  await History.record({
-    ownerPath: databasePath,
-    subjectType: EntryHistorySubjectType,
-    subjectKey: original.title,
+  await recordDatabaseEntryHistory(database, original, {
     kind: 'rename',
     target: 'self',
     from: original.title,
     to: updated.title,
   });
 
+  // Resolve the entry's history subject
+  const { ownerPath, subjectType } = resolveDatabaseEntryHistorySubject(
+    database,
+    original,
+  );
+
   // Move the history to follow the entry to its new title
   await History.move({
-    ownerPath: databasePath,
-    subjectType: EntryHistorySubjectType,
+    ownerPath,
+    subjectType,
     fromKey: original.title,
     toKey: updated.title,
   });

@@ -1,15 +1,13 @@
-import { History } from '@minddrop/history';
 import { Properties } from '@minddrop/properties';
 import { TagRenamedEventData } from '@minddrop/tags';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
-import { EntryHistorySubjectType } from '../../constants';
 import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
 import { getAllDatabases } from '../../getAllDatabases';
+import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
 import { sqlUpsertEntries } from '../../sql';
 import { SqlEntryRecord } from '../../types';
 import {
   convertEntryToSqlRecord,
-  resolveDatabasePath,
   rewriteEntryPropertyValues,
 } from '../../utils';
 import { writeDatabaseEntry } from '../../writeDatabaseEntry';
@@ -60,10 +58,7 @@ export async function onTagRenamed(data: TagRenamedEventData): Promise<void> {
       // Record the rename against each property which held the tag
       await Promise.all(
         rewritten.changes.map((change) =>
-          History.record({
-            ownerPath: resolveDatabasePath(database),
-            subjectType: EntryHistorySubjectType,
-            subjectKey: entry.title,
+          recordDatabaseEntryHistory(database, entry, {
             kind: 'rename',
             target: 'value-label',
             property: change.property,

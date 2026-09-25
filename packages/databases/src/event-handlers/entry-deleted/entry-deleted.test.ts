@@ -3,7 +3,7 @@ import { Collections } from '@minddrop/collections';
 import { ContentViews } from '@minddrop/content-views';
 import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { History } from '@minddrop/history';
-import { EntryHistorySubjectType } from '../../constants';
+import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
 import {
   sqlGetEntrySyncRecords,
   sqlUpsertDatabase,
@@ -15,7 +15,6 @@ import {
   collectionDatabase,
   collectionEntry1,
   collectionEntry1SqlRecord,
-  databaseDirPath,
   objectDatabase,
   objectEntry1,
   relatedEntry1,
@@ -25,7 +24,11 @@ import {
   setup,
   setupTestSqlDatabase,
 } from '../../test-utils';
-import { virtualCollectionId, virtualCollectionName } from '../../utils';
+import {
+  resolveDatabaseEntryHistorySubject,
+  virtualCollectionId,
+  virtualCollectionName,
+} from '../../utils';
 import { onDeleteEntry } from './entry-deleted';
 
 describe('onDeleteEntry', () => {
@@ -162,21 +165,16 @@ describe('onDeleteEntry', () => {
   });
 
   it("closes a named entry's history, which outlives it", async () => {
-    await History.record({
-      ownerPath: databaseDirPath(objectDatabase),
-      subjectType: EntryHistorySubjectType,
-      subjectKey: objectEntry1.title,
+    await recordDatabaseEntryHistory(objectDatabase, objectEntry1, {
       kind: 'created',
     });
 
     await onDeleteEntry(objectEntry1);
 
     expect(
-      await History.read({
-        ownerPath: databaseDirPath(objectDatabase),
-        subjectType: EntryHistorySubjectType,
-        subjectKey: objectEntry1.title,
-      }),
+      await History.read(
+        resolveDatabaseEntryHistorySubject(objectDatabase, objectEntry1),
+      ),
     ).toEqual([
       expect.objectContaining({ kind: 'created' }),
       expect.objectContaining({ kind: 'deleted' }),
@@ -186,10 +184,7 @@ describe('onDeleteEntry', () => {
   it("deletes an untitled entry's history", async () => {
     const untitled = { ...objectEntry1, title: 'Untitled' };
 
-    await History.record({
-      ownerPath: databaseDirPath(objectDatabase),
-      subjectType: EntryHistorySubjectType,
-      subjectKey: untitled.title,
+    await recordDatabaseEntryHistory(objectDatabase, untitled, {
       kind: 'created',
     });
 
@@ -198,11 +193,9 @@ describe('onDeleteEntry', () => {
     // The title goes back into the pool, so the next new entry must
     // not inherit what was recorded under it.
     expect(
-      await History.read({
-        ownerPath: databaseDirPath(objectDatabase),
-        subjectType: EntryHistorySubjectType,
-        subjectKey: untitled.title,
-      }),
+      await History.read(
+        resolveDatabaseEntryHistorySubject(objectDatabase, untitled),
+      ),
     ).toEqual([]);
   });
 });

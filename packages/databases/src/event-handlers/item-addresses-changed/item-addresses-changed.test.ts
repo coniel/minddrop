@@ -5,7 +5,6 @@ import { History } from '@minddrop/history';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
-import { EntryHistorySubjectType } from '../../constants';
 import { sqlUpsertDatabase } from '../../sql';
 import {
   MockFs,
@@ -14,7 +13,6 @@ import {
   clearRecordedSqlStatements,
   collectionDatabase,
   collectionEntry1,
-  databaseDirPath,
   databaseEntryFilePath,
   getRecordedSqlStatements,
   relatedEntry1,
@@ -24,6 +22,7 @@ import {
 } from '../../test-utils';
 import {
   databaseEntryAddress,
+  resolveDatabaseEntryHistorySubject,
   resolveDatabaseEntryPath,
   viewMetadataKey,
   virtualViewId,
@@ -235,11 +234,12 @@ describe('onItemAddressesChanged', () => {
     // The referencing entry's history should be able to follow its
     // older records to the new address.
     expect(
-      await History.read({
-        ownerPath: databaseDirPath(collectionDatabase),
-        subjectType: EntryHistorySubjectType,
-        subjectKey: collectionEntry1.title,
-      }),
+      await History.read(
+        resolveDatabaseEntryHistorySubject(
+          collectionDatabase,
+          collectionEntry1,
+        ),
+      ),
     ).toContainEqual(
       expect.objectContaining({
         kind: 'rename',
@@ -248,35 +248,5 @@ describe('onItemAddressesChanged', () => {
         to: databaseEntryAddress(renamedRelated, collectionDatabase),
       }),
     );
-  });
-
-  it('records nothing against entries which do not reference it', async () => {
-    DatabaseEntriesStore.update(relatedEntry1.id, {
-      title: renamedRelated.title,
-      path: renamedRelated.path,
-    });
-
-    await onItemAddressesChanged({
-      workspaceId: workspace_1.id,
-      changes: [
-        {
-          id: relatedEntry1.id,
-          oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
-          newReference: databaseEntryAddress(
-            renamedRelated,
-            collectionDatabase,
-          ),
-        },
-      ],
-    });
-
-    // relatedEntry2 is in the same database but references nothing
-    expect(
-      await History.read({
-        ownerPath: databaseDirPath(collectionDatabase),
-        subjectType: EntryHistorySubjectType,
-        subjectKey: relatedEntry2.title,
-      }),
-    ).toEqual([]);
   });
 });

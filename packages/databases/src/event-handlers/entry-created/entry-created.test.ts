@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { History } from '@minddrop/history';
-import { EntryHistorySubjectType } from '../../constants';
 import { sqlGetAllEntriesFull, sqlUpsertDatabase } from '../../sql';
 import {
   cleanup,
@@ -9,14 +8,17 @@ import {
   collectionDatabase,
   collectionEntry1,
   collectionEntry1SqlRecord,
-  databaseDirPath,
   objectDatabase,
   objectEntry1,
   objectEntry1SqlRecord,
   setup,
   setupTestSqlDatabase,
 } from '../../test-utils';
-import { virtualCollectionId, virtualCollectionName } from '../../utils';
+import {
+  resolveDatabaseEntryHistorySubject,
+  virtualCollectionId,
+  virtualCollectionName,
+} from '../../utils';
 import { onCreateEntry } from './entry-created';
 
 describe('onCreateEntry', () => {
@@ -142,11 +144,9 @@ describe('onCreateEntry', () => {
     await onCreateEntry(objectEntry1);
 
     expect(
-      await History.read({
-        ownerPath: databaseDirPath(objectDatabase),
-        subjectType: EntryHistorySubjectType,
-        subjectKey: objectEntry1.title,
-      }),
+      await History.read(
+        resolveDatabaseEntryHistorySubject(objectDatabase, objectEntry1),
+      ),
     ).toEqual([expect.objectContaining({ kind: 'created' })]);
   });
 });

@@ -4,7 +4,6 @@ import { storeItem } from '@minddrop/stores/test-utils';
 import { TagFixtures } from '@minddrop/tags/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
-import { EntryHistorySubjectType } from '../../constants';
 import { sqlGetEntryPropertyValues, sqlUpsertDatabase } from '../../sql';
 import {
   MockFs,
@@ -17,7 +16,11 @@ import {
   setup,
   setupRecordingTestSqlDatabase,
 } from '../../test-utils';
-import { resolveDatabaseEntryPath, resolveDatabasePath } from '../../utils';
+import {
+  resolveDatabaseEntryHistorySubject,
+  resolveDatabaseEntryPath,
+  resolveDatabasePath,
+} from '../../utils';
 import { onTagDeleted } from './tag-deleted';
 
 const { tag_1, historyAction_tagDeleted } = TagFixtures;
@@ -135,11 +138,9 @@ describe('onTagDeleted', () => {
     await onTagDeleted(deletedTag);
 
     expect(
-      await History.read({
-        ownerPath: resolveDatabasePath(tagsDatabase),
-        subjectType: EntryHistorySubjectType,
-        subjectKey: taggedEntry.title,
-      }),
+      await History.read(
+        resolveDatabaseEntryHistorySubject(tagsDatabase, taggedEntry),
+      ),
     ).toContainEqual(
       expect.objectContaining({
         kind: 'property',
@@ -164,11 +165,7 @@ describe('onTagDeleted', () => {
 
     const records = await Promise.all(
       [taggedEntry, secondEntry].map((entry) =>
-        History.read({
-          ownerPath: resolveDatabasePath(tagsDatabase),
-          subjectType: EntryHistorySubjectType,
-          subjectKey: entry.title,
-        }),
+        History.read(resolveDatabaseEntryHistorySubject(tagsDatabase, entry)),
       ),
     );
     const actions = records.flat().map((record) => record.action);
@@ -195,11 +192,9 @@ describe('onTagDeleted', () => {
     await onTagDeleted(deletedTag);
 
     expect(
-      await History.read({
-        ownerPath: resolveDatabasePath(tagsDatabase),
-        subjectType: EntryHistorySubjectType,
-        subjectKey: untagged.title,
-      }),
+      await History.read(
+        resolveDatabaseEntryHistorySubject(tagsDatabase, untagged),
+      ),
     ).toEqual([]);
   });
 });

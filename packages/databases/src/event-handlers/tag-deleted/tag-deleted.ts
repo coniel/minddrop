@@ -1,15 +1,13 @@
-import { History } from '@minddrop/history';
 import { Properties } from '@minddrop/properties';
 import { TagDeletedEventData } from '@minddrop/tags';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
-import { EntryHistorySubjectType } from '../../constants';
 import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
 import { getAllDatabases } from '../../getAllDatabases';
+import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
 import { sqlUpsertEntries } from '../../sql';
 import { SqlEntryRecord } from '../../types';
 import {
   convertEntryToSqlRecord,
-  resolveDatabasePath,
   rewriteEntryPropertyValues,
 } from '../../utils';
 import { writeDatabaseEntry } from '../../writeDatabaseEntry';
@@ -57,10 +55,7 @@ export async function onTagDeleted(data: TagDeletedEventData): Promise<void> {
       await writeDatabaseEntry(entry.id);
 
       // Record every value the deletion changed in one record
-      await History.record({
-        ownerPath: resolveDatabasePath(database),
-        subjectType: EntryHistorySubjectType,
-        subjectKey: entry.title,
+      await recordDatabaseEntryHistory(database, entry, {
         kind: 'property',
         changes: rewritten.changes,
         action,

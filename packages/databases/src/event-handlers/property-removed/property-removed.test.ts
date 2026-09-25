@@ -10,7 +10,7 @@ import { storeItem } from '@minddrop/stores/test-utils';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabaseEntryTemplatesStore } from '../../DatabaseEntryTemplatesStore';
-import { EntryHistoryCauses, EntryHistorySubjectType } from '../../constants';
+import { EntryHistoryCauses } from '../../constants';
 import {
   sqlGetAllEntriesFull,
   sqlGetEntrySyncRecords,
@@ -36,7 +36,11 @@ import {
   setupTestSqlDatabase,
   withoutDatabaseProperty,
 } from '../../test-utils';
-import { virtualCollectionId, virtualCollectionName } from '../../utils';
+import {
+  resolveDatabaseEntryHistorySubject,
+  virtualCollectionId,
+  virtualCollectionName,
+} from '../../utils';
 import { onRemoveProperty } from './property-removed';
 
 const { ownedCardDesign_1 } = DesignFixtures;
@@ -234,11 +238,9 @@ describe('onRemoveProperty', () => {
       await removeIconProperty();
 
       expect(
-        await History.read({
-          ownerPath: databaseDirPath(objectDatabase),
-          subjectType: EntryHistorySubjectType,
-          subjectKey: objectEntry1.title,
-        }),
+        await History.read(
+          resolveDatabaseEntryHistorySubject(objectDatabase, objectEntry1),
+        ),
       ).toContainEqual(
         expect.objectContaining({
           kind: 'property',
@@ -265,11 +267,9 @@ describe('onRemoveProperty', () => {
       await removeIconProperty();
 
       expect(
-        await History.read({
-          ownerPath: databaseDirPath(objectDatabase),
-          subjectType: EntryHistorySubjectType,
-          subjectKey: withoutIcon.title,
-        }),
+        await History.read(
+          resolveDatabaseEntryHistorySubject(objectDatabase, withoutIcon),
+        ),
       ).toEqual([]);
     });
 

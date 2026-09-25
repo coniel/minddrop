@@ -5,7 +5,7 @@ import { SelectPropertySchema } from '@minddrop/properties';
 import { storeItem } from '@minddrop/stores/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
-import { EntryHistoryCauses, EntryHistorySubjectType } from '../../constants';
+import { EntryHistoryCauses } from '../../constants';
 import { DatabaseEntryUpdatedEvent } from '../../events';
 import { sqlGetEntryPropertyValues, sqlUpsertDatabase } from '../../sql';
 import {
@@ -19,7 +19,11 @@ import {
   setup,
   setupRecordingTestSqlDatabase,
 } from '../../test-utils';
-import { resolveDatabaseEntryPath, resolveDatabasePath } from '../../utils';
+import {
+  resolveDatabaseEntryHistorySubject,
+  resolveDatabaseEntryPath,
+  resolveDatabasePath,
+} from '../../utils';
 import { onRenamePropertyOption } from './property-option-renamed';
 
 // The renamed single-select property, holding the new value
@@ -219,11 +223,9 @@ describe('onRenamePropertyOption', () => {
     await renameStatusOption();
 
     expect(
-      await History.read({
-        ownerPath: resolveDatabasePath(selectDatabase),
-        subjectType: EntryHistorySubjectType,
-        subjectKey: selectEntry.title,
-      }),
+      await History.read(
+        resolveDatabaseEntryHistorySubject(selectDatabase, selectEntry),
+      ),
     ).toContainEqual(
       expect.objectContaining({
         kind: 'rename',
@@ -240,11 +242,7 @@ describe('onRenamePropertyOption', () => {
 
     const records = await Promise.all(
       [selectEntry, secondEntry].map((entry) =>
-        History.read({
-          ownerPath: resolveDatabasePath(selectDatabase),
-          subjectType: EntryHistorySubjectType,
-          subjectKey: entry.title,
-        }),
+        History.read(resolveDatabaseEntryHistorySubject(selectDatabase, entry)),
       ),
     );
 
@@ -259,11 +257,9 @@ describe('onRenamePropertyOption', () => {
     await renameStatusOption();
 
     expect(
-      await History.read({
-        ownerPath: resolveDatabasePath(selectDatabase),
-        subjectType: EntryHistorySubjectType,
-        subjectKey: otherEntry.title,
-      }),
+      await History.read(
+        resolveDatabaseEntryHistorySubject(selectDatabase, otherEntry),
+      ),
     ).toEqual([]);
   });
 });

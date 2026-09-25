@@ -1,20 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { History, HistoryRecord } from '@minddrop/history';
-import { ContentCaptureGapMs, EntryHistorySubjectType } from '../../constants';
-import {
-  cleanup,
-  databaseDirPath,
-  objectDatabase,
-  objectEntry1,
-  setup,
-} from '../../test-utils';
+import { ContentCaptureGapMs } from '../../constants';
+import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
+import { cleanup, objectDatabase, objectEntry1, setup } from '../../test-utils';
+import { resolveDatabaseEntryHistorySubject } from '../../utils';
 import { onEntryWritten } from './entry-written';
-
-const subject = {
-  ownerPath: databaseDirPath(objectDatabase),
-  subjectType: EntryHistorySubjectType,
-  subjectKey: objectEntry1.title,
-};
 
 const written = {
   entry: objectEntry1,
@@ -27,7 +17,9 @@ const written = {
  * Returns the entry's content records.
  */
 async function contentRecords(): Promise<HistoryRecord[]> {
-  const records = await History.read(subject);
+  const records = await History.read(
+    resolveDatabaseEntryHistorySubject(objectDatabase, objectEntry1),
+  );
 
   return records.filter((record) => record.kind === 'content');
 }
@@ -49,7 +41,7 @@ describe('onEntryWritten', () => {
     expect(record).toBeDefined();
     expect(
       await History.readContent({
-        ...subject,
+        ...resolveDatabaseEntryHistorySubject(objectDatabase, objectEntry1),
         file: record.kind === 'content' ? record.file : '',
       }),
     ).toBe('The contents the write replaced');
@@ -97,4 +89,35 @@ describe('onEntryWritten', () => {
 
     expect(await contentRecords()).toHaveLength(1);
   });
+
+  it('does not capture content identical to one captured in an earlier session', async () => {
+    await seedEarlierSessionCapture();
+
+    vi.advanceTimersByTime(ContentCaptureGapMs + 1);
+
+    await onEntryWritten(written);
+
+    expect(await contentRecords()).toHaveLength(1);
+  });
+
+  it('does not capture again within the gap of a capture made in an earlier session', async () => {
+    await seedEarlierSessionCapture();
+
+    await onEntryWritten({ ...written, previousContents: 'Replaced again' });
+
+    expect(await contentRecords()).toHaveLength(1);
+  });
 });
+
+/**
+ * Records the replaced content in the entry's history without
+ * recording it in this session's capture registry. This is the state
+ * a capture made in an earlier session leaves.
+ */
+async function seedEarlierSessionCapture(): Promise<void> {
+  await recordDatabaseEntryHistory(objectDatabase, objectEntry1, {
+    kind: 'content',
+    contents: written.previousContents,
+    extension: 'md',
+  });
+}

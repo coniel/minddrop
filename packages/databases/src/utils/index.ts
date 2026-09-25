@@ -73,6 +73,7 @@ export * from './searchDatabaseEntryCreationOptions';
 export * from './sortDatabaseEntryTemplates';
 export * from './resolveDatabasePath';
 export * from './resolveDatabaseEntryPath';
+export * from './resolveDatabaseEntryHistorySubject';
 export * from './serializeDatabase';
 export * from './serializeDatabaseEntryTemplate';
 export * from './matchesEntryFocusRequest';

@@ -12,7 +12,7 @@ import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabaseEntryTemplatesStore } from '../../DatabaseEntryTemplatesStore';
 import { DatabasesStore } from '../../DatabasesStore';
-import { EntryHistoryCauses, EntryHistorySubjectType } from '../../constants';
+import { EntryHistoryCauses } from '../../constants';
 import {
   sqlGetAllEntriesFull,
   sqlUpsertDatabase,
@@ -35,7 +35,11 @@ import {
   setupTestSqlDatabase,
 } from '../../test-utils';
 import { Database } from '../../types';
-import { virtualCollectionId, virtualCollectionName } from '../../utils';
+import {
+  resolveDatabaseEntryHistorySubject,
+  virtualCollectionId,
+  virtualCollectionName,
+} from '../../utils';
 import { onRenameProperty } from './property-renamed';
 
 const { ownedCardDesign_1 } = DesignFixtures;
@@ -253,11 +257,9 @@ describe('onRenameProperty', () => {
     await renameProperty(objectDatabase, 'Icon', 'Symbol');
 
     expect(
-      await History.read({
-        ownerPath: databaseDirPath(objectDatabase),
-        subjectType: EntryHistorySubjectType,
-        subjectKey: objectEntry1.title,
-      }),
+      await History.read(
+        resolveDatabaseEntryHistorySubject(objectDatabase, objectEntry1),
+      ),
     ).toContainEqual(
       expect.objectContaining({
         kind: 'rename',
@@ -283,11 +285,7 @@ describe('onRenameProperty', () => {
 
     const records = await Promise.all(
       [objectEntry1, withIcon].map((entry) =>
-        History.read({
-          ownerPath: databaseDirPath(objectDatabase),
-          subjectType: EntryHistorySubjectType,
-          subjectKey: entry.title,
-        }),
+        History.read(resolveDatabaseEntryHistorySubject(objectDatabase, entry)),
       ),
     );
 
@@ -313,11 +311,9 @@ describe('onRenameProperty', () => {
     await renameProperty(objectDatabase, 'Icon', 'Symbol');
 
     expect(
-      await History.read({
-        ownerPath: databaseDirPath(objectDatabase),
-        subjectType: EntryHistorySubjectType,
-        subjectKey: withoutIcon.title,
-      }),
+      await History.read(
+        resolveDatabaseEntryHistorySubject(objectDatabase, withoutIcon),
+      ),
     ).toEqual([]);
   });
 });

@@ -6,7 +6,7 @@ import { Events } from '@minddrop/events';
 import { History } from '@minddrop/history';
 import { ItemReferences } from '@minddrop/item-references';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
-import { EntryHistorySubjectType } from '../../constants';
+import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
 import { sqlGetAllEntriesFull, sqlUpsertDatabase } from '../../sql';
 import {
   MockFs,
@@ -25,6 +25,7 @@ import {
 } from '../../test-utils';
 import { DatabaseEntryMetadata } from '../../types';
 import {
+  resolveDatabaseEntryHistorySubject,
   resolveEntryMetadataFilePath,
   virtualCollectionId,
   virtualCollectionName,
@@ -301,10 +302,7 @@ describe('onRenameEntry', () => {
 
   it("records the rename and moves the entry's history", async () => {
     // Record something against the entry under its old title
-    await History.record({
-      ownerPath: databaseDirPath(objectDatabase),
-      subjectType: EntryHistorySubjectType,
-      subjectKey: objectEntry1.title,
+    await recordDatabaseEntryHistory(objectDatabase, objectEntry1, {
       kind: 'created',
     });
 
@@ -316,11 +314,12 @@ describe('onRenameEntry', () => {
     // The history should have followed the entry to its new title,
     // with the rename recorded in it.
     expect(
-      await History.read({
-        ownerPath: databaseDirPath(objectDatabase),
-        subjectType: EntryHistorySubjectType,
-        subjectKey: 'Renamed',
-      }),
+      await History.read(
+        resolveDatabaseEntryHistorySubject(objectDatabase, {
+          ...objectEntry1,
+          title: 'Renamed',
+        }),
+      ),
     ).toEqual([
       expect.objectContaining({ kind: 'created' }),
       expect.objectContaining({

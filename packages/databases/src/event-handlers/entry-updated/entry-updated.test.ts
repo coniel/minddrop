@@ -1,6 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { History } from '@minddrop/history';
-import { EntryHistorySubjectType } from '../../constants';
 import {
   sqlGetAllEntriesFull,
   sqlUpsertDatabase,
@@ -9,13 +8,13 @@ import {
 import {
   cleanup,
   cleanupTestSqlDatabase,
-  databaseDirPath,
   objectDatabase,
   objectEntry1,
   objectEntry1SqlRecord,
   setup,
   setupTestSqlDatabase,
 } from '../../test-utils';
+import { resolveDatabaseEntryHistorySubject } from '../../utils';
 import { onUpdateEntry } from './entry-updated';
 
 // The entry with an updated title and property value
@@ -90,11 +89,9 @@ describe('onUpdateEntry', () => {
 
     await onUpdateEntry({ original: objectEntry1, updated: updatedEntry });
 
-    const records = await History.read({
-      ownerPath: databaseDirPath(objectDatabase),
-      subjectType: EntryHistorySubjectType,
-      subjectKey: objectEntry1.title,
-    });
+    const records = await History.read(
+      resolveDatabaseEntryHistorySubject(objectDatabase, objectEntry1),
+    );
 
     expect(records).toEqual([
       expect.objectContaining({
@@ -114,11 +111,9 @@ describe('onUpdateEntry', () => {
     await onUpdateEntry({ original: objectEntry1, updated: objectEntry1 });
 
     expect(
-      await History.read({
-        ownerPath: databaseDirPath(objectDatabase),
-        subjectType: EntryHistorySubjectType,
-        subjectKey: objectEntry1.title,
-      }),
+      await History.read(
+        resolveDatabaseEntryHistorySubject(objectDatabase, objectEntry1),
+      ),
     ).toEqual([]);
   });
 });

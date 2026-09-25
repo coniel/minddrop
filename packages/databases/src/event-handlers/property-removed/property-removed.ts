@@ -1,14 +1,13 @@
 import { Collections } from '@minddrop/collections';
 import { Designs } from '@minddrop/designs-next';
-import { History } from '@minddrop/history';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { clearDatabaseEntriesProperty } from '../../clearDatabaseEntriesProperty';
 import { clearDatabaseEntryTemplatesProperty } from '../../clearDatabaseEntryTemplatesProperty';
-import { EntryHistorySubjectType } from '../../constants';
 import { DatabasePropertyRemovedEventData } from '../../events';
+import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
 import { sqlReindexDatabaseEntries } from '../../sql';
 import { updateDatabaseDesignsElements } from '../../updateDatabaseDesignsElements';
-import { resolveDatabasePath, virtualCollectionId } from '../../utils';
+import { virtualCollectionId } from '../../utils';
 
 /**
  * Called when a property is removed from a database. Clears the
@@ -30,10 +29,7 @@ export async function onRemoveProperty(
   // Record the value dropped from each entry
   await Promise.all(
     cleared.map(({ entry, value }) =>
-      History.record({
-        ownerPath: resolveDatabasePath(database),
-        subjectType: EntryHistorySubjectType,
-        subjectKey: entry.title,
+      recordDatabaseEntryHistory(database, entry, {
         kind: 'property',
         changes: [{ property: property.name, from: value, to: null }],
         action,
