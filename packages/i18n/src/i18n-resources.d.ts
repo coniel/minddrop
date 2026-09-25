@@ -291,9 +291,6 @@ declare module 'i18next' {
             newEntry: string;
             configuration: string;
           };
-          layouts: {
-            databaseDefault: string;
-          };
           layoutContexts: {
             card: {
               name: string;

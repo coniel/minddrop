@@ -4,7 +4,6 @@ export * from './CreateDatabaseEntryButton';
 export * from './DatabaseDesignPreviewToolbar';
 export * from './DatabaseEntriesSearchField';
 export * from './DatabaseDesignSelectionMenu';
-export * from './DatabaseLayoutSelectionMenu';
 export * from './ContentViewFloatingToolbar';
 export * from './SelectedEntriesToolbar';
 export * from './useNewEntryDraggable';

@@ -230,9 +230,6 @@
       "newEntry": "New entry",
       "configuration": "Configuration"
     },
-    "layouts": {
-      "databaseDefault": "Database default"
-    },
     "layoutContexts": {
       "card": {
         "name": "Card"
