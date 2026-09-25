@@ -47,6 +47,39 @@ describe('EditorElementRenderer', () => {
     expect(screen.getByText('The entry document.')).toBeInTheDocument();
   });
 
+  // Typing into the document and committing the title run on Slate's
+  // input handling. happy-dom does not drive it, so what the editor
+  // writes is left to the editor's own tests and to end-to-end runs.
+  // These cover what the element decides: whether the document takes
+  // input at all.
+  it('renders the document editable when the property can be updated', () => {
+    const { container } = render(
+      <DesignPropertiesProvider
+        properties={properties}
+        values={{ Notes: 'The entry document.' }}
+        onValueChange={() => {}}
+      >
+        <EditorElementRenderer element={editorElement} />
+      </DesignPropertiesProvider>,
+    );
+
+    expect(container.querySelector('[contenteditable="true"]')).not.toBeNull();
+  });
+
+  it('renders the document read only without an update callback', () => {
+    const { container } = render(
+      <DesignPropertiesProvider
+        properties={properties}
+        values={{ Notes: 'The entry document.' }}
+      >
+        <EditorElementRenderer element={editorElement} />
+      </DesignPropertiesProvider>,
+    );
+
+    expect(container.querySelector('[contenteditable="false"]')).not.toBeNull();
+    expect(container.querySelector('[contenteditable="true"]')).toBeNull();
+  });
+
   it('applies the text settings the editor inherits as styles', () => {
     const { container } = render(
       <EditorElementRenderer element={{ ...editorElement, italic: true }} />,
@@ -106,6 +139,36 @@ describe('EditorElementRenderer', () => {
     );
 
     expect(screen.getByText('The entry title')).toBeInTheDocument();
+  });
+
+  it('reflects a changed title value', async () => {
+    const { rerender } = render(
+      <DesignPropertiesProvider
+        properties={properties}
+        values={{ Title: 'The entry title' }}
+      >
+        <EditorElementRenderer
+          element={editorElement}
+          childElements={[titleElement]}
+        />
+      </DesignPropertiesProvider>,
+    );
+
+    rerender(
+      <DesignPropertiesProvider
+        properties={properties}
+        values={{ Title: 'Renamed' }}
+      >
+        <EditorElementRenderer
+          element={editorElement}
+          childElements={[titleElement]}
+        />
+      </DesignPropertiesProvider>,
+    );
+
+    // The editor syncs the title into its document on the next tick
+    expect(await screen.findByText('Renamed')).toBeInTheDocument();
+    expect(screen.queryByText('The entry title')).toBeNull();
   });
 
   it('renders no title while the slot is empty', () => {

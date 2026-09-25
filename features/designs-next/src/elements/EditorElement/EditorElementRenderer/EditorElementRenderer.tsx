@@ -22,31 +22,33 @@ const EditorDefaults: DesignElementSettings = {
 };
 
 /**
- * Renders an editor element as its content property's document,
- * read only and set in the element's own text styles. The element
- * filling its title slot becomes the document's title.
+ * Renders an editor element as its content property's document. The
+ * element filling its title slot becomes the document's title.
  */
 export const EditorElementRenderer: React.FC<
   DesignElementProps<EditorElement>
 > = ({ element, childElements = [] }) => {
-  // Read the property the element maps to
-  const property = useElementProperty(element);
-
   // Read the element filling the title slot, absent while the slot
   // is empty.
   const titleElement = childElements.find(
     (child) => child.slot === EditorTitleSlot,
   );
 
+  // Read the property the element maps to
+  const property = useElementProperty(element);
+
   // Read the title from the property it maps to
   const titleValue = useElementValue(titleElement);
+
+  // Read the title's property for the callbacks updating it
+  const titleProperty = useElementProperty(titleElement);
 
   // Read the document from the mapped content property
   const markdown =
     typeof property?.value === 'string' ? property.value : undefined;
 
-  // Resolve the text settings into the styles they render as,
-  // leaving out the padding, which the scroll area takes as a prop.
+  // Resolve the text settings into the styles they render as. The
+  // padding is left out. The scroll area takes it as a prop.
   const {
     fontFamily,
     fontSize,
@@ -56,8 +58,8 @@ export const EditorElementRenderer: React.FC<
     ...inherited
   } = resolveElementStyle(element, EditorDefaults);
 
-  // The editor declares its own typography, so those four reach the
-  // document as custom properties; the rest it inherits.
+  // Set the typography as custom properties, since the editor
+  // declares its own. Spread the rest for the document to inherit.
   const style = {
     ...inherited,
     '--editor-font-family': fontFamily,
@@ -67,22 +69,29 @@ export const EditorElementRenderer: React.FC<
   } as React.CSSProperties;
 
   // Scroll a document past the block's height rather than clip it.
-  // The padding lands on the scrolling box, so the document scrolls
+  // The padding is set on the scrolling box, so the document scrolls
   // all the way to the block's edges rather than stopping short.
+  //
+  // Commit the document on the debounced change, and the title
+  // through the editor's own title commit.
   return (
     <ScrollArea
       className="design-editor-element"
       style={style}
       padding={element.padding}
     >
-      {/** The editor takes its title on mount alone, so a changed
-       * title remounts it **/}
+      {/** Remount the editor when the title slot is filled or
+       * emptied, since it takes whether it has a title on mount
+       * alone. **/}
       <MarkdownEditor
-        key={titleElement ? `${titleElement.property}:${titleValue}` : 'none'}
+        key={titleElement ? 'title' : 'none'}
         initialValue={markdown}
         title={titleElement && (titleValue ?? '')}
         titleStyle={titleElement && resolveElementStyle(titleElement)}
-        readOnly
+        readOnly={!property?.updateValue}
+        onDebouncedChange={property?.updateValue}
+        onTitleChange={titleProperty?.updateValue}
+        validateTitle={titleProperty?.validateValue}
       />
     </ScrollArea>
   );
