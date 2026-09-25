@@ -79,3 +79,4 @@ export * from './matchesEntryFocusRequest';
 export * from './getRecentDatabases';
 export * from './resolveEntryMetadataValue';
 export * from './resolveEntryPropertyValue';
+export * from './resolveEntryDatabaseValues';

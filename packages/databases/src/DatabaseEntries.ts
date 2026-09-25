@@ -75,4 +75,4 @@ export { sortDatabaseEntryIds as sortIds } from './utils';
 export { getRecentDatabaseEntries as getRecent } from './utils';
 export { searchDatabaseEntriesByTitle as searchByTitle } from './utils';
 export { resolveEntryColor as resolveColor } from './utils';
-export { resolveEntryLayoutOverrides as resolveLayoutOverrides } from './resolveEntryLayoutOverrides';
+export { resolveEntryDatabaseValues as resolveDatabaseValues } from './utils';
