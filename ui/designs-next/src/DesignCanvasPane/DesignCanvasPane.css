@@ -18,6 +18,64 @@
   gap: var(--space-2);
 }
 
+/* A filled pane stacks its toolbar above the layout */
+.design-canvas-pane-filled {
+  display: flex;
+  flex-direction: column;
+}
+
+/* The filled pane's controls, in a toolbar across its top */
+.design-canvas-pane-toolbar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  min-height: calc(var(--control-height-sm) + var(--space-2) * 2);
+  padding: 0 var(--space-2);
+  border-bottom: var(--border-width-thin) solid var(--border-default);
+  background-color: var(--surface-overlay);
+}
+
+/* The controls' toolbars sit flat in the toolbar and the side column
+   rather than on floating surfaces of their own. The column shares
+   the hover arms' surface, so they reach out of it. */
+.design-canvas-pane-toolbar .floating-toolbar,
+.design-canvas-pane-side-column .floating-toolbar {
+  border-color: transparent;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.design-canvas-pane-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+/* The side controls' column, as wide as their vertical toolbar
+   whether or not it shows, so the layout keeps its width as the
+   controls come and go */
+.design-canvas-pane-side-column {
+  flex: none;
+  min-width: calc(
+    var(--control-height-sm) + var(--space-1) * 2 + var(--border-width-thin) * 2
+  );
+  border-right: var(--border-width-thin) solid var(--border-default);
+  background-color: var(--surface-overlay);
+}
+
+.design-canvas-pane-scroll-area {
+  flex: 1;
+  min-width: 0;
+}
+
+/* The filled layout runs edge to edge. It reaches the pane's bottom
+   so presses below a short layout land on it. */
+.design-canvas-pane-fill {
+  min-height: 100%;
+}
+
 /* The layout sits at the canvas origin */
 .design-canvas-pane-layout {
   position: absolute;

@@ -3,6 +3,7 @@ import { Designs } from '@minddrop/designs-next';
 import {
   cardDesign_1,
   designElements,
+  pageDesign_1,
   titleDesignElement,
 } from '@minddrop/designs-next/test-utils';
 import { fireEvent, render, screen } from '@minddrop/test-utils';
@@ -11,12 +12,13 @@ import { cleanup } from '../test-utils';
 import { DesignEditor } from './DesignEditor';
 
 /**
- * Renders the editor on the fixture design.
+ * Renders the editor on a fixture design.
  *
+ * @param designId - The design to edit, the card fixture by default.
  * @returns The render container.
  */
-function renderEditor() {
-  const { container } = render(<DesignEditor designId={cardDesign_1.id} />);
+function renderEditor(designId = cardDesign_1.id) {
+  const { container } = render(<DesignEditor designId={designId} />);
 
   return container;
 }
@@ -34,7 +36,7 @@ const { workspace_1 } = WorkspaceFixtures;
 
 describe('DesignEditor', () => {
   beforeEach(() => {
-    Designs.load([cardDesign_1], workspace_1.id);
+    Designs.load([cardDesign_1, pageDesign_1], workspace_1.id);
 
     // Pointer capture is not implemented in the test environment
     if (!Element.prototype.setPointerCapture) {
@@ -165,5 +167,77 @@ describe('DesignEditor', () => {
     expect(design.rows).toBe(
       Math.max(contentBottom, Designs.constants.MinRows),
     );
+  });
+
+  it('keeps card designs on the canvas, offering an aspect ratio', () => {
+    const container = renderEditor();
+
+    expect(container.querySelectorAll('.ui-canvas-viewport')).toHaveLength(2);
+    expect(screen.getByText('Auto height')).toBeInTheDocument();
+    expect(screen.queryByLabelText('Fill pane')).toBeNull();
+  });
+
+  it('opens page designs filling both panes, without an aspect ratio', () => {
+    const container = renderEditor(pageDesign_1.id);
+
+    expect(container.querySelector('.ui-canvas-viewport')).toBeNull();
+    expect(
+      container.querySelector('.design-canvas-pane-filled .design-renderer'),
+    ).not.toBeNull();
+    expect(screen.queryByText('Auto height')).toBeNull();
+    expect(screen.queryByLabelText('Regular')).toBeNull();
+  });
+
+  it('switches both panes of a page design to the canvas', () => {
+    const container = renderEditor(pageDesign_1.id);
+
+    fireEvent.click(screen.getByLabelText('Show on canvas'));
+
+    expect(container.querySelectorAll('.ui-canvas-viewport')).toHaveLength(2);
+    expect(container.querySelector('.design-canvas-pane-filled')).toBeNull();
+  });
+
+  it('switches both panes of a page design back to filling them', () => {
+    const container = renderEditor(pageDesign_1.id);
+
+    fireEvent.click(screen.getByLabelText('Show on canvas'));
+    fireEvent.click(screen.getByLabelText('Fill pane'));
+
+    expect(container.querySelector('.ui-canvas-viewport')).toBeNull();
+    expect(
+      container.querySelectorAll('.design-canvas-pane-filled'),
+    ).toHaveLength(2);
+  });
+
+  it("opens at the design type's snap resolution", () => {
+    renderEditor();
+
+    // Snap to the 8px grid
+    expect(screen.getByLabelText('8px')).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+
+    cleanup();
+
+    renderEditor(pageDesign_1.id);
+
+    // Snap to the 16px grid
+    expect(screen.getByLabelText('16px')).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+  });
+
+  it('previews page designs on the canvas at page widths', () => {
+    const container = renderEditor(pageDesign_1.id);
+
+    fireEvent.click(screen.getByLabelText('Show on canvas'));
+    fireEvent.click(screen.getByLabelText('Wide'));
+
+    expect(
+      container.querySelector<HTMLElement>('.design-preview-pane-render')?.style
+        .width,
+    ).toBe('1280px');
   });
 });

@@ -21,7 +21,7 @@ export const EditorElementConfig: DesignElementConfig<EditorElement> = {
   group: 'content',
   propertyTypes: ['content'],
   component: EditorElementRenderer,
-  defaultColumnSpan: Designs.constants.DefaultColumns,
+  defaultColumnSpan: Designs.constants.TypeColumns.card,
   defaultRowSpan: DefaultRowSpan,
   defaultContentFit: 'grow',
   paddable: true,

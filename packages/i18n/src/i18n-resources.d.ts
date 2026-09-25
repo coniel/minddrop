@@ -2288,6 +2288,10 @@ declare module 'i18next' {
             portrait: string;
             landscape: string;
             previewWidth: string;
+            layout: {
+              fill: string;
+              canvas: string;
+            };
             theme: {
               light: string;
               dark: string;

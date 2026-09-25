@@ -18,3 +18,9 @@
   /* Above the drag grid overlay and the dragged block */
   z-index: 3;
 }
+
+/* A filled layout is bounded by the pane itself, and the ring would
+   overhang its right edge into a horizontal scroll */
+.design-editor-pane.design-canvas-pane-filled .design-block-editor::after {
+  display: none;
+}

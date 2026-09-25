@@ -9,6 +9,7 @@ import {
   useOutsideClick,
   usePopupDismissPress,
 } from '@minddrop/ui-primitives';
+import { useElementWidth } from '@minddrop/utils';
 import {
   DesignBlockEditor,
   DesignBlockEditorProps,
@@ -19,6 +20,11 @@ import './DesignEditorPane.css';
 
 export interface DesignEditorPaneProps
   extends Omit<DesignBlockEditorProps, 'snap' | 'unitSize'> {
+  /**
+   * The snap resolution the editor opens with, in grid units.
+   */
+  defaultSnap: number;
+
   /**
    * The design's own layout controls, floating at the canvas' top
    * right beside the snap and zoom controls.
@@ -32,24 +38,30 @@ export interface DesignEditorPaneProps
   aspectLocked?: boolean;
 
   /**
+   * Whether the block editor fills the pane's width, scaling its
+   * grid to fit, in place of the zoomable canvas.
+   */
+  fill?: boolean;
+
+  /**
    * The properties the design's elements can map to, offered as
    * the content of elements which take one.
    */
   properties?: PropertiesSchema;
 }
 
-// The snap resolution the editor opens with, in grid units
-const DefaultSnap = 2;
-
 /**
  * Renders the editing side of a design: the block editor on a
- * zoomable canvas, with the selected element's controls in a
- * vertical toolbar at the canvas' left edge and the layout, snap
- * resolution and canvas zoom controls floating at its top right.
+ * zoomable canvas or filling the pane's width, with the selected
+ * element's controls in a vertical toolbar at the pane's left edge
+ * and the layout and snap resolution controls floating at its top
+ * right.
  */
 export const DesignEditorPane: React.FC<DesignEditorPaneProps> = ({
+  defaultSnap,
   layoutControls,
   aspectLocked = false,
+  fill = false,
   properties,
   elements,
   columns,
@@ -61,9 +73,21 @@ export const DesignEditorPane: React.FC<DesignEditorPaneProps> = ({
   ...blockEditorProps
 }) => {
   const paneRef = useRef<HTMLElement>(null);
-  const [snap, setSnap] = useState(DefaultSnap);
+  const [snap, setSnap] = useState(defaultSnap);
+  const [layoutElement, setLayoutElement] = useState<HTMLDivElement | null>(
+    null,
+  );
   const wasDismissingPopup = usePopupDismissPress();
+  const layoutWidth = useElementWidth(layoutElement);
   const { t } = useTranslation();
+
+  // The rendered size of a grid unit: the design size on the canvas,
+  // which zooms it, or the room the filled pane gives each column
+  // once it has been measured.
+  const unitSize =
+    fill && layoutWidth
+      ? layoutWidth / columns
+      : Designs.constants.UnitPixelSize;
 
   // Clears the selection, both on canvas background presses and on
   // clicks landing outside the pane, which the block toolbar
@@ -91,6 +115,7 @@ export const DesignEditorPane: React.FC<DesignEditorPaneProps> = ({
       className="design-editor-pane"
       layoutWidth={columns * Designs.constants.UnitPixelSize}
       layoutHeight={rows * Designs.constants.UnitPixelSize}
+      fill={fill}
       onBackgroundPress={handleDeselect}
       sideControls={
         <DesignElementControls
@@ -105,8 +130,6 @@ export const DesignEditorPane: React.FC<DesignEditorPaneProps> = ({
       }
       controls={
         <>
-          {layoutControls}
-
           {/* Snap resolution toggles */}
           <FloatingToolbar size="md" visible>
             <RadioToggleGroup
@@ -131,21 +154,26 @@ export const DesignEditorPane: React.FC<DesignEditorPaneProps> = ({
               ))}
             </RadioToggleGroup>
           </FloatingToolbar>
+
+          {layoutControls}
         </>
       }
     >
-      <DesignBlockEditor
-        {...blockEditorProps}
-        elements={elements}
-        columns={columns}
-        rows={rows}
-        selectedId={selectedId}
-        snap={snap}
-        unitSize={Designs.constants.UnitPixelSize}
-        onElementsChange={onElementsChange}
-        onSelectionChange={onSelectionChange}
-        onRowsChange={onRowsChange}
-      />
+      {/* Measured for the room the filled pane gives the grid */}
+      <div ref={setLayoutElement}>
+        <DesignBlockEditor
+          {...blockEditorProps}
+          elements={elements}
+          columns={columns}
+          rows={rows}
+          selectedId={selectedId}
+          snap={snap}
+          unitSize={unitSize}
+          onElementsChange={onElementsChange}
+          onSelectionChange={onSelectionChange}
+          onRowsChange={onRowsChange}
+        />
+      </div>
     </DesignCanvasPane>
   );
 };

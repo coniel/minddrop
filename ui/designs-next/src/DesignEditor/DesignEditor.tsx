@@ -11,10 +11,8 @@ import { DesignPreviewPane } from '../DesignPreviewPane';
 import { DesignRenderer } from '../DesignRenderer';
 import { AspectRatioMenu } from './AspectRatioMenu';
 import './DesignEditor.css';
-import {
-  PreviewWidthPresets,
-  PreviewWidthToggles,
-} from './PreviewWidthToggles';
+import { DesignFillButton } from './DesignFillButton';
+import { PreviewWidthToggles, PreviewWidths } from './PreviewWidthToggles';
 
 export interface DesignEditorProps {
   /**
@@ -61,16 +59,14 @@ interface Draft {
   rows: number;
 }
 
-// The preview width card designs open at
-const DefaultPreviewWidth = PreviewWidthPresets[1].width;
-
 // The elements shown while the design is missing
 const NoElements: DesignElement[] = [];
 
 /**
  * Renders the design editing surface: the editor pane and the
- * preview pane side by side, with the card design's options in their
- * controls. Drags edit a draft which commits to the design when
+ * preview pane side by side, with the design type's options in their
+ * controls. Page designs fill the panes until switched to the
+ * canvas. Drags edit a draft which commits to the design when
  * released; every other change commits immediately.
  */
 export const DesignEditor: React.FC<DesignEditorProps> = ({
@@ -84,7 +80,10 @@ export const DesignEditor: React.FC<DesignEditorProps> = ({
   const draftRef = useRef<Draft | null>(null);
   const [draft, setDraft] = useState<Draft | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [previewWidth, setPreviewWidth] = useState<number>(DefaultPreviewWidth);
+  const [pickedPreviewWidth, setPickedPreviewWidth] = useState<number | null>(
+    null,
+  );
+  const [fillPicked, setFillPicked] = useState(true);
   const design = Designs.use(designId);
 
   // The draft takes over from the design during drags
@@ -100,6 +99,16 @@ export const DesignEditor: React.FC<DesignEditorProps> = ({
 
   // The design's fixed unit width
   const { columns } = design;
+
+  // Page designs are always auto height, so they offer filling the
+  // panes in place of an aspect ratio.
+  const fillable = design.type === 'page' || design.type === 'space';
+  const fill = fillable && fillPicked;
+
+  // The preview widths offered for the design type, and the width
+  // the preview renders at, opening at the design's own.
+  const previewWidths = PreviewWidths[design.type];
+  const previewWidth = pickedPreviewWidth ?? previewWidths[1];
 
   // The design as rendered, with the draft applied
   const renderedDesign = { ...design, elements, rows };
@@ -186,11 +195,17 @@ export const DesignEditor: React.FC<DesignEditorProps> = ({
         rows={rows}
         selectedId={selectedId}
         aspectLocked={Boolean(design.aspectRatio)}
+        fill={fill}
+        defaultSnap={Designs.constants.TypeSnaps[design.type]}
         layoutControls={
-          <AspectRatioMenu
-            aspectRatio={design.aspectRatio}
-            onAspectRatioChange={handleAspectRatioChange}
-          />
+          fillable ? (
+            <DesignFillButton fill={fill} onFillChange={setFillPicked} />
+          ) : (
+            <AspectRatioMenu
+              aspectRatio={design.aspectRatio}
+              onAspectRatioChange={handleAspectRatioChange}
+            />
+          )
         }
         onElementsChange={handleElementsChange}
         onSelectionChange={setSelectedId}
@@ -201,13 +216,18 @@ export const DesignEditor: React.FC<DesignEditorProps> = ({
 
       <DesignPreviewPane
         width={previewWidth}
+        fill={fill}
         scheme={scheme}
         leadingControls={previewControls}
         controls={
-          <PreviewWidthToggles
-            width={previewWidth}
-            onWidthChange={setPreviewWidth}
-          />
+          // The filled pane decides the width
+          !fill && (
+            <PreviewWidthToggles
+              widths={previewWidths}
+              width={previewWidth}
+              onWidthChange={setPickedPreviewWidth}
+            />
+          )
         }
       >
         <DesignRenderer

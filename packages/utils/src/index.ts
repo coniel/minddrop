@@ -1,5 +1,3 @@
-import { isMap, parse, parseDocument, stringify } from 'yaml';
-
 export * from './Paths';
 export * from './back-end-utils';
 export * from './bracketImageWidth';
@@ -67,15 +65,10 @@ export * from './useForm';
 export * from './useInputValue';
 export * from './useMeasuredImageWidth';
 export * from './useDeleteKey';
+export * from './useElementWidth';
 export * from './useToggle';
 export * from './useModKeyHeld';
 export * from './omitPath';
 export * from './parseDate';
 export { v4 as uuid } from 'uuid';
-
-export const YAML = {
-  parse,
-  stringify,
-  parseDocument,
-  isMap,
-};
+export * from './YAML';

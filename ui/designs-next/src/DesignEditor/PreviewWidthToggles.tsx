@@ -1,3 +1,4 @@
+import { DesignType } from '@minddrop/designs-next';
 import { useTranslation } from '@minddrop/i18n';
 import {
   FloatingToolbar,
@@ -6,6 +7,12 @@ import {
 } from '@minddrop/ui-primitives';
 
 export interface PreviewWidthTogglesProps {
+  /**
+   * The preview widths offered, in pixels, from the narrowest to
+   * the widest.
+   */
+  widths: number[];
+
   /**
    * The current preview width in pixels.
    */
@@ -18,37 +25,43 @@ export interface PreviewWidthTogglesProps {
 }
 
 /**
- * The preview widths offered, in pixels, with their labels and the
- * abbreviations shown on the toggles. Regular matches the design's
+ * The preview widths offered per design type, in pixels, from the
+ * narrowest to the widest. Regular, the second, matches the design's
  * own width, so the preview and the editor match at 100%.
  */
-export const PreviewWidthPresets = [
+export const PreviewWidths: Record<DesignType, number[]> = {
+  card: [240, 384, 560, 800],
+  list: [240, 384, 560, 800],
+  page: [640, 960, 1280, 1600],
+  space: [640, 960, 1280, 1600],
+};
+
+// The labels of the preview widths and the abbreviations shown on
+// the toggles, from the narrowest to the widest.
+const PreviewWidthLabels = [
   {
-    width: 240,
     label: 'designsNext.editor.widths.narrow',
     shortLabel: 'designsNext.editor.widths.narrowShort',
   },
   {
-    width: 384,
     label: 'designsNext.editor.widths.regular',
     shortLabel: 'designsNext.editor.widths.regularShort',
   },
   {
-    width: 560,
     label: 'designsNext.editor.widths.wide',
     shortLabel: 'designsNext.editor.widths.wideShort',
   },
   {
-    width: 800,
     label: 'designsNext.editor.widths.extraWide',
     shortLabel: 'designsNext.editor.widths.extraWideShort',
   },
 ] as const;
 
 /**
- * Renders the card preview width toggles as a floating toolbar.
+ * Renders the preview width toggles as a floating toolbar.
  */
 export const PreviewWidthToggles: React.FC<PreviewWidthTogglesProps> = ({
+  widths,
   width,
   onWidthChange,
 }) => {
@@ -66,19 +79,19 @@ export const PreviewWidthToggles: React.FC<PreviewWidthTogglesProps> = ({
         value={String(width)}
         onValueChange={handleValueChange}
       >
-        {PreviewWidthPresets.map((preset) => (
+        {PreviewWidthLabels.map((labels, index) => (
           <Toggle
-            key={preset.width}
+            key={labels.label}
             size="sm"
-            value={String(preset.width)}
-            label={t(preset.label)}
+            value={String(widths[index])}
+            label={t(labels.label)}
             tooltip={{
               stringTitle: t('designsNext.editor.previewWidth', {
-                width: `${preset.width}px`,
+                width: `${widths[index]}px`,
               }),
             }}
           >
-            {t(preset.shortLabel)}
+            {t(labels.shortLabel)}
           </Toggle>
         ))}
       </RadioToggleGroup>

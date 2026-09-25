@@ -12,9 +12,15 @@ import './DesignPreviewPane.css';
 
 export interface DesignPreviewPaneProps {
   /**
-   * The rendered layout's width in pixels.
+   * The rendered layout's width in pixels, when on the canvas.
    */
   width: number;
+
+  /**
+   * Whether the render fills the pane's width, scrolling vertically,
+   * in place of the zoomable canvas.
+   */
+  fill?: boolean;
 
   /**
    * The scheme hue the render's coloured backgrounds resolve
@@ -44,13 +50,14 @@ export interface DesignPreviewPaneProps {
 
 /**
  * Renders the preview side of a design: the live render on a
- * zoomable canvas which refits as the render resizes, with the
- * theme toggles and the canvas zoom controls floating above it.
- * The toggles theme the render alone, leaving the app in its own
+ * zoomable canvas which refits as the render resizes, or filling
+ * the pane's width, with the theme toggles floating above it. The
+ * toggles theme the render alone, leaving the app in its own
  * appearance.
  */
 export const DesignPreviewPane: React.FC<DesignPreviewPaneProps> = ({
   width,
+  fill = false,
   scheme,
   controls,
   leadingControls,
@@ -82,6 +89,7 @@ export const DesignPreviewPane: React.FC<DesignPreviewPaneProps> = ({
       className="design-preview-pane"
       layoutWidth={width}
       fitOnResize
+      fill={fill}
       controls={
         <>
           {leadingControls}
@@ -120,8 +128,11 @@ export const DesignPreviewPane: React.FC<DesignPreviewPaneProps> = ({
       <div className={`${appearance}-theme`}>
         {/* The scheme class colours the render's schemable
             backgrounds. The wrapper is sized to the layout width, which
-            the render fills. */}
-        <div className={renderClassName} style={{ width }}>
+            the render fills, or fills the pane itself. */}
+        <div
+          className={renderClassName}
+          style={{ width: fill ? undefined : width }}
+        >
           {children}
         </div>
       </div>

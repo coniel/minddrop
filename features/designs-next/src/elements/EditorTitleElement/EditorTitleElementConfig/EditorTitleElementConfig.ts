@@ -27,7 +27,7 @@ export const EditorTitleElementConfig: DesignElementConfig<EditorTitleElement> =
     icon: 'type',
     propertyTypes: ['title', 'text'],
     suggestedPropertyTypes: ['title'],
-    defaultColumnSpan: Designs.constants.DefaultColumns,
+    defaultColumnSpan: Designs.constants.TypeColumns.card,
     defaultRowSpan: Designs.resolveTextLineRowSpan(DefaultTitleFontSize),
     resolveDefaults: resolveTitleDefaults,
     settingControls: [

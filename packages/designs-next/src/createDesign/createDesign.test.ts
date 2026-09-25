@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { storeItem } from '@minddrop/stores/test-utils';
 import { DesignsStore } from '../DesignsStore';
-import { DefaultDesignColumns, DefaultDesignRows } from '../constants';
+import { DesignTypeColumns, DesignTypeRows } from '../constants';
 import { DesignCreatedEvent } from '../events';
 import { MockFs, cleanup, mockDate, setup } from '../test-utils';
 import { resolveDesignFilePath } from '../utils';
@@ -12,8 +12,8 @@ const newDesign = {
   id: expect.any(String),
   name: 'My design',
   type: 'card',
-  columns: DefaultDesignColumns,
-  rows: DefaultDesignRows,
+  columns: DesignTypeColumns.card,
+  rows: DesignTypeRows.card,
   elements: [],
   created: mockDate,
   lastModified: mockDate,
@@ -28,6 +28,13 @@ describe('createDesign', () => {
     const design = await createDesign({ type: 'card', name: 'My design' });
 
     expect(design).toEqual(newDesign);
+  });
+
+  it("sizes the design to its type's dimensions", async () => {
+    const design = await createDesign({ type: 'page' });
+
+    expect(design.columns).toBe(DesignTypeColumns.page);
+    expect(design.rows).toBe(DesignTypeRows.page);
   });
 
   it("defaults the name to the design type's localized name", async () => {

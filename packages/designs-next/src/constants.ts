@@ -56,11 +56,17 @@ export const i18nRoot = 'designsNext';
 export const AutoGrowGapThreshold = 4;
 
 /**
- * The width of a design in grid units. A single generous fixed
- * design-time width: rendering is fully fluid, so designs are
- * authored at one width rather than offering size choices.
+ * The width of a new design in grid units, per design type. One
+ * fixed design-time width per type: rendering is fully fluid, so
+ * designs are authored at one width rather than offering size
+ * choices.
  */
-export const DefaultDesignColumns = 96;
+export const DesignTypeColumns: Record<DesignType, number> = {
+  card: 96,
+  list: 96,
+  page: 240,
+  space: 240,
+};
 
 /**
  * The aspect ratios offered for aspect-locked cards. Trimmed to
@@ -78,9 +84,14 @@ export const CardAspectRatios: AspectRatioToken[] = [
 ];
 
 /**
- * The default height of a new design in grid units.
+ * The height of a new design in grid units, per design type.
  */
-export const DefaultDesignRows = 32;
+export const DesignTypeRows: Record<DesignType, number> = {
+  card: 32,
+  list: 32,
+  page: 200,
+  space: 200,
+};
 
 /**
  * The minimum height of a design in grid units, flooring the
@@ -92,12 +103,23 @@ export const MinDesignRows = 8;
  * The maximum height of a design in grid units, capping the
  * surface height drag and bottom-edge resizes past the design.
  */
-export const MaxDesignRows = 200;
+export const MaxDesignRows = 1000;
 
 /**
  * The snap resolutions offered in the editor, in grid units.
  */
 export const SnapPresets = [1, 2, 4];
+
+/**
+ * The snap resolution the editor opens with, in grid units, per
+ * design type.
+ */
+export const DesignTypeSnaps: Record<DesignType, number> = {
+  card: 2,
+  list: 2,
+  page: 4,
+  space: 4,
+};
 
 /**
  * The element palette groups in display order.

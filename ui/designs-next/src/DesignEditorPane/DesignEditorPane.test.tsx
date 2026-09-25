@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DesignElement } from '@minddrop/designs-next';
+import { DesignElement, Designs } from '@minddrop/designs-next';
 import {
   cardColumns,
   cardRows,
@@ -31,6 +31,11 @@ interface RenderPaneOptions {
    * Whether the design is aspect-locked.
    */
   aspectLocked?: boolean;
+
+  /**
+   * Whether the block editor fills the pane.
+   */
+  fill?: boolean;
 }
 
 /**
@@ -43,12 +48,14 @@ interface RenderPaneOptions {
 function renderPane(options: RenderPaneOptions = {}) {
   const { container } = render(
     <DesignEditorPane
+      defaultSnap={Designs.constants.TypeSnaps.card}
       elements={designElements}
       columns={cardColumns}
       rows={cardRows}
       selectedId={options.selectedId ?? null}
       layoutControls={options.layoutControls}
       aspectLocked={options.aspectLocked}
+      fill={options.fill}
       onElementsChange={(elements) => {
         changedElements = elements;
       }}
@@ -89,6 +96,58 @@ describe('<DesignEditorPane />', () => {
     expect(container.querySelector('.ui-canvas-toolbar-zoom')).not.toBeNull();
   });
 
+  it('fills the pane with the block editor, scaled to its width', () => {
+    const offsetWidth = Object.getOwnPropertyDescriptor(
+      HTMLElement.prototype,
+      'offsetWidth',
+    );
+
+    // Lay the pane out at 20px per column
+    Object.defineProperty(HTMLElement.prototype, 'offsetWidth', {
+      configurable: true,
+      get: () => cardColumns * 20,
+    });
+
+    const container = renderPane({ fill: true });
+    const surface = container.querySelector(
+      '.design-block-editor',
+    ) as HTMLElement;
+
+    // Restore the unlaid-out width
+    Object.defineProperty(HTMLElement.prototype, 'offsetWidth', {
+      ...offsetWidth,
+    });
+
+    expect(container.querySelector('.ui-canvas-viewport')).toBeNull();
+    expect(surface.style.width).toBe(`${cardColumns * 20}px`);
+    expect(surface.style.height).toBe(`${cardRows * 20}px`);
+  });
+
+  it('clears the selection on presses around the filled block editor', () => {
+    const container = renderPane({
+      selectedId: titleDesignElement.id,
+      fill: true,
+    });
+    const fill = container.querySelector(
+      '.design-canvas-pane-fill',
+    ) as HTMLElement;
+
+    fireEvent.mouseDown(fill);
+
+    expect(selectedElementId).toBeNull();
+  });
+
+  it("puts the layout controls in the filled pane's toolbar", () => {
+    const container = renderPane({
+      layoutControls: <button type="button">Layout control</button>,
+      fill: true,
+    });
+
+    expect(
+      container.querySelector('.design-canvas-pane-toolbar'),
+    ).toHaveTextContent('Layout control');
+  });
+
   it('changes the snap resolution through the snap toggles', () => {
     const container = renderPane();
     const surface = container.querySelector(
@@ -98,7 +157,9 @@ describe('<DesignEditorPane />', () => {
     fireEvent.click(screen.getByLabelText('16px'));
 
     // The layout's grid lines draw at the new resolution
-    expect(surface.style.backgroundSize).toBe('16px 16px');
+    expect(surface.style.getPropertyValue('--design-block-editor-cell')).toBe(
+      '16px',
+    );
   });
 
   it('floats the layout controls above the canvas', () => {

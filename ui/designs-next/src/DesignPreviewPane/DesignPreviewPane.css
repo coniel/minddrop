@@ -2,3 +2,8 @@
 .design-preview-pane .design-renderer {
   outline: 1px solid var(--border-subtle);
 }
+
+/* A filled render is bounded by the pane itself */
+.design-preview-pane.design-canvas-pane-filled .design-renderer {
+  outline: none;
+}

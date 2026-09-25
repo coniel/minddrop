@@ -732,12 +732,14 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
       ref={rootRef}
       role="presentation"
       className={resolveSurfaceClass(gridOverBlocks, gridInFront)}
-      style={{
-        width: columns * unitSize,
-        height: rows * unitSize,
-        // Draw grid lines at the snap resolution
-        backgroundSize: `${snap * unitSize}px ${snap * unitSize}px`,
-      }}
+      style={
+        {
+          width: columns * unitSize,
+          height: rows * unitSize,
+          // Draw grid lines at the snap resolution
+          '--design-block-editor-cell': `${snap * unitSize}px`,
+        } as React.CSSProperties
+      }
       onPointerDown={handleGridPointerDown}
       onPointerMove={handleGridPointerMove}
       onPointerUp={handleGridPointerUp}
@@ -863,10 +865,6 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
       {gridOverBlocks && (
         <div
           className="design-block-editor-grid-overlay"
-          style={{
-            // Draw the overlay grid at the snap resolution
-            backgroundSize: `${snap * unitSize}px ${snap * unitSize}px`,
-          }}
           ref={gridOverlayRef}
         />
       )}

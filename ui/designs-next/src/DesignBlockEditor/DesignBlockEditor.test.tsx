@@ -216,7 +216,9 @@ describe('DesignBlockEditor', () => {
 
     expect(surface.style.width).toBe(`${cardColumns * 10}px`);
     expect(surface.style.height).toBe(`${cardRows * 10}px`);
-    expect(surface.style.backgroundSize).toBe('20px 20px');
+    expect(surface.style.getPropertyValue('--design-block-editor-cell')).toBe(
+      '20px',
+    );
   });
 
   it('renders resize handles on every block', () => {

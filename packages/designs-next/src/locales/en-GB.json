@@ -32,6 +32,10 @@
       "portrait": "Portrait",
       "landscape": "Landscape",
       "previewWidth": "Preview at {{width}}",
+      "layout": {
+        "fill": "Fill pane",
+        "canvas": "Show on canvas"
+      },
       "theme": {
         "light": "Light",
         "dark": "Dark"

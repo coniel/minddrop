@@ -2,7 +2,7 @@ import { Events } from '@minddrop/events';
 import { createI18nKeyBuilder, i18n } from '@minddrop/i18n';
 import { EntityId, entityId } from '@minddrop/utils';
 import { DesignsStore } from '../DesignsStore';
-import { DefaultDesignColumns, DefaultDesignRows } from '../constants';
+import { DesignTypeColumns, DesignTypeRows } from '../constants';
 import { DesignCreatedEvent } from '../events';
 import { Design, DesignType } from '../types';
 import { writeDesign } from '../writeDesign';
@@ -30,7 +30,7 @@ export interface CreateDesignOptions {
 
 /**
  * Creates a new design of the given type, seeded with an empty
- * element grid at the default dimensions. The design is written to
+ * element grid at the type's dimensions. The design is written to
  * the file system unless it is owned.
  *
  * @param options - The design type, name and owner.
@@ -45,8 +45,8 @@ export async function createDesign(
     id: entityId('design'),
     name: options.name || i18n.t(typeKey(options.type)),
     type: options.type,
-    columns: DefaultDesignColumns,
-    rows: DefaultDesignRows,
+    columns: DesignTypeColumns[options.type],
+    rows: DesignTypeRows[options.type],
     elements: [],
     created: new Date(),
     lastModified: new Date(),

@@ -2,18 +2,37 @@
   position: relative;
   /* Grid lines stay one screen pixel wide within a zoomed canvas */
   --design-block-editor-line: calc(1px / var(--ui-canvas-zoom, 1));
-  background-color: var(--surface-overlay);
-  background-image:
-    linear-gradient(
+  /* The grid lines, a line at the start of each cell plus the lines
+     closing the last column and row. Drawn as gradients repeating
+     across the whole surface rather than as a tiled image: a tile is
+     rounded to whole pixels, so at a fractional cell size (a grid
+     scaled to fill its pane) the tiles drift off the cell edges and
+     the last ones are cut short. The cell size is set inline. */
+  --design-block-editor-grid:
+    repeating-linear-gradient(
       to right,
+      var(--border-subtle) 0 var(--design-block-editor-line),
+      transparent var(--design-block-editor-line)
+        var(--design-block-editor-cell)
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      var(--border-subtle) 0 var(--design-block-editor-line),
+      transparent var(--design-block-editor-line)
+        var(--design-block-editor-cell)
+    ),
+    linear-gradient(
+      to left,
       var(--border-subtle) var(--design-block-editor-line),
       transparent var(--design-block-editor-line)
     ),
     linear-gradient(
-      to bottom,
+      to top,
       var(--border-subtle) var(--design-block-editor-line),
       transparent var(--design-block-editor-line)
     );
+  background-color: var(--surface-overlay);
+  background-image: var(--design-block-editor-grid);
 }
 
 .design-block-editor-element {
@@ -84,17 +103,7 @@
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background-image:
-    linear-gradient(
-      to right,
-      var(--border-subtle) var(--design-block-editor-line),
-      transparent var(--design-block-editor-line)
-    ),
-    linear-gradient(
-      to bottom,
-      var(--border-subtle) var(--design-block-editor-line),
-      transparent var(--design-block-editor-line)
-    );
+  background-image: var(--design-block-editor-grid);
 }
 
 /* A block's padding, drawn as a shaded ring inside its edges */

@@ -7,7 +7,7 @@ import {
   useCanvasNode,
   useFitOnNodesReady,
 } from '@minddrop/ui-canvas';
-import { joinClasses } from '@minddrop/ui-primitives';
+import { ScrollArea, joinClasses } from '@minddrop/ui-primitives';
 import './DesignCanvasPane.css';
 
 export interface DesignCanvasPaneProps {
@@ -38,8 +38,15 @@ export interface DesignCanvasPaneProps {
   fitOnResize?: boolean;
 
   /**
-   * Toolbars floating at the pane's top right, left of the canvas
-   * zoom controls.
+   * Whether the layout fills the pane's width, scrolling vertically,
+   * in place of the zoomable canvas. The layout width and height
+   * are left to the content.
+   */
+  fill?: boolean;
+
+  /**
+   * Toolbars at the pane's top right: floating left of the canvas
+   * zoom controls, or in the toolbar across the filled pane's top.
    */
   controls?: React.ReactNode;
 
@@ -50,7 +57,8 @@ export interface DesignCanvasPaneProps {
   onBackgroundPress?: () => void;
 
   /**
-   * Toolbars floating at the canvas' left edge.
+   * Toolbars at the pane's left edge: floating over the canvas, or
+   * in a column beside the filled layout.
    */
   sideControls?: React.ReactNode;
 
@@ -68,9 +76,10 @@ const MaxZoom = 2;
 const LayoutNodeId = 'design';
 
 /**
- * Renders a zoomable canvas pane holding a single layout at the
- * canvas origin, with the canvas zoom controls floating at its top
- * right and the pane's side controls at its left edge.
+ * Renders a pane holding a single layout, either on a zoomable
+ * canvas with the pane's controls and side controls floating over
+ * it, or filling the pane's width beneath a toolbar holding the
+ * controls and beside a column holding the side controls.
  */
 export const DesignCanvasPane: React.FC<DesignCanvasPaneProps> = ({
   ref,
@@ -78,36 +87,82 @@ export const DesignCanvasPane: React.FC<DesignCanvasPaneProps> = ({
   layoutWidth,
   layoutHeight,
   fitOnResize = false,
+  fill = false,
   controls,
   onBackgroundPress,
   sideControls,
   children,
-}) => (
-  <CanvasProvider minZoom={MinZoom} maxZoom={MaxZoom} selectable={false}>
-    <section ref={ref} className={joinClasses('design-canvas-pane', className)}>
-      <Canvas
-        lasso={false}
-        shortcutScope="focus"
-        onBackgroundMouseDown={() => onBackgroundPress?.()}
+}) => {
+  // Reports presses landing on the room around the layout
+  function handleFillMouseDown(event: React.MouseEvent<HTMLDivElement>) {
+    if (event.target === event.currentTarget) {
+      onBackgroundPress?.();
+    }
+  }
+
+  if (fill) {
+    return (
+      <section
+        ref={ref}
+        className={joinClasses(
+          'design-canvas-pane',
+          'design-canvas-pane-filled',
+          className,
+        )}
       >
-        <DesignCanvasLayout
-          width={layoutWidth}
-          height={layoutHeight}
-          fitOnResize={fitOnResize}
+        {/* The pane's controls in a toolbar across its top */}
+        <div className="design-canvas-pane-toolbar">{controls}</div>
+
+        <div className="design-canvas-pane-body">
+          {/* The side controls' column, beside the layout rather
+              than over it */}
+          {sideControls && (
+            <div className="design-canvas-pane-side-column">{sideControls}</div>
+          )}
+
+          <ScrollArea className="design-canvas-pane-scroll-area">
+            <div
+              className="design-canvas-pane-fill"
+              onMouseDown={handleFillMouseDown}
+            >
+              {children}
+            </div>
+          </ScrollArea>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <CanvasProvider minZoom={MinZoom} maxZoom={MaxZoom} selectable={false}>
+      <section
+        ref={ref}
+        className={joinClasses('design-canvas-pane', className)}
+      >
+        <Canvas
+          lasso={false}
+          shortcutScope="focus"
+          onBackgroundMouseDown={() => onBackgroundPress?.()}
         >
-          {children}
-        </DesignCanvasLayout>
-      </Canvas>
+          <DesignCanvasLayout
+            width={layoutWidth}
+            height={layoutHeight}
+            fitOnResize={fitOnResize}
+          >
+            {children}
+          </DesignCanvasLayout>
+        </Canvas>
 
-      {/* Canvas controls, with the pane's controls to their left */}
-      <CanvasToolbar snapping={false}>{controls}</CanvasToolbar>
+        {/* Canvas controls, with the pane's controls to their left */}
+        <CanvasToolbar snapping={false}>{controls}</CanvasToolbar>
 
-      {sideControls && (
-        <div className="design-canvas-pane-side-controls">{sideControls}</div>
-      )}
-    </section>
-  </CanvasProvider>
-);
+        {sideControls && (
+          <div className="design-canvas-pane-side-controls">{sideControls}</div>
+        )}
+      </section>
+    </CanvasProvider>
+  );
+};
 
 interface DesignCanvasLayoutProps {
   /**

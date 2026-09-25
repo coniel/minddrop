@@ -9,7 +9,6 @@ paths:
   - 'packages/databases/src/entry-serializers/index.ts'
   - 'packages/i18n/src/index.ts'
   - 'packages/properties/src/schemas/index.ts'
-  - 'packages/utils/src/index.ts'
   - 'ui/primitives/src/test-utils/index.ts'
 tags: [barrels, index, tech-debt]
 ---
@@ -24,7 +23,6 @@ index.ts files are now strictly barrel exports (see CLAUDE.md, adopted 2026-08-1
 - `packages/databases/src/entry-serializers/index.ts` (`coreEntrySerializers`)
 - `packages/i18n/src/index.ts` (`useTranslation`, `translateDynamic`, `I18n` facade, more)
 - `packages/properties/src/schemas/index.ts` (`PropertySchemas`)
-- `packages/utils/src/index.ts` (`YAML` facade)
 - `ui/primitives/src/test-utils/index.ts` (`i18nTestString`)
 
 App entry points (`apps/*/src/**/index.ts`) are not barrels and are fine as they are.
