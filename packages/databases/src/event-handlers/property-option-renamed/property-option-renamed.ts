@@ -1,43 +1,40 @@
 import { History } from '@minddrop/history';
 import { EntryHistorySubjectType } from '../../constants';
 import { DatabasePropertyOptionRenamedEventData } from '../../events';
-import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
-import { DatabaseEntry } from '../../types';
-import { updateDatabaseEntryProperty } from '../../updateDatabaseEntryProperty';
-import { resolveDatabasePath } from '../../utils';
+import { renameDatabaseEntriesPropertyOption } from '../../renameDatabaseEntriesPropertyOption';
+import { sqlUpsertEntries } from '../../sql';
+import { convertEntryToSqlRecord, resolveDatabasePath } from '../../utils';
 
 /**
  * Called when a select property option is renamed. Rewrites the
- * option value in the entries holding it so that they stay on
- * the renamed option, and records the rename against them.
+ * option value in the entries which have it.
  */
 export async function onRenamePropertyOption(
   data: DatabasePropertyOptionRenamedEventData,
 ): Promise<void> {
-  const { updated, property, oldValue, newValue } = data;
+  const { updated: database, property, oldValue, newValue, action } = data;
 
-  // Find the entries holding the renamed option
-  const entries = getAllDatabaseEntries(updated.id).filter((entry) =>
-    holdsOption(entry, property.name, oldValue),
+  // Rewrite the option value in the entries which have it
+  const entries = await renameDatabaseEntriesPropertyOption(
+    database.id,
+    property,
+    oldValue,
+    newValue,
   );
 
-  // Rewrite the option value in them
-  await Promise.all(
-    entries.map((entry) =>
-      updateDatabaseEntryProperty(
-        entry.id,
-        property.name,
-        renameEntryValue(entry.properties[property.name], oldValue, newValue),
-      ),
-    ),
-  );
+  // Update the SQL records with the rewritten values
+  if (entries.length) {
+    sqlUpsertEntries(
+      database.id,
+      entries.map((entry) => convertEntryToSqlRecord(entry, database)),
+    );
+  }
 
-  // Record the rename against each of them, so that their older
-  // records can be read under the label the option had at the time.
+  // Record the rename against each of them
   await Promise.all(
     entries.map((entry) =>
       History.record({
-        ownerPath: resolveDatabasePath(updated),
+        ownerPath: resolveDatabasePath(database),
         subjectType: EntryHistorySubjectType,
         subjectKey: entry.title,
         kind: 'rename',
@@ -45,51 +42,8 @@ export async function onRenamePropertyOption(
         property: property.name,
         from: oldValue,
         to: newValue,
+        action,
       }),
     ),
   );
-}
-
-/**
- * Checks whether an entry holds the renamed option value.
- *
- * @param entry - The entry to check.
- * @param propertyName - The name of the select property.
- * @param value - The option value to check for.
- * @returns Whether the entry holds the value.
- */
-function holdsOption(
-  entry: DatabaseEntry,
-  propertyName: string,
-  value: string,
-): boolean {
-  const entryValue = entry.properties[propertyName];
-
-  // Multiselect values hold an array of option values
-  if (Array.isArray(entryValue)) {
-    return entryValue.includes(value);
-  }
-
-  return entryValue === value;
-}
-
-/**
- * Renames the option value within an entry's property value.
- *
- * @param entryValue - The entry's current property value.
- * @param oldValue - The option value to rename.
- * @param newValue - The new option value.
- * @returns The property value with the option renamed.
- */
-function renameEntryValue(
-  entryValue: unknown,
-  oldValue: string,
-  newValue: string,
-): string | string[] {
-  // Multiselect values keep their other options untouched
-  if (Array.isArray(entryValue)) {
-    return entryValue.map((value) => (value === oldValue ? newValue : value));
-  }
-
-  return newValue;
 }
