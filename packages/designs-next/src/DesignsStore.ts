@@ -35,6 +35,17 @@ export const useDesigns = (ownerId?: string): Design[] => {
 };
 
 /**
+ * Retrieves the designs matching the given IDs. IDs matching no
+ * design are omitted.
+ *
+ * @param ids - The IDs of the designs to retrieve.
+ * @returns An array of the matching designs.
+ */
+export const useDesignsByIds = (ids: string[]): Design[] => {
+  return DesignsStore.useItemsArray(ids);
+};
+
+/**
  * Retrieves all designs of the given design type.
  *
  * @param type - The design type to filter by.

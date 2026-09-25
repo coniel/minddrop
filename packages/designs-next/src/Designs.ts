@@ -89,6 +89,7 @@ export { writeDesign as write } from './writeDesign';
 export {
   useDesign as use,
   useDesigns as useAll,
+  useDesignsByIds as useByIds,
   useDesignsOfType as useOfType,
 } from './DesignsStore';
 export {

@@ -54,6 +54,21 @@ export const ownedCardDesign_1: Design = {
   owner: 'owner_1',
 };
 
+// Further card designs of the same owner, for tests picking between
+// several. The setup does not load them, so it has one design per
+// type.
+export const ownedCardDesign_2: Design = {
+  ...ownedCardDesign_1,
+  id: 'design_5',
+  name: 'Owned card design 2',
+};
+
+export const ownedCardDesign_3: Design = {
+  ...ownedCardDesign_1,
+  id: 'design_6',
+  name: 'Owned card design 3',
+};
+
 export const ownedListDesign_1: Design = {
   id: 'design_4',
   name: 'Owned list design 1',
