@@ -1,4 +1,5 @@
 import {
+  CustomContentTypes,
   DatabaseEntrySerializers,
   Databases,
   PropertyFileStorage,
@@ -9,19 +10,23 @@ import { ViewOpenMode } from '@minddrop/views';
 import {
   entryOpenModeOptions,
   propertyFileStorageOptions,
-} from './settingOptions';
+} from '../settingOptions';
+import { ContentTypeDefaultSetting } from './ContentTypeDefaultSetting';
+import { CustomContentTypeSetting } from './CustomContentTypeSetting';
+import { NewCustomContentTypeSetting } from './NewCustomContentTypeSetting';
 
 /**
- * Renders the global database preferences: defaults applied to
- * newly created databases.
+ * Renders the global database settings.
  */
 export const DatabaseDefaultsSettings: React.FC = () => {
-  // The configured defaults for new databases
+  // Get the defaults for new databases
   const defaults = Databases.useDefaults();
-  // The registered entry serializers, offered as file format options
+  // Get the custom content types
+  const customContentTypes = CustomContentTypes.useAll();
+  // Get the registered entry serializers
   const entrySerializers = DatabaseEntrySerializers.useAll();
 
-  // Select options for the registered entry serializers
+  // Map the entry serializers to select options
   const entrySerializerOptions: SelectOption<string>[] = entrySerializers.map(
     (serializer) => ({
       label: serializer.name,
@@ -62,6 +67,7 @@ export const DatabaseDefaultsSettings: React.FC = () => {
 
       {/* Data storage defaults */}
       <SettingsSection title="databases.settings.sections.data">
+        {/* Entry file format */}
         <SelectSetting
           title="databases.settings.entrySerializer.label"
           description="databases.settings.entrySerializer.description"
@@ -69,6 +75,8 @@ export const DatabaseDefaultsSettings: React.FC = () => {
           value={defaults.entrySerializer}
           onValueChange={handleChangeEntrySerializer}
         />
+
+        {/* Property file storage */}
         <SelectSetting
           title="databases.settings.propertyFileStorage.label"
           description="databases.settings.propertyFileStorage.description"
@@ -76,6 +84,31 @@ export const DatabaseDefaultsSettings: React.FC = () => {
           value={defaults.propertyFileStorage}
           onValueChange={handleChangePropertyFileStorage}
         />
+      </SettingsSection>
+
+      {/* Databases for content added from outside the app */}
+      <SettingsSection
+        title="databases.settings.sections.content"
+        description="databases.settings.contentDefaults.description"
+      >
+        {/* A row per content type */}
+        {Databases.constants.ContentTypes.map((contentType) => (
+          <ContentTypeDefaultSetting
+            key={contentType}
+            contentType={contentType}
+          />
+        ))}
+
+        {/* A row per custom content type */}
+        {customContentTypes.map((customType) => (
+          <CustomContentTypeSetting
+            key={customType.id}
+            customType={customType}
+          />
+        ))}
+
+        {/* Add a custom content type */}
+        <NewCustomContentTypeSetting />
       </SettingsSection>
     </Stack>
   );

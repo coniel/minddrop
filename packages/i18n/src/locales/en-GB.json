@@ -380,7 +380,7 @@
     },
     "settings": {
       "label": "Databases",
-      "description": "Defaults applied to newly created databases.",
+      "description": "Defaults applied to newly created databases and to content dropped or pasted into the app.",
       "actions": {
         "delete": "Delete database"
       },
@@ -388,7 +388,67 @@
         "general": "General",
         "interface": "Interface",
         "data": "Data",
+        "content": "Dropped and pasted content",
         "danger": "Danger zone"
+      },
+      "contentDefaults": {
+        "description": "Content dropped or pasted into the app is added to the database picked for its type. Files of no listed type are added to the other files database.",
+        "text": {
+          "label": "Text"
+        },
+        "url": {
+          "label": "Links"
+        },
+        "image": {
+          "label": "Images"
+        },
+        "pdf": {
+          "label": "PDFs"
+        },
+        "audio": {
+          "label": "Audio"
+        },
+        "video": {
+          "label": "Video"
+        },
+        "file": {
+          "label": "Other files"
+        },
+        "custom": {
+          "add": "Add custom content type",
+          "edit": "Edit content type",
+          "kinds": {
+            "file": {
+              "label": "File type",
+              "description": "Match files by their extension."
+            },
+            "url": {
+              "label": "Link type",
+              "description": "Match links by their domain."
+            }
+          },
+          "name": {
+            "label": "Name",
+            "placeholder": {
+              "file": "e.g. Ebooks",
+              "url": "e.g. Wiki articles"
+            }
+          },
+          "matchers": {
+            "file": {
+              "label": "File extensions",
+              "placeholder": "e.g. epub"
+            },
+            "url": {
+              "label": "Domains",
+              "placeholder": "e.g. wikipedia.org"
+            }
+          },
+          "database": {
+            "label": "Database"
+          },
+          "matcherTaken": "Already used by {{type}}"
+        }
       },
       "name": {
         "description": "The name used to identify this database."

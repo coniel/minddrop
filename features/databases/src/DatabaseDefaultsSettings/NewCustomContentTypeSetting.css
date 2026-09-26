@@ -1,0 +1,5 @@
+/* The add button takes a row's place in the section, so it keeps
+   the row spacing. */
+.database-defaults-settings-new-custom-content-type {
+  padding: var(--space-3) 0;
+}

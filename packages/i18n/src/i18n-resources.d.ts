@@ -449,7 +449,67 @@ declare module 'i18next' {
               general: string;
               interface: string;
               data: string;
+              content: string;
               danger: string;
+            };
+            contentDefaults: {
+              description: string;
+              text: {
+                label: string;
+              };
+              url: {
+                label: string;
+              };
+              image: {
+                label: string;
+              };
+              pdf: {
+                label: string;
+              };
+              audio: {
+                label: string;
+              };
+              video: {
+                label: string;
+              };
+              file: {
+                label: string;
+              };
+              custom: {
+                add: string;
+                edit: string;
+                kinds: {
+                  file: {
+                    label: string;
+                    description: string;
+                  };
+                  url: {
+                    label: string;
+                    description: string;
+                  };
+                };
+                name: {
+                  label: string;
+                  placeholder: {
+                    file: string;
+                    url: string;
+                  };
+                };
+                matchers: {
+                  file: {
+                    label: string;
+                    placeholder: string;
+                  };
+                  url: {
+                    label: string;
+                    placeholder: string;
+                  };
+                };
+                database: {
+                  label: string;
+                };
+                matcherTaken: string;
+              };
             };
             name: {
               description: string;

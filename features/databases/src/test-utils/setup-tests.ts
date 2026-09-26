@@ -59,6 +59,12 @@ export function setup(
     Databases.Store.load(DatabaseFixtures.databases);
   }
 
+  // Load the custom content types into the settings
+  Databases.SettingsStore.set('contentDefaults', {
+    ...Databases.SettingsStore.get('contentDefaults'),
+    customTypes: DatabaseFixtures.customContentTypes,
+  });
+
   if (options.loadDatabaseEntryTemplates !== false) {
     // Load entry templates into the store
     DatabaseEntryTemplates.Store.load(DatabaseFixtures.databaseEntryTemplates);
@@ -91,6 +97,9 @@ export async function cleanup(): Promise<void> {
   // Clear any pending focus request, which would otherwise still
   // be pending in the next test.
   clearEntryFocusRequest();
+
+  // Reset the database settings to their built-in values
+  Databases.SettingsStore.reset();
 
   // Clear stores
   Databases.Store.clear();

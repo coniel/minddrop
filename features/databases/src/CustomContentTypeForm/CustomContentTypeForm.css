@@ -1,0 +1,9 @@
+/* The form takes a row's place in the section, so it keeps the row
+   spacing and divider. */
+.custom-content-type-form {
+  padding: var(--space-3) 0;
+}
+
+.custom-content-type-form:not(:last-child) {
+  border-bottom: var(--border-width-thin) solid var(--border-subtle);
+}
