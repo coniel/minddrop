@@ -1,6 +1,15 @@
 import { getDomainWithoutSuffix, getPublicSuffix, getSubdomain } from 'tldts';
 import { isUrl } from '../isUrl';
 
+export interface IsDomainMatchOptions {
+  /**
+   * Whether a matcher without a subdomain also matches every
+   * subdomain of its domain. A matcher with a subdomain still matches
+   * that subdomain only.
+   */
+  includeSubdomains?: boolean;
+}
+
 /**
  * Checks a string to determine if it is a URL and whether that URL matches
  * against a list of domain matchers, returning a boolean indicating whether
@@ -23,11 +32,13 @@ import { isUrl } from '../isUrl';
  *
  * @param url - The URL to check.
  * @param matchers - The matchers to check against.
+ * @param options - Options adjusting how matchers apply.
  * @returns A boolean indicating whether a match was found.
  */
 export function isDomainMatch(
   url: string,
   matchers: (string | ((url: string) => boolean))[],
+  options: IsDomainMatchOptions = {},
 ): boolean {
   if (!isUrl(url)) {
     // If `url` is not a URL, don't bother checking
@@ -73,6 +84,10 @@ export function isDomainMatch(
       const matcherTld = getPublicSuffix(validMatcher);
       // The matcher's subdomain
       const matcherSubdomain = getSubdomain(validMatcher);
+      // Check whether the matcher matches every subdomain
+      const matchesAnySubdomain =
+        isWildcardSubdomain ||
+        (!!options.includeSubdomains && !matcherSubdomain);
 
       if (matcherDomain !== domain) {
         // Domain does not match
@@ -91,7 +106,7 @@ export function isDomainMatch(
 
       if (
         matcherSubdomain !== subdomain &&
-        !isWildcardSubdomain &&
+        !matchesAnySubdomain &&
         // Ignore 'www' as a subdomain
         subdomain !== 'www'
       ) {

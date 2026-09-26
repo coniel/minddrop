@@ -30,6 +30,8 @@ export * from './isInteractiveTarget';
 export * from './isSerializedDate';
 export * from './isUntitledTitle';
 export * from './isUrl';
+export * from './normalizeDomain';
+export * from './normalizeFileExtension';
 export * from './isValidUrl';
 export * from './joinClassNames';
 export * from './parseDateOrNow';

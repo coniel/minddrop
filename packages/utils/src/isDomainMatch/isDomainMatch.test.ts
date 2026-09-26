@@ -64,6 +64,44 @@ describe('isDomainMatch', () => {
         // Should return `false`
         expect(result).toBe(false);
       });
+
+      describe('including subdomains', () => {
+        it('returns true if the matcher has no subdomain', () => {
+          // Test a matcher without a subdomain
+          const result = isDomainMatch(
+            'https://docs.minddrop.app',
+            ['minddrop.app'],
+            { includeSubdomains: true },
+          );
+
+          // Should return `true`
+          expect(result).toBe(true);
+        });
+
+        it('returns false if the matcher has another subdomain', () => {
+          // Test a matcher with a different subdomain
+          const result = isDomainMatch(
+            'https://docs.minddrop.app',
+            ['api.minddrop.app'],
+            { includeSubdomains: true },
+          );
+
+          // Should return `false`
+          expect(result).toBe(false);
+        });
+
+        it('returns false if the domain does not match', () => {
+          // Test a matcher with a different domain
+          const result = isDomainMatch(
+            'https://docs.minddrop.app',
+            ['minddrop.site'],
+            { includeSubdomains: true },
+          );
+
+          // Should return `false`
+          expect(result).toBe(false);
+        });
+      });
     });
 
     describe('www', () => {
