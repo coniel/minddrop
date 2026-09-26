@@ -10,6 +10,11 @@ export interface SettingsSectionProps {
   title: TranslationKey;
 
   /**
+   * The description shown beneath the heading.
+   */
+  description?: TranslationKey;
+
+  /**
    * The setting rows rendered within the section.
    */
   children: ReactNode;
@@ -25,6 +30,7 @@ export interface SettingsSectionProps {
  */
 export const SettingsSection: React.FC<SettingsSectionProps> = ({
   title,
+  description,
   children,
   className,
 }) => {
@@ -38,6 +44,17 @@ export const SettingsSection: React.FC<SettingsSectionProps> = ({
         weight="medium"
         text={title}
       />
+
+      {/* Only render the description when one is provided */}
+      {description && (
+        <Text
+          block
+          className="settings-section-description"
+          size="sm"
+          color="muted"
+          text={description}
+        />
+      )}
 
       {/* Setting rows */}
       <Stack className="settings-section-rows" gap={0}>

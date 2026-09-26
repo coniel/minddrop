@@ -433,6 +433,12 @@ declare module 'i18next' {
               pathConflict: string;
             };
           };
+          combobox: {
+            placeholder: string;
+            searchPlaceholder: string;
+            empty: string;
+            none: string;
+          };
           settings: {
             label: string;
             description: string;

@@ -2,6 +2,7 @@ export * from './AddContentButton';
 export * from './AddContentPicker';
 export * from './AddContentMenu';
 export * from './CollectionSelectionSubmenu';
+export * from './DatabaseCombobox';
 export * from './DataSourceCombobox';
 export * from './EntitySearchMenu';
 export * from './Image';

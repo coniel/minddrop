@@ -1,3 +1,4 @@
+import { TranslationKey } from '@minddrop/i18n';
 import {
   ContentIcon,
   IconButton,
@@ -6,7 +7,13 @@ import {
 } from '@minddrop/ui-primitives';
 import { Setting, SettingProps } from './Setting';
 
-export interface IconSettingProps extends Omit<SettingProps, 'control'> {
+export interface IconSettingProps
+  extends Omit<SettingProps, 'control' | 'title'> {
+  /**
+   * The setting title shown on the left. Also labels the icon button.
+   */
+  title: TranslationKey;
+
   /**
    * The current icon string (e.g. 'lucide:box:default').
    */

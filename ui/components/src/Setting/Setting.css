@@ -2,6 +2,12 @@
   padding: var(--space-3) 0;
 }
 
+/* Section description, spaced from the heading above and the rows
+   below. */
+.settings-section-description {
+  margin: var(--space-1) 0 var(--space-2);
+}
+
 /* Divider between consecutive rows within a section */
 .setting:not(:last-child) {
   border-bottom: var(--border-width-thin) solid var(--border-subtle);

@@ -372,6 +372,12 @@
         "pathConflict": "A folder with this name already exists in the at the specified location."
       }
     },
+    "combobox": {
+      "placeholder": "Select a database",
+      "searchPlaceholder": "Search databases...",
+      "empty": "No databases found",
+      "none": "None"
+    },
     "settings": {
       "label": "Databases",
       "description": "Defaults applied to newly created databases.",

@@ -7,7 +7,13 @@ export interface SettingProps {
   /**
    * The setting title shown on the left.
    */
-  title: TranslationKey;
+  title?: TranslationKey;
+
+  /**
+   * Plain string title rendered without i18n translation. Takes
+   * priority over `title`.
+   */
+  stringTitle?: string;
 
   /**
    * An optional description shown beneath the title.
@@ -15,14 +21,19 @@ export interface SettingProps {
   description?: TranslationKey;
 
   /**
+   * Plain string description rendered without i18n translation.
+   * Takes priority over `description`.
+   */
+  stringDescription?: string;
+
+  /**
    * The control rendered on the right side of the row.
    */
   control: ReactNode;
 
   /**
-   * The root element. Set to 'label' by control variants whose
-   * control is a labelable element, so clicking the title or
-   * description activates it.
+   * The root element. Set to 'label' when the control is a labelable
+   * element, so clicking the title or description activates it.
    */
   as?: ElementType;
 
@@ -33,13 +44,14 @@ export interface SettingProps {
 }
 
 /**
- * Base settings row rendering a title and optional description on
- * the left with a control on the right. Typed variants such as
- * SwitchSetting and TextSetting compose this and supply the control.
+ * Renders a settings row with a title and optional description on the
+ * left and a control on the right.
  */
 export const Setting: React.FC<SettingProps> = ({
   title,
+  stringTitle,
   description,
+  stringDescription,
   control,
   as,
   className,
@@ -59,15 +71,17 @@ export const Setting: React.FC<SettingProps> = ({
           size="base"
           weight="medium"
           text={title}
+          stringText={stringTitle}
         />
         {/* Only render the description when one is provided */}
-        {description && (
+        {(description || stringDescription) && (
           <Text
             block
             className="setting-description"
             size="sm"
             color="muted"
             text={description}
+            stringText={stringDescription}
           />
         )}
       </Stack>
