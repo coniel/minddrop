@@ -40,6 +40,7 @@ import { initializeWorkspaceCleanup } from '../initializeWorkspaceCleanup';
 import { initializeWorkspaceWatchers } from '../initializeWorkspaceWatchers';
 import { locales } from '../locales';
 import { initializeContentViewTypes } from './initializeContentViewTypes';
+import { initializeDropAndPaste } from './initializeDropAndPaste';
 import { initializeSelection } from './initializeSelection';
 import { initializeTheme } from './initializeTheme';
 import { loadWorkspace } from './loadWorkspace';
@@ -162,6 +163,10 @@ async function runInitialization(): Promise<void> {
 
   // Initialize global selection keyboard shortcuts
   initializeSelection();
+
+  // Add content dropped or pasted anywhere in the app to its
+  // default databases.
+  initializeDropAndPaste();
 
   // Load the theme settings and apply them to <body>
   await initializeTheme();

@@ -31,9 +31,8 @@ export async function loadWorkspace(workspace: Workspace): Promise<void> {
   // Hydrate the workspace's per-space view state
   await SpaceViewStateStore.in(workspace.id).hydrate();
 
-  // Hydrate the defaults applied to databases newly created in the
-  // workspace.
-  await Databases.DefaultsStore.in(workspace.id).hydrate();
+  // Hydrate the workspace's global database settings
+  await Databases.SettingsStore.in(workspace.id).hydrate();
 
   // Hydrate which of the workspace's groups are collapsed
   await EntityGroups.CollapsedStore.in(workspace.id).hydrate();

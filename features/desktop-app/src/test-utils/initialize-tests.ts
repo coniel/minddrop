@@ -5,7 +5,7 @@ import { Collections } from '@minddrop/collections';
 import { CollectionFixtures } from '@minddrop/collections/test-utils';
 import { ContentViews } from '@minddrop/content-views';
 import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
-import { DatabaseEntries, Databases } from '@minddrop/databases';
+import { Databases } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { EntityGroups } from '@minddrop/entity-groups';
 import { Fs } from '@minddrop/file-system';
@@ -43,9 +43,10 @@ export function setup(): void {
   // Load the workspace the sidebar's groups are written into
   setupWorkspaceFixtures(MockFs);
 
+  // Load the database fixtures into the stores and mock file system
+  DatabaseFixtures.setup(MockFs);
+
   // Load the entities the sidebar's items render
-  Databases.Store.load(DatabaseFixtures.databases);
-  DatabaseEntries.Store.load(DatabaseFixtures.databaseEntries);
   ContentViews.Store.load(ContentViewFixtures.contentViews);
   Spaces.Store.load(SpaceFixtures.spaces);
   Collections.Store.load(CollectionFixtures.collections);
@@ -72,8 +73,12 @@ export async function cleanup(): Promise<void> {
   // system before clearing the state they may still read.
   await Fs.tests.cleanup();
 
-  Databases.Store.clear();
-  DatabaseEntries.Store.clear();
+  // Reset the database settings to their built-in values
+  Databases.SettingsStore.reset();
+
+  // Clear the database fixtures
+  DatabaseFixtures.cleanup();
+
   ContentViews.Store.clear();
   Spaces.Store.clear();
   Collections.Store.clear();
