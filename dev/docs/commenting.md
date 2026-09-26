@@ -43,6 +43,11 @@ Not everything needs one:
   (`if (!selected) return`) needs nothing; a guard encoding a real
   rule takes one.
 - Imports, type definitions and barrel files take no step comments.
+- Basic i18n plumbing takes no comment: getting the translation
+  function (`const { t } = useTranslation()`), creating a key builder
+  (`createI18nKeyBuilder(...)`) or translating a key. Comment it only
+  when something about it is unusual, such as translating from a
+  namespace registered at runtime.
 
 ## What a step comment says
 
