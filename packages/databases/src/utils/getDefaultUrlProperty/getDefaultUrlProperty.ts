@@ -1,5 +1,5 @@
 import { Properties, UrlPropertySchema } from '@minddrop/properties';
-import { getDatabase } from '../../getDatabase';
+import { resolveDefaultPropertyOfType } from '../resolveDefaultPropertyOfType';
 
 // TODO: Implement URL property filtering logic once URL properties support constraints
 
@@ -7,35 +7,21 @@ import { getDatabase } from '../../getDatabase';
  * Returns the default property for the specified database which supports
  * the specified URL.
  *
- * Property match priority:
- * - Specific default property for the URL type
- * - First available specific property which supports the URL type
- *
  * @param databaseId - The ID of the database.
- * @param _url - The URL. Unused until the filtering logic below is implemented.
- * @returns The default property for the specified database and URL or null if no matching property exists.
+ * @param _url - The URL. Unused until the filtering logic is implemented.
+ * @returns The default URL property, or null if the database has none.
+ *
+ * @throws {DatabaseNotFoundError} If the database does not exist.
  */
 export function getDefaultUrlProperty(
   databaseId: string,
   _url: string,
 ): UrlPropertySchema | null {
-  // Get the database
-  const database = getDatabase(databaseId);
-  // Check if a default url property is provided
-  const propertyName =
-    database.defaultProperties?.[Properties.schemas.url.type];
-
-  // Get the default url property if there is one
-  let property = propertyName
-    ? database.properties.find((property) => property.name === propertyName)
-    : undefined;
-
-  // If there is no default url property, use the first available url property
-  if (!property) {
-    property = database.properties.find((property) =>
-      Properties.isUrl(property),
-    );
-  }
+  // Resolve the database's default URL property
+  const property = resolveDefaultPropertyOfType(
+    databaseId,
+    Properties.schemas.url.type,
+  );
 
   // Ensure the property is a url property
   if (!property || !Properties.isUrl(property)) {

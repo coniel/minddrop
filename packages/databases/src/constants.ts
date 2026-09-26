@@ -1,6 +1,21 @@
-import type { PropertyType } from '@minddrop/properties';
+import { Properties, type PropertyType } from '@minddrop/properties';
 import type { UiIconName } from '@minddrop/ui-icons';
+import type { ContentType, CustomContentTypeKind } from './types';
 import type { EntrySortOptions } from './utils';
+
+/**
+ * Every content type, the specific types before the catch-all.
+ */
+export const ContentTypes: ContentType[] = [
+  'text',
+  'url',
+  ...Properties.constants.FileBasedTypes,
+];
+
+/**
+ * Every custom content type kind.
+ */
+export const CustomContentTypeKinds: CustomContentTypeKind[] = ['file', 'url'];
 
 /**
  * The entity type name of a database, used as the type prefix of

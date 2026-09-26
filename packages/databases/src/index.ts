@@ -6,6 +6,7 @@ export type { SortableEntryProperty } from './utils/resolveSortableEntryProperti
 export type { DatabaseEntryTemplateSearchResult } from './utils/searchDatabaseEntryTemplates';
 export type { DatabaseEntryCreationOption } from './utils/searchDatabaseEntryCreationOptions';
 export * as Databases from './Databases';
+export * as CustomContentTypes from './CustomContentTypes';
 export * as DatabaseEntryTemplates from './DatabaseEntryTemplates';
 export * as DatabaseAutomations from './DatabaseAutomations';
 export * as DatabaseEntrySerializers from './DatabaseEntrySerializers';

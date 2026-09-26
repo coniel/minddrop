@@ -1,4 +1,5 @@
 import {
+  ContentTypes,
   DatabaseEntityType,
   DatabasesIcon,
   DefaultDatabaseIcon,
@@ -83,6 +84,7 @@ export const constants = {
   LayoutContexts: LAYOUT_CONTEXTS,
   LayoutContextBaseType: layoutContextBaseType,
   MultiValuePropertyTypes: MULTI_VALUE_PROPERTY_TYPES,
+  ContentTypes,
   DefaultDesignId,
 };
 
@@ -119,7 +121,7 @@ export { initializeDatabasesBackend as initializeBackend } from './sql';
 export { backgroundSyncDatabases as backgroundSync } from './sql';
 export { handleBackgroundSyncResult } from './handleBackgroundSyncResult';
 export { DatabasesStore as Store } from './DatabasesStore';
-export { DatabaseDefaultsStore as DefaultsStore } from './DatabaseDefaultsStore';
+export { DatabaseSettingsStore as SettingsStore } from './DatabaseSettingsStore';
 export { getAllDatabases as getAll } from './getAllDatabases';
 export { addDatabaseProperty as addProperty } from './addDatabaseProperty';
 export { createDatabase as create } from './createDatabase';
@@ -138,12 +140,15 @@ export { getRecentDatabases as getRecent } from './utils';
 export { updateDatabase as update } from './updateDatabase';
 export { getDatabaseDefaults as getDefaults } from './getDatabaseDefaults';
 export { setDatabaseDefault as setDefault } from './setDatabaseDefault';
-export { useDatabaseDefaults as useDefaults } from './DatabaseDefaultsStore';
+export { useDatabaseDefaults as useDefaults } from './DatabaseSettingsStore';
+export { useDatabaseContentDefaults as useContentDefaults } from './DatabaseSettingsStore';
+export { setDatabaseContentDefault as setContentDefault } from './setDatabaseContentDefault';
 export { setDatabaseEntrySerializer as setEntrySerializer } from './setDatabaseEntrySerializer';
 export { setDatabasePropertyFileStorage as setPropertyFileStorage } from './setDatabasePropertyFileStorage';
 export { updateDatabaseProperty as updateProperty } from './updateDatabaseProperty';
 export { useDatabase as use, useDatabases as useAll } from './DatabasesStore';
 export { useDatabasesFromEntries as useFromEntries } from './useDatabasesFromEntries';
+export { useDatabasesByContentType as useByContentType } from './useDatabasesByContentType';
 export { resolveSortableEntryProperties as sortableProperties } from './utils';
 export { useSortableEntryProperties as useSortableProperties } from './useSortableEntryProperties';
 export { resolveFilterableEntryProperties as filterableProperties } from './utils';
@@ -153,6 +158,7 @@ export {
   convertEntryToSqlRecord,
   convertSqlRecordToEntry,
   filterValidDatabaseFiles as filterFiles,
+  filterDatabasesByContentType as filterByContentType,
   withImplicitMetadataProperties,
   resolveDesignPropertyMap,
 } from './utils';

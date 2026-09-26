@@ -3,6 +3,8 @@ import { Collections } from '@minddrop/collections';
 import { Designs } from '@minddrop/designs-next';
 import { DesignFixtures } from '@minddrop/designs-next/test-utils';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
+import { DatabaseSettingsStore } from '../../DatabaseSettingsStore';
+import { setDatabaseContentDefault } from '../../setDatabaseContentDefault';
 import {
   sqlGetAllDatabases,
   sqlGetEntrySyncRecords,
@@ -138,5 +140,18 @@ describe('onDeleteDatabase', () => {
     );
 
     expect(references.items).toEqual([]);
+  });
+
+  it('unsets the content defaults set to the database', async () => {
+    // Set the database as the text default
+    setDatabaseContentDefault('text', objectDatabase.id);
+
+    // Delete the database
+    await onDeleteDatabase(objectDatabase);
+
+    expect(DatabaseSettingsStore).toHaveStoredValue(
+      'contentDefaults',
+      expect.objectContaining({ text: null }),
+    );
   });
 });

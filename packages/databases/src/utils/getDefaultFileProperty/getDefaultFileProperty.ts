@@ -24,8 +24,9 @@ export function getDefaultFileProperty(
   const database = getDatabase(databaseId);
 
   // Get the property type which supports the file
-  const propertyType =
-    Properties.constants.FileExtensionToType[Fs.getFileExtension(fileName)];
+  const propertyType = Properties.resolveFilePropertyType(
+    Fs.getFileExtension(fileName),
+  );
 
   // Check if a default property is provided for this property type
   let propertyName = database.defaultProperties?.[propertyType];

@@ -1,4 +1,5 @@
-import { DatabaseDefaultsStore } from '../DatabaseDefaultsStore';
+import { DatabaseSettingsStore } from '../DatabaseSettingsStore';
+import { getDatabaseDefaults } from '../getDatabaseDefaults';
 import { DatabaseDefaults } from '../types';
 
 /**
@@ -12,5 +13,8 @@ export function setDatabaseDefault<TKey extends keyof DatabaseDefaults>(
   value: DatabaseDefaults[TKey],
 ): void {
   // Update the default in the store
-  DatabaseDefaultsStore.set(key, value);
+  DatabaseSettingsStore.set('defaults', {
+    ...getDatabaseDefaults(),
+    [key]: value,
+  });
 }

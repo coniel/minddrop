@@ -1,12 +1,12 @@
-import { afterEach, describe, expect, it } from 'vitest';
-import { DatabaseDefaultsStore } from '../DatabaseDefaultsStore';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { setDatabaseDefault } from '../setDatabaseDefault';
+import { cleanup, setup } from '../test-utils';
 import { getDatabaseDefaults } from './getDatabaseDefaults';
 
 describe('getDatabaseDefaults', () => {
-  afterEach(() => {
-    // Reset configured defaults to their built-in values
-    DatabaseDefaultsStore.reset();
-  });
+  beforeEach(setup);
+
+  afterEach(cleanup);
 
   it('returns the built-in defaults', () => {
     expect(getDatabaseDefaults()).toEqual({
@@ -18,7 +18,7 @@ describe('getDatabaseDefaults', () => {
 
   it('reflects configured values', () => {
     // Configure a default
-    DatabaseDefaultsStore.set('entryOpenMode', 'panel');
+    setDatabaseDefault('entryOpenMode', 'panel');
 
     expect(getDatabaseDefaults().entryOpenMode).toBe('panel');
   });

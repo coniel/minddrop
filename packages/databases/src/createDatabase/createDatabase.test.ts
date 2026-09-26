@@ -2,7 +2,6 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { PropertySchema } from '@minddrop/properties';
-import { DatabaseDefaultsStore } from '../DatabaseDefaultsStore';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseCreatedEvent } from '../events';
 import { setDatabaseDefault } from '../setDatabaseDefault';
@@ -98,11 +97,6 @@ describe('createDatabase', () => {
   });
 
   describe('defaults', () => {
-    afterEach(() => {
-      // Reset configured defaults to their built-in values
-      DatabaseDefaultsStore.reset();
-    });
-
     it('applies configured defaults', async () => {
       // Configure defaults for new databases
       setDatabaseDefault('entryOpenMode', 'panel');

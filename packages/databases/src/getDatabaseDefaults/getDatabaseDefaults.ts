@@ -1,4 +1,4 @@
-import { DatabaseDefaultsStore } from '../DatabaseDefaultsStore';
+import { DatabaseSettingsStore } from '../DatabaseSettingsStore';
 import { DatabaseDefaults } from '../types';
 
 /**
@@ -7,5 +7,5 @@ import { DatabaseDefaults } from '../types';
  * @returns The database defaults.
  */
 export function getDatabaseDefaults(): DatabaseDefaults {
-  return DatabaseDefaultsStore.getAll();
+  return DatabaseSettingsStore.get('defaults');
 }

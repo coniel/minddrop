@@ -38,6 +38,7 @@ export { duplicateDatabaseEntry as duplicate } from './duplicateDatabaseEntry';
 export { createDatabaseEntryFromFilePath as createFromFilePath } from './createDatabaseEntryFromFilePath';
 export { createDatabaseEntryFromFile as createFromFile } from './createDatabaseEntryFromFile';
 export { createDatabaseEntryFromUrl as createFromUrl } from './createDatabaseEntryFromUrl';
+export { createDatabaseEntriesFromTransferData as createFromTransferData } from './createDatabaseEntriesFromTransferData';
 export { createDatabaseEntryFromTemplate as createFromTemplate } from './createDatabaseEntryFromTemplate';
 export { getDatabaseEntry as get } from './getDatabaseEntry';
 export { renameDatabaseEntry as rename } from './renameDatabaseEntry';

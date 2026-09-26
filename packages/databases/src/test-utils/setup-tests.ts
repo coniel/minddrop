@@ -23,6 +23,7 @@ import {
 } from '@minddrop/workspaces/test-utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntrySerializersRegistry } from '../DatabaseEntrySerializersRegistry';
+import { DatabaseSettingsStore } from '../DatabaseSettingsStore';
 import { DatabasesStore } from '../DatabasesStore';
 import { clearEntryFocusRequest } from '../EntryFocusRequestStore';
 import { clearContentCaptureRegistry } from '../contentCaptureRegistry';
@@ -33,6 +34,7 @@ import {
   serializeDatabaseEntryReference,
   serializeDatabaseReference,
 } from '../utils';
+import { customContentTypes } from './fixtures';
 import {
   SetupDatabaseFixturesOptions,
   cleanupDatabaseFixtures,
@@ -51,6 +53,11 @@ export function setup(options?: SetupDatabaseFixturesOptions) {
   setupWorkspaceFixtures(MockFs);
   // Setup database fixtures
   setupDatabaseFixtures(MockFs, options);
+  // Load the custom content types into the settings
+  DatabaseSettingsStore.set('contentDefaults', {
+    ...DatabaseSettingsStore.get('contentDefaults'),
+    customTypes: customContentTypes,
+  });
   // Setup external fixtures
   setupContentViewFixtures(MockFs);
   setupDesignFixtures(MockFs);
@@ -83,6 +90,10 @@ export async function cleanup(): Promise<void> {
 
   // Clean up events
   await Events.tests.cleanup();
+
+  // Reset the settings to their built-in values, while the workspace
+  // they were written under is still active.
+  DatabaseSettingsStore.reset();
 
   // Clear database fixtures
   cleanupDatabaseFixtures();

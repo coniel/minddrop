@@ -7,13 +7,13 @@ import { DatabaseDeletedEventData } from '../../events';
 import { getDatabaseEntryTemplates } from '../../getDatabaseEntryTemplates';
 import { removeEntriesFromCollections } from '../../removeEntriesFromCollections';
 import { sqlDeleteDatabase } from '../../sql';
+import { unsetDatabaseContentDefaults } from '../../unsetDatabaseContentDefaults';
 import { virtualCollectionId } from '../../utils';
 
 /**
- * Called when a database is deleted. Removes from SQL, deletes
- * all database views, designs, and entry templates, cleans up
- * virtual collections, and removes the database's entries from
- * collections referencing them.
+ * Cleans up after a deleted database.
+ *
+ * @param data - The deleted database's data.
  */
 export async function onDeleteDatabase(
   data: DatabaseDeletedEventData,
@@ -21,14 +21,19 @@ export async function onDeleteDatabase(
   // Delete from SQL
   sqlDeleteDatabase(data.id);
 
+  // Unset the content defaults set to the database
+  unsetDatabaseContentDefaults(data.id);
+
   // Delete all views belonging to this database
   const databaseViews = ContentViews.getByDataSource('database', data.id);
 
+  // Delete the views
   await Promise.all(databaseViews.map((view) => ContentViews.delete(view.id)));
 
   // Delete all designs owned by this database
   const databaseDesigns = Designs.getByOwner(data.id);
 
+  // Delete the designs
   await Promise.all(databaseDesigns.map((design) => Designs.delete(design.id)));
 
   // Remove the database's entry templates from the store. The
@@ -53,6 +58,7 @@ export async function onDeleteDatabase(
   await Promise.all(
     collectionProperties.flatMap((property) =>
       entries.map((entry) => {
+        // Build the entry's virtual collection ID
         const collectionId = virtualCollectionId(entry.id, property.name);
 
         // Only delete if the collection exists in the store
