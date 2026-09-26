@@ -5,6 +5,10 @@ import { FieldDescription } from '../fields/FieldDescription';
 import { FieldError } from '../fields/FieldError';
 import { FieldLabel } from '../fields/FieldLabel';
 import { FieldRoot } from '../fields/FieldRoot';
+import {
+  FieldValidate,
+  useFieldValidation,
+} from '../fields/useFieldValidation';
 import { DateInput } from './DateInput';
 import type {
   DateInputProps,
@@ -86,6 +90,14 @@ export interface DateFieldProps
    * Disables the field.
    */
   disabled?: boolean;
+
+  /**
+   * Checks each date as it is picked or cleared. Returns the error to
+   * reject it with, or false to accept it. The error is shown until an
+   * accepted date is picked, and takes priority over `error` and
+   * `stringError` while shown.
+   */
+  validate?: FieldValidate<Date | null>;
 }
 
 /** Renders a date input with an optional label, description, and error message. */
@@ -112,15 +124,28 @@ export const DateField = React.forwardRef<HTMLDivElement, DateFieldProps>(
       formatDate,
       side,
       align,
+      validate,
     },
     ref,
   ) => {
+    // Keep the error the date is rejected with
+    const validation = useFieldValidation(validate);
+
+    // Check whether an error is shown
+    const hasError = !!validation.errorText || !!error || !!stringError;
+
+    // Validate each picked or cleared date
+    function handleValueChange(date: Date | null) {
+      validation.validate(date);
+      onValueChange?.(date);
+    }
+
     return (
       <FieldRoot
         ref={ref}
         className={className}
         disabled={disabled}
-        invalid={!!error || !!stringError}
+        invalid={hasError}
       >
         {(label || stringLabel) && (
           <FieldLabel
@@ -135,10 +160,10 @@ export const DateField = React.forwardRef<HTMLDivElement, DateFieldProps>(
           size={size}
           value={value}
           defaultValue={defaultValue}
-          onValueChange={onValueChange}
+          onValueChange={handleValueChange}
           placeholder={placeholder}
           stringPlaceholder={stringPlaceholder}
-          invalid={!!error}
+          invalid={hasError}
           disabled={disabled}
           clearable={clearable}
           formatDate={formatDate}
@@ -146,14 +171,17 @@ export const DateField = React.forwardRef<HTMLDivElement, DateFieldProps>(
           align={align}
         />
 
-        {(description || stringDescription) && !error && !stringError && (
+        {(description || stringDescription) && !hasError && (
           <FieldDescription
             description={description}
             stringDescription={stringDescription}
           />
         )}
-        {(error || stringError) && (
-          <FieldError error={error} stringError={stringError} />
+        {hasError && (
+          <FieldError
+            error={error}
+            stringError={validation.errorText ?? stringError}
+          />
         )}
       </FieldRoot>
     );

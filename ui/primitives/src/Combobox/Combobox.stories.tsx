@@ -127,6 +127,52 @@ export const ComboboxStories = () => (
     </StorySection>
 
     {/* --------------------------------------------------------
+        PLACEHOLDER
+    -------------------------------------------------------- */}
+    <StorySection
+      title="Placeholder"
+      description="Shown in the trigger while nothing is selected, in every mode. Clearing a single-select value shows it again."
+    >
+      <StoryRow>
+        <StoryItem label="single, chip value">
+          <div style={{ width: 300 }}>
+            <Combobox
+              items={DATABASES}
+              size="md"
+              placeholder="Select database..."
+              stringSearchPlaceholder="Search databases..."
+              emptyText="No databases found."
+            />
+          </div>
+        </StoryItem>
+        <StoryItem label="single, text value">
+          <div style={{ width: 300 }}>
+            <Combobox
+              items={DATABASES}
+              size="md"
+              valueVariant="text"
+              placeholder="Select database..."
+              stringSearchPlaceholder="Search databases..."
+              emptyText="No databases found."
+            />
+          </div>
+        </StoryItem>
+        <StoryItem label="multi-select">
+          <div style={{ width: 300 }}>
+            <Combobox
+              items={DATABASES}
+              multiple
+              size="md"
+              placeholder="Select databases..."
+              stringSearchPlaceholder="Search databases..."
+              emptyText="No databases found."
+            />
+          </div>
+        </StoryItem>
+      </StoryRow>
+    </StorySection>
+
+    {/* --------------------------------------------------------
         MULTI-SELECT
     -------------------------------------------------------- */}
     <StorySection

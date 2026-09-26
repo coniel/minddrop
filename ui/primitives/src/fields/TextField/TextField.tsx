@@ -12,12 +12,13 @@ import type {
   TextInputSize,
   TextInputVariant,
 } from '../TextInput';
+import { FieldValidate, useFieldValidation } from '../useFieldValidation';
 
 export type TextFieldVariant = TextInputVariant;
 export type TextFieldSize = TextInputSize;
 
 export interface TextFieldProps
-  extends Omit<Field.Root.Props, 'onChange' | 'onKeyDown'>,
+  extends Omit<Field.Root.Props, 'onChange' | 'onKeyDown' | 'validate'>,
     Pick<
       TextInputProps,
       | 'variant'
@@ -90,6 +91,14 @@ export interface TextFieldProps
    * Takes priority over `placeholder`.
    */
   stringPlaceholder?: string;
+
+  /**
+   * Checks the value when Enter is pressed or the input loses focus.
+   * Returns the error to reject it with, or false to accept it. The
+   * error is shown until the value changes, and takes priority over
+   * `error` and `stringError` while shown.
+   */
+  validate?: FieldValidate<string>;
 }
 
 export const TextField = React.forwardRef<HTMLDivElement, TextFieldProps>(
@@ -119,6 +128,7 @@ export const TextField = React.forwardRef<HTMLDivElement, TextFieldProps>(
       trailing,
       type = 'text',
       unassisted,
+      validate,
       value,
       variant = 'outline',
       weight,
@@ -126,12 +136,38 @@ export const TextField = React.forwardRef<HTMLDivElement, TextFieldProps>(
     },
     ref,
   ) => {
+    // Keep the error the value is rejected with
+    const validation = useFieldValidation(validate);
+
+    // Check whether an error is shown
+    const hasError = !!validation.errorText || !!error || !!stringError;
+
+    // Clear the validation error once the value changes
+    function handleValueChange(newValue: string) {
+      validation.clearError();
+      onValueChange?.(newValue);
+    }
+
+    // Validate the value when Enter is pressed
+    function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+      onKeyDown?.(event);
+
+      if (event.key === 'Enter') {
+        validation.validate(event.currentTarget.value);
+      }
+    }
+
+    // Validate the value when the input loses focus
+    function handleBlur(event: React.FocusEvent<HTMLInputElement>) {
+      validation.validate(event.currentTarget.value);
+    }
+
     return (
       <FieldRoot
         ref={ref}
         className={className}
         disabled={disabled}
-        invalid={!!error || !!stringError}
+        invalid={hasError}
         {...other}
       >
         {(label || stringLabel) && (
@@ -159,20 +195,24 @@ export const TextField = React.forwardRef<HTMLDivElement, TextFieldProps>(
           autoFocus={autoFocus}
           unassisted={unassisted}
           onChange={onChange}
-          onKeyDown={onKeyDown}
-          onValueChange={onValueChange}
-          invalid={!!error || !!stringError}
+          onKeyDown={handleKeyDown}
+          onBlur={handleBlur}
+          onValueChange={handleValueChange}
+          invalid={hasError}
           disabled={disabled}
         />
 
-        {(description || stringDescription) && !error && !stringError && (
+        {(description || stringDescription) && !hasError && (
           <FieldDescription
             description={description}
             stringDescription={stringDescription}
           />
         )}
-        {(error || stringError) && (
-          <FieldError error={error} stringError={stringError} />
+        {hasError && (
+          <FieldError
+            error={error}
+            stringError={validation.errorText ?? stringError}
+          />
         )}
       </FieldRoot>
     );

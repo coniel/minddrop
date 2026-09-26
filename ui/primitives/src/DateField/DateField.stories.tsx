@@ -4,6 +4,7 @@ import { registerStory } from '@minddrop/dev-tools';
  * Dev reference for the DateInput and DateField components.
  */
 import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
+import { FieldValidate } from '../fields/useFieldValidation';
 import { DateField } from './DateField';
 import { DateInput } from './DateInput';
 
@@ -219,8 +220,34 @@ export const DateFieldStories = () => (
         </StoryItem>
       </StoryRow>
     </StorySection>
+    {/* --------------------------------------------------------
+        VALIDATION
+    -------------------------------------------------------- */}
+    <StorySection
+      title="Validation"
+      description="validate runs as a date is picked or cleared. Clear the date to see the error. It shows until an accepted date is picked."
+    >
+      <StoryRow>
+        <StoryItem label="i18n key">
+          <div style={{ width: 240 }}>
+            <DateField
+              clearable
+              stringLabel="Due date"
+              defaultValue={new Date()}
+              validate={requireDate}
+            />
+          </div>
+        </StoryItem>
+      </StoryRow>
+    </StorySection>
   </Story>
 );
+
+/* --- requireDate ---
+   Rejects a cleared date, by i18n key. */
+
+const requireDate: FieldValidate<Date | null> = (value) =>
+  value === null ? 'formErrors.required' : false;
 
 registerStory({
   group: 'Fields',

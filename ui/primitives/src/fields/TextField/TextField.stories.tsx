@@ -4,6 +4,7 @@ import { registerStory } from '@minddrop/dev-tools';
  * Dev reference for TextField and FieldLabel.
  */
 import { Story, StoryItem, StoryRow, StorySection } from '../../dev/Story';
+import { FieldValidate } from '../useFieldValidation';
 import { TextField } from './TextField';
 
 export const TextFieldStories = () => (
@@ -510,8 +511,48 @@ export const TextFieldStories = () => (
         </StoryItem>
       </StoryRow>
     </StorySection>
+    {/* --------------------------------------------------------
+        VALIDATION
+    -------------------------------------------------------- */}
+    <StorySection
+      title="Validation"
+      description="validate runs when Enter is pressed or the input loses focus. It returns the error to reject the value with, or false to accept it. The error clears as soon as the value changes."
+    >
+      <StoryRow>
+        <StoryItem label="i18n key">
+          <div style={{ width: 240 }}>
+            <TextField
+              stringLabel="Folder name"
+              stringPlaceholder='Try "a/b"'
+              validate={validateFolderName}
+            />
+          </div>
+        </StoryItem>
+        <StoryItem label="plain string">
+          <div style={{ width: 240 }}>
+            <TextField
+              stringLabel="Domain"
+              stringPlaceholder="Try localhost"
+              validate={validateDomain}
+            />
+          </div>
+        </StoryItem>
+      </StoryRow>
+    </StorySection>
   </Story>
 );
+
+/* --- validateFolderName ---
+   Rejects a folder name with an invalid character, by i18n key. */
+
+const validateFolderName: FieldValidate<string> = (name) =>
+  /[/\\:*?"<>|]/.test(name) ? 'error.invalidDirName' : false;
+
+/* --- validateDomain ---
+   Rejects a domain without a dot, by plain string. */
+
+const validateDomain: FieldValidate<string> = (domain) =>
+  domain.includes('.') ? false : { string: `"${domain}" is not a domain` };
 
 registerStory({
   group: 'Fields',

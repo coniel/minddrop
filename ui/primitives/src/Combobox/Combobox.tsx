@@ -351,10 +351,20 @@ export const Combobox: React.FC<ComboboxProps> = ({
     );
   };
 
+  /* Render the placeholder while nothing is selected. Base UI only
+     renders its own placeholder when no render function is given. */
+  const renderPlaceholder = () => {
+    if (!placeholder) {
+      return null;
+    }
+
+    return <span className="combobox-trigger-placeholder">{placeholder}</span>;
+  };
+
   /* Render selected value as a chip or plain text for single mode */
   const renderSingleValue = (selectedValue: ComboboxOption | null) => {
     if (!selectedValue) {
-      return null;
+      return renderPlaceholder();
     }
 
     // Render the value as plain select-like text
@@ -412,15 +422,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
           valueVariant === 'text' ? 'combobox-trigger-value-text' : undefined
         }
       >
-        <ComboboxValue
-          placeholder={
-            placeholder ? (
-              <span className="combobox-trigger-placeholder">
-                {placeholder}
-              </span>
-            ) : undefined
-          }
-        >
+        <ComboboxValue>
           {multiple ? renderMultipleValue : renderSingleValue}
         </ComboboxValue>
       </ComboboxTrigger>

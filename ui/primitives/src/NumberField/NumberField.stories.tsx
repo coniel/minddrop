@@ -5,6 +5,7 @@
 import { useState } from 'react';
 import { registerStory } from '@minddrop/dev-tools';
 import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
+import { FieldValidate } from '../fields/useFieldValidation';
 import { NumberField } from './NumberField';
 
 export const NumberFieldStories = () => {
@@ -376,9 +377,30 @@ export const NumberFieldStories = () => {
           </StoryItem>
         </StoryRow>
       </StorySection>
+      {/* --------------------------------------------------------
+          VALIDATION
+      -------------------------------------------------------- */}
+      <StorySection
+        title="Validation"
+        description="validate runs when the input loses focus. Try a negative number. The error clears as soon as the value changes."
+      >
+        <StoryRow>
+          <StoryItem label="plain string">
+            <div style={{ width: 200 }}>
+              <NumberField stringLabel="Quantity" validate={validatePositive} />
+            </div>
+          </StoryItem>
+        </StoryRow>
+      </StorySection>
     </Story>
   );
 };
+
+/* --- validatePositive ---
+   Rejects a negative number, by plain string. */
+
+const validatePositive: FieldValidate<number | null> = (value) =>
+  value !== null && value < 0 ? { string: 'Must be positive' } : false;
 
 registerStory({
   group: 'Fields',

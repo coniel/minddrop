@@ -22,6 +22,27 @@ describe('<Combobox />', () => {
     cleanup();
   });
 
+  it('shows the placeholder while nothing is selected', () => {
+    const { getByRole } = render(
+      <Combobox items={items} placeholder="Pick an item" />,
+    );
+
+    expect(getByRole('combobox')).toHaveTextContent('Pick an item');
+  });
+
+  it('shows the selected item in place of the placeholder', () => {
+    const { getByRole } = render(
+      <Combobox
+        items={items}
+        defaultValue={items[0]}
+        placeholder="Pick an item"
+      />,
+    );
+
+    expect(getByRole('combobox')).toHaveTextContent(items[0].label);
+    expect(getByRole('combobox')).not.toHaveTextContent('Pick an item');
+  });
+
   it('ignores hover while navigating by keyboard', async () => {
     const user = userEvent.setup();
     const { getByRole, getAllByRole } = render(<Combobox items={items} />);

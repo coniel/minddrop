@@ -1,0 +1,207 @@
+/* ============================================================
+   CHIPS INPUT
+   Text input which shows its committed values as chips. Styled
+   like a text-input; chips styled like combobox chips.
+   Variants: subtle | outline (default) | filled
+   Sizes:    md | lg (default)
+   ============================================================ */
+
+/* --- Wrapper --- */
+
+.chips-input {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  box-sizing: border-box;
+  width: 100%;
+  cursor: text;
+
+  border: var(--border-width-thin) solid transparent;
+  border-radius: var(--radius-md);
+
+  transition: var(--transition-colors);
+
+  &:focus-within {
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset-inset);
+    transition: none;
+  }
+}
+
+/* --- Input --- */
+
+.chips-input-input {
+  flex: 1;
+  min-width: 6rem;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+
+  font-family: var(--font-ui);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-regular);
+  line-height: var(--line-height-none);
+
+  &::placeholder {
+    color: var(--text-placeholder);
+    font-weight: var(--font-weight-regular);
+  }
+}
+
+/* --- Chips --- */
+
+.chips-input-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-0-75);
+  height: 20px;
+  max-width: 100%;
+
+  padding: var(--space-px) var(--space-0-75) var(--space-px) var(--space-1);
+
+  font-family: var(--font-ui);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-none);
+  white-space: nowrap;
+
+  background-color: var(--surface-subtle);
+  border: var(--border-width-thin) solid var(--border-default);
+  border-radius: var(--radius-sm);
+  color: var(--text-regular);
+}
+
+.chips-input-chip-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Descender room inside the clipped box */
+  line-height: var(--line-height-snug);
+}
+
+/* Remove button beside the label */
+.chips-input-chip-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-xs);
+  background: none;
+  color: var(--text-subtle);
+
+  &:hover {
+    color: var(--text-regular);
+  }
+}
+
+.chips-input-chip-remove-icon {
+  width: var(--icon-size-2xs);
+  height: var(--icon-size-2xs);
+}
+
+/* ------------------------------------------------------------
+   SIZES
+   ------------------------------------------------------------ */
+
+.chips-input-size-md {
+  min-height: var(--control-height-md);
+  padding: var(--space-0-75) var(--space-2) var(--space-0-75) var(--space-0-75);
+  gap: var(--space-0-75);
+
+  .chips-input-input {
+    padding-left: var(--space-1);
+  }
+}
+
+.chips-input-size-lg,
+.chips-input:not(.chips-input-size-md) {
+  min-height: var(--control-height-lg);
+  padding: var(--space-1) var(--space-2) var(--space-1) var(--space-1);
+
+  .chips-input-input {
+    padding-left: var(--space-2);
+    font-size: var(--font-size-base);
+  }
+
+  .chips-input-chip {
+    height: 26px;
+    padding: var(--space-1);
+  }
+}
+
+/* ------------------------------------------------------------
+   VARIANTS
+   ------------------------------------------------------------ */
+
+.chips-input-variant-subtle {
+  background-color: var(--surface-subtle);
+
+  &:hover,
+  &:focus-within {
+    background-color: var(--surface-accent);
+  }
+}
+
+.chips-input-variant-outline {
+  border-color: var(--border-default);
+
+  &:hover,
+  &:focus-within {
+    background-color: var(--surface-accent);
+    border-color: var(--border-strong);
+  }
+}
+
+.chips-input-variant-filled {
+  background-color: var(--surface-overlay);
+  border-color: var(--border-default);
+  box-shadow: var(--shadow-raised);
+
+  &:hover,
+  &:focus-within {
+    background-color: var(--surface-accent);
+    border-color: var(--border-strong);
+  }
+
+  &:focus-within {
+    box-shadow: none;
+  }
+}
+
+/* ------------------------------------------------------------
+   INVALID STATE
+   ------------------------------------------------------------ */
+
+.chips-input-invalid.chips-input-variant-outline,
+.chips-input-invalid.chips-input-variant-filled {
+  border-color: var(--border-danger);
+
+  &:focus-within {
+    outline-color: var(--border-danger-hover);
+    border-color: var(--border-danger-hover);
+  }
+}
+
+.chips-input-invalid.chips-input-variant-subtle {
+  background-color: var(--surface-danger);
+
+  &:focus-within {
+    outline-color: var(--border-danger-hover);
+  }
+}
+
+/* ------------------------------------------------------------
+   DISABLED STATE
+   ------------------------------------------------------------ */
+
+.chips-input-disabled {
+  cursor: default;
+  opacity: var(--opacity-disabled, 0.5);
+}

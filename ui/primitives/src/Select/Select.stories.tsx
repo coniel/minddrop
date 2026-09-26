@@ -5,7 +5,6 @@ import { registerStory } from '@minddrop/dev-tools';
  */
 import { Button } from '../Button';
 import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
-import { SelectField } from '../fields/SelectField';
 import { Select } from './Select';
 import { SelectItem } from './SelectItem';
 
@@ -153,41 +152,6 @@ export const SelectStories = () => (
         </StoryItem>
       </StoryRow>
     </StorySection>
-    <StorySection
-      title="Label sizes"
-      description="SelectField label sizes, matching the Text size scale. Default is 'sm'."
-    >
-      <StoryRow>
-        <StoryItem label="xs">
-          <div style={{ width: 200 }}>
-            <SelectField
-              labelSize="xs"
-              label="collections.labels.collection"
-              options={SORT_OPTIONS}
-            />
-          </div>
-        </StoryItem>
-        <StoryItem label="sm">
-          <div style={{ width: 200 }}>
-            <SelectField
-              labelSize="sm"
-              label="collections.labels.collection"
-              options={SORT_OPTIONS}
-            />
-          </div>
-        </StoryItem>
-        <StoryItem label="base">
-          <div style={{ width: 200 }}>
-            <SelectField
-              labelSize="base"
-              label="collections.labels.collection"
-              options={SORT_OPTIONS}
-            />
-          </div>
-        </StoryItem>
-      </StoryRow>
-    </StorySection>
-
     <StorySection
       title="Custom children"
       description="Pass SelectItem children directly when you need icons, groupings, or custom item layouts."
