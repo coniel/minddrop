@@ -1,13 +1,17 @@
 import {
+  AudioPropertySchema,
   FilePropertySchema,
   ImagePropertySchema,
   PdfPropertySchema,
+  VideoPropertySchema,
 } from '../schemas';
 
 export type FileBasedPropertySchema =
   | FilePropertySchema
   | ImagePropertySchema
-  | PdfPropertySchema;
+  | PdfPropertySchema
+  | AudioPropertySchema
+  | VideoPropertySchema;
 
 export type FileBasedPropertyType = FileBasedPropertySchema['type'];
 
@@ -17,6 +21,8 @@ export type FileBasedPropertyType = FileBasedPropertySchema['type'];
  */
 export type EmbeddableFilePropertySchema =
   | ImagePropertySchema
-  | PdfPropertySchema;
+  | PdfPropertySchema
+  | AudioPropertySchema
+  | VideoPropertySchema;
 
 export type EmbeddableFilePropertyType = EmbeddableFilePropertySchema['type'];

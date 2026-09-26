@@ -9,16 +9,24 @@ import {
   PropertyType,
 } from './types';
 
+/**
+ * Every file based property type. The specific types come before the
+ * catch-all `file` type.
+ */
 export const FileBasedPropertyTypes: FileBasedPropertyType[] = [
   'image',
-  'file',
   'pdf',
+  'audio',
+  'video',
+  'file',
 ];
 
 // The file property types whose file can be shown in place
 export const EmbeddableFilePropertyTypes: EmbeddableFilePropertyType[] = [
   'image',
   'pdf',
+  'audio',
+  'video',
 ];
 
 /**
@@ -59,6 +67,7 @@ export const SORTABLE_PROPERTY_TYPES = new Set<PropertyType>([
  * can declare it.
  */
 export const ALL_PROPERTY_TYPES: PropertyType[] = [
+  'audio',
   'collection',
   'color',
   'content',
@@ -76,6 +85,7 @@ export const ALL_PROPERTY_TYPES: PropertyType[] = [
   'title',
   'toggle',
   'url',
+  'video',
 ];
 
 /**
@@ -85,6 +95,7 @@ export const ALL_PROPERTY_TYPES: PropertyType[] = [
  * colour or a collection.
  */
 export const TEXTUAL_PROPERTY_TYPES: PropertyType[] = [
+  'audio',
   'created',
   'date',
   'file',
@@ -96,6 +107,7 @@ export const TEXTUAL_PROPERTY_TYPES: PropertyType[] = [
   'text',
   'title',
   'url',
+  'video',
 ];
 
 /**
@@ -109,6 +121,8 @@ export const FilePropertySupportedFileExtensions: Record<
   image: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp', 'ico'],
   file: [],
   pdf: ['pdf'],
+  audio: ['mp3', 'wav', 'ogg', 'oga', 'm4a', 'aac', 'flac', 'aiff', 'wma'],
+  video: ['mp4', 'm4v', 'mov', 'webm', 'mkv', 'avi', 'wmv', 'mpeg', 'mpg'],
 };
 
 /**

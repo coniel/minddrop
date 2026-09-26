@@ -269,6 +269,14 @@ declare module 'i18next' {
             name: string;
             description: string;
           };
+          audio: {
+            name: string;
+            description: string;
+          };
+          video: {
+            name: string;
+            description: string;
+          };
           collection: {
             name: string;
             description: string;

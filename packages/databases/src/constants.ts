@@ -90,6 +90,8 @@ export const TEXT_PROPERTY_TYPES = new Set<PropertyType>([
   'file',
   'image',
   'pdf',
+  'audio',
+  'video',
   'title',
 ]);
 

@@ -1,4 +1,5 @@
 import { PropertySchemaTemplate, PropertyType } from '../types';
+import { AudioPropertySchema } from './AudioPropertySchema';
 import { CollectionPropertySchema } from './CollectionPropertySchema';
 import { ColorPropertySchema } from './ColorPropertySchema';
 import { ContentPropertySchema } from './ContentPropertySchema';
@@ -16,7 +17,9 @@ import { TextPropertySchema } from './TextPropertySchema';
 import { TitlePropertySchema } from './TitlePropertySchema';
 import { TogglePropertySchema } from './TogglePropertySchema';
 import { UrlPropertySchema } from './UrlPropertySchema';
+import { VideoPropertySchema } from './VideoPropertySchema';
 
+export * from './AudioPropertySchema';
 export * from './CollectionPropertySchema';
 export * from './ColorPropertySchema';
 export * from './ContentPropertySchema';
@@ -34,6 +37,7 @@ export * from './TextPropertySchema';
 export * from './TitlePropertySchema';
 export * from './TogglePropertySchema';
 export * from './UrlPropertySchema';
+export * from './VideoPropertySchema';
 
 export const PropertySchemas = {
   title: TitlePropertySchema,
@@ -51,6 +55,8 @@ export const PropertySchemas = {
   'last-modified': LastModifiedPropertySchema,
   file: FilePropertySchema,
   pdf: PdfPropertySchema,
+  audio: AudioPropertySchema,
+  video: VideoPropertySchema,
   collection: CollectionPropertySchema,
   color: ColorPropertySchema,
 } satisfies Record<PropertyType, PropertySchemaTemplate>;

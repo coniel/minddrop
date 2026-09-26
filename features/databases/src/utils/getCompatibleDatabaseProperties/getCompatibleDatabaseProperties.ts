@@ -19,6 +19,8 @@ const compatiblePropertyTypesMap: Record<PropertyType, PropertyType[]> = {
   'last-modified': ['last-modified'],
   number: ['number'],
   pdf: ['pdf'],
+  audio: ['audio'],
+  video: ['video'],
   select: ['select'],
   tags: ['tags'],
   text: ['text', 'title', 'select'],

@@ -1,4 +1,5 @@
 import {
+  AudioPropertySchema,
   CollectionPropertySchema,
   ColorPropertySchema,
   ContentPropertySchema,
@@ -16,6 +17,7 @@ import {
   TitlePropertySchema,
   TogglePropertySchema,
   UrlPropertySchema,
+  VideoPropertySchema,
 } from '../schemas';
 
 export type PropertySchema =
@@ -25,6 +27,7 @@ export type PropertySchema =
   | CreatedPropertySchema
   | DatePropertySchema
   | IconPropertySchema
+  | AudioPropertySchema
   | ImagePropertySchema
   | LastModifiedPropertySchema
   | NumberPropertySchema
@@ -32,6 +35,7 @@ export type PropertySchema =
   | SelectPropertySchema
   | TagsPropertySchema
   | TextPropertySchema
+  | VideoPropertySchema
   | TitlePropertySchema
   | TogglePropertySchema
   | UrlPropertySchema
