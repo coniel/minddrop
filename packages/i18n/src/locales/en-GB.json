@@ -1065,10 +1065,9 @@
       }
     },
     "design": {
-      "noDesigns": "No designs yet. Create one in the design studio.",
+      "noDesigns": "No designs yet. Create one in design mode.",
       "title": "Designs",
       "empty": "No designs yet. Add one with the + button.",
-      "selectDesign": "Select a design",
       "preview": {
         "color": {
           "label": "Entry colour",
@@ -1077,7 +1076,6 @@
         }
       },
       "actions": {
-        "edit": "Edit in design studio",
         "back": "Back to database",
         "designMode": "Design mode",
         "add": "New design",
@@ -1093,17 +1091,10 @@
           "confirm": "Delete"
         }
       },
-      "mapping": {
-        "title": "Property mapping",
-        "none": "None",
-        "noProperties": "The design has no properties.",
-        "noCompatible": "No compatible properties",
-        "description": "Map design properties to database properties to control which values they display."
-      },
-      "defaultLayouts": {
-        "title": "Default layouts",
-        "description": "The design layouts used to display the database's entries in each context. Individual views can override these defaults with a specific layout.",
-        "noCompatible": "No compatible layouts"
+      "defaultDesigns": {
+        "title": "Default designs",
+        "description": "The designs used to display the database's entries in each context. Individual views can override these defaults with a specific design.",
+        "noCompatible": "No compatible designs"
       },
       "entryColor": {
         "title": "Entry colour",

@@ -1129,7 +1129,6 @@ declare module 'i18next' {
             noDesigns: string;
             title: string;
             empty: string;
-            selectDesign: string;
             preview: {
               color: {
                 label: string;
@@ -1138,7 +1137,6 @@ declare module 'i18next' {
               };
             };
             actions: {
-              edit: string;
               back: string;
               designMode: string;
               add: string;
@@ -1154,14 +1152,7 @@ declare module 'i18next' {
                 confirm: string;
               };
             };
-            mapping: {
-              title: string;
-              none: string;
-              noProperties: string;
-              noCompatible: string;
-              description: string;
-            };
-            defaultLayouts: {
+            defaultDesigns: {
               title: string;
               description: string;
               noCompatible: string;

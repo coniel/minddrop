@@ -6,7 +6,6 @@ import {
   Databases,
 } from '@minddrop/databases';
 import { Designs } from '@minddrop/designs-next';
-import { useTranslation } from '@minddrop/i18n';
 import { PanelView, PanelViewProps } from '@minddrop/ui-components';
 import {
   DropdownMenu,
@@ -19,13 +18,9 @@ import { DatabaseBrowseMode } from '../DatabaseBrowseMode';
 import { DatabaseConfigurationPanel } from '../DatabaseConfigurationPanel';
 import { DatabaseDesignMode } from '../DatabaseDesignMode';
 import { DatabaseEmptyMode } from '../DatabaseEmptyMode';
+import { DesignsSubviewId } from '../constants';
+import { useEnterDesignMode } from '../useEnterDesignMode';
 import './DatabaseView.css';
-
-// The subview the database view shows while in design mode, editing
-// the database's designs in place of browsing its entries. Recorded
-// in the tab's history, so it trails the database in the breadcrumbs
-// and stays local to the tab.
-const DesignsSubviewId = 'designs';
 
 export interface DatabaseViewProps {
   /**
@@ -57,8 +52,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
   const entryTemplates = DatabaseEntryTemplates.useAll(databaseId);
   const entryIds = DatabaseEntries.useIds(databaseId);
   const subview = Views.useSubview();
-  const setSubview = Views.useSetSubview();
-  const { t } = useTranslation();
+  const enterDesignMode = useEnterDesignMode();
 
   // Whether the configuration panel is open, remembered with the
   // view's session.
@@ -77,16 +71,6 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
   const toggleConfigurationPanel = useCallback(() => {
     setConfigurationPanelOpen(!configurationPanelOpen);
   }, [configurationPanelOpen, setConfigurationPanelOpen]);
-
-  // Enter design mode by showing the designs subview, a navigation in
-  // the tab's history. The database's breadcrumb leads back out.
-  const enterDesignMode = useCallback(() => {
-    setSubview({
-      id: DesignsSubviewId,
-      title: t('databases.design.title'),
-      icon: Designs.constants.Icon,
-    });
-  }, [setSubview, t]);
 
   async function handleClickNewEntry() {
     if (!database) {
