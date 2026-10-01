@@ -1,6 +1,7 @@
 // Load the event data registry so the augmentation below has a
 // module to merge into (nothing else here imports the events package)
 import type {} from '@minddrop/events/EventDataMap';
+import { HistoryAction } from '@minddrop/history';
 
 export const ItemAddressesChangedEvent = 'item-references:addresses:changed';
 
@@ -34,6 +35,12 @@ export interface ItemAddressesChangedEventData {
    * The address changes.
    */
   changes: ItemAddressChange[];
+
+  /**
+   * The action which changed the addresses. Absent when no action
+   * changed them.
+   */
+  action?: HistoryAction;
 }
 
 declare module '@minddrop/events/EventDataMap' {

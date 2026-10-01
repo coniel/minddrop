@@ -2556,6 +2556,9 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
+      '@minddrop/history':
+        specifier: workspace:*
+        version: link:../history
       '@minddrop/stores':
         specifier: workspace:*
         version: link:../stores
