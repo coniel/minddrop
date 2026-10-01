@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { DatabasesStore } from '../DatabasesStore';
-import { EntryHistoryCauses } from '../constants';
+import { DatabaseHistoryCauses } from '../constants';
 import { DatabasePropertyRemovedEvent } from '../events';
 import {
   MockFs,
@@ -59,7 +59,7 @@ describe('removeDatabaseProperty', () => {
       updated: updatedDatabase,
       action: {
         id: expect.stringMatching(/^action_/),
-        cause: EntryHistoryCauses.PropertyRemoved,
+        cause: DatabaseHistoryCauses.PropertyRemoved,
       },
     });
   });

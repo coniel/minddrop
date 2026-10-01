@@ -12,7 +12,7 @@ import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabaseEntryTemplatesStore } from '../../DatabaseEntryTemplatesStore';
 import { DatabasesStore } from '../../DatabasesStore';
-import { EntryHistoryCauses } from '../../constants';
+import { DatabaseHistoryCauses } from '../../constants';
 import {
   sqlGetAllEntriesFull,
   sqlUpsertDatabase,
@@ -48,7 +48,7 @@ const { titleDesignElement } = DesignElementFixtures;
 const { workspace_1 } = WorkspaceFixtures;
 
 // The action performing the rename
-const action = History.createAction(EntryHistoryCauses.PropertyRenamed);
+const action = History.createAction(DatabaseHistoryCauses.PropertyRenamed);
 
 // A design of the object database with an element mapping its
 // 'Icon' property.

@@ -5,7 +5,7 @@ import { SelectPropertySchema } from '@minddrop/properties';
 import { storeItem } from '@minddrop/stores/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
-import { EntryHistoryCauses } from '../../constants';
+import { DatabaseHistoryCauses } from '../../constants';
 import { DatabaseEntryUpdatedEvent } from '../../events';
 import { sqlGetEntryPropertyValues, sqlUpsertDatabase } from '../../sql';
 import {
@@ -93,7 +93,7 @@ const otherEntry = {
 };
 
 // The action performing the rename
-const action = History.createAction(EntryHistoryCauses.PropertyOptionRenamed);
+const action = History.createAction(DatabaseHistoryCauses.PropertyOptionRenamed);
 
 /**
  * Runs the handler for a rename of the status option 'Todo' to

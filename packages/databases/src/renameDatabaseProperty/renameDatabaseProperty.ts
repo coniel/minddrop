@@ -3,7 +3,7 @@ import { History } from '@minddrop/history';
 import { Properties } from '@minddrop/properties';
 import { InvalidParameterError } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
-import { EntryHistoryCauses } from '../constants';
+import { DatabaseHistoryCauses } from '../constants';
 import { DatabasePropertyRenamedEvent, DatabaseUpdatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { Database } from '../types';
@@ -98,7 +98,7 @@ export async function renameDatabaseProperty(
     updated,
     oldName,
     newName,
-    action: History.createAction(EntryHistoryCauses.PropertyRenamed),
+    action: History.createAction(DatabaseHistoryCauses.PropertyRenamed),
   });
 
   // Write the updated config to the file system

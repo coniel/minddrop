@@ -3,7 +3,7 @@ import { Events } from '@minddrop/events';
 import { storeItem } from '@minddrop/stores/test-utils';
 import { InvalidParameterError } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
-import { EntryHistoryCauses } from '../constants';
+import { DatabaseHistoryCauses } from '../constants';
 import { DatabasePropertyRenamedEvent } from '../events';
 import {
   MockFs,
@@ -111,7 +111,7 @@ describe('renameDatabaseProperty', () => {
       updated: { properties: [{ name: 'Body' }, { name: 'Icon' }] },
       action: {
         id: expect.stringMatching(/^action_/),
-        cause: EntryHistoryCauses.PropertyRenamed,
+        cause: DatabaseHistoryCauses.PropertyRenamed,
       },
     });
   });

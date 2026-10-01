@@ -45,11 +45,10 @@ export const PropertyFilesDirNameKey = 'databases.propertyFilesDirName';
 export const EntryHistorySubjectType = 'entries';
 
 /**
- * The causes an entry's history records name for the actions
- * reaching entries from outside their own edits. Persisted in the
- * entries' history files.
+ * The causes of the actions recorded against a database's history
+ * and its entries' histories. Persisted in the history files.
  */
-export const EntryHistoryCauses = {
+export const DatabaseHistoryCauses = {
   PropertyRenamed: 'databases:property-renamed',
   PropertyOptionRenamed: 'databases:property-option-renamed',
   PropertyRemoved: 'databases:property-removed',

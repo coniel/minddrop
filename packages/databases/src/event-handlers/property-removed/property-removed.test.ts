@@ -10,7 +10,7 @@ import { storeItem } from '@minddrop/stores/test-utils';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabaseEntryTemplatesStore } from '../../DatabaseEntryTemplatesStore';
-import { EntryHistoryCauses } from '../../constants';
+import { DatabaseHistoryCauses } from '../../constants';
 import {
   sqlGetAllEntriesFull,
   sqlGetEntrySyncRecords,
@@ -49,7 +49,7 @@ const { titleDesignElement } = DesignElementFixtures;
 const { workspace_1 } = WorkspaceFixtures;
 
 // The action performing the removal
-const action = History.createAction(EntryHistoryCauses.PropertyRemoved);
+const action = History.createAction(DatabaseHistoryCauses.PropertyRemoved);
 
 // A design of the object database with an element mapping its
 // 'Content' property.
