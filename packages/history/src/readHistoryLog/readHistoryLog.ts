@@ -2,21 +2,21 @@ import { Fs } from '@minddrop/file-system';
 import { restoreDates } from '@minddrop/utils';
 import { archiveHistoryLog } from '../archiveHistoryLog';
 import { LogSizeLimitBytes } from '../constants';
-import { HistoryRecord } from '../types';
+import { BaseHistoryRecord } from '../types';
 
 /**
- * Reads a subject's active log, archiving it and starting a fresh
- * one when it has outgrown its size limit, so that the log each
- * append rewrites stays small.
+ * Reads an active log, archiving it and starting a fresh one when it
+ * has outgrown its size limit, so that the log each append rewrites
+ * stays small.
  *
  * @param logFilePath - The absolute path of the active log file.
  * @returns The records to append to, empty when the log was archived.
  */
 export async function readHistoryLog(
   logFilePath: string,
-): Promise<HistoryRecord[]> {
+): Promise<BaseHistoryRecord[]> {
   // Check if the log exists. No log means nothing has been recorded
-  // against the subject yet.
+  // in it yet.
   if (!(await Fs.exists(logFilePath))) {
     return [];
   }

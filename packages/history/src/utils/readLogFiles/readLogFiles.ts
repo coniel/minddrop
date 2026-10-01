@@ -1,32 +1,29 @@
 import { Fs } from '@minddrop/file-system';
 import { LogFileExtension } from '../../constants';
-import { HistoryRecord, HistorySubject } from '../../types';
-import { resolveSubjectHistoryDirPath } from '../resolveSubjectHistoryDirPath';
+import { BaseHistoryRecord } from '../../types';
 
 /**
- * Reads every log file in a subject's history directory, merged into
- * one chronological list.
+ * Reads every log file in a log directory, merged into one
+ * chronological list.
  *
  * Every file is read rather than just the active one. Rollover leaves
  * archives behind, and third-party sync writes conflicted copies when
- * two devices append to the same file, so both belong in the history.
+ * two devices append to the same file, so both belong in the log.
  *
- * @param subject - The subject to read the logs of.
- * @returns The subject's records, oldest first.
+ * @param logDirPath - The absolute path of the directory holding the logs.
+ * @returns The records, oldest first.
  */
-export async function readLogFiles(
-  subject: HistorySubject,
-): Promise<HistoryRecord[]> {
-  const historyDirPath = resolveSubjectHistoryDirPath(subject);
-
-  // Check if the history directory exists. No directory means nothing
-  // has been recorded against the subject.
-  if (!(await Fs.exists(historyDirPath))) {
+export async function readLogFiles<TRecord extends BaseHistoryRecord>(
+  logDirPath: string,
+): Promise<TRecord[]> {
+  // Check if the log directory exists. No directory means nothing
+  // has been recorded in it.
+  if (!(await Fs.exists(logDirPath))) {
     return [];
   }
 
-  // Read the history directory's contents
-  const entries = await Fs.readDir(historyDirPath);
+  // Read the log directory's contents
+  const entries = await Fs.readDir(logDirPath);
 
   // Filter for log files
   const logFiles = entries.filter(
@@ -34,7 +31,9 @@ export async function readLogFiles(
   );
 
   // Read the log files
-  const logs = await Promise.all(logFiles.map((file) => readLog(file.path)));
+  const logs = await Promise.all(
+    logFiles.map((file) => readLog<TRecord>(file.path)),
+  );
 
   // Sort by timestamp. Sorting is stable, so records sharing a
   // timestamp keep the order they were appended in.
@@ -46,11 +45,11 @@ export async function readLogFiles(
 /**
  * Reads a single log file. A file that cannot be parsed is read as
  * empty, so a damaged one costs its own records rather than the
- * subject's whole history.
+ * whole log.
  */
-async function readLog(path: string): Promise<HistoryRecord[]> {
+async function readLog<TRecord>(path: string): Promise<TRecord[]> {
   try {
-    const records = await Fs.readJsonFile<HistoryRecord[]>(path);
+    const records = await Fs.readJsonFile<TRecord[]>(path);
 
     // Ignore a log holding anything but a list of records
     return Array.isArray(records) ? records : [];

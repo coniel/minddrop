@@ -1,4 +1,5 @@
 export const HistoryDirName = 'history';
+export const LedgersDirName = 'ledgers';
 export const ContentDirName = 'content';
 export const LogFileName = 'history.json';
 export const LogFileExtension = 'json';

@@ -1,5 +1,5 @@
 import { HistoryRecord, HistorySubject } from '../types';
-import { readLogFiles } from '../utils';
+import { readLogFiles, resolveSubjectHistoryDirPath } from '../utils';
 
 export type ReadHistoryOptions = HistorySubject;
 
@@ -12,5 +12,5 @@ export type ReadHistoryOptions = HistorySubject;
 export async function readHistory(
   options: ReadHistoryOptions,
 ): Promise<HistoryRecord[]> {
-  return readLogFiles(options);
+  return readLogFiles(resolveSubjectHistoryDirPath(options));
 }

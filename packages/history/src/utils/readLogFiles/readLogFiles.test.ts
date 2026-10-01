@@ -3,12 +3,6 @@ import { MockFs, cleanup, setup } from '../../test-utils';
 import { HistoryRecord } from '../../types';
 import { readLogFiles } from './readLogFiles';
 
-const subject = {
-  ownerPath: 'Books',
-  subjectType: 'entries',
-  subjectKey: 'My Book',
-};
-
 const historyDirPath = 'Books/.minddrop/history/entries/My Book';
 
 const firstRecord: HistoryRecord = {
@@ -42,7 +36,10 @@ describe('readLogFiles', () => {
     writeLog('history.json', [secondRecord]);
     writeLog('history-20260902T000000000Z.json', [firstRecord]);
 
-    expect(await readLogFiles(subject)).toEqual([firstRecord, secondRecord]);
+    expect(await readLogFiles(historyDirPath)).toEqual([
+      firstRecord,
+      secondRecord,
+    ]);
   });
 
   it('ignores files which are not logs', async () => {
@@ -54,7 +51,7 @@ describe('readLogFiles', () => {
       },
     ]);
 
-    expect(await readLogFiles(subject)).toEqual([firstRecord]);
+    expect(await readLogFiles(historyDirPath)).toEqual([firstRecord]);
   });
 
   it('ignores a log which cannot be parsed', async () => {
@@ -66,10 +63,10 @@ describe('readLogFiles', () => {
       },
     ]);
 
-    expect(await readLogFiles(subject)).toEqual([firstRecord]);
+    expect(await readLogFiles(historyDirPath)).toEqual([firstRecord]);
   });
 
   it('returns an empty array for a subject with no history', async () => {
-    expect(await readLogFiles(subject)).toEqual([]);
+    expect(await readLogFiles(historyDirPath)).toEqual([]);
   });
 });
