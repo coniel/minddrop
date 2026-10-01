@@ -11,8 +11,11 @@
   },
   "devDependencies": {
     "eslint": "^9.39.3",
+    "@minddrop/drag-and-drop": "workspace:*",
     "@minddrop/eslint-config": "workspace:*",
+    "@minddrop/file-system": "workspace:*",
     "@minddrop/vitest-config": "workspace:*",
+    "@minddrop/workspaces": "workspace:*",
     "tsconfig": "workspace:*",
     "typescript": "^5.9.3"
   },
