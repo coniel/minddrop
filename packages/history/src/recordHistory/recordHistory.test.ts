@@ -11,10 +11,10 @@ const subject = {
 const logFilePath = 'Books/.minddrop/history/entries/My Book/history.json';
 
 /**
- * Reads the subject's active log.
+ * Reads the active log at a path.
  */
-function readLog(): HistoryRecord[] {
-  return MockFs.readJsonFile<HistoryRecord[]>(logFilePath);
+function readLog(path = logFilePath): HistoryRecord[] {
+  return MockFs.readJsonFile<HistoryRecord[]>(path);
 }
 
 describe('recordHistory', () => {
@@ -26,6 +26,18 @@ describe('recordHistory', () => {
     await recordHistory({ ...subject, kind: 'created' });
 
     expect(readLog()).toEqual([{ timestamp: mockDate, kind: 'created' }]);
+  });
+
+  it("records the change against an owner's own history", async () => {
+    await recordHistory({
+      ownerPath: 'Books',
+      subjectType: 'database',
+      kind: 'created',
+    });
+
+    expect(readLog('Books/.minddrop/history/database/history.json')).toEqual([
+      { timestamp: mockDate, kind: 'created' },
+    ]);
   });
 
   it('returns the recorded change', async () => {

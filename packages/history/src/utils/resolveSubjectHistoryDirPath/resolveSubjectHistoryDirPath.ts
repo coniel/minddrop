@@ -1,7 +1,7 @@
 import { Fs } from '@minddrop/file-system';
 import { Paths } from '@minddrop/utils';
-import { HistoryDirName } from '../constants';
-import { HistorySubject } from '../types';
+import { HistoryDirName } from '../../constants';
+import { HistorySubject } from '../../types';
 
 /**
  * Returns the absolute path of a subject's history directory, which
@@ -11,11 +11,19 @@ import { HistorySubject } from '../types';
  * @returns The absolute subject history directory path.
  */
 export function resolveSubjectHistoryDirPath(subject: HistorySubject): string {
-  return Fs.concatPath(
+  const typeDirPath = Fs.concatPath(
     subject.ownerPath,
     Paths.hiddenDirName,
     HistoryDirName,
     subject.subjectType,
-    subject.subjectKey,
   );
+
+  // Check if the subject is its owner's own. If so, its history is
+  // filed directly under its type.
+  if (subject.subjectKey === undefined) {
+    return typeDirPath;
+  }
+
+  // File a keyed subject under its key
+  return Fs.concatPath(typeDirPath, subject.subjectKey);
 }

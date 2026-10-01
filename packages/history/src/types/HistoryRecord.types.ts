@@ -171,9 +171,10 @@ export interface HistorySubject {
   subjectType: string;
 
   /**
-   * The subject's key within its type.
+   * The subject's key within its type. Absent for an owner's own
+   * history, which is filed directly under its type.
    */
-  subjectKey: string;
+  subjectKey?: string;
 }
 
 export type RecordHistoryOptions = HistorySubject & HistoryRecordInput;

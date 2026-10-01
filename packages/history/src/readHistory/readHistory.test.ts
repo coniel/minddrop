@@ -25,10 +25,14 @@ const secondRecord: HistoryRecord = {
 /**
  * Writes a log file holding the given records.
  */
-function writeLog(fileName: string, records: HistoryRecord[]): void {
+function writeLog(
+  fileName: string,
+  records: HistoryRecord[],
+  dirPath = historyDirPath,
+): void {
   MockFs.addFiles([
     {
-      path: `${historyDirPath}/${fileName}`,
+      path: `${dirPath}/${fileName}`,
       textContent: JSON.stringify(records),
     },
   ]);
@@ -43,6 +47,14 @@ describe('readHistory', () => {
     writeLog('history.json', [firstRecord, secondRecord]);
 
     expect(await readHistory(subject)).toEqual([firstRecord, secondRecord]);
+  });
+
+  it("reads an owner's own history", async () => {
+    writeLog('history.json', [firstRecord], 'Books/.minddrop/history/database');
+
+    expect(
+      await readHistory({ ownerPath: 'Books', subjectType: 'database' }),
+    ).toEqual([firstRecord]);
   });
 
   it('merges the archived logs with the active one, oldest first', async () => {
