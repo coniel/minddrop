@@ -21,6 +21,10 @@
   width: var(--icon-size-sm);
 }
 
+.content-color-swatch-size-lg {
+  width: var(--icon-size-md);
+}
+
 /* --- Unset --- */
 
 /* No colour at all rather than a pale one. Struck corner to

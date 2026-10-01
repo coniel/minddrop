@@ -1,0 +1,28 @@
+/* The layer sits over the drawn page and under the text layer, so
+   text stays selectable through it. The boxes multiply onto the
+   page, tinting the paper while the ink shows through. The layer
+   is scoped to the light palette whatever the appearance, since the
+   page it multiplies onto is always paper. */
+.pdf-highlight-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+/* A highlight's box, placed through the page's viewport. Tinted in
+   the palette step of its content colour. */
+.pdf-highlight {
+  position: absolute;
+  left: var(--pdf-highlight-left);
+  top: var(--pdf-highlight-top);
+  width: var(--pdf-highlight-width);
+  height: var(--pdf-highlight-height);
+  border-radius: var(--radius-xs);
+  background: var(--pdf-highlight-color);
+}
+
+/* A selected highlight is drawn a step darker */
+.pdf-highlight-selected {
+  background: var(--pdf-highlight-selected-color);
+}

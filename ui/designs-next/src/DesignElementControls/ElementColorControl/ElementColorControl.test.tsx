@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { ElementColor } from '@minddrop/designs-next';
 import { fireEvent, render, screen } from '@minddrop/test-utils';
-import { FloatingToolbar } from '@minddrop/ui-primitives';
+import { ContentColorSwatch, FloatingToolbar } from '@minddrop/ui-primitives';
 import { cleanup } from '../../test-utils';
 import { ElementColorControl } from './ElementColorControl';
 
@@ -57,9 +57,13 @@ describe('ElementColorControl', () => {
     renderControl({ color: 'brown', level: 600 });
 
     const swatch = screen.getByLabelText('Text colour').firstElementChild;
+    // Render a swatch of the expected colour to compare against
+    const { container } = render(
+      <ContentColorSwatch color="brown" level={600} />,
+    );
 
-    expect(swatch?.getAttribute('style')).toContain(
-      'background: var(--brown-600)',
+    expect(swatch?.getAttribute('style')).toBe(
+      container.firstElementChild?.getAttribute('style'),
     );
   });
 });

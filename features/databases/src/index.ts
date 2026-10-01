@@ -6,6 +6,7 @@ export * from './DatabaseEntryRenderer';
 export * from './DatabaseMenuItem';
 export * from './DatabasesFeature';
 export * from './events';
+export * from './initializeEntryPdfs';
 export * from './registerDatabaseViews';
 export * from './utils/hasTransferredAddContentCard';
 export * from './utils/resolveTransferredEntryIds';

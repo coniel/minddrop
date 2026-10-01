@@ -1,0 +1,19 @@
+/* A zero sized anchor the toolbar is centred on. Placed a gap under
+   the selection in the document column. */
+.pdf-annotation-toolbar-anchor {
+  position: absolute;
+  left: var(--pdf-annotation-toolbar-left);
+  top: calc(var(--pdf-annotation-toolbar-top) + var(--space-2));
+  width: 0;
+  height: 0;
+  z-index: 2;
+}
+
+/* The toolbar, centred on the anchor */
+.pdf-annotation-toolbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}

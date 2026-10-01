@@ -13,6 +13,9 @@ export const DatabaseEntryViewName = 'databases:view:entry';
 export const DatabaseEntriesEventListenerId = 'database-entries-feature';
 export const CloseDatabaseEntryDialogEvent = 'databases:entry-dialog:close';
 
+// The ID the entry PDF listeners are registered under
+export const EntryPdfsEventListenerId = 'database-entry-pdfs-feature';
+
 declare module '@minddrop/events/EventDataMap' {
   interface EventDataMap {
     'databases:new-database-dialog:open': void;

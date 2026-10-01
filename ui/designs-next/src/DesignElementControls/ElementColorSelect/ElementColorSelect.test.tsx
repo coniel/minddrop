@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { ElementColor } from '@minddrop/designs-next';
 import { fireEvent, render, screen } from '@minddrop/test-utils';
+import { ContentColorSwatch } from '@minddrop/ui-primitives';
 import { cleanup } from '../../test-utils';
 import { ElementColorSelect } from './ElementColorSelect';
 
@@ -56,13 +57,14 @@ describe('ElementColorSelect', () => {
     renderSelect({ color: 'purple', level: 700 });
 
     const swatch = screen.getByLabelText('Shade 400').firstElementChild;
-
-    // jsdom keeps the custom property in the style attribute but
-    // cannot resolve it, so the attribute itself is the assertion.
-    expect(swatch?.getAttribute('style')).toContain(
-      'background: var(--purple-400)',
+    // Render a swatch of the expected colour to compare against
+    const { container } = render(
+      <ContentColorSwatch color="purple" level={400} />,
     );
-    expect(swatch).toHaveClass('content-color-swatch');
+
+    expect(swatch?.getAttribute('style')).toBe(
+      container.firstElementChild?.getAttribute('style'),
+    );
   });
 
   it('marks the colour and step the element is drawn in', () => {

@@ -6,7 +6,7 @@ import {
 import { propsToClass } from '../utils';
 import './ContentColorSwatch.css';
 
-export type ContentColorSwatchSize = 'xs' | 'sm' | 'md';
+export type ContentColorSwatchSize = 'xs' | 'sm' | 'md' | 'lg';
 
 export interface ContentColorSwatchProps {
   /**
