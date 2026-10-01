@@ -7,3 +7,5 @@ export * from './releaseDrag';
 export * from './dragAndDrop';
 export * from './cancelDragWithEscape';
 export * from './DragSource';
+export * from './dropNative';
+export * from './dragOverNative';

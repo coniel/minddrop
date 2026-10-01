@@ -13,6 +13,7 @@ import {
   cleanup,
   dragAndDrop,
   dragOver,
+  dragOverNative,
   setup,
 } from '../test-utils';
 import { DragMoveData, DropEventData, DroppableOptions } from '../types';
@@ -284,6 +285,22 @@ describe('useDroppable', () => {
       );
     });
 
+    it('ignores a drag carrying only a type accepted from native drags', () => {
+      render(
+        <>
+          <Draggable types={['native']} />
+          <Droppable accepts={['wanted']} nativeAccepts={['native']} />
+        </>,
+      );
+
+      dragOver(screen.getByTestId('item'), screen.getByTestId('target'));
+
+      expect(screen.getByTestId('target')).toHaveAttribute(
+        'data-dragging-over',
+        'false',
+      );
+    });
+
     it('lets an accepted drag reach the targets around it when not claiming it', () => {
       render(
         <>
@@ -387,6 +404,89 @@ describe('useDroppable', () => {
         'data-dragging-over',
         'false',
       );
+    });
+
+    it('accepts a drag with a type accepted from native drags only', () => {
+      render(<Droppable accepts={['wanted']} nativeAccepts={['native']} />);
+
+      fireEvent.dragOver(screen.getByTestId('target'), {
+        dataTransfer: nativeDragOf('native'),
+      });
+
+      expect(screen.getByTestId('target')).toHaveAttribute(
+        'data-dragging-over',
+        'true',
+      );
+    });
+
+    it('reports the drag moving over it', () => {
+      const moves: DragMoveData[] = [];
+
+      render(<Droppable onDragMove={(move) => moves.push(move)} />);
+
+      dragOverNative(
+        screen.getByTestId('target'),
+        { [toMimeType('wanted')]: '[]' },
+        { clientX: 5, clientY: 6 },
+      );
+
+      expect(moves.at(-1)).toEqual({
+        clientX: 5,
+        clientY: 6,
+        target: screen.getByTestId('target'),
+        position: 'inside',
+      });
+    });
+
+    it('only reacts to drags directly over it when direct only', () => {
+      render(
+        <Droppable directOnly>
+          <div data-testid="child" />
+        </Droppable>,
+      );
+
+      fireEvent.dragOver(screen.getByTestId('child'), {
+        dataTransfer: nativeDragOf('wanted'),
+      });
+
+      expect(screen.getByTestId('target')).toHaveAttribute(
+        'data-dragging-over',
+        'false',
+      );
+
+      fireEvent.dragOver(screen.getByTestId('target'), {
+        dataTransfer: nativeDragOf('wanted'),
+      });
+
+      expect(screen.getByTestId('target')).toHaveAttribute(
+        'data-dragging-over',
+        'true',
+      );
+    });
+
+    it('leaves a drag over an editable control to it', () => {
+      const drops: DropEventData[] = [];
+
+      render(
+        <Droppable onDrop={(drop) => drops.push(drop)}>
+          <input data-testid="input" />
+        </Droppable>,
+      );
+
+      fireEvent.dragOver(screen.getByTestId('input'), {
+        dataTransfer: nativeDragOf('wanted'),
+      });
+
+      expect(screen.getByTestId('target')).toHaveAttribute(
+        'data-dragging-over',
+        'false',
+      );
+
+      fireEvent.drop(screen.getByTestId('input'), {
+        dataTransfer: nativeDragOf('wanted'),
+      });
+
+      expect(drops).toEqual([]);
     });
 
     it('keeps an accepted drag from the targets around it', () => {

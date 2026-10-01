@@ -84,6 +84,13 @@ export interface DroppableOptions {
   accepts?: string[];
 
   /**
+   * The data types the element accepts drops of from native drags
+   * only, in addition to `accepts`. A drag within the app carrying
+   * only these types is ignored.
+   */
+  nativeAccepts?: string[];
+
+  /**
    * Whether an accepted drag is claimed. A claimed drag does not
    * reach ancestor drop targets.
    *

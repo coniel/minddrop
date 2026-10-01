@@ -1,5 +1,5 @@
 import React, { useCallback, useId, useRef, useState } from 'react';
-import { getTransferData } from '@minddrop/utils';
+import { getTransferData, isEditableTarget } from '@minddrop/utils';
 import { DroppablesRegistry } from '../DroppablesRegistry';
 import {
   DropIndicatorPosition,
@@ -104,11 +104,27 @@ export function useDroppable(options: DroppableOptions): UseDroppableReturn {
   // Check whether the target accepts a native drag by its data types.
   // A native drag exposes its types but not its data until the drop.
   const acceptsNativeDrag = useCallback((event: React.DragEvent) => {
-    // Read the accepted types
-    const { accepts } = optionsRef.current;
+    // Leave a drag over an editable control to it
+    if (isEditableTarget(event.target)) {
+      return false;
+    }
 
-    // Accept the drag when no types are required or one of them is present
-    return !accepts || dragContainsType(event, accepts);
+    // Read the accepted types and whether only direct hits count
+    const { accepts, nativeAccepts = [], directOnly } = optionsRef.current;
+
+    // Ignore a drag over a descendant when direct only
+    if (directOnly && event.target !== event.currentTarget) {
+      return false;
+    }
+
+    // Accept the drag when no types are required
+    if (!accepts) {
+      return true;
+    }
+
+    // Accept the drag when it carries an accepted type, or one
+    // accepted from native drags only.
+    return dragContainsType(event, [...accepts, ...nativeAccepts]);
   }, []);
 
   // Mark the element as dragged over and resolve where a drop would land
@@ -121,7 +137,12 @@ export function useDroppable(options: DroppableOptions): UseDroppableReturn {
       }
 
       // Read the drop options
-      const { claim = true, index, isLastChild } = optionsRef.current;
+      const {
+        claim = true,
+        index,
+        isLastChild,
+        onDragMove,
+      } = optionsRef.current;
 
       // Allow the drop
       event.preventDefault();
@@ -149,6 +170,14 @@ export function useDroppable(options: DroppableOptions): UseDroppableReturn {
           index,
           isLastChild,
         ),
+      });
+
+      // Report the move to the target
+      onDragMove?.({
+        clientX: event.clientX,
+        clientY: event.clientY,
+        target: event.target as Element,
+        position,
       });
     },
     [acceptsNativeDrag, notify],
