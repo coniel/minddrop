@@ -17,6 +17,10 @@ export const ContentTypes: ContentType[] = [
  */
 export const CustomContentTypeKinds: CustomContentTypeKind[] = ['file', 'url'];
 
+// The raw data transfer types entries are created from: files, URLs
+// and text.
+export const EntryTransferDataTypes = ['Files', 'text/uri-list', 'text/plain'];
+
 /**
  * The entity type name of a database, used as the type prefix of
  * its ID.

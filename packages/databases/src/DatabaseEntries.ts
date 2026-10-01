@@ -1,4 +1,4 @@
-import { DatabaseEntryEntityType } from './constants';
+import { DatabaseEntryEntityType, EntryTransferDataTypes } from './constants';
 import { DatabaseEntryNotFoundError } from './errors';
 import {
   DatabaseEntriesClearedEvent,
@@ -26,6 +26,7 @@ export const events = {
 
 export const constants = {
   EntityType: DatabaseEntryEntityType,
+  TransferDataTypes: EntryTransferDataTypes,
 };
 
 export const errors = {

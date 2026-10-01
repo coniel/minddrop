@@ -4,6 +4,7 @@ import {
   cleanup,
   commonStorageDatabase,
   customContentType_file_1,
+  objectDatabase,
   propertyStorageDatabase,
   rootStorageDatabase,
   setup,
@@ -59,5 +60,29 @@ describe('resolveDefaultDatabaseIdForFile', () => {
 
   it('returns null when no default applies', () => {
     expect(resolveDefaultDatabaseIdForFile('photo.png')).toBeNull();
+  });
+
+  it('prefers a target database which can hold the file over the defaults', () => {
+    setDatabaseContentDefault('image', commonStorageDatabase.id);
+
+    expect(
+      resolveDefaultDatabaseIdForFile('photo.png', rootStorageDatabase.id),
+    ).toBe(rootStorageDatabase.id);
+  });
+
+  it('ignores a target database which cannot hold the file', () => {
+    setDatabaseContentDefault('image', commonStorageDatabase.id);
+
+    expect(
+      resolveDefaultDatabaseIdForFile('photo.png', objectDatabase.id),
+    ).toBe(commonStorageDatabase.id);
+  });
+
+  it('ignores a target database which does not exist', () => {
+    setDatabaseContentDefault('image', commonStorageDatabase.id);
+
+    expect(
+      resolveDefaultDatabaseIdForFile('photo.png', 'missing-database'),
+    ).toBe(commonStorageDatabase.id);
   });
 });

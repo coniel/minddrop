@@ -4,19 +4,20 @@ import { storeItem } from '@minddrop/stores/test-utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
 import { setDatabaseContentDefault } from '../setDatabaseContentDefault';
-import {
-  cleanup,
+import { DatabaseFixtures, cleanup, setup } from '../test-utils';
+import { updateCustomContentType } from '../updateCustomContentType';
+import { createDatabaseEntriesFromTransferData } from './createDatabaseEntriesFromTransferData';
+
+const {
+  commonStorageDatabase,
   customContentType_url_1,
   databaseEntries,
   invalidImagePropertyFile,
   objectDatabase,
   rootStorageDatabase,
-  setup,
   urlDatabase,
   validImagePropertyFile,
-} from '../test-utils';
-import { updateCustomContentType } from '../updateCustomContentType';
-import { createDatabaseEntriesFromTransferData } from './createDatabaseEntriesFromTransferData';
+} = DatabaseFixtures;
 
 // The object database's content property
 const contentProperty = objectDatabase.properties.find(Properties.isContent)!;
@@ -211,6 +212,91 @@ describe('createDatabaseEntriesFromTransferData', () => {
     await createDatabaseEntriesFromTransferData({ 'text/plain': 'Hello' });
 
     expect(DatabaseEntriesStore).toHaveItems(databaseEntries);
+  });
+
+  describe('with a target database', () => {
+    it('creates entries in the target from files it can hold', async () => {
+      const [entry] = await createDatabaseEntriesFromTransferData(
+        { files: [validImagePropertyFile] },
+        commonStorageDatabase.id,
+      );
+
+      expect(storeItem(DatabaseEntriesStore, entry.id).database).toBe(
+        commonStorageDatabase.id,
+      );
+    });
+
+    it('creates entries from files the target cannot hold in their default databases', async () => {
+      const [entry] = await createDatabaseEntriesFromTransferData(
+        { files: [validImagePropertyFile] },
+        objectDatabase.id,
+      );
+
+      expect(storeItem(DatabaseEntriesStore, entry.id).database).toBe(
+        rootStorageDatabase.id,
+      );
+    });
+
+    it('creates entries in the target from URLs it can hold', async () => {
+      // Give URLs no default database
+      setDatabaseContentDefault('url', null);
+
+      const [entry] = await createDatabaseEntriesFromTransferData(
+        { urls: ['https://example.com'] },
+        urlDatabase.id,
+      );
+
+      expect(storeItem(DatabaseEntriesStore, entry.id).database).toBe(
+        urlDatabase.id,
+      );
+    });
+
+    it('creates entries from URLs the target cannot hold in their default databases', async () => {
+      const [entry] = await createDatabaseEntriesFromTransferData(
+        { urls: ['https://example.com'] },
+        objectDatabase.id,
+      );
+
+      expect(storeItem(DatabaseEntriesStore, entry.id).database).toBe(
+        urlDatabase.id,
+      );
+    });
+
+    it('creates an entry from text in the target when it has a content property', async () => {
+      // Give text no default database
+      setDatabaseContentDefault('text', null);
+
+      const [entry] = await createDatabaseEntriesFromTransferData(
+        { 'text/plain': 'Hello' },
+        objectDatabase.id,
+      );
+
+      expect(storeItem(DatabaseEntriesStore, entry.id).database).toBe(
+        objectDatabase.id,
+      );
+    });
+
+    it('creates entries in their default databases when the target no longer exists', async () => {
+      const [entry] = await createDatabaseEntriesFromTransferData(
+        { 'text/plain': 'Hello' },
+        'missing-database',
+      );
+
+      expect(storeItem(DatabaseEntriesStore, entry.id).database).toBe(
+        objectDatabase.id,
+      );
+    });
+
+    it('creates an entry from text the target cannot hold in the text default database', async () => {
+      const [entry] = await createDatabaseEntriesFromTransferData(
+        { 'text/plain': 'Hello' },
+        urlDatabase.id,
+      );
+
+      expect(storeItem(DatabaseEntriesStore, entry.id).database).toBe(
+        objectDatabase.id,
+      );
+    });
   });
 
   it('prefers files over URLs and text', async () => {

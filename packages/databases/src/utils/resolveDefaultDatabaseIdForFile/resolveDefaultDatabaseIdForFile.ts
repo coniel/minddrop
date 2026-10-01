@@ -1,11 +1,14 @@
 import { Fs } from '@minddrop/file-system';
 import { Properties } from '@minddrop/properties';
+import { getDatabase } from '../../getDatabase';
 import { getDatabaseContentDefaults } from '../../getDatabaseContentDefaults';
 import { findCustomContentTypeByMatcher } from '../findCustomContentTypeByMatcher';
+import { getDefaultFileProperty } from '../getDefaultFileProperty';
 
 /**
- * Resolves the ID of the database a file is added to by default. It
- * is the first of these which is set:
+ * Resolves the ID of the database a file is added to. The target
+ * database when it exists and can hold the file, otherwise the first
+ * of these which is set:
  *
  * - The database of the custom content type listing the file's
  *   extension.
@@ -13,11 +16,23 @@ import { findCustomContentTypeByMatcher } from '../findCustomContentTypeByMatche
  * - The catch-all files database.
  *
  * @param fileName - The file name.
+ * @param targetDatabaseId - The ID of the database preferred when it can hold the file.
  * @returns The database ID, or null when no default applies.
  */
 export function resolveDefaultDatabaseIdForFile(
   fileName: string,
+  targetDatabaseId?: string,
 ): string | null {
+  // Check if the target database exists and can hold the file. If
+  // so, use it.
+  if (
+    targetDatabaseId &&
+    getDatabase(targetDatabaseId, false) &&
+    getDefaultFileProperty(targetDatabaseId, fileName)
+  ) {
+    return targetDatabaseId;
+  }
+
   // Get the configured content defaults
   const defaults = getDatabaseContentDefaults();
   // Get the file's extension

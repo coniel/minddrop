@@ -50,4 +50,27 @@ describe('resolveDefaultDatabaseIdForUrl', () => {
 
     expect(resolveDefaultDatabaseIdForUrl('https://example.com')).toBeNull();
   });
+
+  it('prefers a target database which can hold the URL over the defaults', () => {
+    // Give the custom type's URLs another database
+    updateCustomContentType(customContentType_url_1.id, {
+      databaseId: objectDatabase.id,
+    });
+
+    expect(resolveDefaultDatabaseIdForUrl(customTypeUrl, urlDatabase.id)).toBe(
+      urlDatabase.id,
+    );
+  });
+
+  it('ignores a target database which cannot hold the URL', () => {
+    expect(
+      resolveDefaultDatabaseIdForUrl('https://example.com', objectDatabase.id),
+    ).toBe(urlDatabase.id);
+  });
+
+  it('ignores a target database which does not exist', () => {
+    expect(
+      resolveDefaultDatabaseIdForUrl('https://example.com', 'missing-database'),
+    ).toBe(urlDatabase.id);
+  });
 });

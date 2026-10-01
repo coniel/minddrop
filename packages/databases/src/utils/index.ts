@@ -90,6 +90,7 @@ export * from './resolveEntryPropertyValue';
 export * from './resolveContentTypePropertyTypes';
 export * from './filterDatabasesByContentType';
 export * from './resolveDefaultDatabaseIdForFile';
+export * from './resolveDefaultDatabaseIdForText';
 export * from './resolveDefaultDatabaseIdForUrl';
 export * from './normalizeContentTypeMatcher';
 export * from './normalizeContentTypeMatchers';
