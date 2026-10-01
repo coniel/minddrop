@@ -39,6 +39,12 @@ interface FlexDropContainerGapProps {
   accepts?: string[];
 
   /**
+   * The data types the gap accepts drops of from native drags only,
+   * in addition to `accepts`.
+   */
+  nativeAccepts?: string[];
+
+  /**
    * Whether the gap takes a share of the container's free space,
    * standing in for the distribution its children would otherwise
    * be given.
@@ -58,6 +64,7 @@ export const FlexDropContainerGap: React.FC<FlexDropContainerGapProps> = ({
   index,
   isActive = false,
   accepts,
+  nativeAccepts,
   grow = false,
   onDrop,
 }) => {
@@ -67,6 +74,7 @@ export const FlexDropContainerGap: React.FC<FlexDropContainerGapProps> = ({
     id: containerId,
     index,
     accepts,
+    nativeAccepts,
     onDrop,
   });
 

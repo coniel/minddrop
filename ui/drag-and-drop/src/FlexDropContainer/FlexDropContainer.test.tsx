@@ -6,9 +6,16 @@ import {
   cleanup,
   dragAndDrop,
   dragOver,
+  dragOverNative,
   setup,
 } from '@minddrop/drag-and-drop/test-utils';
-import { createDomRect, render, screen } from '@minddrop/test-utils';
+import {
+  createDataTransfer,
+  createDomRect,
+  fireEvent,
+  render,
+  screen,
+} from '@minddrop/test-utils';
 import { FlexDropContainer } from './FlexDropContainer';
 
 /**
@@ -89,9 +96,10 @@ describe('<FlexDropContainer />', () => {
      * Renders the container with two children and a draggable item.
      *
      * @param accepts - The data types the container accepts.
+     * @param nativeAccepts - The data types the container accepts from native drags only.
      * @returns The render result.
      */
-    function renderContainer(accepts?: string[]) {
+    function renderContainer(accepts?: string[], nativeAccepts?: string[]) {
       const result = render(
         <>
           <Draggable />
@@ -99,6 +107,7 @@ describe('<FlexDropContainer />', () => {
             id="container"
             data-testid="container"
             accepts={accepts}
+            nativeAccepts={nativeAccepts}
             onDrop={(_: DropEventData, containerId: string, index: number) =>
               drops.push([containerId, index])
             }
@@ -164,6 +173,28 @@ describe('<FlexDropContainer />', () => {
       dragAndDrop(screen.getByTestId('item'), gap(1));
 
       expect(drops).toEqual([]);
+    });
+
+    it('marks the nearest edge gap while a native drag is over its empty space', () => {
+      renderContainer(['other'], ['text/plain']);
+
+      dragOverNative(
+        screen.getByTestId('container'),
+        { 'text/plain': 'Hello' },
+        { clientY: 10 },
+      );
+
+      expect(gap(0).querySelector('.flex-drop-gap-line')).not.toBeNull();
+    });
+
+    it('takes a native drop of a type accepted from native drags only', () => {
+      renderContainer(['other'], ['text/plain']);
+
+      fireEvent.drop(gap(1), {
+        dataTransfer: createDataTransfer({ 'text/plain': 'Hello' }),
+      });
+
+      expect(drops).toEqual([['container', 1]]);
     });
   });
 });

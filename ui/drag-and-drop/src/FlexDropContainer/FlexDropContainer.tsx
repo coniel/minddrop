@@ -67,6 +67,12 @@ interface FlexDropContainerProps extends Record<string, unknown> {
   accepts?: string[];
 
   /**
+   * The data types the container's gap zones and empty space accept
+   * drops of from native drags only, in addition to `accepts`.
+   */
+  nativeAccepts?: string[];
+
+  /**
    * Class name applied to the root container element.
    */
   className?: string;
@@ -86,6 +92,7 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
   justify = 'start',
   onDrop,
   accepts,
+  nativeAccepts,
   className = '',
   style = {},
   ...rest
@@ -195,6 +202,7 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
     type: 'flex-drop-container',
     id,
     accepts,
+    nativeAccepts,
     // Ignore drags over the children, since they take their own
     directOnly: true,
     onDragMove: handleContainerDragMove,
@@ -229,6 +237,7 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
         index={0}
         isActive={activeGapIndex === 0}
         accepts={accepts}
+        nativeAccepts={nativeAccepts}
         grow={spacingGaps.leading}
         onDrop={(data) => handleDropInGap(data, 0)}
       />,
@@ -252,6 +261,7 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
           index={gapIndex}
           isActive={activeGapIndex === gapIndex}
           accepts={accepts}
+          nativeAccepts={nativeAccepts}
           grow={spacingGaps.between}
           onDrop={(data) => handleDropInGap(data, gapIndex)}
         />,
@@ -271,6 +281,7 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
       index={trailingIndex}
       isActive={activeGapIndex === trailingIndex}
       accepts={accepts}
+      nativeAccepts={nativeAccepts}
       grow={spacingGaps.trailing}
       onDrop={(data) => handleDropInGap(data, trailingIndex)}
     />,
