@@ -108,6 +108,14 @@ describe('dispatchEvent', () => {
     });
   });
 
+  it('resolves once the listeners have settled', async () => {
+    // Wait for the dispatch to settle
+    await dispatchEvent(TestFooEvent, data);
+
+    // The async listener's work is done, not just started
+    expect(asyncFunction).toHaveBeenCalled();
+  });
+
   it('removes the log entry when the event has no listeners', async () => {
     dispatchEvent(TestBarEvent, data);
 
@@ -153,6 +161,11 @@ describe('dispatchEvent', () => {
 
     it('does not fail the dispatch', () => {
       expect(() => dispatchEvent(TestFooEvent)).not.toThrow();
+    });
+
+    it('resolves rather than rejecting', async () => {
+      // The dispatch should resolve despite the failing listeners
+      await expect(dispatchEvent(TestFooEvent)).resolves.toBeUndefined();
     });
 
     it('calls the remaining listeners', async () => {

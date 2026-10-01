@@ -12,22 +12,21 @@ const LISTENER_TIMEOUT_MS = 10000;
  * Dispatches an event to the listeners registered for the event
  * named `eventName` and to the catch-all listeners.
  *
- * Dispatching is fire and forget: the event is logged to the
- * event log synchronously, every listener is queued to run on a
- * microtask, and nothing is awaited. The log entry is removed
- * once all listeners have settled or timed out, marking the
- * event's side effects as no longer in flight.
+ * Listeners run asynchronously, after the dispatching code returns.
+ * The event is logged until every listener has settled or timed out.
  *
  * A listener which throws or rejects is reported to the console
  * and does not affect the other listeners or the dispatching code.
  *
  * @param eventName - The name of the event.
  * @param data - The data associated with the event.
+ * @returns A promise which resolves once the listeners have settled.
+ * It never rejects.
  */
 export function dispatchEvent<TEvent extends EventName>(
   eventName: TEvent,
   data?: EventData<TEvent>,
-): void {
+): Promise<void> {
   // Log the event before anything else, so no side effect can
   // land ahead of its entry.
   const logEntryId = appendEventLogEntry(eventName, data);
@@ -63,6 +62,8 @@ export function dispatchEvent<TEvent extends EventName>(
 
   // Track the dispatch until it settles
   trackPendingDispatch(dispatchSettled);
+
+  return dispatchSettled;
 }
 
 /**
