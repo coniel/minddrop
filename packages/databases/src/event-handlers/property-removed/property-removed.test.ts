@@ -39,6 +39,7 @@ import {
 import {
   resolveDatabaseEntryHistorySubject,
   resolveDatabaseHistorySubject,
+  resolveEntryMetadataFilePath,
   virtualCollectionId,
   virtualCollectionName,
 } from '../../utils';
@@ -311,6 +312,44 @@ describe('onRemoveProperty', () => {
       // The stored file should still be there
       expect(MockFs.exists(storedImagePath)).toBe(true);
     });
+  });
+
+  it("drops the property's metadata from the entries which have any", async () => {
+    // Give two of the entry's properties metadata
+    DatabaseEntriesStore.update(objectEntry1.id, {
+      metadata: {
+        properties: { Icon: { crop: 'square' }, Content: { page: 3 } },
+      },
+    });
+
+    await onRemoveProperty({
+      original: objectDatabase,
+      updated: withoutDatabaseProperty(objectDatabase, 'Icon'),
+      property: objectDatabase.properties[1],
+      action,
+    });
+
+    expect(
+      storeItem(DatabaseEntriesStore, objectEntry1.id).metadata.properties,
+    ).toEqual({ Content: { page: 3 } });
+  });
+
+  it('writes no metadata sidecar for entries without property metadata', async () => {
+    await onRemoveProperty({
+      original: objectDatabase,
+      updated: withoutDatabaseProperty(objectDatabase, 'Icon'),
+      property: objectDatabase.properties[1],
+      action,
+    });
+
+    expect(
+      MockFs.exists(
+        resolveEntryMetadataFilePath(
+          databaseDirPath(objectDatabase),
+          `${databaseDirPath(objectDatabase)}/${objectEntry1.path}`,
+        ),
+      ),
+    ).toBe(false);
   });
 
   it("clears the property from the database's entry templates", async () => {

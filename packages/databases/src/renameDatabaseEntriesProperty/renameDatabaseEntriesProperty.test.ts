@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { storeItem } from '@minddrop/stores/test-utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
+import { readEntryMetadata } from '../readEntryMetadata';
 import {
   MockFs,
   cleanup,
@@ -80,5 +81,29 @@ describe('renameDatabaseEntriesProperty', () => {
     expect(
       storeItem(DatabaseEntriesStore, objectEntry1.id).properties,
     ).not.toHaveProperty('Symbol');
+  });
+
+  it("re-keys the property's metadata", async () => {
+    // Give the renamed property metadata
+    DatabaseEntriesStore.update(objectEntry1.id, {
+      metadata: { properties: { Icon: { crop: 'square' } } },
+    });
+
+    await renameDatabaseEntriesProperty(
+      objectDatabase.id,
+      iconProperty,
+      'Symbol',
+    );
+
+    const entry = storeItem(DatabaseEntriesStore, objectEntry1.id);
+
+    expect(entry.metadata.properties).toEqual({ Symbol: { crop: 'square' } });
+
+    const metadata = await readEntryMetadata(
+      databaseDirPath(objectDatabase),
+      entry.path,
+    );
+
+    expect(metadata.properties).toEqual({ Symbol: { crop: 'square' } });
   });
 });

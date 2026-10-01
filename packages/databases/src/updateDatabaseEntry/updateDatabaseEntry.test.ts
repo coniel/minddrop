@@ -113,4 +113,30 @@ describe('updateDatabaseEntry', () => {
 
       updateDatabaseEntry(objectEntry1.id, update);
     }));
+
+  it('drops the metadata of the properties given a different value', async () => {
+    // Give the changed and an unchanged property metadata
+    DatabaseEntriesStore.update(objectEntry1.id, {
+      metadata: {
+        properties: { Content: { page: 3 }, Icon: { crop: 'square' } },
+      },
+    });
+
+    const entry = await updateDatabaseEntry(objectEntry1.id, {
+      properties: {
+        Content: 'Updated content',
+        Icon: objectEntry1.properties.Icon,
+      },
+    });
+
+    // The changed property's metadata is gone, the unchanged one's kept
+    expect(entry.metadata.properties).toEqual({ Icon: { crop: 'square' } });
+
+    const metadata = await readEntryMetadata(
+      databaseDirPath(objectDatabase),
+      entry.path,
+    );
+
+    expect(metadata.properties).toEqual({ Icon: { crop: 'square' } });
+  });
 });

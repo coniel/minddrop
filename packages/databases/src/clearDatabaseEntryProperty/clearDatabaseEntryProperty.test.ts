@@ -4,6 +4,7 @@ import { Events } from '@minddrop/events';
 import { InvalidParameterError } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { onUpdateCollection } from '../event-handlers/collection-updated';
+import { readEntryMetadata } from '../readEntryMetadata';
 import { sqlGetAllEntriesFull, sqlUpsertDatabase } from '../sql';
 import {
   MockFs,
@@ -11,8 +12,10 @@ import {
   cleanupTestSqlDatabase,
   collectionDatabase,
   collectionEntry1,
+  databaseDirPath,
   databaseEntryFilePath,
   mockDate,
+  objectDatabase,
   objectEntry1,
   setup,
   setupTestSqlDatabase,
@@ -129,5 +132,31 @@ describe('clearDatabaseEntryProperty', () => {
     const result = MockFs.readTextFile(databaseEntryFilePath(objectEntry1));
 
     expect(result).not.toContain(propertyName);
+  });
+
+  it("drops the property's metadata", async () => {
+    // Give the cleared and another property metadata
+    DatabaseEntriesStore.update(objectEntry1.id, {
+      metadata: {
+        properties: {
+          [propertyName]: { crop: 'square' },
+          Content: { page: 3 },
+        },
+      },
+    });
+
+    const result = await clearDatabaseEntryProperty(
+      objectEntry1.id,
+      propertyName,
+    );
+
+    expect(result.metadata.properties).toEqual({ Content: { page: 3 } });
+
+    const metadata = await readEntryMetadata(
+      databaseDirPath(objectDatabase),
+      result.path,
+    );
+
+    expect(metadata.properties).toEqual({ Content: { page: 3 } });
   });
 });

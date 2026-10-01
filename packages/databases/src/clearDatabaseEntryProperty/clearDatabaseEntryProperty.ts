@@ -6,8 +6,13 @@ import { DatabaseEntryUpdatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import { DatabaseEntry } from '../types';
-import { virtualCollectionId } from '../utils';
+import {
+  omitEntryPropertyMetadata,
+  resolveDatabasePath,
+  virtualCollectionId,
+} from '../utils';
 import { writeDatabaseEntry } from '../writeDatabaseEntry';
+import { writeEntryMetadata } from '../writeEntryMetadata';
 
 /**
  * Removes a property from a database entry.
@@ -52,12 +57,13 @@ export async function clearDatabaseEntryProperty(
     }
   }
 
-  // Build updated entry with the property removed
+  // Build updated entry with the property and its metadata removed
   const { [propertyName]: _, ...remainingProperties } =
     originalEntry.properties;
   const updatedEntry: DatabaseEntry = {
     ...originalEntry,
     properties: remainingProperties,
+    metadata: omitEntryPropertyMetadata(originalEntry.metadata, [propertyName]),
     lastModified: new Date(),
   };
 
@@ -72,6 +78,16 @@ export async function clearDatabaseEntryProperty(
 
   // Write the updated entry files to the file system
   await writeDatabaseEntry(entryId);
+
+  // Check if the metadata changed. If so, write the entry's metadata
+  // sidecar.
+  if (updatedEntry.metadata !== originalEntry.metadata) {
+    await writeEntryMetadata(
+      resolveDatabasePath(database),
+      updatedEntry.path,
+      updatedEntry.metadata,
+    );
+  }
 
   return updatedEntry;
 }

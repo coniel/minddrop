@@ -78,6 +78,11 @@ export interface DatabaseEntryViewConfig {
   data?: object;
 }
 
+/**
+ * App managed data belonging to one property of an entry.
+ */
+export type EntryPropertyMetadata = Record<string, unknown>;
+
 export interface DatabaseEntryMetadata {
   /**
    * The date the entry was created. Persisted here because file
@@ -101,4 +106,10 @@ export interface DatabaseEntryMetadata {
    * The entry's color, i.e. the value of the meta Color property.
    */
   color?: ContentColor;
+
+  /**
+   * Metadata belonging to individual properties, keyed by property
+   * name.
+   */
+  properties?: Record<string, EntryPropertyMetadata>;
 }

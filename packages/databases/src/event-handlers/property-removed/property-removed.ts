@@ -5,11 +5,13 @@ import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { clearDatabaseEntriesProperty } from '../../clearDatabaseEntriesProperty';
 import { clearDatabaseEntryTemplatesProperty } from '../../clearDatabaseEntryTemplatesProperty';
 import { DatabasePropertyRemovedEventData } from '../../events';
+import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
 import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
 import { recordDatabaseHistory } from '../../recordDatabaseHistory';
 import { sqlReindexDatabaseEntries } from '../../sql';
 import { updateDatabaseDesignsElements } from '../../updateDatabaseDesignsElements';
-import { virtualCollectionId } from '../../utils';
+import { updateEntryMetadata } from '../../updateEntryMetadata';
+import { omitEntryPropertyMetadata, virtualCollectionId } from '../../utils';
 
 /**
  * Called when a property is removed from a database. Clears the
@@ -60,6 +62,18 @@ export async function onRemoveProperty(
   // Unmap the property from the database's design elements
   await updateDatabaseDesignsElements(database.id, (elements) =>
     Designs.unmapElementProperties(elements, property.name),
+  );
+
+  // Drop the property's metadata from the entries which have any
+  await Promise.all(
+    getAllDatabaseEntries(database.id)
+      .filter((entry) => entry.metadata.properties?.[property.name])
+      .map((entry) =>
+        updateEntryMetadata(
+          entry.id,
+          omitEntryPropertyMetadata(entry.metadata, [property.name]),
+        ),
+      ),
   );
 
   // Only handle collection properties for virtual collections

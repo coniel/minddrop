@@ -5,7 +5,11 @@ import { DatabaseEntryUpdatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import { DatabaseEntry } from '../types';
-import { resolveDatabasePath, setTimestampProperties } from '../utils';
+import {
+  omitEntryPropertyMetadata,
+  resolveDatabasePath,
+  setTimestampProperties,
+} from '../utils';
 import { writeDatabaseEntry } from '../writeDatabaseEntry';
 import { writeEntryMetadata } from '../writeEntryMetadata';
 
@@ -65,9 +69,18 @@ export async function updateDatabaseEntry(
     now,
   );
 
-  // Record the timestamp in the entry's metadata too, so that the app's
-  // own record of it does not drift from the property.
-  updatedEntry.metadata = { ...originalEntry.metadata, lastModified: now };
+  // Filter for the properties the update gives a different value
+  const changedProperties = Object.keys(data.properties ?? {}).filter(
+    (name) => updatedEntry.properties[name] !== originalEntry.properties[name],
+  );
+
+  // Record the timestamp in the entry's metadata too, so that it does
+  // not drift from the property. Drop the metadata of the changed
+  // properties, as it described their old values.
+  updatedEntry.metadata = omitEntryPropertyMetadata(
+    { ...originalEntry.metadata, lastModified: now },
+    changedProperties,
+  );
 
   // Update the entry in the store
   DatabaseEntriesStore.update(id, updatedEntry);

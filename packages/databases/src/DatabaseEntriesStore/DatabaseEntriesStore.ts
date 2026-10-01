@@ -1,6 +1,6 @@
 import { shallow } from 'zustand/shallow';
 import { createObjectStore } from '@minddrop/stores';
-import { DatabaseEntry } from './types';
+import { DatabaseEntry, EntryPropertyMetadata } from '../types';
 
 export const DatabaseEntriesStore = createObjectStore<DatabaseEntry>(
   'Databases:Entries',
@@ -16,6 +16,31 @@ export const DatabaseEntriesStore = createObjectStore<DatabaseEntry>(
  */
 export const useDatabaseEntry = (entryId: string): DatabaseEntry | null =>
   DatabaseEntriesStore.useItem(entryId);
+
+// The metadata of a property without any. Shared so that the hook
+// returns a stable value.
+const EmptyPropertyMetadata: EntryPropertyMetadata = {};
+
+/**
+ * Retrieves the metadata of an entry's property. Empty when the
+ * property has none or the entry does not exist. The metadata is
+ * typed as the caller declares it.
+ *
+ * @param entryId - The ID of the entry.
+ * @param property - The name of the property.
+ * @returns The property's metadata.
+ */
+export const useEntryPropertyMetadata = <
+  TMetadata extends EntryPropertyMetadata = EntryPropertyMetadata,
+>(
+  entryId: string,
+  property: string,
+): TMetadata =>
+  DatabaseEntriesStore.useStore(
+    (state) =>
+      (state.items[entryId]?.metadata.properties?.[property] ??
+        EmptyPropertyMetadata) as TMetadata,
+  );
 
 /**
  * Retrieves all entries for a given database, or across all

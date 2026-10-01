@@ -5,6 +5,7 @@ export type { InitializeBackendResult } from './sql';
 export type { SortableEntryProperty } from './utils/resolveSortableEntryProperties';
 export type { DatabaseEntryTemplateSearchResult } from './utils/searchDatabaseEntryTemplates';
 export type { DatabaseEntryCreationOption } from './utils/searchDatabaseEntryCreationOptions';
+export type { EntryPropertyFileOwner } from './utils/findEntryPropertyFileOwner';
 export * as Databases from './Databases';
 export * as CustomContentTypes from './CustomContentTypes';
 export * as DatabaseEntryTemplates from './DatabaseEntryTemplates';

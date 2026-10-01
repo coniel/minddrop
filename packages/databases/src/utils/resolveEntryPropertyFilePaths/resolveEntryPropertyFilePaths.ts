@@ -1,7 +1,4 @@
-import { Properties } from '@minddrop/properties';
-import { getDatabase } from '../../getDatabase';
-import { getDatabaseEntry } from '../../getDatabaseEntry';
-import { resolveEntryPropertyFilePath } from '../resolveEntryPropertyFilePath';
+import { resolveEntryPropertyFiles } from '../resolveEntryPropertyFiles';
 
 /**
  * Returns the paths of the files owned by an entry's file-based
@@ -15,29 +12,8 @@ export function resolveEntryPropertyFilePaths(
   entryId: string,
   workspacePath?: string,
 ): string[] {
-  // Get the entry
-  const entry = getDatabaseEntry(entryId);
-  // Get the entry's database
-  const database = getDatabase(entry.database);
-
-  // Resolve the file path for each file-based property that has a value
-  return database.properties
-    .filter(Properties.isFileBased)
-    .flatMap((property) => {
-      const value = entry.properties[property.name];
-
-      // Skip properties without a file value
-      if (typeof value !== 'string' || value === '') {
-        return [];
-      }
-
-      return [
-        resolveEntryPropertyFilePath(
-          entryId,
-          property.name,
-          value,
-          workspacePath,
-        ),
-      ];
-    });
+  // Resolve the entry's property files and return their paths
+  return resolveEntryPropertyFiles(entryId, { workspacePath }).map(
+    (file) => file.path,
+  );
 }

@@ -13,6 +13,7 @@ import {
   rootStorageEntry1,
   setup,
 } from '../../test-utils';
+import { DatabaseEntry } from '../../types';
 import { resolveEntryPropertyFilePath } from './resolveEntryPropertyFilePath';
 
 describe('resolveEntryPropertyFilePath', () => {
@@ -65,5 +66,19 @@ describe('resolveEntryPropertyFilePath', () => {
     expect(
       resolveEntryPropertyFilePath(rootStorageEntry1.id, 'Image', 'image.png'),
     ).toBe(`${databaseDirPath(rootStorageDatabase)}/image.png`);
+  });
+
+  it('resolves the path of an entry given as an object', () => {
+    // An entry which is not in the store
+    const entry: DatabaseEntry = {
+      ...entryStorageEntry1,
+      id: 'database-entry_not-stored',
+      title: 'Elsewhere',
+    };
+    const fileName = 'image.png';
+
+    expect(resolveEntryPropertyFilePath(entry, 'Image', fileName)).toBe(
+      `${databaseDirPath(entryStorageDatabase)}/${entry.title}/${fileName}`,
+    );
   });
 });
