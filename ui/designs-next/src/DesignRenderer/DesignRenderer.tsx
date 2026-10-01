@@ -57,12 +57,20 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
   // Compile the design once per design
   const tree = useMemo(() => Designs.resolveLayoutTree(design), [design]);
 
+  // Check if the design has a mapped markdown editor. It has one when
+  // an element maps to a content property and the render accepts
+  // changes.
+  const hasMappedMarkdownEditor =
+    onValueChange !== undefined &&
+    Designs.hasMappedPropertyType(design.elements, properties ?? [], 'content');
+
   return (
     <DesignPropertiesProvider
       properties={properties}
       values={values}
       onValueChange={onValueChange}
       validateValue={validateValue}
+      hasMappedMarkdownEditor={hasMappedMarkdownEditor}
     >
       <div className="design-renderer" style={resolveDesignStyle(design)}>
         <LayoutBoxRenderer box={tree} design={design} axis={null} />

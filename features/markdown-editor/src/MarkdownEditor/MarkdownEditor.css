@@ -1,0 +1,6 @@
+/* The wrapper takes no box of its own, so the editor lays out as if
+   it were rendered directly. It exists to receive the editor's focus
+   events. */
+.markdown-editor {
+  display: contents;
+}

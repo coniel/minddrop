@@ -1,0 +1,27 @@
+{
+  "pdf": {
+    "toolbar": {
+      "previousPage": "Previous page",
+      "nextPage": "Next page",
+      "pageOf": "{{page}} of {{count}}",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out"
+    },
+    "zoom": {
+      "fitWidth": "Fit width",
+      "fitPage": "Fit page"
+    },
+    "error": "This PDF could not be opened.",
+    "annotations": {
+      "delete": "Delete highlight"
+    },
+    "element": {
+      "label": "PDF",
+      "expand": "Expand PDF",
+      "collapse": "Collapse PDF"
+    },
+    "sendToNote": {
+      "label": "Send to note"
+    }
+  }
+}

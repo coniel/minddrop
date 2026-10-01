@@ -4,6 +4,7 @@ import {
 } from '@minddrop/designs-next';
 import { useElementProperty } from '../useElementProperty';
 import { useElementValue } from '../useElementValue';
+import { useHasMappedMarkdownEditor } from '../useHasMappedMarkdownEditor';
 
 /**
  * Renders the text of the property the element maps to.
@@ -33,6 +34,16 @@ const EditElement: DesignElementComponent = ({ element }) => {
   );
 };
 
+/**
+ * Renders whether the design has a mapped markdown editor. 'markdown
+ * editor' when it has one, 'no markdown editor' otherwise.
+ */
+const MarkdownEditorProbeElement: DesignElementComponent = () => (
+  <div>
+    {useHasMappedMarkdownEditor() ? 'markdown editor' : 'no markdown editor'}
+  </div>
+);
+
 // An element type rendering the value of the property it maps to.
 // Stands in for the content elements.
 export const elementConfig_value: DesignElementConfig = {
@@ -51,4 +62,12 @@ export const elementConfig_edit: DesignElementConfig = {
   ...elementConfig_value,
   type: 'edit',
   component: EditElement,
+};
+
+// An element type rendering whether the design has a mapped markdown
+// editor. Stands in for the elements which act on that editor.
+export const elementConfig_markdownEditorProbe: DesignElementConfig = {
+  ...elementConfig_value,
+  type: 'markdown-editor-probe',
+  component: MarkdownEditorProbeElement,
 };

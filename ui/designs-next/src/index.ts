@@ -11,5 +11,6 @@ export * from './IconContentControls';
 export * from './TextContentControls';
 export * from './useElementProperty';
 export * from './useElementValue';
+export * from './useHasMappedMarkdownEditor';
 export * from './utils/resolveElementColor';
 export * from './utils/resolveElementStyle';

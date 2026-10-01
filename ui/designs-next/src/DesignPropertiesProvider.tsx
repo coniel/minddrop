@@ -18,7 +18,14 @@ export interface DesignPropertiesProviderProps
  */
 export const DesignPropertiesProvider: React.FC<
   DesignPropertiesProviderProps
-> = ({ properties, values, onValueChange, validateValue, children }) => {
+> = ({
+  properties,
+  values,
+  onValueChange,
+  validateValue,
+  hasMappedMarkdownEditor,
+  children,
+}) => {
   // Build the context value
   const value = useMemo(
     () => ({
@@ -26,8 +33,9 @@ export const DesignPropertiesProvider: React.FC<
       values: values ?? {},
       onValueChange,
       validateValue,
+      hasMappedMarkdownEditor,
     }),
-    [properties, values, onValueChange, validateValue],
+    [properties, values, onValueChange, validateValue, hasMappedMarkdownEditor],
   );
 
   return (

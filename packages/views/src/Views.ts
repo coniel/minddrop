@@ -73,3 +73,4 @@ export {
   useViewSession as useSession,
 } from './ViewSessionContext';
 export { SubviewProvider, useSubview, useSetSubview } from './SubviewContext';
+export { resolveViewPaneKey as resolvePaneKey } from './utils';

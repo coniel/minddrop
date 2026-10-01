@@ -109,6 +109,7 @@ export {
   applyElementDrag,
   applyElementSettings,
   floorToMultiple,
+  hasMappedPropertyType,
   hasNeighbourOnSide,
   isContentWidth,
   remapElementProperties,

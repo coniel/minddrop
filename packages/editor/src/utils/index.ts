@@ -24,6 +24,7 @@ export * from './opensInnermostFrame';
 export * from './resolveLinkAtCursor';
 export * from './resolveMenuItemAncestry';
 export * from './resolveAncestryChanges';
+export * from './resolveBlockInsertionPath';
 export * from './resolveBlockFrames';
 export * from './resolveClosedBlockRange';
 export * from './resolveDroppedAncestry';

@@ -3,6 +3,7 @@ export * from './applyElementSettings';
 export * from './columnsOverlap';
 export * from './cutRegion';
 export * from './floorToMultiple';
+export * from './hasMappedPropertyType';
 export * from './hasNeighbourOnSide';
 export * from './isContentWidth';
 export * from './isSameRegion';

@@ -36,9 +36,35 @@ const {
   titleDesignElement,
 } = DesignElementFixtures;
 
-const { elementConfig_value, elementConfig_edit } = StandInElementFixtures;
+const {
+  elementConfig_value,
+  elementConfig_edit,
+  elementConfig_markdownEditorProbe,
+} = StandInElementFixtures;
 
 const titleProperties: PropertiesSchema = [{ type: 'title', name: 'Title' }];
+
+const contentProperties: PropertiesSchema = [
+  ...titleProperties,
+  { type: 'content', name: 'Content' },
+];
+
+// A design with a markdown editor probe beside an element mapped to the
+// Content property.
+const markdownEditorDesign: Design = {
+  ...design_stacked,
+  elements: [
+    {
+      ...designElement_stackedFooter,
+      type: elementConfig_markdownEditorProbe.type,
+    },
+    {
+      ...designElement_heading,
+      type: elementConfig_value.type,
+      property: 'Content',
+    },
+  ],
+};
 
 // A design whose only element writes 'Edited' to the Title property
 const editDesign: Design = {
@@ -140,6 +166,62 @@ describe('DesignRenderer', () => {
     );
 
     expect(screen.getByText('Title rejects Edited')).toBeInTheDocument();
+  });
+
+  it('offers its elements a mapped markdown editor when an element maps to a content property and the render accepts changes', () => {
+    DesignElementConfigs.register(elementConfig_value);
+    DesignElementConfigs.register(elementConfig_markdownEditorProbe);
+
+    render(
+      <DesignRenderer
+        design={markdownEditorDesign}
+        properties={contentProperties}
+        values={{}}
+        onValueChange={() => {}}
+      />,
+    );
+
+    expect(screen.getByText('markdown editor')).toBeInTheDocument();
+  });
+
+  it('offers no mapped markdown editor while the render is read only', () => {
+    DesignElementConfigs.register(elementConfig_value);
+    DesignElementConfigs.register(elementConfig_markdownEditorProbe);
+
+    render(
+      <DesignRenderer
+        design={markdownEditorDesign}
+        properties={contentProperties}
+        values={{}}
+      />,
+    );
+
+    expect(screen.getByText('no markdown editor')).toBeInTheDocument();
+  });
+
+  it('offers no mapped markdown editor while no element maps to a content property', () => {
+    DesignElementConfigs.register(elementConfig_value);
+    DesignElementConfigs.register(elementConfig_markdownEditorProbe);
+
+    // Map the design's content element to the Title property
+    const design: Design = {
+      ...markdownEditorDesign,
+      elements: [
+        markdownEditorDesign.elements[0],
+        { ...markdownEditorDesign.elements[1], property: 'Title' },
+      ],
+    };
+
+    render(
+      <DesignRenderer
+        design={design}
+        properties={contentProperties}
+        values={{}}
+        onValueChange={() => {}}
+      />,
+    );
+
+    expect(screen.getByText('no markdown editor')).toBeInTheDocument();
   });
 
   it('renders a wrapper per element', () => {

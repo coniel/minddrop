@@ -28,6 +28,12 @@ export interface DesignPropertiesContextValue {
    * Returns a translated error message when it is invalid.
    */
   validateValue?: (name: string, value: PropertyValue) => string | undefined;
+
+  /**
+   * Whether the design has a markdown editor mapped to a property,
+   * accepting changes.
+   */
+  hasMappedMarkdownEditor?: boolean;
 }
 
 /**

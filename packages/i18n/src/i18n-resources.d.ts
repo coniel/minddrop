@@ -2717,6 +2717,31 @@ declare module 'i18next' {
             unknown: string;
           };
         };
+        pdf: {
+          toolbar: {
+            previousPage: string;
+            nextPage: string;
+            pageOf: string;
+            zoomIn: string;
+            zoomOut: string;
+          };
+          zoom: {
+            fitWidth: string;
+            fitPage: string;
+          };
+          error: string;
+          annotations: {
+            delete: string;
+          };
+          element: {
+            label: string;
+            expand: string;
+            collapse: string;
+          };
+          sendToNote: {
+            label: string;
+          };
+        };
         designsStudio: {
           open: string;
           title: string;
