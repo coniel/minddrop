@@ -88,28 +88,10 @@ export interface Database {
   defaultProperties?: Partial<Record<PropertyType, string>>;
 
   /**
-   * The ID of the design this database uses. When null, no design is
-   * resolved and the renderer uses an inline fallback.
-   */
-  designId: string | null;
-
-  /**
-   * A [design property name]: [database property name] map. Resolves
-   * design-level property bindings to this database's own properties.
-   */
-  designPropertyMap: Record<string, string>;
-
-  /**
    * The name of the select property entries are colored by. When
    * null or unset, entries are colored by the meta Color property.
    */
   colorProperty?: string | null;
-
-  /**
-   * A [layout context]: [layout ID] map of the default layout to use when
-   * rendering entries in each display context.
-   */
-  defaultLayouts: Record<string, string>;
 
   /**
    * How entries are opened when clicked.

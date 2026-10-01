@@ -61,20 +61,10 @@ export async function renameDatabaseProperty(
     );
   }
 
-  // Point any design property mapped onto the renamed property at
-  // its new name.
-  const designPropertyMap = Object.fromEntries(
-    Object.entries(original.designPropertyMap).map(([designProperty, name]) => [
-      designProperty,
-      name === oldName ? newName : name,
-    ]),
-  );
-
   // Rename the property in the database config
   const updated = {
     ...original,
     properties: Properties.rename(original.properties, oldName, newName),
-    designPropertyMap,
     lastModified: new Date(),
   };
 

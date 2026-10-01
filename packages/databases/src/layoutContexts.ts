@@ -1,10 +1,8 @@
-import { LayoutType } from '@minddrop/designs';
+import { DesignType } from '@minddrop/designs-next';
 
 /**
  * A context in which a database entry (or list of entries) is displayed.
- * Each context maps onto a base layout type, letting a database pin a
- * different default layout per context while only authoring card, list,
- * and page layouts.
+ * Each context maps onto a base design type.
  */
 export type LayoutContext =
   | 'card'
@@ -17,10 +15,9 @@ export type LayoutContext =
   | 'new-entry';
 
 /**
- * Maps each layout context to the base layout type its layouts are
- * drawn from.
+ * Maps each layout context to its base design type.
  */
-export const layoutContextBaseType: Record<LayoutContext, LayoutType> = {
+export const layoutContextBaseType: Record<LayoutContext, DesignType> = {
   card: 'card',
   'preview-card': 'card',
   list: 'list',

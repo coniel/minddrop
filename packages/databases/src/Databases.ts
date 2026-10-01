@@ -161,16 +161,9 @@ export {
   filterValidDatabaseFiles as filterFiles,
   filterDatabasesByContentType as filterByContentType,
   withImplicitMetadataProperties,
-  resolveDesignPropertyMap,
 } from './utils';
 export { readWorkspaceDatabases } from './readWorkspaceDatabases';
-export { getDefaultDatabaseLayout as getDefaultLayout } from './getDefaultDatabaseLayout';
-export { getDatabaseDesignPropertyMap as getDesignPropertyMap } from './getDatabaseDesignPropertyMap';
-export { setDatabaseDesignPropertyMap as setDesignPropertyMap } from './setDatabaseDesignPropertyMap';
-export { clearDatabaseDesignPropertyMap as clearDesignPropertyMap } from './clearDatabaseDesignPropertyMap';
-export { setDatabaseDesign as setDesign } from './setDatabaseDesign';
 export { setDatabaseColorProperty as setColorProperty } from './setDatabaseColorProperty';
-export { setDatabaseDefaultLayout as setDefaultLayout } from './setDatabaseDefaultLayout';
 export { useDefaultDatabaseDesign as useDefaultDesign } from './useDefaultDatabaseDesign';
 export { resolveDatabaseDesign as resolveDesign } from './utils';
 export { useDatabaseDesigns as useDesigns } from './useDatabaseDesigns';

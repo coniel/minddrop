@@ -1,4 +1,3 @@
-import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { Fs, MockFileDescriptor } from '@minddrop/file-system';
 import { Properties, SelectPropertySchema } from '@minddrop/properties';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
@@ -13,7 +12,6 @@ import {
 import { fetchWebpageMetadataAutomation } from './database-automations.fixtures';
 
 const { workspace_1 } = WorkspaceFixtures;
-const { layout_card_2, layout_card_3, design_cards } = DesignFixtures;
 
 export const parentDir = workspace_1.path;
 export const genericFilePropertyName = 'File';
@@ -33,9 +31,6 @@ export const pdfPropertyName = 'Paper';
 export const validImagePropertyFile = new File([], 'valid-image.png');
 export const validPdfPropertyFile = new File([], 'paper.pdf');
 export const invalidImagePropertyFile = new File([], 'note.txt');
-// objectDatabase uses design_cards (layouts: [layout_card_2, layout_card_3])
-export const defaultCardLayout = layout_card_3;
-export const firstCardLayout = layout_card_2;
 
 function generateDatabase(
   data: Pick<Database, 'id' | 'name' | 'entryName'> & Partial<Database>,
@@ -48,10 +43,7 @@ function generateDatabase(
     propertyFileStorage: 'property',
     created: new Date('2024-01-01T00:00:00.000Z'),
     lastModified: new Date('2024-01-01T00:00:00.000Z'),
-    designId: design_cards.id,
-    designPropertyMap: {},
     colorProperty: null,
-    defaultLayouts: { card: layout_card_3.id },
     views: [],
     designs: [],
     entryTemplates: [],

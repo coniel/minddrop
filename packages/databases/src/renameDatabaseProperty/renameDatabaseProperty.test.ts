@@ -66,21 +66,6 @@ describe('renameDatabaseProperty', () => {
     ).toEqual(['Title', 'Links', 'References']);
   });
 
-  it('points design property mappings at the new name', async () => {
-    // Map a design property onto the property being renamed
-    DatabasesStore.update(objectDatabase.id, {
-      designPropertyMap: { Heading: 'Content', Cover: 'Icon' },
-    });
-
-    await renameDatabaseProperty(objectDatabase.id, 'Content', 'Body');
-
-    // The mapping onto the renamed property should follow it, the
-    // others left alone.
-    expect(
-      storeItem(DatabasesStore, objectDatabase.id).designPropertyMap,
-    ).toEqual({ Heading: 'Body', Cover: 'Icon' });
-  });
-
   it('follows the rename when the property colors the entries', async () => {
     // Color the entries by the property being renamed
     DatabasesStore.update(objectDatabase.id, { colorProperty: 'Content' });

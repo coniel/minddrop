@@ -6,11 +6,7 @@ import {
   cleanupContentViewFixtures,
   setupContentViewFixtures,
 } from '@minddrop/content-views/test-utils';
-import { Designs as DesignsNext } from '@minddrop/designs-next';
-import {
-  cleanupDesignFixtures,
-  setupDesignFixtures,
-} from '@minddrop/designs/test-utils';
+import { Designs } from '@minddrop/designs-next';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
@@ -60,7 +56,6 @@ export function setup(options?: SetupDatabaseFixturesOptions) {
   });
   // Setup external fixtures
   setupContentViewFixtures(MockFs);
-  setupDesignFixtures(MockFs);
 
   // Register the item reference adapters registered at runtime
   // by initializeDatabases.
@@ -98,10 +93,9 @@ export async function cleanup(): Promise<void> {
   // Clear database fixtures
   cleanupDatabaseFixtures();
   // Clear external fixtures
-  cleanupDesignFixtures();
   cleanupContentViewFixtures();
   cleanupWorkspaceFixtures();
-  DesignsNext.Store.clear();
+  Designs.Store.clear();
 
   // Clear stores
   DatabasesStore.clear();

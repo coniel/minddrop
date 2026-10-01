@@ -50,10 +50,7 @@ export async function createDatabase(
   const databaseConfig: Database = {
     ...getDatabaseDefaults(),
     properties: [],
-    designId: null,
-    designPropertyMap: {},
     colorProperty: null,
-    defaultLayouts: {},
     views: [],
     designs: [],
     entryTemplates: [],
