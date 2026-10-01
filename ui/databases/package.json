@@ -24,7 +24,6 @@
   "dependencies": {
     "@minddrop/collections": "workspace:*",
     "@minddrop/databases": "workspace:*",
-    "@minddrop/designs": "workspace:*",
     "@minddrop/designs-next": "workspace:*",
     "@minddrop/drag-and-drop": "workspace:*",
     "@minddrop/events": "workspace:*",
