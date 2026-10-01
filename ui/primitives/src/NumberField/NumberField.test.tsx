@@ -52,4 +52,11 @@ describe('<NumberField />', () => {
 
     expect(screen.queryByText('Must be positive')).not.toBeInTheDocument();
   });
+
+  it('keeps a hidden label on the input for assistive technology', () => {
+    render(<NumberField stringLabel="Count" hideLabel />);
+
+    // The hiding itself is CSS the test environment cannot see
+    expect(screen.getByLabelText('Count')).toBeInTheDocument();
+  });
 });

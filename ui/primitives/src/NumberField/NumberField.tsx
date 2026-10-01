@@ -60,6 +60,11 @@ export interface NumberFieldProps
    */
   labelSize?: TextSize;
 
+  /**
+   * Hides the label. Assistive technology still reads it.
+   */
+  hideLabel?: boolean;
+
   /*
    * Error message. Also sets the field to invalid state.
    * Can be an i18n key.
@@ -91,6 +96,7 @@ export const NumberField = React.forwardRef<HTMLDivElement, NumberFieldProps>(
       label,
       stringLabel,
       labelSize,
+      hideLabel,
       value,
       defaultValue,
       onValueChange,
@@ -144,6 +150,7 @@ export const NumberField = React.forwardRef<HTMLDivElement, NumberFieldProps>(
             size={labelSize}
             label={label}
             stringLabel={stringLabel}
+            hidden={hideLabel}
           />
         )}
 

@@ -1,40 +1,46 @@
 import { Field } from '@base-ui/react/field';
 import React from 'react';
 import { TranslationKey } from '@minddrop/i18n';
-import { TextColor, TextSize } from '../Text';
-import { propsToClass } from '../utils';
-import { InputLabel } from './InputLabel';
+import { TextColor, TextSize } from '../../Text';
+import { propsToClass } from '../../utils';
+import { InputLabel } from '../InputLabel';
+import './FieldLabel.css';
 
 export interface FieldLabelProps extends Field.Label.Props {
-  /*
+  /**
    * i18n key for the label text. Falls back to children if not provided.
    */
   label?: TranslationKey;
 
-  /*
+  /**
    * Plain string label rendered as-is without i18n translation.
    * Takes priority over `label`.
    */
   stringLabel?: string;
 
-  /*
+  /**
    * Label content. Used when no i18n key is provided.
    */
   children?: React.ReactNode;
 
-  /*
+  /**
    * Size of the label text.
    * @default 'sm'
    */
   size?: TextSize;
 
-  /*
+  /**
    * Color of the label text.
    * @default 'muted'
    */
   color?: TextColor;
 
-  /*
+  /**
+   * Hides the label. Assistive technology still reads it.
+   */
+  hidden?: boolean;
+
+  /**
    * Class name applied to the root element.
    */
   className?: string;
@@ -47,11 +53,12 @@ export const FieldLabel: React.FC<FieldLabelProps> = ({
   className,
   size = 'sm',
   color = 'muted',
+  hidden = false,
   ...other
 }) => {
   return (
     <Field.Label
-      className={propsToClass('field-label', { className })}
+      className={propsToClass('field-label', { hidden, className })}
       {...other}
     >
       <InputLabel
