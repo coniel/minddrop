@@ -30,7 +30,7 @@ import {
  * @param data - The renamed entry's data.
  */
 export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
-  const { original, updated } = data;
+  const { original, updated, action } = data;
 
   // Get the database to access its properties schema
   const database = getDatabase(updated.database);
@@ -49,6 +49,7 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
     target: 'self',
     from: original.title,
     to: updated.title,
+    action,
   });
 
   // Resolve the entry's history subject
@@ -74,6 +75,7 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
       kind: 'rename',
       subject: { key: original.title },
       to: updated.title,
+      action,
     });
   }
 
@@ -120,5 +122,6 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
         newReference: databaseEntryAddress(updated, database),
       },
     ],
+    action,
   });
 }

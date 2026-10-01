@@ -17,6 +17,7 @@ import {
   databaseDirPath,
   databaseEntryFilePath,
   databases,
+  historyAction_entryRenamed,
   objectDatabase,
   objectEntry1,
   relatedEntry1,
@@ -36,6 +37,9 @@ import { onItemAddressesChanged } from '../item-addresses-changed';
 import { onRenameEntry } from './entry-renamed';
 
 const { layout_card_2 } = DesignFixtures;
+
+// The action performing the rename
+const action = historyAction_entryRenamed;
 
 // The renamed version of collectionEntry1: same ID, new title and path
 const renamedEntry = {
@@ -111,6 +115,7 @@ describe('onRenameEntry', () => {
     await onRenameEntry({
       original: collectionEntry1,
       updated: renamedEntry,
+      action,
     });
 
     // The record carries the new title
@@ -127,6 +132,7 @@ describe('onRenameEntry', () => {
     await onRenameEntry({
       original: objectEntry1,
       updated: { ...objectEntry1, title: 'Renamed' },
+      action,
     });
 
     // Virtual collection names should be unchanged
@@ -161,6 +167,7 @@ describe('onRenameEntry', () => {
     await onRenameEntry({
       original: collectionEntry1,
       updated: renamedEntry,
+      action,
     });
 
     // The sidecar should have followed the entry
@@ -181,6 +188,7 @@ describe('onRenameEntry', () => {
     await onRenameEntry({
       original: objectEntry1,
       updated: renamedObjectEntry,
+      action,
     });
 
     // The SQL record should carry the new title under the same ID
@@ -200,6 +208,7 @@ describe('onRenameEntry', () => {
     await onRenameEntry({
       original: collectionEntry1,
       updated: renamedEntry,
+      action,
     });
 
     // Look up the virtual collections
@@ -250,6 +259,7 @@ describe('onRenameEntry', () => {
     await onRenameEntry({
       original: collectionEntry1,
       updated: renamedEntry,
+      action,
     });
 
     // The view should still exist unchanged
@@ -275,6 +285,7 @@ describe('onRenameEntry', () => {
     await onRenameEntry({
       original: relatedEntry1,
       updated: renamedRelated,
+      action,
     });
 
     // The rewrite lands as an unawaited event side effect, so
@@ -291,6 +302,7 @@ describe('onRenameEntry', () => {
     await onRenameEntry({
       original: objectEntry1,
       updated: { ...objectEntry1, title: 'Renamed' },
+      action,
     });
 
     // Should complete without error, collections should be untouched
@@ -310,10 +322,11 @@ describe('onRenameEntry', () => {
     await onRenameEntry({
       original: objectEntry1,
       updated: { ...objectEntry1, title: 'Renamed' },
+      action,
     });
 
-    // The history should have followed the entry to its new title,
-    // with the rename recorded in it.
+    // The history should have followed the entry to its new title.
+    // The rename should be recorded in it with the event's action.
     expect(
       await History.read(
         resolveDatabaseEntryHistorySubject(objectDatabase, {
@@ -328,6 +341,7 @@ describe('onRenameEntry', () => {
         target: 'self',
         from: objectEntry1.title,
         to: 'Renamed',
+        action,
       }),
     ]);
   });
@@ -337,9 +351,11 @@ describe('onRenameEntry', () => {
     await onRenameEntry({
       original: objectEntry1,
       updated: { ...objectEntry1, title: 'Renamed' },
+      action,
     });
 
-    // The ledger should record the rename under the old title
+    // The ledger should record the rename under the old title, with
+    // the event's action.
     expect(
       await Ledgers.read(resolveDatabaseEntryLedger(objectDatabase)),
     ).toEqual([
@@ -347,6 +363,7 @@ describe('onRenameEntry', () => {
         kind: 'rename',
         subject: { key: objectEntry1.title },
         to: 'Renamed',
+        action,
       }),
     ]);
   });
@@ -359,6 +376,7 @@ describe('onRenameEntry', () => {
     await onRenameEntry({
       original: untitled,
       updated: { ...untitled, title: 'Named' },
+      action,
     });
 
     // Nothing references an entry by the title the app handed out, so
@@ -366,5 +384,86 @@ describe('onRenameEntry', () => {
     expect(
       await Ledgers.read(resolveDatabaseEntryLedger(objectDatabase)),
     ).toEqual([]);
+  });
+
+  it("puts the rename's action on the address change it dispatches", async () =>
+    new Promise<void>((done) => {
+      // Listen for the address change. The 'test' listener ID is taken
+      // by the rewrite listener registered in setup.
+      Events.addListener(
+        ItemReferences.events.AddressesChanged,
+        'test-capture',
+        (data) => {
+          // The address change should have the rename's action
+          expect(data.action).toEqual(action);
+          done();
+        },
+      );
+
+      onRenameEntry({
+        original: objectEntry1,
+        updated: { ...objectEntry1, title: 'Renamed' },
+        action,
+      });
+    }));
+
+  it("records the entry's own rename, the ledger rename and the reference renames under one action", async () => {
+    // The renamed version of relatedEntry1. collectionEntry1 references
+    // it.
+    const renamedRelated = {
+      ...relatedEntry1,
+      title: 'Renamed Related',
+      path: 'Renamed Related.md',
+    };
+
+    // Update the store to reflect the rename, so the reference rewrite
+    // sees the new title.
+    DatabaseEntriesStore.update(relatedEntry1.id, {
+      title: renamedRelated.title,
+      path: renamedRelated.path,
+    });
+
+    await onRenameEntry({
+      original: relatedEntry1,
+      updated: renamedRelated,
+      action,
+    });
+
+    // Wait for the reference record before reading the three records
+    // together. An unawaited event side effect writes it.
+    await vi.waitFor(async () => {
+      expect(
+        await History.read(
+          resolveDatabaseEntryHistorySubject(
+            collectionDatabase,
+            collectionEntry1,
+          ),
+        ),
+      ).toHaveLength(1);
+    });
+
+    // Read the three records
+    const records = await Promise.all([
+      // The entry's own history
+      History.read(
+        resolveDatabaseEntryHistorySubject(collectionDatabase, renamedRelated),
+      ),
+      // The entries ledger
+      Ledgers.read(resolveDatabaseEntryLedger(collectionDatabase)),
+      // The referencing entry's history
+      History.read(
+        resolveDatabaseEntryHistorySubject(
+          collectionDatabase,
+          collectionEntry1,
+        ),
+      ),
+    ]);
+
+    // All three records should have the same action
+    expect(records.flat().map((record) => record.action)).toEqual([
+      action,
+      action,
+      action,
+    ]);
   });
 });

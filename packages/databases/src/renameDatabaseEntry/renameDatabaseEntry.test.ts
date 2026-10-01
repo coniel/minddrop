@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
+import { DatabaseHistoryCauses } from '../constants';
 import { DatabaseEntryRenamedEvent } from '../events';
 import {
   MockFs,
@@ -111,7 +112,8 @@ describe('renameDatabaseEntry', () => {
   it('dispatches an entry rename event', async () =>
     new Promise<void>((done) => {
       Events.addListener(DatabaseEntryRenamedEvent, 'test', (payload) => {
-        // Payload data should contain the original and updated entry
+        // Payload data should contain the original and updated entry,
+        // and the action performing the rename.
         expect(payload).toEqual({
           original: objectEntry1,
           updated: {
@@ -119,6 +121,10 @@ describe('renameDatabaseEntry', () => {
             title: 'Renamed DatabaseEntry',
             path: 'Renamed DatabaseEntry.md',
             lastModified: expect.any(Date),
+          },
+          action: {
+            id: expect.stringMatching(/^action_/),
+            cause: DatabaseHistoryCauses.EntryRenamed,
           },
         });
         done();

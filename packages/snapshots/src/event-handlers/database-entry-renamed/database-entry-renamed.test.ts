@@ -6,7 +6,8 @@ import { cleanup, setup } from '../../test-utils';
 import { readRenameEvents } from '../../utils';
 import { onDatabaseEntryRenamed } from './database-entry-renamed';
 
-const { objectDatabase, objectEntry1 } = DatabaseFixtures;
+const { objectDatabase, objectEntry1, historyAction_entryRenamed } =
+  DatabaseFixtures;
 
 describe('onDatabaseEntryRenamed', () => {
   beforeEach(() => {
@@ -25,6 +26,7 @@ describe('onDatabaseEntryRenamed', () => {
     await onDatabaseEntryRenamed({
       original: objectEntry1,
       updated: { ...objectEntry1, title: 'Renamed' },
+      action: historyAction_entryRenamed,
     });
 
     // The ledger should contain an entry rename event recording the
@@ -42,6 +44,7 @@ describe('onDatabaseEntryRenamed', () => {
     await onDatabaseEntryRenamed({
       original: { ...objectEntry1, title: 'Untitled' },
       updated: { ...objectEntry1, title: 'Renamed' },
+      action: historyAction_entryRenamed,
     });
 
     // The rename should not appear in the ledger
@@ -60,6 +63,7 @@ describe('onDatabaseEntryRenamed', () => {
     await onDatabaseEntryRenamed({
       original: { ...objectEntry1, title: 'Untitled' },
       updated: { ...objectEntry1, title: 'Renamed' },
+      action: historyAction_entryRenamed,
     });
 
     // The rename should continue the recorded chain

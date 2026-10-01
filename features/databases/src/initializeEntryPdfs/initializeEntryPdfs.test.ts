@@ -21,6 +21,7 @@ const {
   databaseEntry_pdf_1,
   databaseEntry_pdf_2,
   databaseEntry_pdf_1PropertyFilePath,
+  historyAction_entryRenamed,
   pdfPropertyName,
   validPdfPropertyFile,
 } = DatabaseFixtures;
@@ -245,7 +246,11 @@ describe('initializeEntryPdfs', () => {
 
     PdfAnnotations.load(fromPath, pdfAnnotations);
 
-    Events.dispatch(DatabaseEntries.events.Renamed, { original, updated });
+    Events.dispatch(DatabaseEntries.events.Renamed, {
+      original,
+      updated,
+      action: historyAction_entryRenamed,
+    });
 
     await waitFor(() => {
       expect(PdfAnnotations.Store).toHaveItem(toPath, {

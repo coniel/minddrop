@@ -1,7 +1,9 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
+import { History } from '@minddrop/history';
 import { titleFromPath } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
+import { DatabaseHistoryCauses } from '../constants';
 import { DatabaseEntryRenamedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
@@ -102,6 +104,7 @@ export async function renameDatabaseEntry<
   Events.dispatch(DatabaseEntryRenamedEvent, {
     original: entry,
     updated: renamedDatabaseEntry,
+    action: History.createAction(DatabaseHistoryCauses.EntryRenamed),
   });
 
   // Write the updated entry file

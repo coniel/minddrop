@@ -228,6 +228,11 @@ export type DatabaseEntryDeletedEventData = DatabaseEntry;
 export interface DatabaseEntryRenamedEventData {
   original: DatabaseEntry;
   updated: DatabaseEntry;
+
+  /**
+   * The action performing the rename.
+   */
+  action: HistoryAction;
 }
 
 // Entry written event - fired after an entry file is written, and not

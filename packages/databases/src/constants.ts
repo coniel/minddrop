@@ -67,13 +67,13 @@ export const EntryLedgerType = 'entries';
 export const DatabaseLedgerType = 'databases';
 
 /**
- * The causes of the actions recorded against a database's history,
- * its entries' histories and the workspace's databases ledger.
- * Persisted in the history and ledger files.
+ * The causes of the actions recorded in a database's histories and
+ * ledgers. Persisted in the history and ledger files.
  */
 export const DatabaseHistoryCauses = {
   DatabaseRenamed: 'databases:database-renamed',
   DatabaseDeleted: 'databases:database-deleted',
+  EntryRenamed: 'databases:entry-renamed',
   PropertyAdded: 'databases:property-added',
   PropertyUpdated: 'databases:property-updated',
   PropertyRenamed: 'databases:property-renamed',

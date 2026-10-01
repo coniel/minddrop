@@ -11,6 +11,7 @@ const {
   objectDatabase,
   objectEntry1,
   historyAction_databaseRenamed,
+  historyAction_entryRenamed,
   historyAction_propertyRenamed,
 } = DatabaseFixtures;
 
@@ -53,6 +54,7 @@ describe('initializeSnapshots', () => {
     Events.dispatch(DatabaseEntries.events.Renamed, {
       original: objectEntry1,
       updated: { ...objectEntry1, title: 'Renamed' },
+      action: historyAction_entryRenamed,
     });
 
     // The record lands as an unawaited event side effect

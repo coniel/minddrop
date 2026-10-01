@@ -11,6 +11,11 @@ export const historyAction_databaseDeleted: HistoryAction = {
   cause: DatabaseHistoryCauses.DatabaseDeleted,
 };
 
+export const historyAction_entryRenamed: HistoryAction = {
+  id: 'action_entryRenamed',
+  cause: DatabaseHistoryCauses.EntryRenamed,
+};
+
 export const historyAction_propertyAdded: HistoryAction = {
   id: 'action_propertyAdded',
   cause: DatabaseHistoryCauses.PropertyAdded,
@@ -39,6 +44,7 @@ export const historyAction_propertyRemoved: HistoryAction = {
 export const historyActions = [
   historyAction_databaseRenamed,
   historyAction_databaseDeleted,
+  historyAction_entryRenamed,
   historyAction_propertyAdded,
   historyAction_propertyUpdated,
   historyAction_propertyRenamed,
