@@ -9,6 +9,7 @@ import {
 import { DatabaseEntryDeletedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
 import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
+import { recordDatabaseEntryLedger } from '../../recordDatabaseEntryLedger';
 import { removeEntriesFromCollections } from '../../removeEntriesFromCollections';
 import { sqlDeleteEntries } from '../../sql';
 import {
@@ -18,10 +19,9 @@ import {
 } from '../../utils';
 
 /**
- * Called when a database entry is deleted. Removes from SQL,
- * deletes virtual collections for collection properties, removes
- * the entry from collections referencing it, and closes or deletes
- * its history.
+ * Called when a database entry is deleted. Cleans up after it.
+ *
+ * @param data - The deleted entry's data.
  */
 export async function onDeleteEntry(data: DatabaseEntryDeletedEventData) {
   // Delete from SQL
@@ -60,6 +60,12 @@ export async function onDeleteEntry(data: DatabaseEntryDeletedEventData) {
   // Drop the entry's recorded capture, so an entry taking its title
   // next is not measured against it.
   clearContentCapture(contentCaptureKey(databasePath, data.title));
+
+  // Record the deletion in the entries ledger
+  await recordDatabaseEntryLedger(database, {
+    kind: 'deleted',
+    subject: { key: data.title },
+  });
 
   // Check whether the entry was still untitled. Deleting it frees a
   // title the app hands out, so the next new entry would inherit its

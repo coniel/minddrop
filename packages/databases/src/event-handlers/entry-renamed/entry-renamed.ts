@@ -2,6 +2,7 @@ import { Collections } from '@minddrop/collections';
 import { Events } from '@minddrop/events';
 import { History } from '@minddrop/history';
 import { ItemReferences } from '@minddrop/item-references';
+import { isUntitledTitle } from '@minddrop/utils';
 import { Workspaces } from '@minddrop/workspaces';
 import {
   contentCaptureKey,
@@ -11,6 +12,7 @@ import { DatabaseEntryRenamedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
 import { moveEntryMetadataFile } from '../../moveEntryMetadataFile';
 import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
+import { recordDatabaseEntryLedger } from '../../recordDatabaseEntryLedger';
 import { sqlUpsertEntries } from '../../sql';
 import {
   convertEntryToSqlRecord,
@@ -22,9 +24,10 @@ import {
 } from '../../utils';
 
 /**
- * Called when a database entry is renamed. Updates title-derived
- * state: the SQL record, the metadata sidecar, the entry's history,
- * and virtual collection names.
+ * Called when a database entry is renamed. Updates the state derived
+ * from its title.
+ *
+ * @param data - The renamed entry's data.
  */
 export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
   const { original, updated } = data;
@@ -61,6 +64,18 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
     fromKey: original.title,
     toKey: updated.title,
   });
+
+  // Record the rename in the entries ledger under the old title, unless
+  // the entry was still untitled. Nearly every entry is renamed from
+  // the title the app hands out, and nothing references it by that
+  // title.
+  if (!isUntitledTitle(original.title)) {
+    await recordDatabaseEntryLedger(database, {
+      kind: 'rename',
+      subject: { key: original.title },
+      to: updated.title,
+    });
+  }
 
   // Move the entry's recorded capture along with it
   moveContentCapture(

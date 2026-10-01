@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { ContentViews } from '@minddrop/content-views';
 import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
-import { History } from '@minddrop/history';
+import { History, Ledgers } from '@minddrop/history';
 import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
 import {
   sqlGetEntrySyncRecords,
@@ -26,6 +26,7 @@ import {
 } from '../../test-utils';
 import {
   resolveDatabaseEntryHistorySubject,
+  resolveDatabaseEntryLedger,
   virtualCollectionId,
   virtualCollectionName,
 } from '../../utils';
@@ -197,5 +198,39 @@ describe('onDeleteEntry', () => {
         resolveDatabaseEntryHistorySubject(objectDatabase, untitled),
       ),
     ).toEqual([]);
+  });
+
+  it('records the deletion in the entries ledger', async () => {
+    // Delete the entry
+    await onDeleteEntry(objectEntry1);
+
+    // The ledger should record the deletion under the entry's title
+    expect(
+      await Ledgers.read(resolveDatabaseEntryLedger(objectDatabase)),
+    ).toEqual([
+      expect.objectContaining({
+        kind: 'deleted',
+        subject: { key: objectEntry1.title },
+      }),
+    ]);
+  });
+
+  it("records an untitled entry's deletion in the entries ledger", async () => {
+    // An entry with the app's untitled title
+    const untitled = { ...objectEntry1, title: 'Untitled' };
+
+    // Delete the entry
+    await onDeleteEntry(untitled);
+
+    // The deletion should be in the ledger although the entry's history
+    // was deleted.
+    expect(
+      await Ledgers.read(resolveDatabaseEntryLedger(objectDatabase)),
+    ).toEqual([
+      expect.objectContaining({
+        kind: 'deleted',
+        subject: { key: 'Untitled' },
+      }),
+    ]);
   });
 });

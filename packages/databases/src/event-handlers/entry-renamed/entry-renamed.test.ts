@@ -3,7 +3,7 @@ import { Collections } from '@minddrop/collections';
 import { ContentViews } from '@minddrop/content-views';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { Events } from '@minddrop/events';
-import { History } from '@minddrop/history';
+import { History, Ledgers } from '@minddrop/history';
 import { ItemReferences } from '@minddrop/item-references';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
@@ -26,6 +26,7 @@ import {
 import { DatabaseEntryMetadata } from '../../types';
 import {
   resolveDatabaseEntryHistorySubject,
+  resolveDatabaseEntryLedger,
   resolveEntryMetadataFilePath,
   virtualCollectionId,
   virtualCollectionName,
@@ -329,5 +330,41 @@ describe('onRenameEntry', () => {
         to: 'Renamed',
       }),
     ]);
+  });
+
+  it('records the rename in the entries ledger under the old title', async () => {
+    // Call the handler
+    await onRenameEntry({
+      original: objectEntry1,
+      updated: { ...objectEntry1, title: 'Renamed' },
+    });
+
+    // The ledger should record the rename under the old title
+    expect(
+      await Ledgers.read(resolveDatabaseEntryLedger(objectDatabase)),
+    ).toEqual([
+      expect.objectContaining({
+        kind: 'rename',
+        subject: { key: objectEntry1.title },
+        to: 'Renamed',
+      }),
+    ]);
+  });
+
+  it('does not record a rename from an untitled title in the ledger', async () => {
+    // An entry with the app's untitled title
+    const untitled = { ...objectEntry1, title: 'Untitled 2' };
+
+    // Call the handler
+    await onRenameEntry({
+      original: untitled,
+      updated: { ...untitled, title: 'Named' },
+    });
+
+    // Nothing references an entry by the title the app handed out, so
+    // the ledger has nothing to resolve from it.
+    expect(
+      await Ledgers.read(resolveDatabaseEntryLedger(objectDatabase)),
+    ).toEqual([]);
   });
 });

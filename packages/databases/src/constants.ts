@@ -51,6 +51,12 @@ export const EntryHistorySubjectType = 'entries';
 export const DatabaseHistorySubjectType = 'database';
 
 /**
+ * The type the ledger of a database's entries is filed under within
+ * its ledgers directory.
+ */
+export const EntryLedgerType = 'entries';
+
+/**
  * The causes of the actions recorded against a database's history
  * and its entries' histories. Persisted in the history files.
  */
