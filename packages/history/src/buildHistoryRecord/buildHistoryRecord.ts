@@ -35,6 +35,11 @@ export async function buildHistoryRecord(
     return { ...base, kind: 'property', changes: options.changes };
   }
 
+  // Record the parts of the definition changed together
+  if (options.kind === 'definition') {
+    return { ...base, kind: 'definition', changes: options.changes };
+  }
+
   // Record a value label rename against the property holding it
   if (options.kind === 'rename' && options.target === 'value-label') {
     return {

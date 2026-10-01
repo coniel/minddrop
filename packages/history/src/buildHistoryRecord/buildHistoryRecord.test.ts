@@ -53,6 +53,24 @@ describe('buildHistoryRecord', () => {
     expect(record).toEqual({ timestamp: mockDate, kind: 'property', changes });
   });
 
+  it('builds a definition change', async () => {
+    const changes = [
+      { part: 'Status', from: null, to: { type: 'select', options: [] } },
+    ];
+
+    const record = await buildHistoryRecord({
+      ...subject,
+      kind: 'definition',
+      changes,
+    });
+
+    expect(record).toEqual({
+      timestamp: mockDate,
+      kind: 'definition',
+      changes,
+    });
+  });
+
   it('builds an entity rename', async () => {
     const record = await buildHistoryRecord({
       ...subject,

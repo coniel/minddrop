@@ -30,7 +30,7 @@ export interface HistoryAction {
   cause: string;
 }
 
-interface BaseHistoryRecord {
+export interface BaseHistoryRecord {
   /**
    * When the change happened.
    */
@@ -125,12 +125,50 @@ export interface DeletedRecord extends BaseHistoryRecord {
   kind: 'deleted';
 }
 
+export type JsonValue =
+  | string
+  | number
+  | boolean
+  | null
+  | JsonValue[]
+  | { [key: string]: JsonValue };
+
+export interface DefinitionChange {
+  /**
+   * The name of the part that changed.
+   */
+  part: string;
+
+  /**
+   * The part's definition before the change, or null if the change
+   * added it.
+   */
+  from: JsonValue | null;
+
+  /**
+   * The part's definition after the change, or null if the change
+   * removed it.
+   */
+  to: JsonValue | null;
+}
+
+export interface DefinitionRecord extends BaseHistoryRecord {
+  kind: 'definition';
+
+  /**
+   * The parts of the subject's definition changed by one action,
+   * each holding its complete definition before and after.
+   */
+  changes: DefinitionChange[];
+}
+
 export type HistoryRecord =
   | CreatedRecord
   | PropertyRecord
   | ContentRecord
   | RenameRecord
-  | DeletedRecord;
+  | DeletedRecord
+  | DefinitionRecord;
 
 export type HistoryRecordKind = HistoryRecord['kind'];
 
