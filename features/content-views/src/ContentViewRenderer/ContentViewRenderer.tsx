@@ -1,8 +1,7 @@
 import React from 'react';
-import { ContentView, ContentViewTypes } from '@minddrop/content-views';
-import { Text, TransientViewStateScope } from '@minddrop/ui-primitives';
-import { useFilteredContentViewEntries } from '../useFilteredContentViewEntries';
-import { useSortedContentViewEntries } from '../useSortedContentViewEntries';
+import { ContentView } from '@minddrop/content-views';
+import { Text } from '@minddrop/ui-primitives';
+import { ConfiguredView } from './ConfiguredView';
 import { CreateContentViewForm } from './CreateContentViewForm';
 import './ContentViewRenderer.css';
 
@@ -77,44 +76,5 @@ export const ContentViewRenderer: React.FC<ContentViewRendererProps> = ({
     );
   }
 
-  return <ConfiguredView view={view} entries={entries} />;
-};
-
-interface ConfiguredViewProps {
-  /**
-   * The content view to render.
-   */
-  view: ContentView;
-
-  /**
-   * IDs of the elements to render within the content view.
-   */
-  entries?: string[];
-}
-
-/**
- * Renders the content view's type component.
- */
-const ConfiguredView: React.FC<ConfiguredViewProps> = ({ view, entries }) => {
-  const viewType = ContentViewTypes.use(view.type);
-
-  // Entries matching the view's filters, in the order configured
-  // by its sort options.
-  const filteredEntries = useFilteredContentViewEntries(
-    view,
-    entries ?? NO_ENTRIES,
-  );
-  const sortedEntries = useSortedContentViewEntries(view, filteredEntries);
-
-  if (!viewType) {
-    return null;
-  }
-
-  return (
-    <div className="content-view-renderer">
-      <TransientViewStateScope segment={view.id}>
-        <viewType.component view={view} entries={sortedEntries} />
-      </TransientViewStateScope>
-    </div>
-  );
+  return <ConfiguredView view={view} entries={entries ?? NO_ENTRIES} />;
 };

@@ -651,6 +651,9 @@ importers:
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
+      '@minddrop/drag-and-drop':
+        specifier: workspace:*
+        version: link:../../packages/drag-and-drop
       '@minddrop/entity-groups':
         specifier: workspace:*
         version: link:../../packages/entity-groups
@@ -684,6 +687,9 @@ importers:
       '@minddrop/ui-content-views':
         specifier: workspace:*
         version: link:../../ui/content-views
+      '@minddrop/ui-databases':
+        specifier: workspace:*
+        version: link:../../ui/databases
       '@minddrop/ui-entity-groups':
         specifier: workspace:*
         version: link:../../ui/entity-groups
