@@ -24,7 +24,6 @@ export * from './getReferencingEntries';
 export * from './resolveCollectionProperties';
 export * from './serializeCollectionProperties';
 export * from './filterValidDatabaseFiles';
-export * from './filterValidDatabaseUrls';
 export * from './resolveDatabasePropertyDirs';
 export * from './getDefaultFileProperty';
 export * from './resolveEntryPropertyFilePaths';

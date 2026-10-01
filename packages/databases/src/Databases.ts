@@ -27,7 +27,6 @@ import {
   DatabasesBackgroundSyncedEvent,
   OpenDatabaseViewEvent,
 } from './events';
-import { handleDataTransfer } from './handleDataTransfer';
 import { LAYOUT_CONTEXTS, layoutContextBaseType } from './layoutContexts';
 import {
   SCHEMA_SQL,
@@ -176,23 +175,3 @@ export { useDefaultDatabaseDesign as useDefaultDesign } from './useDefaultDataba
 export { resolveDatabaseDesign as resolveDesign } from './utils';
 export { useDatabaseDesigns as useDesigns } from './useDatabaseDesigns';
 export { setDatabaseDefaultDesign as setDefaultDesign } from './setDatabaseDefaultDesign';
-
-/**
- * Handles a drop event on a database.
- *
- * @param databaseId - The ID of the database to handle the drop event for.
- * @param event - The drop event to handle.
- */
-export function handleDrop(
-  databaseId: string,
-  event: DragEvent | React.DragEvent,
-) {
-  event.stopPropagation();
-  event.preventDefault();
-
-  if (!event.dataTransfer) {
-    return;
-  }
-
-  handleDataTransfer(databaseId, event);
-}
