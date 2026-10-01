@@ -1,8 +1,14 @@
 import { Events } from '@minddrop/events';
+import { applyNullableChanges } from '@minddrop/utils';
 import { DesignsStore } from '../DesignsStore';
 import { DesignUpdatedEvent } from '../events';
 import { getDesign } from '../getDesign';
-import { AspectRatioToken, Design, DesignElement } from '../types';
+import {
+  AspectRatioToken,
+  ContentWidth,
+  Design,
+  DesignElement,
+} from '../types';
 import { writeDesign } from '../writeDesign';
 
 export interface UpdateDesignData {
@@ -28,6 +34,18 @@ export interface UpdateDesignData {
   aspectRatio?: AspectRatioToken | null;
 
   /**
+   * The reading width the design's content is capped at. Null
+   * clears it, returning the design to full width.
+   */
+  contentWidth?: ContentWidth | null;
+
+  /**
+   * The space between the design's side edges and its content, in
+   * pixels. Null clears it.
+   */
+  sidePadding?: number | null;
+
+  /**
    * The design's elements.
    */
   elements?: DesignElement[];
@@ -51,19 +69,12 @@ export async function updateDesign(
   // Get the design
   const design = getDesign(id);
 
-  // Apply the changes and bump the last modified date
-  const { aspectRatio, ...changes } = data;
-  const { aspectRatio: currentAspectRatio, ...current } = design;
-  const updated: Design = { ...current, ...changes, lastModified: new Date() };
-
-  // Keep the aspect ratio unless the update changes or clears it,
-  // dropping the field rather than storing a null.
-  const nextAspectRatio =
-    aspectRatio === undefined ? currentAspectRatio : aspectRatio;
-
-  if (nextAspectRatio) {
-    updated.aspectRatio = nextAspectRatio;
-  }
+  // Apply the changes and bump the last modified date. Cleared
+  // optional fields are dropped rather than stored as a null.
+  const updated: Design = {
+    ...applyNullableChanges(design, data),
+    lastModified: new Date(),
+  };
 
   // Update the design in the store
   DesignsStore.set(updated);

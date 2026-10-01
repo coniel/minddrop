@@ -8,9 +8,9 @@ import { DesignElement } from '../../types';
  * @param parentId - The ID of the element holding them.
  * @returns The parent's child elements.
  */
-export function resolveChildElements(
-  elements: DesignElement[],
+export function resolveChildElements<TElement extends DesignElement>(
+  elements: TElement[],
   parentId?: string,
-): DesignElement[] {
+): TElement[] {
   return elements.filter((element) => element.parent === parentId);
 }

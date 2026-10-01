@@ -4,6 +4,7 @@ export * from './columnsOverlap';
 export * from './cutRegion';
 export * from './floorToMultiple';
 export * from './hasNeighbourOnSide';
+export * from './isContentWidth';
 export * from './isSameRegion';
 export * from './remapElementColumns';
 export * from './remapElementProperties';

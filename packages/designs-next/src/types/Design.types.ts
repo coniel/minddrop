@@ -20,6 +20,11 @@ export type AspectRatioToken =
   | '3/2'
   | '16/9';
 
+/**
+ * A reading width a design caps its content at.
+ */
+export type ContentWidth = 'narrow' | 'regular' | 'wide';
+
 export interface Design {
   /**
    * A unique identifier for the design.
@@ -53,6 +58,18 @@ export interface Design {
    * for natural-height designs.
    */
   aspectRatio?: AspectRatioToken;
+
+  /**
+   * The reading width the design's content is capped at. The
+   * design's columns are the cap's width. Absent for full width.
+   */
+  contentWidth?: ContentWidth;
+
+  /**
+   * The space between the design's side edges and its content, in
+   * pixels. Sits outside the content width cap. Absent for none.
+   */
+  sidePadding?: number;
 
   /**
    * The design's elements. Array order is paint order, later

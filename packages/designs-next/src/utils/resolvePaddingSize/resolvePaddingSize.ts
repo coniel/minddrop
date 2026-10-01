@@ -1,4 +1,4 @@
-import { PaddingSizes } from '../../constants';
+import { PaddingScale, PaddingSizes } from '../../constants';
 import { PaddingSize } from '../../types';
 
 /**
@@ -8,7 +8,6 @@ import { PaddingSize } from '../../types';
  * @returns The step, or undefined if the amount is not on the scale.
  */
 export function resolvePaddingSize(amount: number): PaddingSize | undefined {
-  const sizes = Object.keys(PaddingSizes) as PaddingSize[];
-
-  return sizes.find((size) => PaddingSizes[size] === amount);
+  // Find the step set to the amount
+  return PaddingScale.find((size) => PaddingSizes[size] === amount);
 }

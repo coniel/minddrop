@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { MaxSidePadding } from '../../constants';
 import {
   cardDesign_1,
   coverDesignElement,
@@ -37,6 +38,31 @@ describe('validateDesign', () => {
   it('accepts a known aspect ratio and rejects unknown ones', () => {
     expect(validateDesign({ ...cardDesign_1, aspectRatio: '3/2' })).toBe(true);
     expect(validateDesign({ ...cardDesign_1, aspectRatio: '5/4' })).toBe(false);
+  });
+
+  it('accepts a known content width and rejects unknown ones', () => {
+    expect(validateDesign({ ...pageDesign_1, contentWidth: 'regular' })).toBe(
+      true,
+    );
+    expect(validateDesign({ ...pageDesign_1, contentWidth: 'full' })).toBe(
+      false,
+    );
+  });
+
+  it('accepts a side padding from none to the maximum', () => {
+    expect(validateDesign({ ...pageDesign_1, sidePadding: 0 })).toBe(true);
+    expect(validateDesign({ ...pageDesign_1, sidePadding: 24 })).toBe(true);
+    expect(
+      validateDesign({ ...pageDesign_1, sidePadding: MaxSidePadding }),
+    ).toBe(true);
+  });
+
+  it('rejects a side padding outside the range or not a number', () => {
+    expect(validateDesign({ ...pageDesign_1, sidePadding: -1 })).toBe(false);
+    expect(
+      validateDesign({ ...pageDesign_1, sidePadding: MaxSidePadding + 1 }),
+    ).toBe(false);
+    expect(validateDesign({ ...pageDesign_1, sidePadding: '24' })).toBe(false);
   });
 
   it('rejects a missing elements array', () => {

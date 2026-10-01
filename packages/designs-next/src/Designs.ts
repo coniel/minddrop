@@ -1,5 +1,7 @@
 import {
   CardAspectRatios,
+  ContentWidthColumns,
+  ContentWidths,
   DefaultFontSize,
   DefaultLineHeight,
   DefaultTextColor,
@@ -18,9 +20,11 @@ import {
   MaxElementPadding,
   MaxFontSize,
   MaxLineHeight,
+  MaxSidePadding,
   MinDesignRows,
   MinFontSize,
   MinLineHeight,
+  PaddingScale,
   PaddingSides,
   PaddingSizes,
   SnapPresets,
@@ -56,6 +60,9 @@ export const constants = {
   MinRows: MinDesignRows,
   MaxRows: MaxDesignRows,
   CardAspectRatios,
+  ContentWidths,
+  ContentWidthColumns,
+  MaxSidePadding,
   SnapPresets,
   TypeSnaps: DesignTypeSnaps,
   ElementGroups: DesignElementGroups,
@@ -73,6 +80,7 @@ export const constants = {
   DefaultTextColor,
   MaxPadding: MaxElementPadding,
   PaddingSides,
+  PaddingScale,
   PaddingSizes,
 };
 
@@ -88,6 +96,7 @@ export { loadWorkspaceDesigns as loadWorkspace } from './loadWorkspaceDesigns';
 export { loadDesigns as load } from './loadDesigns';
 export { readDesign as read } from './readDesign';
 export { serializeDesign as serialize } from './serializeDesign';
+export { setDesignContentWidth as setContentWidth } from './setDesignContentWidth';
 export { updateDesign as update } from './updateDesign';
 export { writeDesign as write } from './writeDesign';
 export {
@@ -101,6 +110,7 @@ export {
   applyElementSettings,
   floorToMultiple,
   hasNeighbourOnSide,
+  isContentWidth,
   remapElementProperties,
   removeElement,
   resolveAspectRatioValue,

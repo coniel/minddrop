@@ -1,15 +1,14 @@
-import { isEntityId } from '@minddrop/utils';
-import { CardAspectRatios } from '../../constants';
+import { isEntityId, isNumberInRange } from '@minddrop/utils';
+import { CardAspectRatios, MaxSidePadding } from '../../constants';
 import { Design, DesignType } from '../../types';
+import { isContentWidth } from '../isContentWidth';
 import { validateDesignElement } from '../validateDesignElement';
 
 // The design types a design file may declare
 const designTypes: DesignType[] = ['card', 'list', 'page', 'space'];
 
 /**
- * Validates the shape of a design read from disk: a typed design ID,
- * a name, a known design type, whole positive unit dimensions, and a
- * valid element per elements array entry.
+ * Validates the shape of a design read from disk.
  *
  * @param candidate - The parsed design file contents.
  * @returns Whether the candidate is a valid design.
@@ -46,6 +45,23 @@ export function validateDesign(candidate: unknown): candidate is Design {
   if (
     design.aspectRatio !== undefined &&
     !CardAspectRatios.includes(design.aspectRatio)
+  ) {
+    return false;
+  }
+
+  // The content width must be a known width when present
+  if (
+    design.contentWidth !== undefined &&
+    !isContentWidth(design.contentWidth)
+  ) {
+    return false;
+  }
+
+  // The side padding must be a non-negative amount up to the maximum
+  // when present.
+  if (
+    design.sidePadding !== undefined &&
+    !isNumberInRange(design.sidePadding, 0, MaxSidePadding)
   ) {
     return false;
   }

@@ -10,6 +10,7 @@ import {
   cleanup,
   mockDate,
   ownedCardDesign_1,
+  pageDesign_1,
   setup,
 } from '../test-utils';
 import { resolveDesignFilePath } from '../utils';
@@ -64,6 +65,49 @@ describe('updateDesign', () => {
     await updateDesign(cardDesign_1.id, { aspectRatio: null });
 
     expect(DesignsStore.get(cardDesign_1.id)).not.toHaveProperty('aspectRatio');
+  });
+
+  it('sets the content width and side padding', async () => {
+    await updateDesign(pageDesign_1.id, {
+      contentWidth: 'narrow',
+      sidePadding: 16,
+    });
+
+    const design = storeItem(DesignsStore, pageDesign_1.id);
+
+    expect(design.contentWidth).toBe('narrow');
+    expect(design.sidePadding).toBe(16);
+  });
+
+  it('drops the content width and side padding fields when cleared', async () => {
+    await updateDesign(pageDesign_1.id, {
+      contentWidth: 'narrow',
+      sidePadding: 16,
+    });
+    await updateDesign(pageDesign_1.id, {
+      contentWidth: null,
+      sidePadding: null,
+    });
+
+    const design = storeItem(DesignsStore, pageDesign_1.id);
+
+    expect(design).not.toHaveProperty('contentWidth');
+    expect(design).not.toHaveProperty('sidePadding');
+  });
+
+  it('keeps the clearable fields on updates which leave them out', async () => {
+    await updateDesign(pageDesign_1.id, {
+      aspectRatio: '3/2',
+      contentWidth: 'narrow',
+      sidePadding: 16,
+    });
+    await updateDesign(pageDesign_1.id, { name: 'Renamed' });
+
+    const design = storeItem(DesignsStore, pageDesign_1.id);
+
+    expect(design.aspectRatio).toBe('3/2');
+    expect(design.contentWidth).toBe('narrow');
+    expect(design.sidePadding).toBe(16);
   });
 
   it('throws if the design does not exist', async () => {

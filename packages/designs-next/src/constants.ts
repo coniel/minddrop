@@ -1,6 +1,7 @@
 import type { UiIconName } from '@minddrop/ui-icons';
 import {
   AspectRatioToken,
+  ContentWidth,
   DesignElementGroup,
   DesignType,
   ElementColor,
@@ -67,6 +68,26 @@ export const DesignTypeColumns: Record<DesignType, number> = {
   page: 240,
   space: 240,
 };
+
+/**
+ * The reading widths a design can cap its content at, in display
+ * order.
+ */
+export const ContentWidths: ContentWidth[] = ['narrow', 'regular', 'wide'];
+
+/**
+ * The width of a design capped at each reading width, in grid units.
+ */
+export const ContentWidthColumns: Record<ContentWidth, number> = {
+  narrow: 120,
+  regular: 180,
+  wide: 240,
+};
+
+/**
+ * The largest side padding a design can have, in pixels.
+ */
+export const MaxSidePadding = 200;
 
 /**
  * The aspect ratios offered for aspect-locked cards. Trimmed to
@@ -196,6 +217,21 @@ export const PaddingSides: (keyof ElementPadding)[] = [
   'right',
   'bottom',
   'left',
+];
+
+/**
+ * The steps of the padding scale, from the smallest to the largest.
+ */
+export const PaddingScale: PaddingSize[] = [
+  'xs',
+  's',
+  'm',
+  'l',
+  'xl',
+  '2xl',
+  '3xl',
+  '4xl',
+  '5xl',
 ];
 
 /**

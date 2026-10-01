@@ -1,4 +1,4 @@
-import { isEntityId } from '@minddrop/utils';
+import { isEntityId, isNumberInRange } from '@minddrop/utils';
 import {
   ElementContentFits,
   ElementHeightModes,
@@ -139,5 +139,5 @@ function isPaddingAmount(value: unknown): boolean {
     return true;
   }
 
-  return typeof value === 'number' && Number.isFinite(value) && value >= 0;
+  return isNumberInRange(value, 0);
 }

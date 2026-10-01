@@ -1,9 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
+  TestSlotName,
+  captionSlotElement,
   cardColumns,
   coverDesignElement,
   designElements,
   iconDesignElement,
+  slottedDesignElement,
   titleDesignElement,
 } from '../../test-utils';
 import { DesignElement } from '../../types';
@@ -84,6 +87,45 @@ describe('remapElementColumns', () => {
 
     expect(remapped.column).toBe(0);
     expect(remapped.columnSpan).toBe(24);
+  });
+
+  it('leaves held elements as they are', () => {
+    const [slotted, caption] = remapElementColumns(
+      [slottedDesignElement, captionSlotElement],
+      cardColumns,
+      24,
+    );
+
+    // The holder is remapped. The caption is left as it is, since
+    // its slot places it.
+    expect(slotted.columnSpan).toBe(20);
+    expect(caption).toEqual(captionSlotElement);
+  });
+
+  it('resolves context from the design’s own elements only', () => {
+    // A fluid element beside a held fluid one. The held element's
+    // geometry is not on the design's grid.
+    const wideElement: DesignElement = {
+      ...titleDesignElement,
+      column: 0,
+      columnSpan: 32,
+    };
+    const heldElement: DesignElement = {
+      ...titleDesignElement,
+      id: 'element_held',
+      column: 32,
+      columnSpan: 16,
+      parent: slottedDesignElement.id,
+      slot: TestSlotName,
+    };
+    const [remapped] = remapElementColumns(
+      [wideElement, heldElement],
+      cardColumns,
+      24,
+    );
+
+    // The element scales alone, keeping the 16 unit gap to its right
+    expect(remapped.columnSpan).toBe(8);
   });
 
   it('preserves extra element fields', () => {

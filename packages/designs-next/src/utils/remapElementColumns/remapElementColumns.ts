@@ -1,18 +1,20 @@
 import { clamp } from '@minddrop/utils';
 import { DesignElement } from '../../types';
+import { resolveChildElements } from '../resolveChildElements';
 import { resolveContextElements } from '../resolveContextElements';
 import { resolveScaledWidths } from '../resolveScaledWidths';
 import { resolveScalingColumns } from '../resolveScalingColumns';
 
 /**
- * Remaps element columns to a new card column count, element by
+ * Remaps element columns to a new design column count, element by
  * element against each element's own context. Non-scaling columns
  * (gaps and fixed elements) keep their single-unit width while
  * scaling columns share the remaining units proportionally, so edge
  * offsets, inter-element gaps, and fixed element widths stay fixed
- * and fluid element span ratios are preserved.
+ * and fluid element span ratios are preserved. Elements held by
+ * another element are returned unchanged.
  *
- * @param elements - The card's elements.
+ * @param elements - The design's elements.
  * @param oldColumns - The current column count.
  * @param newColumns - The target column count.
  * @returns The elements with columns and spans remapped.
@@ -28,10 +30,19 @@ export function remapElementColumns<TElement extends DesignElement>(
     return elements;
   }
 
-  // Remap each element against its own context
+  // Resolve the elements on the design's own grid
+  const ownElements = resolveChildElements(elements);
+
+  // Remap each of the design's own elements against its own context
   return elements.map((element) => {
+    // Check if the element is held by another. If so, leave it as it
+    // is, since its parent places it.
+    if (element.parent) {
+      return element;
+    }
+
     // Classify column scaling against the element's context
-    const context = resolveContextElements(element, elements);
+    const context = resolveContextElements(element, ownElements);
     const scaling = resolveScalingColumns([element, ...context], oldColumns);
     const scalingCount = scaling.filter(Boolean).length;
     const fixedCount = oldColumns - scalingCount;
