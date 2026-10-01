@@ -14,7 +14,6 @@ import { Events } from '@minddrop/events';
 import {
   DatabaseEntryRenderer,
   hasTransferredAddContentCard,
-  resolveTransferredEntryIds,
   resolveTransferredNewEntryDatabaseIds,
 } from '@minddrop/feature-databases';
 import { DropEventData, Selection } from '@minddrop/selection';
@@ -41,6 +40,7 @@ import { ContentViewSettingsMenu } from '@minddrop/ui-content-views';
 import {
   ContentViewFloatingToolbar,
   DatabaseEntryContextProvider,
+  resolveTransferredEntryIds,
 } from '@minddrop/ui-databases';
 import { uuid } from '@minddrop/utils';
 import {

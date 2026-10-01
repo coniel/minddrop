@@ -19,7 +19,6 @@ import {
 import { Events } from '@minddrop/events';
 import {
   hasTransferredAddContentCard,
-  resolveTransferredEntryIds,
   resolveTransferredNewEntryDatabaseIds,
 } from '@minddrop/feature-databases';
 import { DropEventData } from '@minddrop/selection';
@@ -28,6 +27,7 @@ import { ContentViewSettingsMenu } from '@minddrop/ui-content-views';
 import {
   ContentViewFloatingToolbar,
   DatabaseEntryContextProvider,
+  resolveTransferredEntryIds,
 } from '@minddrop/ui-databases';
 import { FlexDropContainer } from '@minddrop/ui-drag-and-drop';
 import { ScrollArea } from '@minddrop/ui-primitives';

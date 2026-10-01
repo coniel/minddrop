@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
-import { DatabaseEntriesDataKey } from '@minddrop/ui-databases';
+import { DatabaseEntriesDataKey } from '../../constants';
 import { resolveTransferredEntryIds } from './resolveTransferredEntryIds';
 
 const { objectEntry1, urlEntry1 } = DatabaseFixtures;

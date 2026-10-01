@@ -9,5 +9,4 @@ export * from './events';
 export * from './initializeEntryPdfs';
 export * from './registerDatabaseViews';
 export * from './utils/hasTransferredAddContentCard';
-export * from './utils/resolveTransferredEntryIds';
 export * from './utils/resolveTransferredNewEntryDatabaseIds';

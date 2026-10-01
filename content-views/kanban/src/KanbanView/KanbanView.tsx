@@ -11,10 +11,12 @@ import {
 } from '@minddrop/content-views';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
-import { resolveTransferredEntryIds } from '@minddrop/feature-databases';
 import { SelectPropertySchema } from '@minddrop/properties';
 import { DropEventData } from '@minddrop/selection';
-import { DatabaseEntryContextProvider } from '@minddrop/ui-databases';
+import {
+  DatabaseEntryContextProvider,
+  resolveTransferredEntryIds,
+} from '@minddrop/ui-databases';
 import {
   SortableItemRenderProps,
   SortableList,

@@ -1,6 +1,6 @@
 import { DatabaseEntry } from '@minddrop/databases';
-import { DatabaseEntriesDataKey } from '@minddrop/ui-databases';
 import { TransferData } from '@minddrop/utils';
+import { DatabaseEntriesDataKey } from '../../constants';
 
 /**
  * Returns the IDs of the database entries contained in transfer data,
