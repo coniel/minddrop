@@ -49,6 +49,8 @@ export const EntryHistorySubjectType = 'entries';
  * and its entries' histories. Persisted in the history files.
  */
 export const DatabaseHistoryCauses = {
+  PropertyAdded: 'databases:property-added',
+  PropertyUpdated: 'databases:property-updated',
   PropertyRenamed: 'databases:property-renamed',
   PropertyOptionRenamed: 'databases:property-option-renamed',
   PropertyRemoved: 'databases:property-removed',

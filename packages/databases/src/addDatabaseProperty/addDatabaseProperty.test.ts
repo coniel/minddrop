@@ -1,7 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Events } from '@minddrop/events';
 import { PropertySchema } from '@minddrop/properties';
 import { InvalidParameterError } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
+import { DatabaseHistoryCauses } from '../constants';
+import { DatabasePropertyAddedEvent } from '../events';
 import {
   MockFs,
   cleanup,
@@ -39,6 +42,33 @@ describe('addDatabaseProperty', () => {
     await addDatabaseProperty(objectDatabase.id, newProperty);
 
     expect(DatabasesStore).toHaveItem(objectDatabase.id, updatedDatabase);
+  });
+
+  it('dispatches the property added event', async () => {
+    // The captured event data
+    let eventData: unknown;
+
+    // Capture the dispatched event data
+    Events.addListener(DatabasePropertyAddedEvent, 'test', (data) => {
+      eventData = data;
+    });
+
+    // Add the property
+    await addDatabaseProperty(objectDatabase.id, newProperty);
+
+    // Stop capturing
+    Events.removeListener(DatabasePropertyAddedEvent, 'test');
+
+    // The event should have the property, the updated database and the
+    // action adding it.
+    expect(eventData).toMatchObject({
+      property: newProperty,
+      updated: updatedDatabase,
+      action: {
+        id: expect.stringMatching(/^action_/),
+        cause: DatabaseHistoryCauses.PropertyAdded,
+      },
+    });
   });
 
   it('writes the updated config to the file system', async () => {

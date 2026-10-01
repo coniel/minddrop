@@ -1,6 +1,16 @@
 import { HistoryAction } from '@minddrop/history';
 import { DatabaseHistoryCauses } from '../../constants';
 
+export const historyAction_propertyAdded: HistoryAction = {
+  id: 'action_propertyAdded',
+  cause: DatabaseHistoryCauses.PropertyAdded,
+};
+
+export const historyAction_propertyUpdated: HistoryAction = {
+  id: 'action_propertyUpdated',
+  cause: DatabaseHistoryCauses.PropertyUpdated,
+};
+
 export const historyAction_propertyRenamed: HistoryAction = {
   id: 'action_propertyRenamed',
   cause: DatabaseHistoryCauses.PropertyRenamed,
@@ -17,6 +27,8 @@ export const historyAction_propertyRemoved: HistoryAction = {
 };
 
 export const historyActions = [
+  historyAction_propertyAdded,
+  historyAction_propertyUpdated,
   historyAction_propertyRenamed,
   historyAction_propertyOptionRenamed,
   historyAction_propertyRemoved,

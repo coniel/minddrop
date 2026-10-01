@@ -3,6 +3,7 @@ import { Collections } from '@minddrop/collections';
 import { PropertySchema } from '@minddrop/properties';
 import { sqlGetAllEntriesFull, sqlUpsertDatabase } from '../../sql';
 import {
+  DatabaseFixtures,
   cleanup,
   cleanupTestSqlDatabase,
   objectDatabase,
@@ -14,6 +15,9 @@ import {
 import { Database } from '../../types';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
 import { onAddProperty } from './property-added';
+
+// The action performing the addition
+const { historyAction_propertyAdded: action } = DatabaseFixtures;
 
 /**
  * Returns a copy of a database with the property added to its
@@ -59,6 +63,7 @@ describe('onAddProperty', () => {
       original: objectDatabase,
       updated: withProperty(objectDatabase, property),
       property,
+      action,
     });
 
     // No virtual collections should be created
@@ -75,6 +80,7 @@ describe('onAddProperty', () => {
       original: objectDatabase,
       updated: withProperty(objectDatabase, property),
       property,
+      action,
     });
 
     // The database's entries should be re-upserted into SQL
@@ -89,6 +95,7 @@ describe('onAddProperty', () => {
       original: objectDatabase,
       updated: withProperty(objectDatabase, property),
       property,
+      action,
     });
 
     // Should create a virtual collection for the existing entry

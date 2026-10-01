@@ -1,7 +1,9 @@
 import { Events } from '@minddrop/events';
+import { History } from '@minddrop/history';
 import { Properties, PropertySchema } from '@minddrop/properties';
 import { InvalidParameterError } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
+import { DatabaseHistoryCauses } from '../constants';
 import { DatabasePropertyAddedEvent, DatabaseUpdatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { Database } from '../types';
@@ -58,6 +60,7 @@ export async function addDatabaseProperty(
     original: config,
     updated,
     property,
+    action: History.createAction(DatabaseHistoryCauses.PropertyAdded),
   });
 
   // Write the updated config to the file system

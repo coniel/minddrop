@@ -1,7 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Events } from '@minddrop/events';
 import { PropertySchema } from '@minddrop/properties';
 import { InvalidParameterError } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
+import { DatabaseHistoryCauses } from '../constants';
+import { DatabasePropertyUpdatedEvent, DatabaseUpdatedEvent } from '../events';
 import {
   MockFs,
   cleanup,
@@ -61,6 +64,57 @@ describe('updateDatabaseProperty', () => {
     await updateDatabaseProperty(objectDatabase.id, updatedProperty);
 
     expect(DatabasesStore).toHaveItem(objectDatabase.id, updatedDatabase);
+  });
+
+  it('dispatches the database updated event', async () => {
+    // The captured event data
+    let eventData: unknown;
+
+    // Capture the dispatched event data
+    Events.addListener(DatabaseUpdatedEvent, 'test', (data) => {
+      eventData = data;
+    });
+
+    // Update the property
+    await updateDatabaseProperty(objectDatabase.id, updatedProperty);
+
+    // Stop capturing
+    Events.removeListener(DatabaseUpdatedEvent, 'test');
+
+    // The event should have the database before and after the update
+    expect(eventData).toEqual({
+      original: objectDatabase,
+      updated: updatedDatabase,
+    });
+  });
+
+  it('dispatches the property updated event', async () => {
+    // The captured event data
+    let eventData: unknown;
+
+    // Capture the dispatched event data
+    Events.addListener(DatabasePropertyUpdatedEvent, 'test', (data) => {
+      eventData = data;
+    });
+
+    // Update the property
+    await updateDatabaseProperty(objectDatabase.id, updatedProperty);
+
+    // Stop capturing
+    Events.removeListener(DatabasePropertyUpdatedEvent, 'test');
+
+    // The event should have the database and the property before and
+    // after the update, and the action updating it.
+    expect(eventData).toMatchObject({
+      original: objectDatabase,
+      updated: updatedDatabase,
+      originalProperty: objectDatabase.properties[0],
+      updatedProperty,
+      action: {
+        id: expect.stringMatching(/^action_/),
+        cause: DatabaseHistoryCauses.PropertyUpdated,
+      },
+    });
   });
 
   it('writes the updated config to the file system', async () => {

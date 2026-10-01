@@ -29,6 +29,7 @@ export interface DatabaseRenamedEventData {
 
 // Property events
 export const DatabasePropertyAddedEvent = 'databases:property:added';
+export const DatabasePropertyUpdatedEvent = 'databases:property:updated';
 export const DatabasePropertyRemovedEvent = 'databases:property:removed';
 export const DatabasePropertyRenamedEvent = 'databases:property:renamed';
 
@@ -47,6 +48,38 @@ export interface DatabasePropertyAddedEventData {
    * The property that was added.
    */
   property: PropertySchema;
+
+  /**
+   * The action performing the addition.
+   */
+  action: HistoryAction;
+}
+
+export interface DatabasePropertyUpdatedEventData {
+  /**
+   * The database config from before the property was updated.
+   */
+  original: Database;
+
+  /**
+   * The database config with the property updated.
+   */
+  updated: Database;
+
+  /**
+   * The property from before the update.
+   */
+  originalProperty: PropertySchema;
+
+  /**
+   * The updated property.
+   */
+  updatedProperty: PropertySchema;
+
+  /**
+   * The action performing the update.
+   */
+  action: HistoryAction;
 }
 
 export interface DatabasePropertyRemovedEventData {
@@ -395,6 +428,7 @@ declare module '@minddrop/events/EventDataMap' {
     'databases:database:deleted': DatabaseDeletedEventData;
     'databases:database:renamed': DatabaseRenamedEventData;
     'databases:property:added': DatabasePropertyAddedEventData;
+    'databases:property:updated': DatabasePropertyUpdatedEventData;
     'databases:property:removed': DatabasePropertyRemovedEventData;
     'databases:property:renamed': DatabasePropertyRenamedEventData;
     'databases:property-option:renamed': DatabasePropertyOptionRenamedEventData;
