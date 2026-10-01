@@ -1,0 +1,821 @@
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Collections } from '@minddrop/collections';
+import {
+  ContentViewTypeComponentProps,
+  ContentViews,
+} from '@minddrop/content-views';
+import {
+  DatabaseEntries,
+  DatabaseEntryTemplates,
+  DatabaseId,
+  Databases,
+} from '@minddrop/databases';
+import { Events } from '@minddrop/events';
+import {
+  DatabaseEntryRenderer,
+  hasTransferredAddContentCard,
+  resolveTransferredNewEntryDatabaseIds,
+} from '@minddrop/feature-databases';
+import { DropEventData, Selection } from '@minddrop/selection';
+import {
+  Canvas,
+  CanvasConnectionReconnection,
+  CanvasConnectionsLayer,
+  CanvasFrameAlignment,
+  CanvasNode,
+  CanvasNodeConnection,
+  CanvasNodeFrame,
+  CanvasPoint,
+  CanvasSelection,
+  CanvasSelectionDeleteOptions,
+  CanvasToolbar,
+  alignFrames,
+  useCanvas,
+  useCanvasStore,
+  useFitOnNodesReady,
+} from '@minddrop/ui-canvas';
+import { AddContentPicker, AddedContent } from '@minddrop/ui-components';
+import { ContentViewSettingsMenu } from '@minddrop/ui-content-views';
+import {
+  ContentViewFloatingToolbar,
+  DatabaseEntryContextProvider,
+  resolveTransferredEntryIds,
+} from '@minddrop/ui-databases';
+import { uuid } from '@minddrop/utils';
+import {
+  CanvasConnectionChanges,
+  CanvasConnectionToolbar,
+} from '../CanvasConnectionToolbar';
+import { CanvasNodeSelectionToolbar } from '../CanvasNodeSelectionToolbar';
+import {
+  CANVAS_ACCEPTED_DATA_TYPES,
+  DEFAULT_NODE_WIDTH,
+  ESTIMATED_NODE_HEIGHT,
+  NODE_GAP,
+} from '../constants';
+import {
+  CanvasViewConnection,
+  CanvasViewData,
+  CanvasViewNode,
+  CanvasViewOptions,
+} from '../types';
+import {
+  placeEntryNode,
+  reconcileConnections,
+  reconcileNodes,
+  stackEntryNodes,
+  updateNodeFrame,
+} from '../utils';
+
+interface EntryPickerState {
+  /**
+   * The picker's horizontal position in canvas coordinates.
+   */
+  x: number;
+
+  /**
+   * The picker's vertical position in canvas coordinates.
+   */
+  y: number;
+}
+
+/**
+ * Renders the canvas view's canvas inside the canvas context the
+ * view provides.
+ */
+export const CanvasViewContent: React.FC<
+  ContentViewTypeComponentProps<CanvasViewOptions, CanvasViewData>
+> = ({ view, entries }) => {
+  // The active entry picker, spawned by dropping the add existing
+  // entry or new entry card.
+  const [entryPicker, setEntryPicker] = useState<EntryPickerState | null>(null);
+
+  // Whether the view options menu is open, pinning the floating
+  // toolbar in place.
+  const [optionsMenuOpen, setOptionsMenuOpen] = useState(false);
+
+  // The databases the canvas's entries belong to
+  const entryDatabases = Databases.useFromEntries(entries);
+
+  // Resolve nodes from view data, falling back to an empty canvas
+  const nodes = useMemo(() => view.data?.nodes || [], [view.data]);
+
+  // Map each duplicate among the entries to the entry it was
+  // duplicated from. The reconciliation places a duplicate below
+  // its original until the placement listener has persisted its
+  // position.
+  const databaseEntries = DatabaseEntries.useByIds(entries);
+  const duplicateOriginals = useMemo(() => {
+    const originals: Record<string, string> = {};
+
+    databaseEntries.forEach((entry) => {
+      if (entry.duplicatedFrom) {
+        originals[entry.id] = entry.duplicatedFrom;
+      }
+    });
+
+    return originals;
+  }, [databaseEntries]);
+
+  // Reconcile the saved nodes with the current entries from the
+  // collection. Entries added to the collection but not yet
+  // placed get auto-placed positions. Nodes of entries removed
+  // from the collection are filtered out.
+  const reconciledNodes = useMemo(
+    () => reconcileNodes(nodes, entries, duplicateOriginals),
+    [nodes, entries, duplicateOriginals],
+  );
+
+  // Resolve connections from view data, falling back to none
+  const connections = useMemo(() => view.data?.connections || [], [view.data]);
+
+  // Reconcile the saved connections with the reconciled nodes,
+  // dropping connections attached to removed nodes.
+  const reconciledConnections = useMemo(
+    () => reconcileConnections(connections, reconciledNodes),
+    [connections, reconciledNodes],
+  );
+
+  // Resolve the card design each entry renders with. The view's
+  // override for its database, else the database default.
+  const entryCardDesigns = DatabaseEntries.useDesigns(
+    entries,
+    'card',
+    view.options?.cardDesignOverrides,
+  );
+
+  // Derive a toolbar card for each database the canvas's entries
+  // belong to, excluding those whose card the user has hidden.
+  const toolbarDatabaseCards = useMemo(() => {
+    const toolbarCards = view.options?.toolbarCards;
+
+    return entryDatabases
+      .filter((database) => !toolbarCards?.[database.id]?.hidden)
+      .map((database) => ({
+        databaseId: database.id,
+        templateId: toolbarCards?.[database.id]?.templateId,
+      }));
+  }, [entryDatabases, view.options?.toolbarCards]);
+
+  // Canvas actions for reading the selection and converting
+  // points to canvas coordinates.
+  const canvas = useCanvas();
+
+  // Whether node interactions snap to the grid, toggled from the
+  // canvas settings menu.
+  const snapToGrid = useCanvasStore((state) => state.snapToGrid);
+
+  // Whether node interactions snap to the other nodes, toggled
+  // from the canvas settings menu.
+  const snapToObjects = useCanvasStore((state) => state.snapToObjects);
+
+  // The canvas's selected connections, whose configuration the
+  // toolbar edits as one.
+  const selectedConnectionIds = useCanvasStore((state) =>
+    state.selection?.type === 'connections' ? state.selection.ids : null,
+  );
+
+  const selectedConnections = useMemo(
+    () =>
+      selectedConnectionIds
+        ? reconciledConnections.filter((connection) =>
+            selectedConnectionIds.includes(connection.id),
+          )
+        : [],
+    [reconciledConnections, selectedConnectionIds],
+  );
+
+  // Fit the placed nodes into view when the canvas opens
+  useFitOnNodesReady(reconciledNodes.map((node) => node.id));
+
+  // Persist the updated nodes to the view data
+  const updateNodes = useCallback(
+    (updatedNodes: CanvasViewNode[]) => {
+      ContentViews.update(view.id, { data: { nodes: updatedNodes } });
+    },
+    [view.id],
+  );
+
+  // Persist the updated connections to the view data
+  const updateConnections = useCallback(
+    (updatedConnections: CanvasViewConnection[]) => {
+      ContentViews.update(view.id, {
+        data: { connections: updatedConnections },
+      });
+    },
+    [view.id],
+  );
+
+  // Add a connection dragged between two nodes, skipping exact
+  // duplicates.
+  const handleConnect = useCallback(
+    (connection: CanvasNodeConnection) => {
+      // An identical connection already exists
+      const duplicate = reconciledConnections.some(
+        (existing) =>
+          existing.from.nodeId === connection.from.nodeId &&
+          existing.from.side === connection.from.side &&
+          existing.to.nodeId === connection.to.nodeId &&
+          existing.to.side === connection.to.side,
+      );
+
+      if (duplicate) {
+        return;
+      }
+
+      updateConnections([
+        ...reconciledConnections,
+        { id: uuid(), from: connection.from, to: connection.to },
+      ]);
+    },
+    [reconciledConnections, updateConnections],
+  );
+
+  // Persist the canvas's snap to grid setting when it is toggled
+  useEffect(() => {
+    // The setting matches what is saved, nothing to persist
+    if (snapToGrid === Boolean(view.options?.snapToGrid)) {
+      return;
+    }
+
+    ContentViews.updateOptions(view.id, { snapToGrid });
+  }, [snapToGrid, view.id, view.options?.snapToGrid]);
+
+  // Persist the canvas's snap to objects setting when it is
+  // toggled.
+  useEffect(() => {
+    // The setting matches what is saved, nothing to persist
+    if (snapToObjects === Boolean(view.options?.snapToObjects)) {
+      return;
+    }
+
+    ContentViews.updateOptions(view.id, { snapToObjects });
+  }, [snapToObjects, view.id, view.options?.snapToObjects]);
+
+  // Re-route a connection end dragged onto a new target, skipping
+  // changes that would duplicate an existing connection. Ends
+  // dropped on empty canvas remove the connection.
+  const handleConnectionReconnect = useCallback(
+    (reconnection: CanvasConnectionReconnection) => {
+      const { target } = reconnection;
+
+      // Dropped on empty canvas: remove the connection
+      if (!target) {
+        updateConnections(
+          reconciledConnections.filter(
+            (connection) => connection.id !== reconnection.connectionId,
+          ),
+        );
+
+        return;
+      }
+
+      // Replace the dragged end on the re-routed connection
+      const updated = reconciledConnections.map((connection) => {
+        // Leave other connections untouched
+        if (connection.id !== reconnection.connectionId) {
+          return connection;
+        }
+
+        // Replace the dragged end with its new target
+        if (reconnection.end === 'from') {
+          return { ...connection, from: target };
+        }
+
+        return { ...connection, to: target };
+      });
+
+      const rerouted = updated.find(
+        (connection) => connection.id === reconnection.connectionId,
+      );
+
+      // The re-routed connection no longer exists
+      if (!rerouted) {
+        return;
+      }
+
+      // An identical connection already exists; drop the change
+      const duplicate = updated.some(
+        (connection) =>
+          connection.id !== rerouted.id &&
+          connection.from.nodeId === rerouted.from.nodeId &&
+          connection.from.side === rerouted.from.side &&
+          connection.to.nodeId === rerouted.to.nodeId &&
+          connection.to.side === rerouted.to.side,
+      );
+
+      if (duplicate) {
+        return;
+      }
+
+      updateConnections(updated);
+    },
+    [reconciledConnections, updateConnections],
+  );
+
+  // Apply configuration changes to every selected connection, so
+  // a lassoed set can be restyled in one go.
+  const handleConnectionChange = useCallback(
+    (changes: CanvasConnectionChanges) => {
+      const selectedIds = canvas.getSelectedConnectionIds();
+
+      updateConnections(
+        reconciledConnections.map((connection) =>
+          selectedIds.includes(connection.id)
+            ? { ...connection, ...changes }
+            : connection,
+        ),
+      );
+    },
+    [canvas, reconciledConnections, updateConnections],
+  );
+
+  // Remove the selected connections and clear the selection
+  const deleteSelectedConnections = useCallback(() => {
+    const selectedIds = canvas.getSelectedConnectionIds();
+
+    updateConnections(
+      reconciledConnections.filter(
+        (connection) => !selectedIds.includes(connection.id),
+      ),
+    );
+    canvas.clearSelection();
+  }, [canvas, reconciledConnections, updateConnections]);
+
+  // Take the selected entries out of the collection. Dropping
+  // their nodes would not work: reconciliation gives every
+  // collection entry a node, so a removed node is re-placed at
+  // the bottom of the canvas on the next render.
+  const removeSelectedNodes = useCallback(
+    (nodeIds: string[]) => {
+      Collections.removeItems(view.dataSource.id, nodeIds);
+      canvas.clearSelection();
+    },
+    [canvas, view.dataSource.id],
+  );
+
+  // Delete the selected entries outright, moving their files to
+  // the system trash once confirmed.
+  const deleteSelectedNodes = useCallback(
+    (nodeIds: string[]) => {
+      const i18nRoot = 'contentViews.canvas.deleteEntries';
+
+      // The dialog event takes no interpolation options, so the
+      // singular wording is picked by key.
+      const single = nodeIds.length === 1;
+
+      Events.dispatch(Events.events.OpenConfirmationDialog, {
+        title: single ? `${i18nRoot}.titleOne` : `${i18nRoot}.title`,
+        message: single ? `${i18nRoot}.messageOne` : `${i18nRoot}.message`,
+        confirmLabel: `${i18nRoot}.confirm`,
+        danger: true,
+        onConfirm: () => {
+          nodeIds.forEach((entryId) => DatabaseEntries.delete(entryId));
+          canvas.clearSelection();
+        },
+      });
+    },
+    [canvas],
+  );
+
+  // Delete whichever kind of thing is selected. Shift escalates a
+  // node removal to deleting the entries themselves.
+  const handleSelectionDelete = useCallback(
+    (
+      selection: CanvasSelection,
+      { shiftKey }: CanvasSelectionDeleteOptions,
+    ) => {
+      if (selection.type === 'connections') {
+        deleteSelectedConnections();
+
+        return;
+      }
+
+      if (shiftKey) {
+        deleteSelectedNodes(selection.ids);
+
+        return;
+      }
+
+      removeSelectedNodes(selection.ids);
+    },
+    [deleteSelectedConnections, deleteSelectedNodes, removeSelectedNodes],
+  );
+
+  // Align the selected nodes, persisting only the ones that move
+  const handleNodesAlign = useCallback(
+    (alignment: CanvasFrameAlignment) => {
+      const selectedIds = canvas.getSelectedNodeIds();
+      const registered = canvas.getNodes();
+
+      // The registered frames carry measured auto-heights, which
+      // the saved nodes do not.
+      const frames = Object.fromEntries(
+        selectedIds
+          .filter((id) => registered[id])
+          .map((id) => [id, registered[id]]),
+      );
+
+      const aligned = alignFrames(frames, alignment);
+
+      updateNodes(
+        reconciledNodes.map((node) =>
+          aligned[node.id]
+            ? { ...node, x: aligned[node.id].x, y: aligned[node.id].y }
+            : node,
+        ),
+      );
+    },
+    [canvas, reconciledNodes, updateNodes],
+  );
+
+  // Render the toolbar for whichever kind of thing is selected
+  const renderSelectionToolbar = useCallback(
+    (selection: CanvasSelection) => {
+      if (selection.type === 'connections') {
+        return (
+          <CanvasConnectionToolbar
+            connections={selectedConnections}
+            onConnectionChange={handleConnectionChange}
+            onConnectionDelete={deleteSelectedConnections}
+          />
+        );
+      }
+
+      return (
+        <CanvasNodeSelectionToolbar
+          alignable={selection.ids.length > 1}
+          onAlign={handleNodesAlign}
+          onDelete={(options) => handleSelectionDelete(selection, options)}
+        />
+      );
+    },
+    [
+      selectedConnections,
+      handleConnectionChange,
+      deleteSelectedConnections,
+      handleNodesAlign,
+      handleSelectionDelete,
+    ],
+  );
+
+  // Persist a group move in a single update. Per-node reporting
+  // would apply each frame against the same stale snapshot.
+  const handleNodesFrameChange = useCallback(
+    (frames: Record<string, CanvasNodeFrame>) => {
+      updateNodes(
+        reconciledNodes.map((node) =>
+          frames[node.id] ? { ...node, ...frames[node.id] } : node,
+        ),
+      );
+    },
+    [reconciledNodes, updateNodes],
+  );
+
+  // Persist duplicated entries' placement below their original.
+  // Until this lands, the reconciliation places the duplicate
+  // there from the duplication's event log entry.
+  useEffect(() => {
+    Events.addListener(
+      DatabaseEntries.events.Duplicated,
+      `canvas-view-${view.id}`,
+      (data) => {
+        // Ignore duplications from other sources
+        if (data.source?.id !== view.dataSource.id) {
+          return;
+        }
+
+        const original = reconciledNodes.find(
+          (node) => node.type === 'entry' && node.id === data.original.id,
+        );
+
+        // Skip the update if the original is not on the canvas
+        if (!original) {
+          return;
+        }
+
+        // Place the duplicate directly below the original
+        updateNodes(
+          placeEntryNode(reconciledNodes, data.duplicate.id, {
+            x: original.x + original.width / 2,
+            y:
+              original.y +
+              (original.height ?? ESTIMATED_NODE_HEIGHT) +
+              NODE_GAP,
+          }),
+        );
+      },
+    );
+
+    return () => {
+      Events.removeListener(
+        DatabaseEntries.events.Duplicated,
+        `canvas-view-${view.id}`,
+      );
+    };
+  }, [view.id, view.dataSource.id, reconciledNodes, updateNodes]);
+
+  // Create an entry in the given database, optionally from an
+  // entry template, place it on the canvas, and add it to the
+  // canvas's collection.
+  const createEntry = useCallback(
+    async (databaseId: DatabaseId, point: CanvasPoint, templateId?: string) => {
+      // Create from the template when one is picked
+      const entry = templateId
+        ? await DatabaseEntries.createFromTemplate(templateId)
+        : await DatabaseEntries.create(databaseId);
+
+      // Place the entry before adding it to the collection, otherwise
+      // it is briefly reconciled into the auto-placed grid.
+      updateNodes(placeEntryNode(reconciledNodes, entry.id, point));
+
+      // Focus the new entry's editor once its node mounts. The node
+      // is placed where the user asked for it, so it needs no
+      // revealing.
+      DatabaseEntries.requestFocus(entry.id, { viewId: view.id });
+
+      await Collections.addItems(view.dataSource.id, [entry.id]);
+    },
+    [view.id, view.dataSource.id, reconciledNodes, updateNodes],
+  );
+
+  // Create entries from content dropped in from outside the app,
+  // place them one below the other from the point, and add them to
+  // the canvas's collection.
+  const addExternalContent = useCallback(
+    async (data: DropEventData['data'], point: CanvasPoint) => {
+      // Create the entries in the content's default databases
+      const created = await DatabaseEntries.createFromTransferData(data);
+
+      if (!created.length) {
+        return;
+      }
+
+      // Get the IDs of the created entries
+      const entryIds = created.map((entry) => entry.id);
+
+      // Place the entries before adding them to the collection,
+      // otherwise they are briefly reconciled into the auto-placed
+      // grid.
+      updateNodes(stackEntryNodes(reconciledNodes, entryIds, point));
+
+      // Add the entries to the collection
+      await Collections.addItems(view.dataSource.id, entryIds);
+    },
+    [view.dataSource.id, reconciledNodes, updateNodes],
+  );
+
+  // Handle a drop onto the canvas
+  const handleDrop = useCallback(
+    async (drop: DropEventData) => {
+      // Convert the drop point into canvas units
+      const canvasPoint = canvas.clientToCanvas({
+        x: drop.clientX,
+        y: drop.clientY,
+      });
+
+      // Picker cards spawn the picker at the drop position
+      if (hasTransferredAddContentCard(drop.data)) {
+        setEntryPicker({
+          x: Math.round(canvasPoint.x - DEFAULT_NODE_WIDTH / 2),
+          y: Math.round(canvasPoint.y),
+        });
+
+        return;
+      }
+
+      // Existing entries are placed at the drop position
+      const [droppedEntryId] = resolveTransferredEntryIds(drop.data);
+
+      if (droppedEntryId) {
+        updateNodes(
+          placeEntryNode(reconciledNodes, droppedEntryId, canvasPoint),
+        );
+
+        return;
+      }
+
+      // New entry cards create an entry at the drop position,
+      // using the card's configured template when set.
+      const [databaseId] = resolveTransferredNewEntryDatabaseIds(drop.data);
+
+      if (databaseId) {
+        await createEntry(
+          databaseId,
+          canvasPoint,
+          toolbarCardTemplateId(view.options, databaseId),
+        );
+
+        return;
+      }
+
+      // Create entries from content from outside the app, placed down
+      // from the drop position.
+      await addExternalContent(drop.data, canvasPoint);
+    },
+    [
+      canvas,
+      view.options,
+      reconciledNodes,
+      updateNodes,
+      createEntry,
+      addExternalContent,
+    ],
+  );
+
+  // Register the canvas as a drop target
+  const { droppableProps } = Selection.useDroppable({
+    type: 'canvas-view',
+    id: view.id,
+    accepts: CANVAS_ACCEPTED_DATA_TYPES,
+    nativeAccepts: DatabaseEntries.constants.TransferDataTypes,
+    onDrop: handleDrop,
+  });
+
+  // The picker's placement point: the canvas point its card
+  // would be centered on.
+  const pickerPoint = useCallback(
+    (picker: EntryPickerState): CanvasPoint => ({
+      x: picker.x + DEFAULT_NODE_WIDTH / 2,
+      y: picker.y,
+    }),
+    [],
+  );
+
+  // Place added content at the picker position and add it to the
+  // canvas's collection.
+  const addContent = useCallback(
+    async (content: AddedContent, picker: EntryPickerState) => {
+      // Place the content before adding it to the collection,
+      // otherwise it is briefly reconciled into the auto-placed
+      // grid.
+      updateNodes(
+        placeEntryNode(reconciledNodes, content.id, pickerPoint(picker)),
+      );
+
+      // Focus a newly created entry's editor once its node mounts.
+      // The node is placed where the user asked for it, so it needs
+      // no revealing.
+      if (content.created) {
+        DatabaseEntries.requestFocus(content.id, { viewId: view.id });
+      }
+
+      // Add the content to the canvas's collection
+      await Collections.addItems(view.dataSource.id, [content.id]);
+    },
+    [reconciledNodes, updateNodes, pickerPoint, view.id, view.dataSource.id],
+  );
+
+  // Handle adding content, replacing the picker
+  const handleContentAdded = useCallback(
+    async (content: AddedContent) => {
+      if (!entryPicker) {
+        return;
+      }
+
+      // Close the picker
+      setEntryPicker(null);
+
+      // Place the content where the picker was
+      await addContent(content, entryPicker);
+    },
+    [entryPicker, addContent],
+  );
+
+  // Handle adding content while keeping the picker open
+  const handleContentSecondaryAdded = useCallback(
+    async (content: AddedContent) => {
+      if (!entryPicker) {
+        return;
+      }
+
+      // Move the picker down, making room for the content
+      setEntryPicker({
+        ...entryPicker,
+        y: entryPicker.y + ESTIMATED_NODE_HEIGHT + NODE_GAP,
+      });
+
+      // Place the content where the picker was
+      await addContent(content, entryPicker);
+    },
+    [entryPicker, addContent],
+  );
+
+  // Handle dismissing the picker without a selection
+  const handleEntryPickerDismiss = useCallback(() => {
+    setEntryPicker(null);
+  }, []);
+
+  // Render the active picker at its canvas position
+  function renderEntryPicker() {
+    if (!entryPicker) {
+      return null;
+    }
+
+    return (
+      <div
+        className="canvas-view-picker"
+        style={{
+          transform: `translate(${entryPicker.x}px, ${entryPicker.y}px)`,
+          width: DEFAULT_NODE_WIDTH,
+        }}
+      >
+        <AddContentPicker
+          excludeIds={entries}
+          onAdd={handleContentAdded}
+          onSecondaryAdd={handleContentSecondaryAdded}
+          onDismiss={handleEntryPickerDismiss}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="canvas-view floating-toolbar-host" {...droppableProps}>
+      <Canvas
+        shortcutScope="focus"
+        onNodesFrameChange={handleNodesFrameChange}
+        onSelectionDelete={handleSelectionDelete}
+        selectionToolbar={renderSelectionToolbar}
+      >
+        {/* Connection curves, rendered below the nodes */}
+        <CanvasConnectionsLayer
+          connections={reconciledConnections}
+          onConnectionReconnect={handleConnectionReconnect}
+        />
+
+        <DatabaseEntryContextProvider
+          optionsMenu
+          source={view.dataSource}
+          viewId={view.id}
+        >
+          {reconciledNodes.map((node) => (
+            <CanvasNode
+              key={node.id}
+              id={node.id}
+              x={node.x}
+              y={node.y}
+              width={node.width}
+              height={node.height}
+              resizeEdges="horizontal"
+              dragMode="handle"
+              connectable
+              className="canvas-view-node"
+              onConnect={handleConnect}
+              onFrameChange={(frame) =>
+                updateNodes(updateNodeFrame(reconciledNodes, node.id, frame))
+              }
+            >
+              {/** Entry card **/}
+              <DatabaseEntryRenderer
+                entryId={node.id}
+                layoutContext="card"
+                design={entryCardDesigns[node.id] ?? null}
+              />
+            </CanvasNode>
+          ))}
+        </DatabaseEntryContextProvider>
+
+        {/* Active entry picker */}
+        {renderEntryPicker()}
+      </Canvas>
+
+      {/* Floating toolbar. The canvas pans rather than scrolls,
+          so the toolbar is pinned to the view instead of stuck
+          to a scrollport. */}
+      <ContentViewFloatingToolbar
+        databaseCards={toolbarDatabaseCards}
+        menuOpen={optionsMenuOpen}
+        position="absolute"
+      >
+        {/* View settings menu */}
+        <ContentViewSettingsMenu
+          view={view}
+          onOpenChange={setOptionsMenuOpen}
+        />
+      </ContentViewFloatingToolbar>
+
+      {/* Zoom controls */}
+      <CanvasToolbar />
+    </div>
+  );
+};
+
+// Resolve the entry template configured for a database's toolbar
+// card, ignoring templates which no longer exist.
+function toolbarCardTemplateId(
+  options: Partial<CanvasViewOptions> | undefined,
+  databaseId: DatabaseId,
+): string | undefined {
+  const templateId = options?.toolbarCards?.[databaseId]?.templateId;
+
+  // No template configured for the card
+  if (!templateId) {
+    return undefined;
+  }
+
+  // Check that the template still exists
+  const exists = Boolean(DatabaseEntryTemplates.get(templateId, false));
+
+  return exists ? templateId : undefined;
+}
