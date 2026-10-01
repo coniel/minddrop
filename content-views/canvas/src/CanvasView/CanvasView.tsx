@@ -64,6 +64,7 @@ import {
   placeEntryNode,
   reconcileConnections,
   reconcileNodes,
+  stackEntryNodes,
   updateNodeFrame,
 } from '../utils';
 import './CanvasView.css';
@@ -556,8 +557,33 @@ const CanvasViewContent: React.FC<
     [view.id, view.dataSource.id, reconciledNodes, updateNodes],
   );
 
-  // Handle dropping an entry, new entry card, or picker card onto
-  // the canvas.
+  // Create entries from content dropped in from outside the app,
+  // place them one below the other from the point, and add them to
+  // the canvas's collection.
+  const addExternalContent = useCallback(
+    async (data: DropEventData['data'], point: CanvasPoint) => {
+      // Create the entries in the content's default databases
+      const created = await DatabaseEntries.createFromTransferData(data);
+
+      if (!created.length) {
+        return;
+      }
+
+      // Get the IDs of the created entries
+      const entryIds = created.map((entry) => entry.id);
+
+      // Place the entries before adding them to the collection,
+      // otherwise they are briefly reconciled into the auto-placed
+      // grid.
+      updateNodes(stackEntryNodes(reconciledNodes, entryIds, point));
+
+      // Add the entries to the collection
+      await Collections.addItems(view.dataSource.id, entryIds);
+    },
+    [view.dataSource.id, reconciledNodes, updateNodes],
+  );
+
+  // Handle a drop onto the canvas
   const handleDrop = useCallback(
     async (drop: DropEventData) => {
       // Convert the drop point into canvas units
@@ -591,24 +617,36 @@ const CanvasViewContent: React.FC<
       // using the card's configured template when set.
       const [databaseId] = resolveTransferredNewEntryDatabaseIds(drop.data);
 
-      if (!databaseId) {
+      if (databaseId) {
+        await createEntry(
+          databaseId,
+          canvasPoint,
+          toolbarCardTemplateId(view.options, databaseId),
+        );
+
         return;
       }
 
-      await createEntry(
-        databaseId,
-        canvasPoint,
-        toolbarCardTemplateId(view.options, databaseId),
-      );
+      // Create entries from content from outside the app, placed down
+      // from the drop position.
+      await addExternalContent(drop.data, canvasPoint);
     },
-    [canvas, view.options, reconciledNodes, updateNodes, createEntry],
+    [
+      canvas,
+      view.options,
+      reconciledNodes,
+      updateNodes,
+      createEntry,
+      addExternalContent,
+    ],
   );
 
-  // Register the canvas as a drop target for entries and toolbar cards
+  // Register the canvas as a drop target
   const { droppableProps } = Selection.useDroppable({
     type: 'canvas-view',
     id: view.id,
     accepts: CANVAS_ACCEPTED_DATA_TYPES,
+    nativeAccepts: DatabaseEntries.constants.TransferDataTypes,
     onDrop: handleDrop,
   });
 
