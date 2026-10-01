@@ -2,10 +2,6 @@ import { vi } from 'vitest';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { DesignElementConfigs } from '@minddrop/designs-next';
 import { DesignElementConfigsRegistry } from '@minddrop/designs-next/test-utils';
-import {
-  cleanupDesignFixtures,
-  setupDesignFixtures,
-} from '@minddrop/designs/test-utils';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
@@ -28,10 +24,8 @@ export function setup() {
   setupWorkspaceFixtures(MockFs);
 
   // Load the database and entry fixtures into the stores and the
-  // mock file system, and the legacy layouts the entries fall back
-  // to.
+  // mock file system.
   DatabaseFixtures.setup(MockFs);
-  setupDesignFixtures(MockFs);
 
   // Register the element type the card designs render
   DesignElementConfigs.register(elementConfig_value);
@@ -46,7 +40,6 @@ export async function cleanup(): Promise<void> {
 
   // Clear the stores, registries and fixtures
   DatabaseFixtures.cleanup();
-  cleanupDesignFixtures();
   DesignElementConfigsRegistry.clear();
   await Events.tests.cleanup();
   vi.clearAllMocks();

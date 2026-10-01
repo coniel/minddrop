@@ -16,7 +16,7 @@ import { GalleryViewOptions } from '../types';
 import { GalleryViewComponent } from './GalleryView';
 
 const { contentView_gallery_1 } = ContentViewFixtures;
-const { objectDatabase, objectEntry1, defaultCardLayout } = DatabaseFixtures;
+const { objectDatabase, objectEntry1 } = DatabaseFixtures;
 const { ownedCardDesign_1, ownedCardDesign_2 } = DesignFixtures;
 const { titleDesignElement } = DesignElementFixtures;
 const { elementConfig_value } = StandInElementFixtures;
@@ -105,7 +105,7 @@ describe('<GalleryViewComponent />', () => {
     renderGallery();
 
     expect(screen.getByText(entry.title)).toBeInTheDocument();
-    expect(screen.queryByText('Entry summary')).toBeNull();
+    expect(screen.queryByText(entry.properties.Summary)).toBeNull();
   });
 
   it('renders the cards with the card design the view overrides', () => {
@@ -113,16 +113,20 @@ describe('<GalleryViewComponent />', () => {
       cardDesignOverrides: { [database.id]: summaryCardDesign.id },
     });
 
-    expect(screen.getByText('Entry summary')).toBeInTheDocument();
+    expect(screen.getByText(entry.properties.Summary)).toBeInTheDocument();
     expect(screen.queryByText(entry.title)).toBeNull();
   });
 
-  it('renders the cards with the legacy layout when the database owns no card design', () => {
+  it('renders the cards as their titles when the database owns no card design', () => {
+    // The override names a design the database no longer owns, so
+    // neither it nor the title design renders.
     Designs.Store.clear();
 
-    renderGallery();
+    renderGallery({
+      cardDesignOverrides: { [database.id]: summaryCardDesign.id },
+    });
 
-    // The layout fixture renders its ID as content
-    expect(screen.getByText(defaultCardLayout.id)).toBeInTheDocument();
+    expect(screen.getByText(entry.title)).toBeInTheDocument();
+    expect(screen.queryByText(entry.properties.Summary)).toBeNull();
   });
 });

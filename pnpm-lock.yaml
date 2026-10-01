@@ -377,9 +377,6 @@ importers:
         specifier: workspace:*
         version: link:../../ui/primitives
     devDependencies:
-      '@minddrop/designs':
-        specifier: workspace:*
-        version: link:../../packages/designs
       '@minddrop/designs-next':
         specifier: workspace:*
         version: link:../../packages/designs-next
