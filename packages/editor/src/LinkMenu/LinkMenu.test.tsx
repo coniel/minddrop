@@ -76,36 +76,30 @@ describe('LinkMenu', () => {
   });
 
   it('offers a web address typed into the field', async () => {
-    const { findAllByText } = renderMenu({ query: 'https://minddrop.app' });
+    const { findByText } = renderMenu({ query: 'https://minddrop.app' });
 
-    // While searching, the menu renders its items from its own registry as
-    // well as keeping the source items hidden, so each appears twice.
-    expect(await findAllByText('https://minddrop.app')).not.toHaveLength(0);
-    expect(await findAllByText('Link to webpage')).not.toHaveLength(0);
+    await findByText('https://minddrop.app');
+    await findByText('Link to webpage');
   });
 
   it('lists no references while a web address is offered', async () => {
-    const { queryByText, findAllByText } = renderMenu({
+    const { queryByText, findByText } = renderMenu({
       query: 'https://minddrop.app',
     });
 
-    await findAllByText('https://minddrop.app');
+    await findByText('https://minddrop.app');
 
     expect(queryByText('Book')).toBeNull();
   });
 
   it('chooses the web address when it is pressed', async () => {
     const onSelectUrl = vi.fn();
-    const { findAllByText } = renderMenu({
+    const { findByText } = renderMenu({
       query: 'https://minddrop.app',
       onSelectUrl,
     });
 
-    // The listed item is the one the menu renders, the other being the
-    // hidden source it was registered from.
-    const [, listed] = await findAllByText('https://minddrop.app');
-
-    fireEvent.click(listed);
+    fireEvent.click(await findByText('https://minddrop.app'));
 
     expect(onSelectUrl).toHaveBeenCalledWith('https://minddrop.app');
   });
