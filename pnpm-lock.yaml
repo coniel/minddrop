@@ -736,9 +736,6 @@ importers:
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
-      '@minddrop/designs':
-        specifier: workspace:*
-        version: link:../../packages/designs
       '@minddrop/designs-next':
         specifier: workspace:*
         version: link:../../packages/designs-next

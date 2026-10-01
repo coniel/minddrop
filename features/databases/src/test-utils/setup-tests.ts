@@ -13,9 +13,7 @@ import {
   DatabaseFixtures,
   clearEntryFocusRequest,
 } from '@minddrop/databases/test-utils';
-import { Designs } from '@minddrop/designs';
 import { Designs as DesignsNext } from '@minddrop/designs-next';
-import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
@@ -37,7 +35,6 @@ interface SetupOptions {
   loadDatabaseEntries?: boolean;
   loadDatabaseEntryTemplates?: boolean;
   loadDatabaseTemplates?: boolean;
-  loadDesigns?: boolean;
 }
 
 initializeI18n();
@@ -53,7 +50,6 @@ export function setup(
     loadDatabaseEntries: true,
     loadDatabaseEntryTemplates: true,
     loadDatabaseTemplates: true,
-    loadDesigns: true,
   },
 ) {
   setupWorkspaceFixtures(MockFs);
@@ -82,11 +78,6 @@ export function setup(
   if (options.loadDatabaseTemplates !== false) {
     // Load database templates into the store
     DatabaseTemplates.initialize();
-  }
-
-  if (options.loadDesigns !== false) {
-    // Load designs into the store so their inner layouts are queryable
-    Designs.Store.load(DesignFixtures.designs);
   }
 
   // Load view types into the store
@@ -131,7 +122,6 @@ export async function cleanup(): Promise<void> {
   DatabaseEntries.Store.clear();
   DatabaseEntryTemplates.Store.clear();
   DatabaseTemplates.Store.clear();
-  Designs.Store.clear();
   DesignsNext.Store.clear();
   ContentViewTypes.Store.clear();
   resetPdfStores();

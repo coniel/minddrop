@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Design } from '@minddrop/designs-next';
 import {
   LayoutRegionSizesStore,
   layoutRegionSizeKey,
@@ -66,14 +67,21 @@ interface UseDialogSizeReturn {
 }
 
 /**
- * Manages dialog size state, restores persisted sizes on open,
- * and adapts the size when the browser window is resized.
+ * Manages the dialog's size, restoring a persisted size on open and
+ * adapting it when the window is resized.
+ *
+ * @param open - Whether the dialog is open.
+ * @param design - The design the persisted size is keyed on, or null to use the default size.
+ * @returns The size state and the refs the resize handling reads.
  */
 export function useDialogSize(
   open: boolean,
-  layoutId: string | null,
+  design: Design | null,
 ): UseDialogSizeReturn {
   const [size, setSize] = useState<DialogSize>({ width: 0, height: 0 });
+
+  // The ID the persisted size is keyed on
+  const designId = design?.id ?? null;
 
   // Keep a ref to the current size so callbacks can read it
   // without needing size in their dependency arrays.
@@ -98,10 +106,10 @@ export function useDialogSize(
     slotRef.current = slot;
 
     // Attempt to restore a persisted size, fall back to defaults
-    const saved = layoutId
+    const saved = designId
       ? LayoutRegionSizesStore.get(
           layoutRegionSizeKey(
-            layoutId,
+            designId,
             DIALOG_CONTEXT,
             DIALOG_FRAME_REGION,
             slot,
@@ -127,7 +135,7 @@ export function useDialogSize(
     };
 
     setSize({ width, height });
-  }, [open, layoutId]);
+  }, [open, designId]);
 
   // Adapt dialog size when the window is resized
   useEffect(() => {
@@ -145,10 +153,10 @@ export function useDialogSize(
         slotRef.current = newSlot;
 
         // Try to load a saved size for the new slot, fall back to defaults
-        const saved = layoutId
+        const saved = designId
           ? LayoutRegionSizesStore.get(
               layoutRegionSizeKey(
-                layoutId,
+                designId,
                 DIALOG_CONTEXT,
                 DIALOG_FRAME_REGION,
                 newSlot,
@@ -235,7 +243,7 @@ export function useDialogSize(
     return () => {
       window.removeEventListener('resize', handleWindowResize);
     };
-  }, [open, layoutId]);
+  }, [open, designId]);
 
   return { size, setSize, sizeRef, baseSizeRef };
 }

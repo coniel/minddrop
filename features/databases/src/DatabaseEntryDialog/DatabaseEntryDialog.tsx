@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import {
   DropdownMenu,
@@ -43,32 +43,21 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
   const canvasRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
 
-  // Get the entry so we can resolve the dialog layout ID
+  // Get the entry
   const entry = DatabaseEntries.use(entryId);
 
-  // Resolve the dialog layout ID for the entry's database
-  const databaseId = entry?.database ?? null;
-  const layoutId = useMemo(() => {
-    if (!databaseId) {
-      return null;
-    }
-
-    try {
-      return Databases.getDefaultLayout(databaseId, 'dialog')?.id ?? null;
-    } catch {
-      return null;
-    }
-  }, [databaseId]);
+  // Resolve the design the entry's database renders the dialog with
+  const design = Databases.useDefaultDesign(entry?.database ?? null, 'dialog');
 
   // Dialog size management (init, persistence, window resize adaptation)
-  const { size, setSize, sizeRef, baseSizeRef } = useDialogSize(open, layoutId);
+  const { size, setSize, sizeRef, baseSizeRef } = useDialogSize(open, design);
 
   // Corner-drag resize handling
   const { handleResizeMouseDown } = useDialogResize(
     open,
     size,
     setSize,
-    layoutId,
+    design,
     sizeRef,
     baseSizeRef,
   );
@@ -181,7 +170,11 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
 
         {/* Content wrapper */}
         <ScrollArea className="database-entry-dialog-content" endPadding={8}>
-          <DatabaseEntryRenderer entryId={entryId} layoutContext="dialog" />
+          <DatabaseEntryRenderer
+            entryId={entryId}
+            layoutContext="dialog"
+            design={design}
+          />
         </ScrollArea>
 
         {/* Previous entry navigation button */}

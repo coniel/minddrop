@@ -5,7 +5,6 @@ import {
   Databases,
 } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
-import { Designs } from '@minddrop/designs';
 import {
   DesignElementConfigs,
   Designs as DesignsNext,
@@ -15,30 +14,20 @@ import {
   DesignElementFixtures,
   DesignFixtures as DesignNextFixtures,
 } from '@minddrop/designs-next/test-utils';
-import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { storeItem } from '@minddrop/stores/test-utils';
-import { act, fireEvent, render, screen, waitFor } from '@minddrop/test-utils';
+import { fireEvent, render, screen, waitFor } from '@minddrop/test-utils';
 import { DatabaseEntryContextProvider } from '@minddrop/ui-databases';
 import { StandInElementFixtures } from '@minddrop/ui-designs-next/test-utils';
 import { MockFs, cleanup, setup } from '../test-utils';
 import { DatabaseEntryRenderer } from './DatabaseEntryRenderer';
 
-const { objectEntry1, objectDatabase, defaultCardLayout, databaseDirPath } =
-  DatabaseFixtures;
-const {
-  layout_list_1,
-  layout_card_1,
-  element_text_1,
-  element_property_formatted_text_1,
-  design_books,
-} = DesignFixtures;
+const { objectEntry1, objectDatabase, databaseDirPath } = DatabaseFixtures;
 const { ownedCardDesign_1 } = DesignNextFixtures;
 const { titleDesignElement } = DesignElementFixtures;
 const { elementConfig_value, elementConfig_edit } = StandInElementFixtures;
 
-// A database with a text property, whose value only a design
-// renders: neither the layout fixtures nor the title-only fallback
-// show it.
+// A database with a text property. Only a design renders the
+// property's value. The title-only fallback does not show it.
 const designDatabase = {
   ...objectDatabase,
   id: 'database_design' as const,
@@ -122,106 +111,6 @@ const ownedBodyMappedDesign = {
   owner: designDatabase.id,
 };
 
-// A text element bound to the 'Heading' design property
-const boundTextElement = {
-  ...element_text_1,
-  property: 'Heading',
-};
-
-// A card layout whose only element is the bound text element
-const boundLayout = {
-  ...layout_card_1,
-  id: 'layout_bound-card' as const,
-  tree: { ...layout_card_1.tree, children: [boundTextElement] },
-};
-
-// The design's 'Heading' property, carrying a placeholder for the
-// unmapped-render case (spread from a text property for its type)
-const headingProperty = {
-  ...design_books.properties[0],
-  name: 'Heading',
-  placeholder: 'Heading placeholder',
-};
-
-// A design declaring the 'Heading' property and the bound layout
-const boundDesign = {
-  ...design_books,
-  id: 'design_bound' as const,
-  properties: [headingProperty],
-  layouts: [boundLayout],
-};
-
-// A database using the bound design. The design property map is
-// supplied per-test to cover the mapped and unmapped cases.
-function mappedDatabase(designPropertyMap: Record<string, string>) {
-  return {
-    ...objectDatabase,
-    id: 'database_mapped' as const,
-    name: 'MappedDb',
-    path: `${objectDatabase.path}-mapped`,
-    designId: boundDesign.id,
-    designPropertyMap,
-    defaultLayouts: {},
-    properties: [{ ...design_books.properties[0], name: 'Body' }],
-  };
-}
-
-// An entry in the mapped database with a value for the 'Body' property
-const mappedEntry = {
-  ...objectEntry1,
-  id: 'database-entry_mapped-entry' as const,
-  database: 'database_mapped' as const,
-  path: `${objectDatabase.path}-mapped/Entry.md`,
-  title: 'Mapped Entry',
-  properties: { Body: 'Mapped Value' },
-};
-
-// An editor variant content element with its title bound
-// to the 'Heading' design property.
-const titleBoundEditorElement = {
-  ...element_property_formatted_text_1,
-  titleProperty: 'Heading',
-};
-
-// A card layout whose only element is the title-bound editor
-const titleBoundLayout = {
-  ...layout_card_1,
-  id: 'layout_title-bound-card' as const,
-  tree: { ...layout_card_1.tree, children: [titleBoundEditorElement] },
-};
-
-// A design declaring the 'Heading' property and the title-bound
-// layout.
-const titleBoundDesign = {
-  ...design_books,
-  id: 'design_title-bound' as const,
-  properties: [headingProperty],
-  layouts: [titleBoundLayout],
-};
-
-// A database using the title-bound design, mapping the 'Heading'
-// design property to the implicit Title database property.
-const titleDatabase = {
-  ...objectDatabase,
-  id: 'database_title' as const,
-  name: 'TitleDb',
-  path: `${objectDatabase.path}-title`,
-  designId: titleBoundDesign.id,
-  designPropertyMap: { Heading: 'Title' },
-  defaultLayouts: {},
-  properties: [],
-};
-
-// An entry in the title database
-const titleEntry = {
-  ...objectEntry1,
-  id: 'database-entry_title-entry' as const,
-  database: 'database_title' as const,
-  path: `${objectDatabase.path}-title/Title Entry.md`,
-  title: 'Title Entry',
-  properties: {},
-};
-
 describe('<DatabaseEntryRenderer />', () => {
   beforeEach(() => {
     setup();
@@ -241,28 +130,6 @@ describe('<DatabaseEntryRenderer />', () => {
     DesignElementConfigsRegistry.clear();
   });
 
-  it('renders an entry using the default layout', () => {
-    render(
-      <DatabaseEntryRenderer entryId={objectEntry1.id} layoutContext="card" />,
-    );
-
-    // Layout fixture renders its ID as content
-    screen.getByText(defaultCardLayout.id);
-  });
-
-  it('renders an entry using the specified layout', () => {
-    render(
-      <DatabaseEntryRenderer
-        entryId={objectEntry1.id}
-        layoutContext="list"
-        layoutId={layout_list_1.id}
-      />,
-    );
-
-    // Layout fixture renders its ID as content
-    screen.getByText(layout_list_1.id);
-  });
-
   it('renders an entry with the design its database owns', () => {
     Databases.Store.load([designDatabase]);
     DatabaseEntries.Store.load([designEntry]);
@@ -273,9 +140,7 @@ describe('<DatabaseEntryRenderer />', () => {
     );
 
     // The design's element resolves the entry's Body value
-    screen.getByText('Design value');
-    // The design takes precedence over the legacy layout
-    expect(screen.queryByText(defaultCardLayout.id)).toBeNull();
+    screen.getByText(designEntry.properties.Body);
   });
 
   it('renders an entry with the design it is given', () => {
@@ -290,11 +155,10 @@ describe('<DatabaseEntryRenderer />', () => {
       />,
     );
 
-    screen.getByText('Design value');
-    expect(screen.queryByText(defaultCardLayout.id)).toBeNull();
+    screen.getByText(designEntry.properties.Body);
   });
 
-  it('renders the legacy layout when given no design', () => {
+  it('renders the entry title alone when given no design', () => {
     // The database owns a design, which the given null overrides
     Databases.Store.load([designDatabase]);
     DatabaseEntries.Store.load([designEntry]);
@@ -308,8 +172,8 @@ describe('<DatabaseEntryRenderer />', () => {
       />,
     );
 
-    // Layout fixture renders its ID as content
-    screen.getByText(defaultCardLayout.id);
+    screen.getByText(designEntry.title);
+    expect(screen.queryByText(designEntry.properties.Body)).toBeNull();
   });
 
   it("writes a design element's value to the entry", async () => {
@@ -393,110 +257,6 @@ describe('<DatabaseEntryRenderer />', () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  it('renders a bound element with the mapped database property value', () => {
-    // Register the bound design and a database mapping Heading -> Body
-    Designs.Store.load([boundDesign]);
-    Databases.Store.load([mappedDatabase({ Heading: 'Body' })]);
-    DatabaseEntries.Store.load([mappedEntry]);
-
-    render(
-      <DatabaseEntryRenderer
-        entryId={mappedEntry.id}
-        layoutContext="card"
-        layoutId={boundLayout.id}
-      />,
-    );
-
-    // The bound element resolves Heading -> Body -> the entry's value
-    screen.getByText('Mapped Value');
-  });
-
-  it('does not render the design placeholder when the property is unmapped', () => {
-    // Register the bound design and a database with no property mapping
-    Designs.Store.load([boundDesign]);
-    Databases.Store.load([mappedDatabase({})]);
-    DatabaseEntries.Store.load([mappedEntry]);
-
-    render(
-      <DatabaseEntryRenderer
-        entryId={mappedEntry.id}
-        layoutContext="card"
-        layoutId={boundLayout.id}
-      />,
-    );
-
-    // Placeholders are a design aid: an unmapped bound element
-    // renders empty rather than showing placeholder text as if it
-    // were entry content.
-    expect(screen.queryByText('Heading placeholder')).toBeNull();
-  });
-
-  it('renders the entry title in a title-bound editor element', () => {
-    // Register the title-bound design and its database and entry
-    Designs.Store.load([titleBoundDesign]);
-    Databases.Store.load([titleDatabase]);
-    DatabaseEntries.Store.load([titleEntry]);
-
-    render(
-      <DatabaseEntryRenderer
-        entryId={titleEntry.id}
-        layoutContext="card"
-        layoutId={titleBoundLayout.id}
-      />,
-    );
-
-    // The editor's title block resolves Heading -> Title -> the
-    // entry title.
-    screen.getByText('Title Entry');
-  });
-
-  it('shows a bound editor element the property value set in the store', () => {
-    // An editor element bound to the 'Heading' design property
-    const editorElement = {
-      ...element_property_formatted_text_1,
-      property: 'Heading',
-    };
-    const editorLayout = {
-      ...layout_card_1,
-      id: 'layout_editor-card' as const,
-      tree: { ...layout_card_1.tree, children: [editorElement] },
-    };
-    const editorDesign = {
-      ...boundDesign,
-      id: 'design_editor' as const,
-      layouts: [editorLayout],
-    };
-    const database = {
-      ...mappedDatabase({ Heading: 'Body' }),
-      designId: editorDesign.id,
-    };
-
-    Designs.Store.load([editorDesign]);
-    Databases.Store.load([database]);
-    DatabaseEntries.Store.load([mappedEntry]);
-
-    render(
-      <DatabaseEntryRenderer
-        entryId={mappedEntry.id}
-        layoutContext="card"
-        layoutId={editorLayout.id}
-      />,
-    );
-
-    screen.getByText('Mapped Value');
-
-    // The entry changes behind the editor, as on a background sync
-    act(() => {
-      DatabaseEntries.Store.set({
-        ...mappedEntry,
-        properties: { Body: 'External edit' },
-      });
-    });
-
-    screen.getByText('External edit');
-    expect(screen.queryByText('Mapped Value')).toBeNull();
-  });
-
   it('tints the entry with its meta color', () => {
     // Give the entry a color
     DatabaseEntries.Store.load([
@@ -556,33 +316,16 @@ describe('<DatabaseEntryRenderer />', () => {
     expect(container.querySelector('[class*="scheme-"]')).toBeNull();
   });
 
-  it('renders a title-only fallback when the database has no design', () => {
-    // A database with no design and an entry belonging to it
-    const noDesignDatabase = {
-      ...objectDatabase,
-      id: 'database_no-design' as const,
-      name: 'NoDesignDb',
-      path: `${objectDatabase.path}-no-design`,
-      designId: null,
-    };
-    const noDesignEntry = {
-      ...objectEntry1,
-      id: 'database-entry_no-design-entry' as const,
-      database: 'database_no-design' as const,
-      path: `${objectDatabase.path}-no-design/Entry.md`,
-      title: 'No Design Entry',
-    };
+  it('renders the entry title alone when its database owns no design', () => {
+    Databases.Store.load([designDatabase]);
+    DatabaseEntries.Store.load([designEntry]);
 
-    Databases.Store.load([noDesignDatabase]);
-    DatabaseEntries.Store.load([noDesignEntry]);
-
-    const { container } = render(
-      <DatabaseEntryRenderer entryId={noDesignEntry.id} layoutContext="card" />,
+    render(
+      <DatabaseEntryRenderer entryId={designEntry.id} layoutContext="card" />,
     );
 
-    // Falls back to a title-only fallback container showing the entry title
-    expect(container.querySelector('.database-entry-fallback')).not.toBeNull();
-    screen.getByText('No Design Entry');
+    screen.getByText(designEntry.title);
+    expect(screen.queryByText(designEntry.properties.Body)).toBeNull();
   });
 
   it('opens the entry options menu on right click when enabled', async () => {

@@ -5,9 +5,7 @@ import {
   Databases,
   LayoutContext,
 } from '@minddrop/databases';
-import { Designs, Layouts } from '@minddrop/designs';
 import { Design } from '@minddrop/designs-next';
-import { LayoutRenderer } from '@minddrop/feature-designs';
 import { useTranslation } from '@minddrop/i18n';
 import { PropertyValue } from '@minddrop/properties';
 import { Selection } from '@minddrop/selection';
@@ -26,7 +24,6 @@ import {
   DropdownMenu,
   IconButton,
   Text,
-  TransientViewStateScope,
 } from '@minddrop/ui-primitives';
 import { Views } from '@minddrop/views';
 import { DatabaseEntryOptionsMenu } from '../DatabaseEntryOptionsMenu';
@@ -34,25 +31,19 @@ import './DatabaseEntryRenderer.css';
 
 export interface DatabaseEntryRendererProps {
   /**
-   * The ID of the element to render.
+   * The ID of the entry to render.
    */
   entryId: string;
 
   /**
-   * The context in which the element is displayed, determining which
-   * default layout to use.
+   * The context the entry is displayed in. Determines which default
+   * design renders it.
    */
   layoutContext: LayoutContext;
 
   /**
-   * The ID of the layout to use to render the element.
-   * If not provided, the default layout will be used.
-   */
-  layoutId?: string;
-
-  /**
-   * The design to render the entry with, null to render it with
-   * the legacy layout. Resolved from the database when omitted.
+   * The design to render the entry with. Null renders its title
+   * alone. Resolved from the database when omitted.
    */
   design?: Design | null;
 
@@ -86,6 +77,9 @@ export const DatabaseEntryRenderer: React.FC<DatabaseEntryRendererProps> =
 DatabaseEntryRenderer.displayName = 'DatabaseEntryRenderer';
 
 interface EntryProps extends Omit<DatabaseEntryRendererProps, 'entryId'> {
+  /**
+   * The entry to render.
+   */
   entry: DatabaseEntry;
 }
 
@@ -102,9 +96,12 @@ const EntryWithResolvedDesign: React.FC<EntryProps> = (props) => {
   return <Entry {...props} design={design} />;
 };
 
+/**
+ * Renders an entry with its design, or its title alone when it has
+ * none.
+ */
 const Entry: React.FC<EntryProps> = ({
   entry,
-  layoutId,
   layoutContext,
   design,
   onClick,
@@ -117,10 +114,6 @@ const Entry: React.FC<EntryProps> = ({
   );
   const { t } = useTranslation();
   const database = Databases.use(entry.database);
-  const databaseDesign = Designs.use(database?.designId || '');
-  // Only database designs apply to entries
-  const legacyDesign =
-    databaseDesign?.type === 'database' ? databaseDesign : null;
   const { draggable, optionsMenu, contextMenu, source, viewId } =
     useDatabaseEntryContext();
   const focusRequested = Boolean(
@@ -133,85 +126,11 @@ const Entry: React.FC<EntryProps> = ({
     preview: () => rootRef.current,
   });
 
-  // The base layout type the context resolves to, used for styling
-  // and click behaviour.
-  const baseType = Databases.constants.LayoutContextBaseType[layoutContext];
-
-  // Resolve the layout to render with, falling back to the
-  // database default when no override is specified.
-  const layout = useMemo(() => {
-    // A design takes precedence over the legacy layouts
-    if (design) {
-      return null;
-    }
-
-    // Look up the explicit layout if a real ID was provided
-    if (layoutId && layoutId !== 'default') {
-      const explicit = Layouts.get(layoutId, false);
-
-      if (explicit) {
-        return explicit;
-      }
-    }
-
-    // Fall back to the database's default layout for this context
-    return Databases.getDefaultLayout(entry.database, layoutContext);
-    // Depends on the database's pinned default and the legacy design so the
-    // layout recomputes when the default is changed or the design's layouts
-    // change
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- recompute on default/design changes
-  }, [
-    design,
-    layoutId,
-    entry.database,
-    layoutContext,
-    database?.defaultLayouts?.[layoutContext],
-    legacyDesign,
-  ]);
-
-  // Resolve each bound element to the database property mapped to
-  // its design property (element ID -> design property -> database
-  // property)
-  const propertyMap = useMemo(() => {
-    if (!layout || !database || !legacyDesign) {
-      return {};
-    }
-
-    const bindings = Layouts.getPropertyBindings(layout);
-    const designPropertyMap = Databases.resolveDesignPropertyMap(
-      legacyDesign.properties,
-      database,
-    );
-    const resolved: Record<string, string> = {};
-
-    Object.entries(bindings).forEach(([elementId, designPropertyName]) => {
-      const databaseProperty = designPropertyMap[designPropertyName];
-
-      if (databaseProperty) {
-        resolved[elementId] = databaseProperty;
-      }
-    });
-
-    return resolved;
-  }, [database, legacyDesign, layout]);
-
   // Database properties including the implicit entry metadata
   // properties, so metadata-mapped elements resolve a schema.
   const rendererProperties = useMemo(
     () => Databases.withImplicitMetadataProperties(database?.properties || []),
     [database],
-  );
-
-  // Get display-ready property values (image paths, virtual view IDs, etc.).
-  // Depends on entry.properties so the values recompute when a property is
-  // written after the entry is created (e.g. an image dropped into the view).
-  const propertyValues = useMemo(
-    () =>
-      layout
-        ? DatabaseEntries.displayPropertyValues(entry.id, layout, propertyMap)
-        : {},
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- recompute on property changes
-    [entry.id, entry.properties, layout, propertyMap],
   );
 
   // Resolve the entry's property values when rendering with a design
@@ -296,6 +215,10 @@ const Entry: React.FC<EntryProps> = ({
     return null;
   }
 
+  // The base layout type the context resolves to, used for styling
+  // and click behaviour.
+  const baseType = Databases.constants.LayoutContextBaseType[layoutContext];
+
   // Page entries are not clickable items, so they should not
   // have button role or keyboard activation.
   const isClickable = baseType !== 'page';
@@ -308,24 +231,28 @@ const Entry: React.FC<EntryProps> = ({
   // within contexts which enable it.
   const showOptionsMenu = baseType === 'card' && optionsMenu;
 
-  // The entry's color, applied as a scheme class so the layout's
-  // schemable roles resolve against it.
+  // Resolve the entry's color. It is applied as a scheme class so the
+  // design's schemable roles resolve against it.
   const entryColor = DatabaseEntries.resolveColor(database, entry);
 
   // Join the entry's modifier classes
   const className = [
+    // The root class
     'database-entry',
+    // The base type modifier
     `database-entry-${baseType}`,
+    // The entry's color scheme
     entryColor ? `scheme-${entryColor}` : '',
+    // The dragging modifier
     showDragHandle && isDragging ? 'database-entry-dragging' : '',
-    design || layout ? '' : 'database-entry-fallback',
+    // The title-only fallback
+    design ? '' : 'database-entry-fallback',
   ]
     .filter(Boolean)
     .join(' ');
 
   /**
-   * Renders the entry with the database's design. Falls back to its
-   * legacy layout, then to a title-only text.
+   * Renders the entry with its design. Without one, renders its title.
    *
    * @returns The entry content.
    */
@@ -339,27 +266,6 @@ const Entry: React.FC<EntryProps> = ({
           onValueChange={onUpdatePropertyValue}
           validateValue={onValidatePropertyValue}
         />
-      );
-    }
-
-    if (layout) {
-      return (
-        <TransientViewStateScope segment={entry.id}>
-          <LayoutRenderer
-            layout={layout}
-            context={layoutContext}
-            autoFocusEditor={focusRequested}
-            designProperties={legacyDesign?.properties}
-            mediaDirPath={
-              legacyDesign ? Designs.resolveMediaDirPath(legacyDesign.id) : null
-            }
-            propertyMap={propertyMap}
-            propertyValues={propertyValues}
-            properties={rendererProperties}
-            onUpdatePropertyValue={onUpdatePropertyValue}
-            onValidatePropertyValue={onValidatePropertyValue}
-          />
-        </TransientViewStateScope>
       );
     }
 

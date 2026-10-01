@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
+import { Design } from '@minddrop/designs-next';
 import {
   LayoutRegionSizesStore,
   layoutRegionSizeKey,
@@ -42,12 +43,20 @@ interface UseDialogResizeReturn {
  * Manages corner-drag resizing of the dialog canvas. Attaches
  * global mouse listeners while the dialog is open and persists
  * the final size on mouseup.
+ *
+ * @param open - Whether the dialog is open.
+ * @param size - The current dialog size.
+ * @param setSize - Setter for the dialog size.
+ * @param design - The design the persisted size is keyed on, or null to skip persisting.
+ * @param sizeRef - Ref mirroring the latest size.
+ * @param baseSizeRef - Ref holding the user's intended size and the viewport it was set in.
+ * @returns The corner handle mousedown handler.
  */
 export function useDialogResize(
   open: boolean,
   size: DialogSize,
   setSize: React.Dispatch<React.SetStateAction<DialogSize>>,
-  layoutId: string | null,
+  design: Design | null,
   sizeRef: React.RefObject<DialogSize>,
   baseSizeRef: React.RefObject<{
     width: number;
@@ -57,6 +66,9 @@ export function useDialogResize(
   } | null>,
 ): UseDialogResizeReturn {
   const resizeState = useRef<ResizeState | null>(null);
+
+  // The ID the persisted size is keyed on
+  const designId = design?.id ?? null;
 
   // Start a resize operation on mousedown
   const handleResizeMouseDown = useCallback(
@@ -161,10 +173,10 @@ export function useDialogResize(
       return;
     }
 
-    // Persist the final size if we have a design ID
-    if (layoutId) {
+    // If there is a design ID, persist the final size under it
+    if (designId) {
       const key = layoutRegionSizeKey(
-        layoutId,
+        designId,
         DIALOG_CONTEXT,
         DIALOG_FRAME_REGION,
         getWindowSizeSlot(),
@@ -181,7 +193,7 @@ export function useDialogResize(
     }
 
     resizeState.current = null;
-  }, [layoutId, sizeRef, baseSizeRef]);
+  }, [designId, sizeRef, baseSizeRef]);
 
   // Attach global mouse listeners for resize
   useEffect(() => {

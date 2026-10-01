@@ -6,7 +6,6 @@ paths:
   - 'packages/designs/src/Layouts.ts'
   - 'packages/designs/src/getLayout/**'
   - 'packages/designs/src/DesignsStore.ts'
-  - 'features/databases/src/DatabaseEntryRenderer/**'
 tags: [layouts, performance, store, denormalisation]
 ---
 
@@ -14,6 +13,6 @@ tags: [layouts, performance, store, denormalisation]
 
 `LayoutsStore` derives layouts from `DesignsStore` on demand (`getLayout` scans `designs × layouts`). This is deliberate: the Design is the single source of truth and a separate layouts store would need write-through sync on every design mutation (including whole-design saves from the studio) — a standing desync risk for an unmeasurable win.
 
-Perf context (as of the figma-design-studio WG): the entry-rendering hot path (`DatabaseEntryRenderer`) resolves layouts non-reactively inside a `useMemo`, so the scan runs once per entry mount. Even hundreds of entries amount to microseconds; the real cost of large views is rendering N copies of the layout element tree, not the lookup.
+Perf context (as of the figma-design-studio WG): the entry-rendering hot path resolved layouts non-reactively inside a `useMemo`, so the scan ran once per entry mount. Even hundreds of entries amount to microseconds; the real cost of large views is rendering N copies of the layout element tree, not the lookup. Database entries render through `designs-next` since the cutover (2026-10-01), leaving spaces and the studio as the lookup's callers.
 
 If profiling ever shows lookups matter: add an internal `Map<layoutId, Layout>` index inside `LayoutsStore`, rebuilt lazily on `DesignsStore` changes. O(1) lookups, same public API, nothing authoritative to desync. Do **not** reach for a separate store.
