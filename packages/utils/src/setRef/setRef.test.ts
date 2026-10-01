@@ -16,7 +16,9 @@ describe('setRef', () => {
     const cleanup = setRef<string>((instance) => {
       received.push(instance);
 
-      return () => received.push(null);
+      return () => {
+        received.push(null);
+      };
     }, 'instance');
 
     cleanup?.();
