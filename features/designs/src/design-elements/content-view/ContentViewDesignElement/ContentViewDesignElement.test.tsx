@@ -1,5 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { ContentViews } from '@minddrop/content-views';
+import {
+  ContentViewTypeComponentProps,
+  ContentViewTypes,
+  ContentViews,
+} from '@minddrop/content-views';
 import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { cleanup as cleanupRender, render, screen } from '@minddrop/test-utils';
@@ -7,17 +11,27 @@ import { cleanup, setup } from '../../../test-utils';
 import { ContentViewDesignElement } from './ContentViewDesignElement';
 
 const { element_content_view_1 } = DesignFixtures;
+const { contentView_gallery_1, contentViewType_gallery } = ContentViewFixtures;
 
-// A query sourced content view, so that rendering it does not depend
-// on a loaded database.
+// A query sourced content view. Rendering it needs no loaded
+// database.
 const queryContentView = {
-  ...ContentViewFixtures.contentView_gallery_1,
+  ...contentView_gallery_1,
   dataSource: { type: 'query' as const, id: 'query-1' },
 };
 
 describe('<ContentViewDesignElement />', () => {
   beforeEach(() => {
+    // Load the workspace and design fixtures
     setup();
+
+    // Register a view type which renders the view's name
+    ContentViewTypes.register({
+      ...contentViewType_gallery,
+      component: TestViewTypeComponent,
+    });
+
+    // Load the query sourced content view
     ContentViews.Store.load([queryContentView]);
   });
 
@@ -25,6 +39,7 @@ describe('<ContentViewDesignElement />', () => {
     cleanupRender();
     await cleanup();
     ContentViews.Store.clear();
+    ContentViewTypes.unregister(contentViewType_gallery.type);
   });
 
   it('renders the creation form when the element has no content view', () => {
@@ -51,9 +66,14 @@ describe('<ContentViewDesignElement />', () => {
       />,
     );
 
-    // The header names the resolved view, and neither the creation
-    // form nor the missing view notice is shown.
-    expect(screen.queryByText(queryContentView.name)).not.toBeNull();
-    expect(screen.queryByText('contentViews.missing.message')).toBeNull();
+    // The view type renders the resolved view
+    expect(screen.getByTestId('view').textContent).toBe(queryContentView.name);
   });
 });
+
+/**
+ * Renders the received view's name for assertion.
+ */
+function TestViewTypeComponent({ view }: ContentViewTypeComponentProps) {
+  return <div data-testid="view">{view.name}</div>;
+}
