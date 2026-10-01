@@ -37,8 +37,9 @@ export interface BaseHistoryRecord {
   timestamp: Date;
 
   /**
-   * The action which caused the change. Absent when the change was an
-   * edit of the subject itself.
+   * The action which caused the change. Every record the action made,
+   * in whichever history or ledger, shares it. Absent when the change
+   * is recorded in one place.
    */
   action?: HistoryAction;
 }
