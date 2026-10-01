@@ -1,9 +1,10 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { i18n } from '@minddrop/i18n';
 import { Properties, PropertySchema } from '@minddrop/properties';
 import {
   fillForm,
   fireEvent,
+  loadDefaultContentIconSet,
   pickContentIcon,
   pickedContentIconString,
   render,
@@ -25,6 +26,8 @@ const textProperty: PropertySchema = {
 };
 
 describe('<PropertyEditorBase />', () => {
+  beforeAll(loadDefaultContentIconSet);
+
   afterEach(cleanup);
 
   it('focuses and selects name input when opened with default name', async () => {

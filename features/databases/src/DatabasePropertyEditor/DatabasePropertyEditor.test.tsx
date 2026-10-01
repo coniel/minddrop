@@ -1,10 +1,19 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from 'vitest';
 import { Databases } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Events } from '@minddrop/events';
 import { Properties } from '@minddrop/properties';
 import {
   fillForm,
+  loadDefaultContentIconSet,
   pickContentIcon,
   pickedContentIconName,
   render,
@@ -22,6 +31,8 @@ const property = DatabaseFixtures.objectDatabase.properties[0];
 const property2 = DatabaseFixtures.objectDatabase.properties[1];
 
 describe('<DatabasePropertyEditor />', () => {
+  beforeAll(loadDefaultContentIconSet);
+
   beforeEach(setup);
 
   afterEach(cleanup);
