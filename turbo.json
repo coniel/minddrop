@@ -2,21 +2,28 @@
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env.*local"],
   "tasks": {
+    "transit": {
+      "dependsOn": ["^transit"]
+    },
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"],
       "env": ["TAURI_PLATFORM", "TAURI_DEBUG", "MINDDROP_BLOG_DIR"]
     },
     "lint": {
+      "dependsOn": ["transit"],
       "outputs": []
     },
     "typecheck": {
+      "dependsOn": ["transit"],
       "outputs": []
     },
     "dev": {
       "cache": false
     },
-    "test": {},
+    "test": {
+      "dependsOn": ["transit"]
+    },
     "test:watch": {
       "cache": false
     }
