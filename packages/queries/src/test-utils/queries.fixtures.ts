@@ -1,5 +1,8 @@
+import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { MockFileDescriptor } from '@minddrop/file-system';
 import { Query } from '../types';
+
+const { objectDatabase, urlDatabase } = DatabaseFixtures;
 
 function generateQueryFixture(number: number): Query {
   return {
@@ -50,6 +53,25 @@ function generateQueryFixture(number: number): Query {
 export const query_1 = generateQueryFixture(1);
 export const query_2 = generateQueryFixture(2);
 export const query_3 = generateQueryFixture(3);
+
+// A query fed by two databases. Not among the loaded queries, so
+// tests needing it load it themselves.
+export const query_twoDatabases_1: Query = {
+  ...generateQueryFixture(4),
+  id: 'query_twoDatabases_1',
+  name: 'Query fed by two databases',
+  nodes: generateQueryFixture(4).nodes.map((node) =>
+    node.type === 'source'
+      ? {
+          ...node,
+          sources: [
+            { type: 'database', id: objectDatabase.id },
+            { type: 'database', id: urlDatabase.id },
+          ],
+        }
+      : node,
+  ),
+};
 
 export const queries = [query_1, query_2, query_3];
 
