@@ -1,5 +1,6 @@
 import React from 'react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Events } from '@minddrop/events';
 import {
   createDataTransfer,
   fireEvent,
@@ -7,6 +8,7 @@ import {
   screen,
 } from '@minddrop/test-utils';
 import { toMimeType } from '@minddrop/utils';
+import { DragEndedEvent } from '../events';
 import {
   DragSource,
   cancelDragWithEscape,
@@ -319,6 +321,41 @@ describe('useDroppable', () => {
       );
     });
   });
+
+  it('reports the target the drag dropped on when it ends', () =>
+    new Promise<void>((done) => {
+      render(
+        <>
+          <Draggable />
+          <Droppable />
+        </>,
+      );
+
+      Events.addListener(DragEndedEvent, 'test', ({ target }) => {
+        expect(target).toBe(screen.getByTestId('target'));
+        done();
+      });
+
+      dragAndDrop(screen.getByTestId('item'), screen.getByTestId('target'));
+    }));
+
+  it('reports no target when the drag is cancelled', () =>
+    new Promise<void>((done) => {
+      render(
+        <>
+          <Draggable />
+          <Droppable />
+        </>,
+      );
+
+      Events.addListener(DragEndedEvent, 'test', ({ target }) => {
+        expect(target).toBeNull();
+        done();
+      });
+
+      dragOver(screen.getByTestId('item'), screen.getByTestId('target'));
+      cancelDragWithEscape();
+    }));
 
   it('drops on the innermost target', () => {
     const drops: string[] = [];

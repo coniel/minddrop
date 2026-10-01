@@ -16,6 +16,12 @@ export type DragEndedEventData = {
    * cancelled or released outside every target.
    */
   dropped: boolean;
+
+  /**
+   * The element of the drop target the drag dropped on, or null
+   * when it did not drop.
+   */
+  target: HTMLElement | null;
 };
 
 declare module '@minddrop/events/EventDataMap' {

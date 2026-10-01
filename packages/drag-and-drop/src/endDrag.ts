@@ -89,6 +89,10 @@ export function endDrag(released: boolean): void {
     swallowNextClick();
 
     // Dispatch a drag ended event
-    Events.dispatch(DragEndedEvent, { drag, dropped });
+    Events.dispatch(DragEndedEvent, {
+      drag,
+      dropped,
+      target: dropped && target ? target.element : null,
+    });
   }
 }
