@@ -1,7 +1,8 @@
 import { EntityGroups } from '@minddrop/entity-groups';
 import { I18n } from '@minddrop/i18n';
-import { TagGroupsTypeConfig } from './TagGroupsTypeConfig';
-import { locales } from './locales';
+import { TagGroupsTypeConfig } from '../TagGroupsTypeConfig';
+import { initializeTagEventHandlers } from '../initializeTagEventHandlers';
+import { locales } from '../locales';
 
 /**
  * Initializes the tags package.
@@ -14,4 +15,7 @@ export function initializeTags(): void {
 
   // Register the tag groups entity group type
   EntityGroups.registerType(TagGroupsTypeConfig);
+
+  // Register the tag event handlers
+  initializeTagEventHandlers();
 }

@@ -4,3 +4,4 @@ export * from './searchTags';
 export * from './resolveUniqueTagName';
 export * from './validateTagName';
 export * from './getRecentTags';
+export * from './resolveWorkspaceTagLedger';

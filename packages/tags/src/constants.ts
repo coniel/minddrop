@@ -29,8 +29,14 @@ export const TagGroupsIcon: UiIconName = 'tags';
 export const DefaultTagIcon = 'lucide:tag:default';
 
 /**
- * The causes a tag action names on the history records it makes.
- * Persisted in history files.
+ * The type the ledger of a workspace's tags is filed under within
+ * its ledgers directory.
+ */
+export const TagLedgerType = 'tags';
+
+/**
+ * The causes of the actions recorded in the workspace's tags ledger.
+ * Persisted in the ledger files.
  */
 export const TagHistoryCauses = {
   TagRenamed: 'tags:tag-renamed',
