@@ -1,25 +1,39 @@
 import { Range, Editor as SlateEditor } from 'slate';
-import { Ast, WikilinkElement } from '@minddrop/ast';
+import { generateWikilinkElement } from '@minddrop/ast';
 import { Transforms } from '../Transforms';
 import { Editor } from '../types';
+
+export interface InsertWikilinkOptions {
+  /**
+   * The link's text. Defaults to the text the link replaces.
+   */
+  label?: string;
+
+  /**
+   * The part of the target the link points into.
+   */
+  fragment?: string;
+}
 
 /**
  * Inserts a wikilink at the cursor.
  *
  * The link's text is the given label, or the text it is inserted over, or the
- * reference itself, in which case it is written back without a label. The
- * cursor is left after the link, so that typing continues alongside it rather
- * than inside it.
+ * target itself, in which case it is written back without a label. The cursor
+ * is left after the link, so that typing continues alongside it rather than
+ * inside it.
  *
- * @param editor An editor instance.
- * @param reference What the link points at, as written between its brackets.
- * @param label The link's text, defaulting to the text it replaces.
+ * @param editor - An editor instance.
+ * @param reference - What the link points at, as written between its brackets.
+ * @param options - The link's text and the part of the target it points into.
  */
 export function insertWikilink(
   editor: Editor,
   reference: string,
-  label?: string,
+  options: InsertWikilinkOptions = {},
 ): void {
+  const { label, fragment } = options;
+
   if (!editor.selection) {
     return;
   }
@@ -27,11 +41,12 @@ export function insertWikilink(
   const isCollapsed = Range.isCollapsed(editor.selection);
   const selectedText = SlateEditor.string(editor, editor.selection);
 
-  const element = Ast.generateElement<WikilinkElement>('wikilink', {
-    reference,
-    // Text the link is made from is kept as its label, so linking a phrase
-    // reads as that phrase rather than as what it points at.
-    children: [{ text: label || selectedText || reference }],
+  // Create the link. Text the link is made from is kept as its label,
+  // so linking a phrase reads as that phrase rather than as what it
+  // points at.
+  const element = generateWikilinkElement(reference, {
+    label: label || selectedText || undefined,
+    fragment,
   });
 
   SlateEditor.withoutNormalizing(editor, () => {

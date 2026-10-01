@@ -5,7 +5,7 @@ export interface EditorShortcutContext {
    * Opens what a wikilink references. Absent when the editor's consumer does
    * not resolve references.
    */
-  onOpenWikilink?: (reference: string) => void;
+  onOpenWikilink?: (reference: string, fragment?: string) => void;
 }
 
 export interface EditorShortcut {

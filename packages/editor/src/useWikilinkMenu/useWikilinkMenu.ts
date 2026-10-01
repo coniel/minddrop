@@ -153,7 +153,7 @@ export function useWikilinkMenu(
       }
 
       // No text was selected, so the link shows the reference's own label
-      insertWikilink(editor, reference.reference, reference.label);
+      insertWikilink(editor, reference.reference, { label: reference.label });
     },
     [editor, references, disarm],
   );

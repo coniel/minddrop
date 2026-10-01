@@ -46,22 +46,28 @@ export { updateDatabaseEntry as update } from './updateDatabaseEntry';
 export { clearDatabaseEntryProperty as clearProperty } from './clearDatabaseEntryProperty';
 export { updateDatabaseEntryProperty as updateProperty } from './updateDatabaseEntryProperty';
 export { setEntryColor as setColor } from './setEntryColor';
+export { getEntryPropertyMetadata as getPropertyMetadata } from './getEntryPropertyMetadata';
+export { updateEntryPropertyMetadata as updatePropertyMetadata } from './updateEntryPropertyMetadata';
 export { writeDatabaseEntry as write } from './writeDatabaseEntry';
 export { readDatabaseEntry as read } from './readDatabaseEntry';
 export {
   DatabaseEntriesStore as Store,
   useDatabaseEntry as use,
+  useEntryPropertyMetadata as usePropertyMetadata,
   useDatabaseEntries as useAll,
   useDatabaseEntriesByIds as useByIds,
   useDatabaseEntryIds as useIds,
 } from './DatabaseEntriesStore';
 export { requestEntryFocus as requestFocus } from './requestEntryFocus';
 export { useEntryFocusRequest as useFocusRequest } from './EntryFocusRequestStore';
+export { resolveDatabaseEntryReference as resolveReference } from './utils';
 export { resolveEntryPropertyFilePath as propertyFilePath } from './utils';
+export { resolveEntryPropertyFiles as propertyFiles } from './utils';
 export { resolveEntryIcon as resolveIcon } from './utils';
 export { isEntryTitleTaken as isTitleTaken } from './utils';
 export { isGloballyUniqueEntryTitle as isGloballyUniqueTitle } from './utils';
 export { findDatabaseEntryByReference as findByReference } from './utils';
+export { findEntryPropertyFileOwner as findPropertyFileOwner } from './utils';
 export { validateDatabaseEntryTitle as validateTitle } from './validateDatabaseEntryTitle';
 export { readDatabaseEntries as readFiles } from './readDatabaseEntries';
 export { createEntryVirtualViews as createVirtualViews } from './utils';

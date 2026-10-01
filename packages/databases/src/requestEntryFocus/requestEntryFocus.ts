@@ -6,24 +6,29 @@ export interface RequestEntryFocusOptions {
    * request is honoured wherever the entry renders.
    */
   viewId?: string;
+
+  /**
+   * The part of the entry to bring forward, as a link fragment.
+   * When omitted, the entry itself is brought forward.
+   */
+  fragment?: string;
 }
 
 /**
- * Requests that an entry's renderers bring the entry forward, e.g.
- * by scrolling it into view and focusing its editor. Made by the
- * action which creates an entry, whose renderers mount afterwards.
- *
- * The request is picked up by renderers which mount while it is
- * pending, and expires shortly after being made. Any pending
- * request is replaced, so a burst of creations brings forward only
- * the entry created last.
+ * Requests that an entry's renderers bring the entry forward. The
+ * request is picked up by renderers which mount while it is pending,
+ * expires shortly after being made, and replaces any pending request.
  *
  * @param entryId - The ID of the entry to bring forward.
- * @param options - Options limiting where the request applies.
+ * @param options - Where the request applies and what part of the entry it names.
  */
 export function requestEntryFocus(
   entryId: string,
   options: RequestEntryFocusOptions = {},
 ): void {
-  setEntryFocusRequest({ entryId, viewId: options.viewId });
+  setEntryFocusRequest({
+    entryId,
+    viewId: options.viewId,
+    fragment: options.fragment,
+  });
 }

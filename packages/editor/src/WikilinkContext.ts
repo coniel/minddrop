@@ -8,5 +8,5 @@ import { createContext } from 'react';
  * following one is the consumer's to do.
  */
 export const WikilinkContext = createContext<
-  ((reference: string) => void) | undefined
+  ((reference: string, fragment?: string) => void) | undefined
 >(undefined);

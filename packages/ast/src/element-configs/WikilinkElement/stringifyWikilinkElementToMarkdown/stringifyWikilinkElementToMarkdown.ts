@@ -1,11 +1,11 @@
-import { getLiteralContent } from '../../../utils';
+import { getLiteralContent, resolveWikilinkTarget } from '../../../utils';
 import { WikilinkElement } from '../WikilinkElement.types';
 
 /**
  * Stringifies a wikilink element into its markdown spelling.
  *
- * A link whose text is its own reference is written without a label, which
- * is the spelling it was read from.
+ * A link whose text is its own target is written without a label. This is
+ * the spelling it was read from.
  *
  * @param element - The wikilink element to stringify.
  * @returns A wikilink string.
@@ -13,11 +13,17 @@ import { WikilinkElement } from '../WikilinkElement.types';
 export const stringifyWikilinkElementToMarkdown = (
   element: WikilinkElement,
 ): string => {
+  // Get the link's text
   const label = getLiteralContent(element);
+  // Resolve the target spelling
+  const target = resolveWikilinkTarget(element.reference, element.fragment);
 
-  if (!label || label === element.reference) {
-    return `[[${element.reference}]]`;
+  // Check if the label is the target itself, or empty. If so, write the
+  // link without one.
+  if (!label || label === target) {
+    return `[[${target}]]`;
   }
 
-  return `[[${element.reference}|${label}]]`;
+  // Write the link with its label
+  return `[[${target}|${label}]]`;
 };

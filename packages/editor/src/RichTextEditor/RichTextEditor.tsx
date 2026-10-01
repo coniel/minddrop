@@ -1,6 +1,7 @@
 import React, {
   useCallback,
   useEffect,
+  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -32,7 +33,7 @@ import { insertTrailingParagraph } from '../insertTrailingParagraph';
 import { resetEditorContent } from '../resetEditorContent';
 import { selectAutoFocusTarget } from '../selectAutoFocusTarget';
 import { turnBlocksInto } from '../turnBlocksInto';
-import { BlockElementProps, ReferenceSource } from '../types';
+import { BlockElementProps, Editor, ReferenceSource } from '../types';
 import { useBlockDrag } from '../useBlockDrag';
 import { useBlockMenu } from '../useBlockMenu';
 import { useBlockSelection } from '../useBlockSelection';
@@ -148,11 +149,17 @@ export interface EditorProps {
   references?: ReferenceSource;
 
   /**
-   * Callback fired when a wikilink is followed, receiving what the link
-   * points at as it was written between its brackets. The editor does not
-   * know what a reference names, so opening it is the consumer's to do.
+   * Receives the editor instance.
    */
-  onOpenWikilink?: (reference: string) => void;
+  editorRef?: React.Ref<Editor>;
+
+  /**
+   * Callback fired when a wikilink is followed. Receives what the link
+   * points at and the part of it the link points into, as written between
+   * its brackets. The editor does not know what a reference names, so
+   * opening it is the consumer's to do.
+   */
+  onOpenWikilink?: (reference: string, fragment?: string) => void;
 
   /**
    * Callback used to validate the title on every change. Returns
@@ -180,6 +187,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
   validateTitle,
   references,
   onOpenWikilink,
+  editorRef: externalEditorRef,
 }) => {
   const editor = useMemo(() => createEditor(), []);
   const editorRef = useRef(editor);
@@ -274,6 +282,11 @@ export const RichTextEditor: React.FC<EditorProps> = ({
     () => (hasTitle ? withTitle(editorWithMarks) : editorWithMarks),
     [editorWithMarks, hasTitle],
   );
+
+  // Hand over the editor with its plugins applied
+  useImperativeHandle(externalEditorRef, () => editorWithPlugins, [
+    editorWithPlugins,
+  ]);
 
   const { titleError, handleEditorChange, handleEditorBlur } = useEditorTitle(
     editorWithPlugins,

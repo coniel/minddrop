@@ -10,7 +10,10 @@ export * from './createMockBackendAdapter';
 export * from './createRecordingSqlAdapter';
 export * from './fixtures';
 export * from './withoutDatabaseProperty';
-export { clearEntryFocusRequest } from '../EntryFocusRequestStore';
+export {
+  clearEntryFocusRequest,
+  getEntryFocusRequest,
+} from '../EntryFocusRequestStore';
 export { registerDatabaseEntryFilterAdapter } from '../registerDatabaseEntryFilterAdapter';
 
 export const DatabaseFixtures = {

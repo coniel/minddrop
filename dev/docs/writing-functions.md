@@ -113,6 +113,20 @@ A parameter misleads inside the signature exactly as the name does outside it, s
 
 This is the same rule as the prefixes below, applied to the noun rather than the verb.
 
+### Independent optional parameters take an options object
+
+When a function has more than one optional parameter, and a caller can need a later one without the earlier ones, the optional parameters go in an options object. Positional optionals force a caller to pass `undefined` to reach the one it wants, and an `undefined` in a call says nothing about what was skipped.
+
+```ts
+// BAD, the caller skips the property types to reach the workspace path
+resolveEntryPropertyFiles(entryId, undefined, workspacePath);
+
+// GOOD
+resolveEntryPropertyFiles(entryId, { workspacePath });
+```
+
+The options type is named after the function (`ResolveEntryPropertyFilesOptions`) and exported from the function's file, per the order below. Required parameters stay positional, and so does a single optional parameter, or optionals a caller only ever passes in order: nothing is skipped to reach them.
+
 ## Inside the file
 
 Order within a function file:
@@ -151,4 +165,5 @@ Before committing a new function:
 - Is it domain-free? Then it lives in `packages/utils`.
 - Is it named and typed for what it does, taking the values it uses rather than a caller's object?
 - Does the name say what comes back? A function returning IDs is `...Ids`, and its parameters and the variables it lands in follow.
+- Could a caller pass `undefined` to reach a later optional parameter? Then the optional parameters are an options object.
 - Could a second function ever call any helper left below it? If so, that helper is its own file.

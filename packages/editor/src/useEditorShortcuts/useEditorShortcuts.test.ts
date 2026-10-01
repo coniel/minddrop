@@ -12,10 +12,7 @@ import {
 } from '@minddrop/utils';
 import { EditorShortcuts } from '../EditorShortcuts';
 import { cleanup, createTestEditor } from '../test-utils';
-import {
-  listItemElement1,
-  paragraphElement1,
-} from '../test-utils/editor.fixtures';
+import { listItemElement1, paragraphElement1 } from '../test-utils';
 import { Editor, EditorShortcutContext } from '../types';
 
 // Runs the shortcut registered for a hotkey, as the hook does
@@ -75,7 +72,34 @@ describe('EditorShortcuts', () => {
       Transforms.select(editor, SlateEditor.end(editor, [0, 1]));
 
       expect(run('mod+enter', editor, { onOpenWikilink })).toBe(true);
-      expect(onOpenWikilink).toHaveBeenCalledWith('Book');
+      expect(onOpenWikilink).toHaveBeenCalledWith('Book', undefined);
+    });
+
+    it('follows a wikilink pointing into its target', () => {
+      // What the wikilinks followed pointed at
+      const followed: [string, string | undefined][] = [];
+      const editor = createTestEditor([
+        Ast.generateElement<ParagraphElement>('paragraph', {
+          children: [
+            { text: '' },
+            Ast.generateElement<WikilinkElement>('wikilink', {
+              reference: 'Paper',
+              fragment: '^abcd1234',
+              children: [{ text: 'Paper' }],
+            }),
+            { text: '' },
+          ],
+        }),
+      ]);
+
+      Transforms.select(editor, SlateEditor.end(editor, [0, 1]));
+      run('mod+enter', editor, {
+        onOpenWikilink: (reference, fragment) => {
+          followed.push([reference, fragment]);
+        },
+      });
+
+      expect(followed).toEqual([['Paper', '^abcd1234']]);
     });
 
     it('declines the keystroke when the cursor is not in a link', () => {

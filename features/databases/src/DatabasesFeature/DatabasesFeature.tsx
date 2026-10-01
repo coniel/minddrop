@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
+import { Pdf } from '@minddrop/pdf';
 import { ViewSessions, Views } from '@minddrop/views';
 import { DatabaseEntryDialog } from '../DatabaseEntryDialog';
 import { DatabaseEntryRendererProps } from '../DatabaseEntryRenderer';
@@ -16,6 +17,7 @@ import {
 import {
   resolveDatabaseEntryViewId,
   resolveDatabaseViewId,
+  resolveEntryPdfAnchor,
   resolveOpenMode,
 } from '../utils';
 
@@ -229,7 +231,50 @@ export const DatabasesFeature: React.FC = () => {
           return;
         }
 
-        Events.dispatch(DatabaseEntries.events.OpenView, { entryId: entry.id });
+        // Bring the part of the entry the link points into forward
+        if (data.fragment) {
+          DatabaseEntries.requestFocus(entry.id, { fragment: data.fragment });
+        }
+
+        // Resolve the PDF annotation the fragment names, if any
+        const pdfAnchor = data.fragment
+          ? resolveEntryPdfAnchor(entry, data.fragment)
+          : null;
+
+        // Bring the annotation forward in the document's readers
+        if (pdfAnchor) {
+          Pdf.requestAnnotationFocus(pdfAnchor.path, pdfAnchor.annotationId);
+        }
+
+        // Check if the link was opened from a view area. If so, leave
+        // the entry unopened when the fragment can be brought forward
+        // in place there.
+        if (data.viewAreaId) {
+          // Check if a reader of the annotation's document renders in
+          // the view area.
+          const read =
+            pdfAnchor !== null &&
+            Pdf.hasReader(pdfAnchor.path, data.viewAreaId);
+          // Check if the view area's session shows the entry's own view
+          const shown =
+            ViewSessions.findPane(
+              data.viewAreaId,
+              resolveDatabaseEntryViewId(entry.id),
+            ) !== null;
+
+          // Leave the entry unopened if either brings the fragment
+          // forward.
+          if (read || shown) {
+            return;
+          }
+        }
+
+        // Open the entry from the pane the link was opened from
+        Events.dispatch(DatabaseEntries.events.OpenView, {
+          entryId: entry.id,
+          viewAreaId: data.viewAreaId,
+          sourcePane: data.sourcePane,
+        });
       },
     );
 

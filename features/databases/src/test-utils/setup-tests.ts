@@ -4,6 +4,7 @@ import { vi } from 'vitest';
 import { ContentViewTypes } from '@minddrop/content-views';
 import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import {
+  DatabaseEntries,
   DatabaseEntryTemplates,
   DatabaseTemplates,
   Databases,
@@ -19,6 +20,7 @@ import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { initializeI18n } from '@minddrop/i18n';
+import { resetPdfStores } from '@minddrop/pdf/test-utils';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
 import {
   WorkspaceFixtures,
@@ -32,6 +34,7 @@ const { contentViewType_table } = ContentViewFixtures;
 
 interface SetupOptions {
   loadDatabases?: boolean;
+  loadDatabaseEntries?: boolean;
   loadDatabaseEntryTemplates?: boolean;
   loadDatabaseTemplates?: boolean;
   loadDesigns?: boolean;
@@ -47,6 +50,7 @@ export const MockFs = initializeMockFileSystem([
 export function setup(
   options: SetupOptions = {
     loadDatabases: true,
+    loadDatabaseEntries: true,
     loadDatabaseEntryTemplates: true,
     loadDatabaseTemplates: true,
     loadDesigns: true,
@@ -57,6 +61,11 @@ export function setup(
   if (options.loadDatabases !== false) {
     // Load item type configs into the store
     Databases.Store.load(DatabaseFixtures.databases);
+  }
+
+  if (options.loadDatabaseEntries !== false) {
+    // Load entries into the store
+    DatabaseEntries.Store.load(DatabaseFixtures.databaseEntries);
   }
 
   // Load the custom content types into the settings
@@ -84,6 +93,22 @@ export function setup(
   ContentViewTypes.register(contentViewType_table);
 }
 
+/**
+ * Loads the pdf database and its entries, and adds their files to the
+ * mock file system.
+ */
+export function setupPdfFixtures(): void {
+  Databases.Store.load([DatabaseFixtures.database_pdf]);
+  DatabaseEntries.Store.load([
+    DatabaseFixtures.databaseEntry_pdf_1,
+    DatabaseFixtures.databaseEntry_pdf_2,
+  ]);
+  MockFs.addFiles([
+    ...DatabaseFixtures.databaseFiles_pdf,
+    ...DatabaseFixtures.databaseEntryFiles_pdf,
+  ]);
+}
+
 export async function cleanup(): Promise<void> {
   cleanupRender();
   vi.clearAllMocks();
@@ -103,10 +128,12 @@ export async function cleanup(): Promise<void> {
 
   // Clear stores
   Databases.Store.clear();
+  DatabaseEntries.Store.clear();
   DatabaseEntryTemplates.Store.clear();
   DatabaseTemplates.Store.clear();
   Designs.Store.clear();
   DesignsNext.Store.clear();
   ContentViewTypes.Store.clear();
+  resetPdfStores();
   cleanupWorkspaceFixtures();
 }

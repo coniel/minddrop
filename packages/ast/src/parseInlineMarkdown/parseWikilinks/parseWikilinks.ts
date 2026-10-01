@@ -1,13 +1,14 @@
-import { WikilinkElement } from '../../element-configs';
 import { Fragment, TextElement } from '../../types';
-import { generateElement } from '../../utils';
+import { generateWikilinkElement } from '../../utils';
 
 /**
- * The wikilink spelling: a reference, optionally followed by the label to
- * show it as. Neither part may contain the characters which close the link,
- * so an unclosed `[[` is left as the text it is.
+ * The wikilink spelling: a reference, optionally followed by a `#` fragment
+ * and by the label to show it as. None of the parts may contain the
+ * characters which close the link, so an unclosed `[[` is left as the text
+ * it is. `#` is reserved as the fragment separator, so a reference cannot
+ * contain one.
  */
-const WikilinkPattern = /\[\[([^[\]|]+)(?:\|([^[\]]*))?\]\]/g;
+const WikilinkPattern = /\[\[([^[\]|#]+)(?:#([^[\]|]+))?(?:\|([^[\]]*))?\]\]/g;
 
 /**
  * Splits the wikilinks out of a run of text.
@@ -33,18 +34,19 @@ export function parseWikilinks(text: TextElement): Fragment {
     match;
     match = WikilinkPattern.exec(value)
   ) {
-    const [source, reference, label] = match;
+    // Split the match into the link's parts
+    const [source, reference, linkFragment, label] = match;
 
     // The text between the previous link and this one
     if (match.index > index) {
       fragment.push({ ...marks, text: value.slice(index, match.index) });
     }
 
+    // Add the link. One written without a label shows its target.
     fragment.push(
-      generateElement<WikilinkElement>('wikilink', {
-        reference,
-        // A link written without a label shows its reference
-        children: [{ text: label || reference }],
+      generateWikilinkElement(reference, {
+        label: label || undefined,
+        fragment: linkFragment,
       }),
     );
 

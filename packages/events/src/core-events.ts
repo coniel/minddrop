@@ -18,6 +18,23 @@ export type OpenReferenceEventData = {
    * nothing recognises opens nothing.
    */
   reference: string;
+
+  /**
+   * The part of the target the link points into, as it was written after
+   * the `#`: a heading or an anchor within the target.
+   */
+  fragment?: string;
+
+  /**
+   * The ID of the area of the app the link was opened from. Unset when
+   * it was opened from outside one.
+   */
+  viewAreaId?: string;
+
+  /**
+   * The pane of that area the link was opened from.
+   */
+  sourcePane?: 'main' | 'split';
 };
 
 export type SetNavToolbarWidthEventData = {

@@ -20,11 +20,31 @@ describe('insertWikilink', () => {
   it('inserts a link showing the given label', () => {
     const editor = createTestEditorWithText();
 
-    insertWikilink(editor, 'Books/Book', 'Book');
+    insertWikilink(editor, 'Books/Book', { label: 'Book' });
 
     expect(getWikilinks(editor)).toMatchObject([
       { reference: 'Books/Book', children: [{ text: 'Book' }] },
     ]);
+  });
+
+  it('inserts a link pointing into its target', () => {
+    const editor = createTestEditorWithText();
+
+    insertWikilink(editor, 'Paper', {
+      label: 'a quote',
+      fragment: '^abcd1234',
+    });
+
+    expect(getWikilinks(editor)).toMatchObject([
+      {
+        reference: 'Paper',
+        fragment: '^abcd1234',
+        children: [{ text: 'a quote' }],
+      },
+    ]);
+    expect(Ast.toMarkdown(editor.children as Element[])).toBe(
+      '[[Paper#^abcd1234|a quote]]',
+    );
   });
 
   it('keeps the text it is inserted over as the label', () => {
@@ -90,7 +110,7 @@ describe('insertWikilink', () => {
   it('writes a qualified link back with its label', () => {
     const editor = createTestEditorWithText();
 
-    insertWikilink(editor, 'Books/Book', 'Book');
+    insertWikilink(editor, 'Books/Book', { label: 'Book' });
 
     expect(Ast.toMarkdown(editor.children as Element[])).toBe(
       '[[Books/Book|Book]]',

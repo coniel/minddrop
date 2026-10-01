@@ -67,6 +67,34 @@ describe('parseWikilinks', () => {
     expect(parseWikilinks(text)).toEqual([text]);
   });
 
+  it('reads the fragment of a link pointing into its target', () => {
+    expect(parseWikilinks({ text: '[[Paper#^abcd1234|a quote]]' })).toEqual([
+      {
+        type: 'wikilink',
+        reference: 'Paper',
+        fragment: '^abcd1234',
+        children: [{ text: 'a quote' }],
+      },
+    ]);
+  });
+
+  it('shows the target of a fragment link written without a label', () => {
+    expect(parseWikilinks({ text: '[[Paper#Chapter 1]]' })).toEqual([
+      {
+        type: 'wikilink',
+        reference: 'Paper',
+        fragment: 'Chapter 1',
+        children: [{ text: 'Paper#Chapter 1' }],
+      },
+    ]);
+  });
+
+  it('leaves an unclosed fragment link as text', () => {
+    const text = { text: '[[Paper#' };
+
+    expect(parseWikilinks(text)).toEqual([text]);
+  });
+
   it('leaves an empty reference as text', () => {
     const text = { text: '[[]]' };
 

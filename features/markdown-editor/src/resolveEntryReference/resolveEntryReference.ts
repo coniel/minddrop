@@ -16,16 +16,18 @@ import { EditorReference } from '@minddrop/editor';
  * @returns The entry as a reference.
  */
 export function resolveEntryReference(entry: DatabaseEntry): EditorReference {
+  // The entry's database, if it still exists
   const database = Databases.get(entry.database, false);
-  const isUnique = DatabaseEntries.isGloballyUniqueTitle(entry.title);
 
+  // Build the reference
   return {
-    reference:
-      isUnique || !database ? entry.title : `${database.name}/${entry.title}`,
-    // The link reads as the entry's title either way, the database being
-    // there to name the entry rather than to be read.
+    // The reference naming the entry
+    reference: DatabaseEntries.resolveReference(entry),
+    // The link reads as the entry's title
     label: entry.title,
+    // The database qualifying the title, shown but not part of the link
     description: database?.name,
+    // The entry icon
     icon: 'file-text',
   };
 }

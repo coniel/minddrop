@@ -115,8 +115,9 @@ export const EditorShortcuts: EditorShortcut[] = [
         return false;
       }
 
+      // Open a wikilink through the consumer, with the part it points into
       if (link.type === 'wikilink') {
-        onOpenWikilink?.(link.reference);
+        onOpenWikilink?.(link.reference, link.fragment);
 
         return true;
       }

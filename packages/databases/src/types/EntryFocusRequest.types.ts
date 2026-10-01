@@ -1,6 +1,5 @@
 /**
- * A request for an entry's renderers to bring the entry forward,
- * typically made by the action which created the entry.
+ * A request for an entry's renderers to bring the entry forward.
  */
 export interface EntryFocusRequest {
   /**
@@ -13,4 +12,11 @@ export interface EntryFocusRequest {
    * one are honoured wherever the entry renders.
    */
   viewId?: string;
+
+  /**
+   * The part of the entry to bring forward, as a link fragment: an
+   * anchor within the entry, `^id`, or a heading. Requests made
+   * without one bring the entry itself forward.
+   */
+  fragment?: string;
 }

@@ -5,8 +5,7 @@ import { BlockElementProps } from '../../../types';
 import './WikilinkElementComponent.css';
 
 /**
- * Renders a wikilink. Pressing it opens what it references rather than
- * placing the cursor in the link's text.
+ * Renders a wikilink.
  */
 export const WikilinkElementComponent: React.FC<
   BlockElementProps<WikilinkElement>
@@ -19,9 +18,10 @@ export const WikilinkElementComponent: React.FC<
     event.preventDefault();
   };
 
+  // Open what the link references, when the consumer resolves references
   const handleClick = () => {
     if (onOpenWikilink) {
-      onOpenWikilink(element.reference);
+      onOpenWikilink(element.reference, element.fragment);
     }
   };
 

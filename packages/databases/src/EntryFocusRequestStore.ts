@@ -10,9 +10,7 @@ interface EntryFocusRequestState {
   request: EntryFocusRequest | null;
 }
 
-// Carries a focus request from the action which created an entry to
-// the entry's renderers, which mount after the request is made. A
-// single slot, so that creating several entries in quick succession
+// A single slot, so that creating several entries in quick succession
 // brings forward only the last of them.
 const EntryFocusRequestStore = createVanillaStore<EntryFocusRequestState>(
   () => ({ request: null }),
@@ -28,10 +26,13 @@ let expiryTimeout: ReturnType<typeof setTimeout> | undefined;
  * @param request - The focus request.
  */
 export function setEntryFocusRequest(request: EntryFocusRequest): void {
+  // Cancel the pending request's expiry
   clearTimeout(expiryTimeout);
 
+  // Replace the pending request
   EntryFocusRequestStore.setState({ request });
 
+  // Expire the request
   expiryTimeout = setTimeout(
     clearEntryFocusRequest,
     EntryFocusRequestTimeoutMs,
@@ -57,19 +58,21 @@ export function getEntryFocusRequest(): EntryFocusRequest | null {
 }
 
 /**
- * Watches whether an entry rendered in a given view has been asked
- * to bring itself forward, e.g. by scrolling into view or focusing
- * its editor.
+ * Watches the pending focus request applying to an entry rendered in
+ * a given view. Each request is a new object. A repeated request
+ * returns a new object, even while the first is pending.
  *
  * @param entryId - The ID of the rendered entry.
  * @param viewId - The ID of the view the entry renders in.
- * @returns Whether focus was requested for the entry.
+ * @returns The focus request, or null while none applies.
  */
 export function useEntryFocusRequest(
   entryId: string,
   viewId?: string,
-): boolean {
+): EntryFocusRequest | null {
   return useStore(EntryFocusRequestStore, (state) =>
-    matchesEntryFocusRequest(state.request, entryId, viewId),
+    matchesEntryFocusRequest(state.request, entryId, viewId)
+      ? state.request
+      : null,
   );
 }

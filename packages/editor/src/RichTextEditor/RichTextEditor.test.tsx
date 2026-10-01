@@ -13,6 +13,7 @@ import {
 } from '@minddrop/drag-and-drop/test-utils';
 import { SelectionItemSerializers } from '@minddrop/selection';
 import { act, fireEvent, render } from '@minddrop/test-utils';
+import { insertReferenceQuote } from '../insertReferenceQuote';
 import { registerBlockSelectionSerializer } from '../registerBlockSelectionSerializer';
 import {
   actFlush,
@@ -852,5 +853,33 @@ describe('RichTextEditor block selection', () => {
     });
 
     expect(isSelected(getByText(paragraphElement1PlainText))).toBe(true);
+  });
+});
+
+describe('RichTextEditor editor ref', () => {
+  afterEach(cleanup);
+
+  it('hands the editor to the given ref', async () => {
+    const editorRef = React.createRef<Editor>();
+    const { getByText } = render(
+      <RichTextEditor
+        initialValue={[paragraphElement1]}
+        editorRef={editorRef}
+      />,
+    );
+    const editor = editorRef.current;
+
+    if (!editor) {
+      throw new Error('The editor was not handed to the ref');
+    }
+
+    expect(editor.children).toMatchObject([paragraphElement1]);
+
+    // A change made through the editor reaches the rendered content
+    await actFlush(() => {
+      insertReferenceQuote(editor, 'Paper', 'a quote');
+    });
+
+    expect(getByText('a quote')).not.toBeNull();
   });
 });

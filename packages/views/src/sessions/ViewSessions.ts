@@ -10,6 +10,7 @@ export { getViewSession as get } from './getViewSession';
 export { getViewSessions as getAll } from './getViewSessions';
 export { getActiveViewSession as getActive } from './getActiveViewSession';
 export { getOpenViews } from './getOpenViews';
+export { findViewSessionPane as findPane } from './findViewSessionPane';
 export { createViewSession as create } from './createViewSession';
 export { closeViewSession as close } from './closeViewSession';
 export { setActiveViewSession as setActive } from './setActiveViewSession';

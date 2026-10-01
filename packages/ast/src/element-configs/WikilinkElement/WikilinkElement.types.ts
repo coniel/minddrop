@@ -10,10 +10,18 @@ export interface WikilinkElementData {
    * recognises it.
    */
   reference: string;
+
+  /**
+   * The part of the target the link points into, as written after the `#`:
+   * a heading, or an anchor within the target, `^abcd1234`. Kept as
+   * written and left unresolved, like the reference.
+   */
+  fragment?: string;
 }
 
 /**
- * A link written in the wikilink spelling, `[[Book]]` or `[[Books/Book|Book]]`.
+ * A link written in the wikilink spelling, `[[Book]]`, `[[Books/Book|Book]]`
+ * or `[[Book#^abcd1234|quote]]`.
  *
  * Markdown has no such construct: CommonMark reads the spelling as ordinary
  * text. It is modelled here so that the link can be rendered and followed,

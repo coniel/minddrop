@@ -123,7 +123,9 @@ const Entry: React.FC<EntryProps> = ({
     databaseDesign?.type === 'database' ? databaseDesign : null;
   const { draggable, optionsMenu, contextMenu, source, viewId } =
     useDatabaseEntryContext();
-  const focusRequested = DatabaseEntries.useFocusRequest(entry.id, viewId);
+  const focusRequested = Boolean(
+    DatabaseEntries.useFocusRequest(entry.id, viewId),
+  );
   const openView = Views.useOpenView();
   // Register the drag handle as draggable, with the card as the preview
   // since the handle is invisible.

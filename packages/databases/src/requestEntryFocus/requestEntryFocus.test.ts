@@ -1,7 +1,10 @@
+// @vitest-environment happy-dom
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { act, renderHook } from '@minddrop/test-utils';
 import {
   clearEntryFocusRequest,
   getEntryFocusRequest,
+  useEntryFocusRequest,
 } from '../EntryFocusRequestStore';
 import { EntryFocusRequestTimeoutMs } from '../constants';
 import { requestEntryFocus } from './requestEntryFocus';
@@ -22,7 +25,54 @@ describe('requestEntryFocus', () => {
     expect(getEntryFocusRequest()).toEqual({
       entryId: 'entry-1',
       viewId: undefined,
+      fragment: undefined,
     });
+  });
+
+  it('names the part of the entry to bring forward', () => {
+    requestEntryFocus('entry-1', { fragment: '^abcd1234' });
+
+    expect(getEntryFocusRequest()).toMatchObject({
+      entryId: 'entry-1',
+      fragment: '^abcd1234',
+    });
+  });
+
+  it("reaches the entry's renderers with the part to bring forward", () => {
+    const { result } = renderHook(() => useEntryFocusRequest('entry-1'));
+
+    act(() => {
+      requestEntryFocus('entry-1', { fragment: '^abcd1234' });
+    });
+
+    expect(result.current?.fragment).toBe('^abcd1234');
+  });
+
+  it("reaches the entry's renderers anew when a request is repeated", () => {
+    const { result } = renderHook(() => useEntryFocusRequest('entry-1'));
+
+    act(() => {
+      requestEntryFocus('entry-1', { fragment: '^abcd1234' });
+    });
+
+    // The request the renderers received first
+    const first = result.current;
+
+    act(() => {
+      requestEntryFocus('entry-1', { fragment: '^abcd1234' });
+    });
+
+    expect(result.current).not.toBe(first);
+  });
+
+  it("does not reach another entry's renderers", () => {
+    const { result } = renderHook(() => useEntryFocusRequest('entry-2'));
+
+    act(() => {
+      requestEntryFocus('entry-1', { fragment: '^abcd1234' });
+    });
+
+    expect(result.current).toBeNull();
   });
 
   it('scopes the request to a view', () => {
@@ -31,6 +81,7 @@ describe('requestEntryFocus', () => {
     expect(getEntryFocusRequest()).toEqual({
       entryId: 'entry-1',
       viewId: 'view-1',
+      fragment: undefined,
     });
   });
 
@@ -41,6 +92,7 @@ describe('requestEntryFocus', () => {
     expect(getEntryFocusRequest()).toEqual({
       entryId: 'entry-2',
       viewId: undefined,
+      fragment: undefined,
     });
   });
 

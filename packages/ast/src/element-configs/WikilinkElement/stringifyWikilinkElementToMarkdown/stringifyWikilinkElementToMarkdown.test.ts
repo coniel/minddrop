@@ -1,31 +1,52 @@
 import { describe, expect, it } from 'vitest';
-import { generateElement } from '../../../utils';
-import { WikilinkElement } from '../WikilinkElement.types';
+import { generateWikilinkElement } from '../../../utils';
 import { stringifyWikilinkElementToMarkdown } from './stringifyWikilinkElementToMarkdown';
-
-const wikilink = (reference: string, label: string) =>
-  generateElement<WikilinkElement>('wikilink', {
-    reference,
-    children: [{ text: label }],
-  });
 
 describe('stringifyWikilinkElementToMarkdown', () => {
   it('stringifies a link with a label', () => {
     expect(
-      stringifyWikilinkElementToMarkdown(wikilink('Books/Book', 'Book')),
+      stringifyWikilinkElementToMarkdown(
+        generateWikilinkElement('Books/Book', { label: 'Book' }),
+      ),
     ).toBe('[[Books/Book|Book]]');
   });
 
   it('omits a label which is the reference itself', () => {
     // The spelling it was read from, so it is the spelling written back
     expect(
-      stringifyWikilinkElementToMarkdown(wikilink('Books/Book', 'Books/Book')),
+      stringifyWikilinkElementToMarkdown(
+        generateWikilinkElement('Books/Book', { label: 'Books/Book' }),
+      ),
     ).toBe('[[Books/Book]]');
   });
 
+  it('stringifies a link pointing into its target', () => {
+    expect(
+      stringifyWikilinkElementToMarkdown(
+        generateWikilinkElement('Paper', {
+          label: 'a quote',
+          fragment: '^abcd1234',
+        }),
+      ),
+    ).toBe('[[Paper#^abcd1234|a quote]]');
+  });
+
+  it('omits a label which is the target itself', () => {
+    expect(
+      stringifyWikilinkElementToMarkdown(
+        generateWikilinkElement('Paper', {
+          label: 'Paper#Chapter 1',
+          fragment: 'Chapter 1',
+        }),
+      ),
+    ).toBe('[[Paper#Chapter 1]]');
+  });
+
   it('stringifies a link whose label has been emptied', () => {
-    expect(stringifyWikilinkElementToMarkdown(wikilink('Books/Book', ''))).toBe(
-      '[[Books/Book]]',
-    );
+    expect(
+      stringifyWikilinkElementToMarkdown(
+        generateWikilinkElement('Books/Book', { label: '' }),
+      ),
+    ).toBe('[[Books/Book]]');
   });
 });

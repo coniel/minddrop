@@ -1,11 +1,17 @@
 export * from './element-configs';
 export * from './types';
+export * from './utils/generateBlockquoteFrame';
 export * from './utils/generateListItemFrame';
+export * from './utils/generateWikilinkElement';
+export * from './utils/isAnchorFragment';
 export * from './utils/isSameList';
+export * from './utils/parseAnchorFragment';
+export * from './utils/resolveAnchorFragment';
 export * from './utils/resolveFrameSpan';
 export * from './utils/resolveInnermostListItem';
 export * from './utils/resolveSharedFrameDepth';
 export * from './utils/resolveListItemNumbers';
+export * from './utils/resolveWikilinkTarget';
 export * from './ElementTypeConfigs';
 export * from './errors';
 export * as Ast from './Ast';
