@@ -11,7 +11,7 @@ import {
 } from '@minddrop/content-views';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
-import { getDroppedEntryIds } from '@minddrop/feature-databases';
+import { resolveTransferredEntryIds } from '@minddrop/feature-databases';
 import { SelectPropertySchema } from '@minddrop/properties';
 import { DropEventData } from '@minddrop/selection';
 import { DatabaseEntryContextProvider } from '@minddrop/ui-databases';
@@ -428,7 +428,7 @@ export const KanbanViewComponent: React.FC<
   // Handle dropping an entry into a column
   const handleColumnDrop = useCallback(
     async (
-      data: DropEventData,
+      drop: DropEventData,
       columnValue: string,
       targetEntryIndex: number,
     ) => {
@@ -439,7 +439,7 @@ export const KanbanViewComponent: React.FC<
       }
 
       // The dropped entry, if any
-      const [droppedEntryId] = getDroppedEntryIds(data);
+      const [droppedEntryId] = resolveTransferredEntryIds(drop.data);
 
       // Check that an entry was dropped
       if (!droppedEntryId) {

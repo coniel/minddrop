@@ -18,9 +18,9 @@ import {
 } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import {
-  dropContainsAddContentCard,
-  getDroppedEntryIds,
-  getDroppedNewEntryDatabaseIds,
+  hasTransferredAddContentCard,
+  resolveTransferredEntryIds,
+  resolveTransferredNewEntryDatabaseIds,
 } from '@minddrop/feature-databases';
 import { DropEventData } from '@minddrop/selection';
 import { AddContentPicker, AddedContent } from '@minddrop/ui-components';
@@ -205,7 +205,7 @@ export const BoardViewComponent: React.FC<
   // entry card into a column.
   const handleColumnDrop = useCallback(
     async (
-      data: DropEventData,
+      drop: DropEventData,
       targetColumnIndex: number,
       rawTargetEntryIndex: number,
     ) => {
@@ -220,7 +220,7 @@ export const BoardViewComponent: React.FC<
           : rawTargetEntryIndex;
 
       // Picker cards spawn the picker at the drop position
-      if (dropContainsAddContentCard(data)) {
+      if (hasTransferredAddContentCard(drop.data)) {
         setEntryPicker({
           columnIndex: targetColumnIndex,
           entryIndex: targetEntryIndex,
@@ -231,7 +231,7 @@ export const BoardViewComponent: React.FC<
       }
 
       // Existing entries are moved to the drop position
-      const [droppedEntryId] = getDroppedEntryIds(data);
+      const [droppedEntryId] = resolveTransferredEntryIds(drop.data);
 
       if (droppedEntryId) {
         updateColumns(
@@ -248,7 +248,7 @@ export const BoardViewComponent: React.FC<
 
       // New entry cards create an entry at the drop position,
       // using the card's configured template when set.
-      const [databaseId] = getDroppedNewEntryDatabaseIds(data);
+      const [databaseId] = resolveTransferredNewEntryDatabaseIds(drop.data);
 
       if (!databaseId) {
         return;
@@ -271,9 +271,9 @@ export const BoardViewComponent: React.FC<
 
   // Handle dropping between columns to create a new column
   const handleColumnLayoutDrop = useCallback(
-    async (data: DropEventData, _containerId: string, gapIndex: number) => {
+    async (drop: DropEventData, _containerId: string, gapIndex: number) => {
       // Picker cards spawn the picker in a new column
-      if (dropContainsAddContentCard(data)) {
+      if (hasTransferredAddContentCard(drop.data)) {
         const updated = [...reconciledColumns];
 
         updated.splice(gapIndex, 0, []);
@@ -289,7 +289,7 @@ export const BoardViewComponent: React.FC<
       }
 
       // Existing entries are moved into the new column
-      const [droppedEntryId] = getDroppedEntryIds(data);
+      const [droppedEntryId] = resolveTransferredEntryIds(drop.data);
 
       if (droppedEntryId) {
         updateColumns(
@@ -301,7 +301,7 @@ export const BoardViewComponent: React.FC<
 
       // New entry cards create an entry in the new column,
       // using the card's configured template when set.
-      const [databaseId] = getDroppedNewEntryDatabaseIds(data);
+      const [databaseId] = resolveTransferredNewEntryDatabaseIds(drop.data);
 
       if (!databaseId) {
         return;

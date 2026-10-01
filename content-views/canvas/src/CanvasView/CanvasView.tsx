@@ -13,9 +13,9 @@ import {
 import { Events } from '@minddrop/events';
 import {
   DatabaseEntryRenderer,
-  dropContainsAddContentCard,
-  getDroppedEntryIds,
-  getDroppedNewEntryDatabaseIds,
+  hasTransferredAddContentCard,
+  resolveTransferredEntryIds,
+  resolveTransferredNewEntryDatabaseIds,
 } from '@minddrop/feature-databases';
 import { DropEventData, Selection } from '@minddrop/selection';
 import {
@@ -567,7 +567,7 @@ const CanvasViewContent: React.FC<
       });
 
       // Picker cards spawn the picker at the drop position
-      if (dropContainsAddContentCard(drop)) {
+      if (hasTransferredAddContentCard(drop.data)) {
         setEntryPicker({
           x: Math.round(canvasPoint.x - DEFAULT_NODE_WIDTH / 2),
           y: Math.round(canvasPoint.y),
@@ -577,7 +577,7 @@ const CanvasViewContent: React.FC<
       }
 
       // Existing entries are placed at the drop position
-      const [droppedEntryId] = getDroppedEntryIds(drop);
+      const [droppedEntryId] = resolveTransferredEntryIds(drop.data);
 
       if (droppedEntryId) {
         updateNodes(
@@ -589,7 +589,7 @@ const CanvasViewContent: React.FC<
 
       // New entry cards create an entry at the drop position,
       // using the card's configured template when set.
-      const [databaseId] = getDroppedNewEntryDatabaseIds(drop);
+      const [databaseId] = resolveTransferredNewEntryDatabaseIds(drop.data);
 
       if (!databaseId) {
         return;
