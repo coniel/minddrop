@@ -100,6 +100,12 @@ describe('useDefaultDatabaseDesign', () => {
     expect(result.current).toBeNull();
   });
 
+  it('returns null when there is no database', () => {
+    const { result } = renderHook(() => useDefaultDatabaseDesign(null, 'card'));
+
+    expect(result.current).toBeNull();
+  });
+
   it('returns the resolved design as it is edited', () => {
     const { result } = renderHook(() =>
       useDefaultDatabaseDesign(objectDatabase.id, 'card'),
