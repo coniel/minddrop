@@ -28,12 +28,26 @@ describe('<AddContentMenu />', () => {
 
   function init(props: Partial<React.ComponentProps<typeof AddContentMenu>>) {
     const added: AddedContent[] = [];
+    const secondaryAdded: AddedContent[] = [];
 
     render(
-      <AddContentMenu onAdd={(content) => added.push(content)} {...props} />,
+      <AddContentMenu
+        onAdd={(content) => added.push(content)}
+        onSecondaryAdd={(content) => secondaryAdded.push(content)}
+        {...props}
+      />,
     );
 
-    return { added };
+    return { added, secondaryAdded };
+  }
+
+  // Picks an item with shift held, making it a secondary selection
+  async function shiftPick(text: string) {
+    const user = userEvent.setup();
+
+    await user.keyboard('{Shift>}');
+    await user.click(screen.getByText(text));
+    await user.keyboard('{/Shift}');
   }
 
   // The name a template is listed under. The entry name it creates
@@ -127,6 +141,24 @@ describe('<AddContentMenu />', () => {
     await userEvent.click(screen.getByText(recentEntry.title));
 
     expect(added).toEqual([{ id: recentEntry.id, created: false }]);
+  });
+
+  it('hands a shift-picked entry to the secondary handler', async () => {
+    const { added, secondaryAdded } = init({});
+
+    await shiftPick(recentEntry.title);
+
+    expect(secondaryAdded).toEqual([{ id: recentEntry.id, created: false }]);
+    expect(added).toEqual([]);
+  });
+
+  it('clears the search after a secondary pick', async () => {
+    init({});
+
+    search(recentEntry.title);
+    await shiftPick(recentEntry.title);
+
+    expect(screen.getByRole('textbox')).toHaveValue('');
   });
 
   it('creates an entry in the picked database', async () => {
