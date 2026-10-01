@@ -37,6 +37,7 @@ import {
 import { Database } from '../../types';
 import {
   resolveDatabaseEntryHistorySubject,
+  resolveDatabaseHistorySubject,
   virtualCollectionId,
   virtualCollectionName,
 } from '../../utils';
@@ -253,6 +254,25 @@ describe('onRenameProperty', () => {
       ),
     );
   });
+
+  it("records the rename against the database's history", async () => {
+    // Rename the property
+    await renameProperty(objectDatabase, 'Icon', 'Symbol');
+
+    // The database's history should record the rename
+    expect(
+      await History.read(resolveDatabaseHistorySubject(objectDatabase)),
+    ).toEqual([
+      expect.objectContaining({
+        kind: 'rename',
+        target: 'property',
+        from: 'Icon',
+        to: 'Symbol',
+        action,
+      }),
+    ]);
+  });
+
   it('records the rename against the entries which held the property', async () => {
     await renameProperty(objectDatabase, 'Icon', 'Symbol');
 

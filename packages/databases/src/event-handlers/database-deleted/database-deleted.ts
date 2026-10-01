@@ -5,6 +5,7 @@ import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabaseEntryTemplatesStore } from '../../DatabaseEntryTemplatesStore';
 import { DatabaseDeletedEventData } from '../../events';
 import { getDatabaseEntryTemplates } from '../../getDatabaseEntryTemplates';
+import { recordDatabaseHistory } from '../../recordDatabaseHistory';
 import { removeEntriesFromCollections } from '../../removeEntriesFromCollections';
 import { sqlDeleteDatabase } from '../../sql';
 import { unsetDatabaseContentDefaults } from '../../unsetDatabaseContentDefaults';
@@ -18,6 +19,9 @@ import { virtualCollectionId } from '../../utils';
 export async function onDeleteDatabase(
   data: DatabaseDeletedEventData,
 ): Promise<void> {
+  // Close the database's history
+  await recordDatabaseHistory(data, { kind: 'deleted' });
+
   // Delete from SQL
   sqlDeleteDatabase(data.id);
 

@@ -1,6 +1,6 @@
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { Fs, MockFileDescriptor } from '@minddrop/file-system';
-import { Properties } from '@minddrop/properties';
+import { Properties, SelectPropertySchema } from '@minddrop/properties';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { Database, DatabaseEntryTemplate } from '../../types';
 import {
@@ -20,6 +20,15 @@ export const genericFilePropertyName = 'File';
 export const imagePropertyName = 'Image';
 export const notesPropertyName = 'Notes';
 export const countPropertyName = 'Count';
+// The entry templates database's select property
+export const statusProperty: SelectPropertySchema = {
+  type: 'select',
+  name: 'Status',
+  options: [
+    { value: 'Todo', color: 'blue' },
+    { value: 'Done', color: 'green' },
+  ],
+};
 export const pdfPropertyName = 'Paper';
 export const validImagePropertyFile = new File([], 'valid-image.png');
 export const validPdfPropertyFile = new File([], 'paper.pdf');
@@ -280,14 +289,7 @@ export const entryTemplatesDatabase = generateDatabase({
       type: 'number',
       name: countPropertyName,
     },
-    {
-      type: 'select',
-      name: 'Status',
-      options: [
-        { value: 'Todo', color: 'blue' },
-        { value: 'Done', color: 'green' },
-      ],
-    },
+    statusProperty,
     {
       type: 'toggle',
       name: 'Urgent',

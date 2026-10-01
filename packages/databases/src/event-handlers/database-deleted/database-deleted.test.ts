@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { Designs } from '@minddrop/designs-next';
 import { DesignFixtures } from '@minddrop/designs-next/test-utils';
+import { History } from '@minddrop/history';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseSettingsStore } from '../../DatabaseSettingsStore';
 import { setDatabaseContentDefault } from '../../setDatabaseContentDefault';
@@ -22,7 +23,11 @@ import {
   setup,
   setupTestSqlDatabase,
 } from '../../test-utils';
-import { virtualCollectionId, virtualCollectionName } from '../../utils';
+import {
+  resolveDatabaseHistorySubject,
+  virtualCollectionId,
+  virtualCollectionName,
+} from '../../utils';
 import { onDeleteDatabase } from './database-deleted';
 
 const { ownedCardDesign_1 } = DesignFixtures;
@@ -89,6 +94,16 @@ describe('onDeleteDatabase', () => {
 
     // The database's entry records should be cascade deleted
     expect(sqlGetEntrySyncRecords(collectionDatabase.id)).toEqual([]);
+  });
+
+  it("closes the database's history", async () => {
+    // Call the handler
+    await onDeleteDatabase(objectDatabase);
+
+    // The database's history should end with its deletion
+    expect(
+      await History.read(resolveDatabaseHistorySubject(objectDatabase)),
+    ).toEqual([expect.objectContaining({ kind: 'deleted' })]);
   });
 
   it("deletes the database's designs", async () => {

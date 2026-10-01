@@ -1,10 +1,12 @@
 import { Collections } from '@minddrop/collections';
 import { Designs } from '@minddrop/designs-next';
+import { toJsonValue } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { clearDatabaseEntriesProperty } from '../../clearDatabaseEntriesProperty';
 import { clearDatabaseEntryTemplatesProperty } from '../../clearDatabaseEntryTemplatesProperty';
 import { DatabasePropertyRemovedEventData } from '../../events';
 import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
+import { recordDatabaseHistory } from '../../recordDatabaseHistory';
 import { sqlReindexDatabaseEntries } from '../../sql';
 import { updateDatabaseDesignsElements } from '../../updateDatabaseDesignsElements';
 import { virtualCollectionId } from '../../utils';
@@ -12,11 +14,26 @@ import { virtualCollectionId } from '../../utils';
 /**
  * Called when a property is removed from a database. Clears the
  * property from everything that has or maps it.
+ *
+ * @param data - The removed property's event data.
  */
 export async function onRemoveProperty(
   data: DatabasePropertyRemovedEventData,
 ): Promise<void> {
   const { updated: database, property, action } = data;
+
+  // Record the property's removal against the database's history
+  await recordDatabaseHistory(database, {
+    kind: 'definition',
+    changes: [
+      {
+        part: property.name,
+        from: toJsonValue(property),
+        to: null,
+      },
+    ],
+    action,
+  });
 
   // Drop the property's value from the database's entries. The files
   // a file based property stored for them are deliberately left in

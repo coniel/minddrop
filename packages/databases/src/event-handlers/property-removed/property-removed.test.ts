@@ -38,6 +38,7 @@ import {
 } from '../../test-utils';
 import {
   resolveDatabaseEntryHistorySubject,
+  resolveDatabaseHistorySubject,
   virtualCollectionId,
   virtualCollectionName,
 } from '../../utils';
@@ -218,6 +219,23 @@ describe('onRemoveProperty', () => {
         action,
       });
     }
+
+    it("records the property's removal against the database's history", async () => {
+      // Remove the property
+      await removeIconProperty();
+
+      // The database's history should hold the removed property's
+      // definition.
+      expect(
+        await History.read(resolveDatabaseHistorySubject(objectDatabase)),
+      ).toEqual([
+        expect.objectContaining({
+          kind: 'definition',
+          changes: [{ part: iconProperty.name, from: iconProperty, to: null }],
+          action,
+        }),
+      ]);
+    });
 
     it("clears the property's value from the database's entries", async () => {
       await removeIconProperty();

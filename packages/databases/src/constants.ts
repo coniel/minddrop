@@ -45,6 +45,12 @@ export const PropertyFilesDirNameKey = 'databases.propertyFilesDirName';
 export const EntryHistorySubjectType = 'entries';
 
 /**
+ * The type a database's own history is filed under within its
+ * history directory.
+ */
+export const DatabaseHistorySubjectType = 'database';
+
+/**
  * The causes of the actions recorded against a database's history
  * and its entries' histories. Persisted in the history files.
  */

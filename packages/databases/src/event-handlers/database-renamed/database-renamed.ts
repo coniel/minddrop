@@ -4,6 +4,7 @@ import { ItemReferences } from '@minddrop/item-references';
 import { Workspaces } from '@minddrop/workspaces';
 import { DatabaseRenamedEventData } from '../../events';
 import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
+import { recordDatabaseHistory } from '../../recordDatabaseHistory';
 import { sqlUpsertDatabase } from '../../sql';
 import {
   databaseEntryAddress,
@@ -12,17 +13,28 @@ import {
 } from '../../utils';
 
 /**
- * Called when a database is renamed. Updates name-derived state: the
- * SQL record and virtual collection names.
+ * Called when a database is renamed. Updates the state derived from
+ * its name.
  *
  * Neither the entries nor their metadata files need changes: entry
  * paths are addressed from their database and metadata keys from the
  * entry file name, so neither moves with the database.
+ *
+ * @param data - The renamed database's data.
  */
 export async function onRenameDatabase(
   data: DatabaseRenamedEventData,
 ): Promise<void> {
   const { original, updated } = data;
+
+  // Record the rename against the database's history. The history
+  // has already moved with the database's directory.
+  await recordDatabaseHistory(updated, {
+    kind: 'rename',
+    target: 'self',
+    from: original.name,
+    to: updated.name,
+  });
 
   // Read the database's entries, whose addresses the rename changes
   const entries = getAllDatabaseEntries(updated.id);

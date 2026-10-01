@@ -22,6 +22,7 @@ import {
 import {
   resolveDatabaseEntryHistorySubject,
   resolveDatabaseEntryPath,
+  resolveDatabaseHistorySubject,
   resolveDatabasePath,
 } from '../../utils';
 import { onRenamePropertyOption } from './property-option-renamed';
@@ -93,7 +94,9 @@ const otherEntry = {
 };
 
 // The action performing the rename
-const action = History.createAction(DatabaseHistoryCauses.PropertyOptionRenamed);
+const action = History.createAction(
+  DatabaseHistoryCauses.PropertyOptionRenamed,
+);
 
 /**
  * Runs the handler for a rename of the status option 'Todo' to
@@ -217,6 +220,25 @@ describe('onRenamePropertyOption', () => {
     Events.removeListener(DatabaseEntryUpdatedEvent, 'test');
 
     expect(updatedEntries).toBe(0);
+  });
+
+  it("records the rename against the database's history", async () => {
+    // Rename the option
+    await renameStatusOption();
+
+    // The database's history should record the rename
+    expect(
+      await History.read(resolveDatabaseHistorySubject(selectDatabase)),
+    ).toEqual([
+      expect.objectContaining({
+        kind: 'rename',
+        target: 'value-label',
+        property: statusProperty.name,
+        from: 'Todo',
+        to: 'Doing',
+        action,
+      }),
+    ]);
   });
 
   it('records the rename against the entries with the option', async () => {

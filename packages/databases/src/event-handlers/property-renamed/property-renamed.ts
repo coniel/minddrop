@@ -4,6 +4,7 @@ import { Properties } from '@minddrop/properties';
 import { DatabasePropertyRenamedEventData } from '../../events';
 import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
 import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
+import { recordDatabaseHistory } from '../../recordDatabaseHistory';
 import { renameDatabaseEntriesProperty } from '../../renameDatabaseEntriesProperty';
 import { renameDatabaseEntryTemplatesProperty } from '../../renameDatabaseEntryTemplatesProperty';
 import { renamePropertyFileDir } from '../../renamePropertyFileDir';
@@ -12,13 +13,24 @@ import { updateDatabaseDesignsElements } from '../../updateDatabaseDesignsElemen
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
 
 /**
- * Called when a database property is renamed. Carries the new name
- * into everything keyed by the old one.
+ * Called when a database property is renamed. Renames it in
+ * everything keyed by the old name.
+ *
+ * @param data - The renamed property's event data.
  */
 export async function onRenameProperty(
   data: DatabasePropertyRenamedEventData,
 ): Promise<void> {
   const { original, updated: database, oldName, newName, action } = data;
+
+  // Record the rename against the database's history
+  await recordDatabaseHistory(database, {
+    kind: 'rename',
+    target: 'property',
+    from: oldName,
+    to: newName,
+    action,
+  });
 
   // Rename in SQL
   sqlRenameProperty(database.id, oldName, newName);

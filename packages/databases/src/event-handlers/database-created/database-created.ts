@@ -1,13 +1,18 @@
 import { ContentViews } from '@minddrop/content-views';
 import { entityId } from '@minddrop/utils';
 import { DatabaseCreatedEventData } from '../../events';
+import { recordDatabaseHistory } from '../../recordDatabaseHistory';
 import { sqlUpsertDatabase } from '../../sql';
 
 /**
- * Called when a database is created. Syncs to SQL and
- * creates a default virtual table view.
+ * Called when a database is created. Sets up the state derived from
+ * it.
+ *
+ * @param data - The created database's data.
  */
-export function onCreateDatabase(data: DatabaseCreatedEventData) {
+export async function onCreateDatabase(
+  data: DatabaseCreatedEventData,
+): Promise<void> {
   // Create a virtual view for the database
   ContentViews.createVirtual({
     id: entityId(ContentViews.constants.EntityType),
@@ -23,4 +28,7 @@ export function onCreateDatabase(data: DatabaseCreatedEventData) {
     path: data.path,
     icon: data.icon,
   });
+
+  // Open the database's history
+  await recordDatabaseHistory(data, { kind: 'created' });
 }

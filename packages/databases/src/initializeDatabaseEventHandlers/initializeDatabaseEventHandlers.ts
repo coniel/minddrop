@@ -35,6 +35,7 @@ import {
   onUpdateDatabase,
   onUpdateEntry,
   onUpdateEntryMetadata,
+  onUpdateProperty,
   onUpdateVirtualView,
 } from '../event-handlers';
 import {
@@ -51,6 +52,7 @@ import {
   DatabasePropertyOptionRenamedEvent,
   DatabasePropertyRemovedEvent,
   DatabasePropertyRenamedEvent,
+  DatabasePropertyUpdatedEvent,
   DatabaseRenamedEvent,
   DatabaseUpdatedEvent,
 } from '../events';
@@ -67,6 +69,7 @@ export function initializeDatabaseEventHandlers() {
     [DatabaseRenamedEvent]: onRenameDatabase,
     [DatabasePropertyAddedEvent]: onAddProperty,
     [DatabasePropertyRemovedEvent]: onRemoveProperty,
+    [DatabasePropertyUpdatedEvent]: onUpdateProperty,
     [DatabasePropertyRenamedEvent]: onRenameProperty,
     [DatabasePropertyOptionRenamedEvent]: onRenamePropertyOption,
     [Designs.events.PropertyRenamed]: onRenameDesignProperty,

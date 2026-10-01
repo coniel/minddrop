@@ -3,6 +3,7 @@ import { Collections } from '@minddrop/collections';
 import { ContentViews } from '@minddrop/content-views';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { Events } from '@minddrop/events';
+import { History } from '@minddrop/history';
 import { ItemReferences } from '@minddrop/item-references';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
@@ -29,6 +30,7 @@ import {
   setupRecordingTestSqlDatabase,
 } from '../../test-utils';
 import {
+  resolveDatabaseHistorySubject,
   resolveDatabasePath,
   viewMetadataKey,
   virtualCollectionId,
@@ -126,6 +128,26 @@ describe('onRenameDatabase', () => {
         'Related',
       ),
     );
+  });
+
+  it("records the rename against the database's history under its new path", async () => {
+    // Call the handler
+    await onRenameDatabase({
+      original: collectionDatabase,
+      updated: renamedDatabase,
+    });
+
+    // The history at the new path should record the rename
+    expect(
+      await History.read(resolveDatabaseHistorySubject(renamedDatabase)),
+    ).toEqual([
+      expect.objectContaining({
+        kind: 'rename',
+        target: 'self',
+        from: collectionDatabase.name,
+        to: renamedDatabase.name,
+      }),
+    ]);
   });
 
   it('leaves the entries untouched', async () => {
