@@ -5,6 +5,7 @@ export { relativePath } from './relativePath';
 export { getFileExtension as getExtension } from './getFileExtension';
 export { removeFileExtension as removeExtension } from './removeFileExtension';
 export { getFileExtension } from './getFileExtension';
+export { resolveFileSrc } from './resolveFileSrc';
 export { useImageSrc } from './useImageSrc';
 export { getImageStats } from './getImageStats';
 export { preloadImageStats } from './preloadImageStats';

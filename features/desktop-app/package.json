@@ -47,6 +47,7 @@
     "@minddrop/feature-designs-next": "workspace:*",
     "@minddrop/feature-dev-tools": "workspace:*",
     "@minddrop/feature-markdown-editor": "workspace:*",
+    "@minddrop/feature-pdf": "workspace:*",
     "@minddrop/feature-queries": "workspace:*",
     "@minddrop/feature-search": "workspace:*",
     "@minddrop/feature-settings": "workspace:*",

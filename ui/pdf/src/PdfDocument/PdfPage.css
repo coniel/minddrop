@@ -1,0 +1,90 @@
+/* The page's box, filling the slot the document lays it out in. Pages
+   are paper, so they keep the light scheme in every appearance. */
+.pdf-page {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--pdf-paper);
+  color-scheme: only light;
+}
+
+/* The drawn page, scaled down from its device pixel backing */
+.pdf-page-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* The text layer. pdf.js lays the page's text out over the canvas as
+   transparent spans, positioned by percentage and sized from the
+   page's scale factor, so it can be selected and searched. Selection
+   is opted back in, as the theme's reset disables it by default. */
+.pdf-page-text-layer {
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+  -webkit-user-select: text;
+  user-select: text;
+  opacity: 1;
+  line-height: 1;
+  text-align: initial;
+  text-size-adjust: none;
+  forced-color-adjust: none;
+  transform-origin: 0 0;
+  caret-color: CanvasText;
+  z-index: 0;
+
+  --min-font-size: 1;
+  --text-scale-factor: calc(var(--total-scale-factor) * var(--min-font-size));
+  --min-font-size-inv: calc(1 / var(--min-font-size));
+}
+
+/* Each text run, placed and scaled by pdf.js */
+.pdf-page-text-layer :is(span, br) {
+  color: transparent;
+  position: absolute;
+  white-space: pre;
+  cursor: text;
+  transform-origin: 0% 0%;
+}
+
+/* Runs sized from the page's scale factor */
+.pdf-page-text-layer > :not(.markedContent),
+.pdf-page-text-layer .markedContent span:not(.markedContent) {
+  z-index: 1;
+
+  --font-height: 0;
+  font-size: calc(var(--text-scale-factor) * var(--font-height));
+
+  --scale-x: 1;
+  --rotate: 0deg;
+  transform: rotate(var(--rotate)) scaleX(var(--scale-x))
+    scale(var(--min-font-size-inv));
+}
+
+/* Marked content wrappers take no box */
+.pdf-page-text-layer .markedContent {
+  display: contents;
+}
+
+/* Image placeholders are not selectable */
+.pdf-page-text-layer span[role='img'] {
+  user-select: none;
+  cursor: default;
+}
+
+/* The selection tint */
+.pdf-page-text-layer ::selection {
+  background: rgb(0 100 255 / 0.3);
+}
+
+/* The end-of-content marker pdf.js appends. Takes no space. */
+.pdf-page-text-layer .endOfContent {
+  display: block;
+  position: absolute;
+  inset: 100% 0 0;
+  z-index: 0;
+  cursor: default;
+  user-select: none;
+}

@@ -1,0 +1,12 @@
+/* The page position, kept from wrapping between the page buttons */
+.pdf-toolbar-page {
+  padding: 0 var(--space-1);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The zoom select. Wide enough for its longest option, so the toolbar
+   keeps its width as the zoom changes. */
+.pdf-toolbar-zoom {
+  min-width: 6.5rem;
+}

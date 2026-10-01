@@ -55,6 +55,7 @@ export async function initializeDevToolsFeature(): Promise<void> {
     () => import('@minddrop/feature-markdown-editor/stories'),
   );
   registerStoryLoader(() => import('@minddrop/ui-primitives/stories'));
+  registerStoryLoader(() => import('@minddrop/ui-pdf/stories'));
 
   // Register the UI component stories panel
   DevToolsPanelsRegistry.register({

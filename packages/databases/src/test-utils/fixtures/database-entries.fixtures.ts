@@ -1,5 +1,6 @@
 import { MockFileDescriptor } from '@minddrop/file-system';
 import { DatabaseEntry, SqlEntryRecord } from '../../types';
+import { resolvePropertyFilePath } from '../../utils';
 import {
   collectionDatabase,
   commonStorageDatabase,
@@ -572,6 +573,18 @@ export const databaseEntry_pdf_1: DatabaseEntry = {
 export const databaseEntry_pdf_1FileContents = `---
 : 
 ---`;
+
+// The path of the first pdf entry's document, under the pdf
+// database's property file storage.
+export const databaseEntry_pdf_1PropertyFilePath = resolvePropertyFilePath({
+  databasePath: databaseDirPath(database_pdf),
+  mode: database_pdf.propertyFileStorage,
+  // Unused under the pdf database's property storage
+  propertyFilesDirName: '',
+  entryTitle: databaseEntry_pdf_1.title,
+  propertyName: pdfPropertyName,
+  fileName: validPdfPropertyFile.name,
+});
 
 export const databaseEntry_pdf_2: DatabaseEntry = {
   ...databaseEntry_pdf_1,

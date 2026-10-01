@@ -1,0 +1,27 @@
+/* The block's box. The reader fills it and scrolls inside it. */
+.design-pdf-element {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* The block expanded over the design, filling its bounds */
+.design-pdf-element-expanded {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+}
+
+/* The box while the property holds no file, showing its icon */
+.design-pdf-element-empty {
+  background: var(--surface-subtle);
+}
+
+/* The property's icon, sized up and faded */
+.design-pdf-element-icon {
+  width: var(--icon-size-xl);
+  height: var(--icon-size-xl);
+  opacity: 0.5;
+}

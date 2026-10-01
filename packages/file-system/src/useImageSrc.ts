@@ -1,4 +1,5 @@
-import { Paths, bracketImageWidth } from '@minddrop/utils';
+import { bracketImageWidth } from '@minddrop/utils';
+import { resolveFileSrc } from './resolveFileSrc';
 
 /**
  * Returns the `src` of an image on the file system, or null if
@@ -12,11 +13,12 @@ export function useImageSrc(
   path: string | null,
   width?: number,
 ): string | null {
-  if (!path) {
+  // Resolve the file's src
+  const src = resolveFileSrc(path);
+
+  if (!src) {
     return null;
   }
-
-  const src = `${Paths.httpServerHost}/files?path=${encodeURIComponent(path)}`;
 
   // Bracket the width client side so that the URL is canonical
   // across renders and stays browser cacheable.

@@ -1,0 +1,15 @@
+/* The native file input, driven by the button in its place */
+.pdf-document-stories-input {
+  display: none;
+}
+
+/* The reader's frame. Tall enough to page through a document.
+   Positions the floating toolbar over its bottom edge. */
+.pdf-document-stories-frame {
+  position: relative;
+  display: flex;
+  height: 70vh;
+  border: var(--border-width-thin) solid var(--border-default);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}

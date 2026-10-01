@@ -15,6 +15,7 @@
     "@minddrop/feature-markdown-editor": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/stores": "workspace:*",
+    "@minddrop/ui-pdf": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
     "@minddrop/ui-theme": "workspace:*",
     "@minddrop/utils": "workspace:*",

@@ -1,0 +1,38 @@
+/* The scrolling reader, drawn on a receded surface the pages stand
+   out from. Pages are paper, so they stay light in every appearance. */
+.pdf-document {
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  background: var(--surface-subtle);
+
+  --pdf-paper: white;
+}
+
+/* The column the pages are laid out in. Sized by the layout, and at
+   least as wide as the viewport so the pages centre in it. */
+.pdf-document-pages {
+  position: relative;
+  width: 100%;
+  height: var(--pdf-document-pages-height);
+  min-width: var(--pdf-document-pages-width);
+}
+
+/* A page's slot, placed by the layout and centred in the column */
+.pdf-document-page {
+  position: absolute;
+  top: var(--pdf-document-page-top);
+  left: 50%;
+  width: var(--pdf-document-page-width);
+  height: var(--pdf-document-page-height);
+  transform: translateX(-50%);
+  background: var(--pdf-paper);
+  box-shadow: var(--shadow-sm);
+}
+
+/* The message shown in place of a document which failed to load */
+.pdf-document-error {
+  display: block;
+  padding: var(--space-4);
+  text-align: center;
+}
