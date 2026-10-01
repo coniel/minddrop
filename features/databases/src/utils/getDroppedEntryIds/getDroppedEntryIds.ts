@@ -10,11 +10,7 @@ import { DatabaseEntriesDataKey } from '@minddrop/ui-databases';
  * @returns The dropped entry IDs, empty if the drop contained no entries.
  */
 export function getDroppedEntryIds(data: DropEventData): DatabaseEntry['id'][] {
-  // Drops from outside the app carry no MindDrop data
-  if (!data.data || typeof data.data !== 'object') {
-    return [];
-  }
-
+  // Get the dragged entries from the drop data
   const entries = (data.data as Record<string, unknown>)[
     DatabaseEntriesDataKey
   ];
@@ -24,7 +20,7 @@ export function getDroppedEntryIds(data: DropEventData): DatabaseEntry['id'][] {
     return [];
   }
 
-  // Pull the ID off each serialized entry, dropping malformed ones
+  // Get the ID of each well-formed serialized entry
   return entries
     .map((entry: Partial<DatabaseEntry>) => entry?.id)
     .filter((id) => typeof id === 'string');

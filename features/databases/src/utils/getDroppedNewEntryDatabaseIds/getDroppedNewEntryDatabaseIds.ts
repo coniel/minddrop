@@ -13,11 +13,7 @@ import { isEntityId } from '@minddrop/utils';
 export function getDroppedNewEntryDatabaseIds(
   data: DropEventData,
 ): DatabaseId[] {
-  // Drops from outside the app carry no MindDrop data
-  if (!data.data || typeof data.data !== 'object') {
-    return [];
-  }
-
+  // Get the new entry cards' database IDs from the drop data
   const databaseIds = (data.data as Record<string, unknown>)[
     NewDatabaseEntriesDataKey
   ];
