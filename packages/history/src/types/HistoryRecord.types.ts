@@ -1,5 +1,5 @@
 import { PropertyValue } from '@minddrop/properties';
-import { DistributiveOmit } from '@minddrop/utils';
+import { DistributiveOmit, JsonValue } from '@minddrop/utils';
 
 export interface PropertyChange {
   /**
@@ -125,13 +125,7 @@ export interface DeletedRecord extends BaseHistoryRecord {
   kind: 'deleted';
 }
 
-export type JsonValue =
-  | string
-  | number
-  | boolean
-  | null
-  | JsonValue[]
-  | { [key: string]: JsonValue };
+export type { JsonValue };
 
 export interface DefinitionChange {
   /**
