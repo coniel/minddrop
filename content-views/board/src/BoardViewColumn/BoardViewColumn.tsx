@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { DatabaseEntries } from '@minddrop/databases';
 import { Design } from '@minddrop/designs-next';
 import { DropEventData } from '@minddrop/selection';
 import { FlexDropContainer } from '@minddrop/ui-drag-and-drop';
@@ -122,6 +123,7 @@ export const BoardViewColumn: React.FC<BoardViewColumnProps> = ({
         gap={16}
         className="board-view-column-content"
         accepts={BOARD_ACCEPTED_DATA_TYPES}
+        nativeAccepts={DatabaseEntries.constants.TransferDataTypes}
         onDrop={handleDrop}
       >
         {cards}

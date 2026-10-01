@@ -35,6 +35,8 @@ import { BoardViewColumn } from '../BoardViewColumn';
 import { BOARD_ACCEPTED_DATA_TYPES, defaultBoardViewData } from '../constants';
 import { BoardColumns, BoardViewData, BoardViewOptions } from '../types';
 import {
+  placeEntriesInColumn,
+  placeEntriesInNewColumn,
   placeEntryBelow,
   placeEntryInColumn,
   placeEntryInNewColumn,
@@ -201,8 +203,35 @@ export const BoardViewComponent: React.FC<
     [view.id, view.dataSource.id, updateColumns],
   );
 
-  // Handle dropping an entry, new entry card, or add existing
-  // entry card into a column.
+  // Create entries from content dropped in from outside the app,
+  // place them on the board, and add them to the board's
+  // collection.
+  const addExternalContent = useCallback(
+    async (
+      data: DropEventData['data'],
+      placeEntries: (entryIds: string[]) => BoardColumns,
+    ) => {
+      // Create the entries in the content's default databases
+      const created = await DatabaseEntries.createFromTransferData(data);
+
+      if (!created.length) {
+        return;
+      }
+
+      // Get the IDs of the created entries
+      const entryIds = created.map((entry) => entry.id);
+
+      // Place the entries before adding them to the collection,
+      // otherwise they are briefly reconciled into the first column.
+      updateColumns(placeEntries(entryIds));
+
+      // Add the entries to the collection
+      await Collections.addItems(view.dataSource.id, entryIds);
+    },
+    [view.dataSource.id, updateColumns],
+  );
+
+  // Handle a drop into a column
   const handleColumnDrop = useCallback(
     async (
       drop: DropEventData,
@@ -250,23 +279,41 @@ export const BoardViewComponent: React.FC<
       // using the card's configured template when set.
       const [databaseId] = resolveTransferredNewEntryDatabaseIds(drop.data);
 
-      if (!databaseId) {
+      if (databaseId) {
+        await createEntry(
+          databaseId,
+          (entryId) =>
+            placeEntryInColumn(
+              reconciledColumns,
+              entryId,
+              targetColumnIndex,
+              targetEntryIndex,
+            ),
+          toolbarCardTemplateId(view.options, databaseId),
+        );
+
         return;
       }
 
-      await createEntry(
-        databaseId,
-        (entryId) =>
-          placeEntryInColumn(
-            reconciledColumns,
-            entryId,
-            targetColumnIndex,
-            targetEntryIndex,
-          ),
-        toolbarCardTemplateId(view.options, databaseId),
+      // Create entries from content from outside the app, filling
+      // consecutive slots from the drop position.
+      await addExternalContent(drop.data, (entryIds) =>
+        placeEntriesInColumn(
+          reconciledColumns,
+          entryIds,
+          targetColumnIndex,
+          targetEntryIndex,
+        ),
       );
     },
-    [reconciledColumns, updateColumns, createEntry, entryPicker, view.options],
+    [
+      reconciledColumns,
+      updateColumns,
+      createEntry,
+      addExternalContent,
+      entryPicker,
+      view.options,
+    ],
   );
 
   // Handle dropping between columns to create a new column
@@ -303,18 +350,30 @@ export const BoardViewComponent: React.FC<
       // using the card's configured template when set.
       const [databaseId] = resolveTransferredNewEntryDatabaseIds(drop.data);
 
-      if (!databaseId) {
+      if (databaseId) {
+        await createEntry(
+          databaseId,
+          (entryId) =>
+            placeEntryInNewColumn(reconciledColumns, entryId, gapIndex),
+          toolbarCardTemplateId(view.options, databaseId),
+        );
+
         return;
       }
 
-      await createEntry(
-        databaseId,
-        (entryId) =>
-          placeEntryInNewColumn(reconciledColumns, entryId, gapIndex),
-        toolbarCardTemplateId(view.options, databaseId),
+      // Create entries from content from outside the app in the new
+      // column.
+      await addExternalContent(drop.data, (entryIds) =>
+        placeEntriesInNewColumn(reconciledColumns, entryIds, gapIndex),
       );
     },
-    [reconciledColumns, updateColumns, createEntry, view.options],
+    [
+      reconciledColumns,
+      updateColumns,
+      createEntry,
+      addExternalContent,
+      view.options,
+    ],
   );
 
   // Handle deleting an empty column
@@ -453,6 +512,7 @@ export const BoardViewComponent: React.FC<
           gap={16}
           className="board-view"
           accepts={BOARD_ACCEPTED_DATA_TYPES}
+          nativeAccepts={DatabaseEntries.constants.TransferDataTypes}
           onDrop={handleColumnLayoutDrop}
         >
           {reconciledColumns.map((columnEntries, columnIndex) => (

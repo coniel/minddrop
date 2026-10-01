@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { DatabaseEntries } from '@minddrop/databases';
 import { Design } from '@minddrop/designs-next';
 import { DatabaseEntryRenderer } from '@minddrop/feature-databases';
 import { DropEventData, Selection } from '@minddrop/selection';
@@ -65,6 +66,7 @@ export const BoardViewCard: React.FC<BoardViewCardProps> = ({
       axis: 'vertical',
       isLastChild,
       accepts: BOARD_ACCEPTED_DATA_TYPES,
+      nativeAccepts: DatabaseEntries.constants.TransferDataTypes,
       onDrop: handleDrop,
     });
 
