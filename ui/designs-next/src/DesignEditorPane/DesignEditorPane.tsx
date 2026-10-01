@@ -32,6 +32,12 @@ export interface DesignEditorPaneProps
   layoutControls?: React.ReactNode;
 
   /**
+   * The design's own controls. Shown in place of the selected
+   * element's controls while nothing is selected.
+   */
+  designControls?: React.ReactNode;
+
+  /**
    * Whether the design is aspect-locked, offering element height
    * modes instead of the natural height toggle.
    */
@@ -51,15 +57,12 @@ export interface DesignEditorPaneProps
 }
 
 /**
- * Renders the editing side of a design: the block editor on a
- * zoomable canvas or filling the pane's width, with the selected
- * element's controls in a vertical toolbar at the pane's left edge
- * and the layout and snap resolution controls floating at its top
- * right.
+ * Renders a design's block editor with its controls.
  */
 export const DesignEditorPane: React.FC<DesignEditorPaneProps> = ({
   defaultSnap,
   layoutControls,
+  designControls,
   aspectLocked = false,
   fill = false,
   properties,
@@ -118,15 +121,20 @@ export const DesignEditorPane: React.FC<DesignEditorPaneProps> = ({
       fill={fill}
       onBackgroundPress={handleDeselect}
       sideControls={
-        <DesignElementControls
-          elements={elements}
-          selectedId={selectedId}
-          rows={rows}
-          properties={properties}
-          aspectLocked={aspectLocked}
-          onElementsChange={onElementsChange}
-          onRowsChange={onRowsChange}
-        />
+        // The design's own controls while nothing is selected
+        selectedId === null ? (
+          designControls
+        ) : (
+          <DesignElementControls
+            elements={elements}
+            selectedId={selectedId}
+            rows={rows}
+            properties={properties}
+            aspectLocked={aspectLocked}
+            onElementsChange={onElementsChange}
+            onRowsChange={onRowsChange}
+          />
+        )
       }
       controls={
         <>

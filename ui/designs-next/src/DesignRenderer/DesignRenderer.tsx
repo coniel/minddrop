@@ -6,6 +6,7 @@ import {
   PropertyValue,
 } from '@minddrop/properties';
 import { DesignPropertiesProvider } from '../DesignPropertiesProvider';
+import { resolveDesignStyle } from '../utils';
 import './DesignRenderer.css';
 import { LayoutBoxRenderer } from './LayoutBoxRenderer';
 
@@ -63,10 +64,7 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
       onValueChange={onValueChange}
       validateValue={validateValue}
     >
-      <div
-        className="design-renderer"
-        style={{ aspectRatio: design.aspectRatio }}
-      >
+      <div className="design-renderer" style={resolveDesignStyle(design)}>
         <LayoutBoxRenderer box={tree} design={design} axis={null} />
       </div>
     </DesignPropertiesProvider>

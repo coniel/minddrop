@@ -5,8 +5,8 @@ import {
   RadioToggleGroup,
   Stack,
   Toggle,
+  joinClasses,
 } from '@minddrop/ui-primitives';
-import './NumberLadder.css';
 
 export interface NumberLadderOption {
   /**
@@ -58,6 +58,12 @@ export interface NumberLadderProps {
   label?: TranslationKey;
 
   /**
+   * Hides the custom field's label. Assistive technology still reads
+   * it. Used when the ladder's own label names what both set.
+   */
+  hideCustomLabel?: boolean;
+
+  /**
    * The amount the field steps by.
    * @default 1
    */
@@ -72,6 +78,11 @@ export interface NumberLadderProps {
    * Callback fired with the chosen value.
    */
   onValueChange: (value: number) => void;
+
+  /**
+   * Class name applied to the ladder.
+   */
+  className?: string;
 }
 
 /**
@@ -85,9 +96,11 @@ export const NumberLadder: React.FC<NumberLadderProps> = ({
   min,
   max,
   label,
+  hideCustomLabel = false,
   step,
   decimals,
   onValueChange,
+  className,
 }) => {
   // Set inline so the column count overrides the toggle group's
   // own single row.
@@ -110,7 +123,7 @@ export const NumberLadder: React.FC<NumberLadderProps> = ({
   }
 
   return (
-    <Stack gap={3} className="design-number-ladder">
+    <Stack gap={3} className={joinClasses('design-number-ladder', className)}>
       <Stack gap={1}>
         {label && <InputLabel size="xs" label={label} />}
         <RadioToggleGroup
@@ -137,6 +150,7 @@ export const NumberLadder: React.FC<NumberLadderProps> = ({
         stepper="ends"
         label="designsNext.settings.custom"
         labelSize="xs"
+        hideLabel={hideCustomLabel}
         value={value}
         min={min}
         max={max}

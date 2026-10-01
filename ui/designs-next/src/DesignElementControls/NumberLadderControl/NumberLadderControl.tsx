@@ -1,7 +1,7 @@
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/ui-icons';
 import { Icon, ToolbarHoverPanel } from '@minddrop/ui-primitives';
-import { NumberLadder } from '../NumberLadder';
+import { NumberLadder } from '../../NumberLadder';
 import './NumberLadderControl.css';
 
 export interface NumberLadderControlProps {
@@ -88,6 +88,7 @@ export const NumberLadderControl: React.FC<NumberLadderControlProps> = ({
       }
     >
       <NumberLadder
+        className="design-number-ladder-control-panel"
         label={label}
         options={ladder.map((ladderValue) => ({
           value: ladderValue,

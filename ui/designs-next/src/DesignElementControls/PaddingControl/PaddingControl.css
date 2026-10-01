@@ -86,9 +86,11 @@
 
 /* Fixed to the width the box is sized from, rather than sizing to
    its content, so a scale fits beside the side it opens from. The
-   box sets the property, and the scale renders inside it. */
+   box sets the property, and the scale renders inside it. The scale
+   is a stack rather than a row of controls, so the popover pads it. */
 .design-padding-control-scale {
   width: var(--design-padding-control-scale-width);
+  padding: var(--space-2);
 }
 
 /* The content area the sides leave, holding the link toggle */

@@ -9,8 +9,9 @@ import {
   PopoverTrigger,
   useHoverMenu,
 } from '@minddrop/ui-primitives';
-import { NoValueGlyph } from '../../constants';
-import { NumberLadder, NumberLadderOption } from '../NumberLadder';
+import { NumberLadder } from '../../NumberLadder';
+import { NoValueGlyph, PaddingScaleColumns } from '../../constants';
+import { usePaddingLadderOptions } from '../../usePaddingLadderOptions';
 
 export type PaddingSideName = keyof ElementPadding;
 
@@ -35,14 +36,6 @@ export interface PaddingSideProps {
    */
   onAmountChange: (amount: number) => void;
 }
-
-// The steps of the padding scale, in the order they are offered
-const PaddingSizes = Object.keys(
-  Designs.constants.PaddingSizes,
-) as (keyof typeof Designs.constants.PaddingSizes)[];
-
-// The values a row of the scale holds
-const ScaleColumns = 5;
 
 // Which way each side's scale opens. Inwards, so the side it was
 // opened from stays visible.
@@ -71,16 +64,7 @@ export const PaddingSide: React.FC<PaddingSideProps> = ({
 }) => {
   const { t } = useTranslation();
   const { open, setOpen, hoverProps } = useHoverMenu();
-
-  const sizeOptions: NumberLadderOption[] = [
-    // Clears the side
-    { value: 0, label: t('designsNext.padding.none'), content: NoValueGlyph },
-    // The scale's steps
-    ...PaddingSizes.map((size) => ({
-      value: Designs.constants.PaddingSizes[size],
-      label: t(paddingSizeKey(size)),
-    })),
-  ];
+  const sizeOptions = usePaddingLadderOptions();
 
   // Shows the name of the step the amount sits on, the amount
   // itself when it is off the scale, or a dash for no padding.
@@ -125,7 +109,7 @@ export const PaddingSide: React.FC<PaddingSideProps> = ({
           >
             <NumberLadder
               options={sizeOptions}
-              columns={ScaleColumns}
+              columns={PaddingScaleColumns}
               value={amount}
               min={0}
               max={Designs.constants.MaxPadding}

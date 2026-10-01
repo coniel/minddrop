@@ -57,12 +57,20 @@
    whether or not it shows, so the layout keeps its width as the
    controls come and go */
 .design-canvas-pane-side-column {
+  display: flex;
   flex: none;
+  flex-direction: column;
   min-width: calc(
     var(--control-height-sm) + var(--space-1) * 2 + var(--border-width-thin) * 2
   );
   border-right: var(--border-width-thin) solid var(--border-default);
   background-color: var(--surface-overlay);
+}
+
+/* The column's toolbar runs its full height, so the whole column
+   reveals hover arms and takes the toolbar's surface */
+.design-canvas-pane-side-column .floating-toolbar {
+  flex: 1;
 }
 
 .design-canvas-pane-scroll-area {

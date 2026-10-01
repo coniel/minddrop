@@ -28,6 +28,11 @@ interface RenderPaneOptions {
   layoutControls?: React.ReactNode;
 
   /**
+   * The design's own controls.
+   */
+  designControls?: React.ReactNode;
+
+  /**
    * Whether the design is aspect-locked.
    */
   aspectLocked?: boolean;
@@ -54,6 +59,7 @@ function renderPane(options: RenderPaneOptions = {}) {
       rows={cardRows}
       selectedId={options.selectedId ?? null}
       layoutControls={options.layoutControls}
+      designControls={options.designControls}
       aspectLocked={options.aspectLocked}
       fill={options.fill}
       onElementsChange={(elements) => {
@@ -191,6 +197,34 @@ describe('<DesignEditorPane />', () => {
       ),
     ).not.toBeNull();
     expect(screen.getByLabelText('Width')).toBeInTheDocument();
+  });
+
+  it('shows the design controls while nothing is selected', () => {
+    renderPane({
+      designControls: <button type="button">Design control</button>,
+    });
+
+    expect(screen.getByText('Design control')).toBeInTheDocument();
+
+    cleanup();
+
+    // The selected block's controls take their place
+    renderPane({
+      designControls: <button type="button">Design control</button>,
+      selectedId: titleDesignElement.id,
+    });
+
+    expect(screen.queryByText('Design control')).toBeNull();
+    expect(screen.getByLabelText('Width')).toBeInTheDocument();
+  });
+
+  it('shows the design controls in the filled pane', () => {
+    renderPane({
+      designControls: <button type="button">Design control</button>,
+      fill: true,
+    });
+
+    expect(screen.getByText('Design control')).toBeInTheDocument();
   });
 
   it('clears the selection on canvas background presses', () => {

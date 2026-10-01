@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import {
   AspectRatioToken,
+  ContentWidth,
   DesignElement,
   Designs,
 } from '@minddrop/designs-next';
@@ -12,6 +13,7 @@ import { DesignRenderer } from '../DesignRenderer';
 import { AspectRatioMenu } from './AspectRatioMenu';
 import './DesignEditor.css';
 import { DesignFillButton } from './DesignFillButton';
+import { PageDesignControls } from './PageDesignControls';
 import { PreviewWidthToggles, PreviewWidths } from './PreviewWidthToggles';
 
 export interface DesignEditorProps {
@@ -100,8 +102,9 @@ export const DesignEditor: React.FC<DesignEditorProps> = ({
   // The design's fixed unit width
   const { columns } = design;
 
-  // Page designs are always auto height, so they offer filling the
-  // panes in place of an aspect ratio.
+  // Check if the design is a page or a space. These are always auto
+  // height, so they fill the panes in place of an aspect ratio. They
+  // also have a content width and side padding of their own.
   const fillable = design.type === 'page' || design.type === 'space';
   const fill = fillable && fillPicked;
 
@@ -186,6 +189,16 @@ export const DesignEditor: React.FC<DesignEditorProps> = ({
     });
   }
 
+  // Sets the picked content width
+  function handleContentWidthChange(contentWidth: ContentWidth | null) {
+    Designs.setContentWidth(designId, contentWidth);
+  }
+
+  // Changes the side padding, dropping it at none
+  function handleSidePaddingChange(sidePadding: number) {
+    Designs.update(designId, { sidePadding: sidePadding || null });
+  }
+
   return (
     <div className="design-editor">
       <DesignEditorPane
@@ -197,6 +210,17 @@ export const DesignEditor: React.FC<DesignEditorProps> = ({
         aspectLocked={Boolean(design.aspectRatio)}
         fill={fill}
         defaultSnap={Designs.constants.TypeSnaps[design.type]}
+        designControls={
+          // Page designs have controls of their own
+          fillable && (
+            <PageDesignControls
+              contentWidth={design.contentWidth}
+              sidePadding={design.sidePadding}
+              onContentWidthChange={handleContentWidthChange}
+              onSidePaddingChange={handleSidePaddingChange}
+            />
+          )
+        }
         layoutControls={
           fillable ? (
             <DesignFillButton fill={fill} onFillChange={setFillPicked} />

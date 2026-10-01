@@ -2,6 +2,7 @@ export * from './formatSnapUnits';
 export * from './formatUnitLength';
 export * from './resolveAtomElementStyle';
 export * from './resolveContentFitStyles';
+export * from './resolveDesignStyle';
 export * from './resolveElementClass';
 export * from './resolveElementColor';
 export * from './resolveElementStyle';

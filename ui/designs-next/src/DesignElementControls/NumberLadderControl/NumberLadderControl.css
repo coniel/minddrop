@@ -1,3 +1,9 @@
+/* The ladder is a stack rather than a row of controls, so the panel
+   pads it */
+.design-number-ladder-control-panel {
+  padding: var(--space-2);
+}
+
 /* The value on the trigger, a figure marking the control rather
    than text to read. */
 .design-number-ladder-control-value {

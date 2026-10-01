@@ -1,9 +1,15 @@
-/* The render fills its container's width. Its root box fills the
-   render, so that an aspect ratio fixing the height reaches it. */
+/* The render fills its container's width. Its side padding is inside
+   that width. A render capped at a content width is centred by the
+   auto margins, which take no room while it is uncapped. Its root
+   box fills the render, so that an aspect ratio fixing the height
+   reaches it. */
 .design-renderer {
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
   width: 100%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .design-renderer > * {

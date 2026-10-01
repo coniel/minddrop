@@ -148,6 +148,18 @@
         "5xl": "5XL"
       }
     },
+    "contentWidth": {
+      "label": "Content width",
+      "narrow": "Narrow",
+      "regular": "Regular",
+      "wide": "Wide",
+      "full": "Full",
+      "capDescription": "Caps the content at {{width}}.",
+      "fullDescription": "Lets the content fill the page."
+    },
+    "sidePadding": {
+      "label": "Side padding"
+    },
     "pin": {
       "label": {
         "left": "Pin left",

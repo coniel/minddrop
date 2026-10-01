@@ -209,6 +209,69 @@ describe('DesignEditor', () => {
     ).toHaveLength(2);
   });
 
+  it('caps page designs at the picked content width', () => {
+    renderEditor(pageDesign_1.id);
+
+    fireEvent.click(screen.getByLabelText('Content width'));
+    fireEvent.click(screen.getByLabelText('Narrow'));
+
+    const design = Designs.get(pageDesign_1.id);
+
+    expect(design.contentWidth).toBe('narrow');
+    expect(design.columns).toBe(Designs.constants.ContentWidthColumns.narrow);
+  });
+
+  it('sets the side padding of page designs from the padding scale', () => {
+    renderEditor(pageDesign_1.id);
+
+    fireEvent.click(screen.getByLabelText('Content width'));
+    fireEvent.click(screen.getByLabelText('XL'));
+
+    expect(Designs.get(pageDesign_1.id).sidePadding).toBe(
+      Designs.constants.PaddingSizes.xl,
+    );
+  });
+
+  it('returns page designs to full width', async () => {
+    await Designs.setContentWidth(pageDesign_1.id, 'narrow');
+
+    renderEditor(pageDesign_1.id);
+
+    fireEvent.click(screen.getByLabelText('Content width'));
+    fireEvent.click(screen.getByLabelText('Full'));
+
+    const design = Designs.get(pageDesign_1.id);
+
+    expect(design.contentWidth).toBeUndefined();
+    expect(design.columns).toBe(Designs.constants.TypeColumns.page);
+  });
+
+  it('clears the side padding of page designs from the None option', () => {
+    Designs.update(pageDesign_1.id, { sidePadding: 16 });
+
+    renderEditor(pageDesign_1.id);
+
+    fireEvent.click(screen.getByLabelText('Content width'));
+    fireEvent.click(screen.getByLabelText('None'));
+
+    expect(Designs.get(pageDesign_1.id)).not.toHaveProperty('sidePadding');
+  });
+
+  it('keeps the side padding custom field labelled with its label hidden', () => {
+    renderEditor(pageDesign_1.id);
+
+    fireEvent.click(screen.getByLabelText('Content width'));
+
+    // The hiding itself is CSS the test environment cannot see
+    expect(screen.getByLabelText('Custom')).toBeInTheDocument();
+  });
+
+  it('offers card designs no design controls', () => {
+    renderEditor();
+
+    expect(screen.queryByLabelText('Content width')).toBeNull();
+  });
+
   it("opens at the design type's snap resolution", () => {
     renderEditor();
 

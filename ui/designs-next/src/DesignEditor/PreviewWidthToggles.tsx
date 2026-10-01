@@ -26,8 +26,9 @@ export interface PreviewWidthTogglesProps {
 
 /**
  * The preview widths offered per design type, in pixels, from the
- * narrowest to the widest. Regular, the second, matches the design's
- * own width, so the preview and the editor match at 100%.
+ * narrowest to the widest. A card's regular width, the second,
+ * matches its design width, so the preview and the editor match at
+ * 100%.
  */
 export const PreviewWidths: Record<DesignType, number[]> = {
   card: [240, 384, 560, 800],

@@ -341,6 +341,21 @@ describe('DesignRenderer', () => {
     expect(renderer.style.aspectRatio).toBe('3 / 2');
   });
 
+  it('caps a design at its content width, padded at the sides', () => {
+    // A narrow page with 24px of side padding
+    const design: Design = {
+      ...DesignFixtures.pageDesign_1,
+      columns: 120,
+      contentWidth: 'narrow',
+      sidePadding: 24,
+    };
+    const { container } = render(<DesignRenderer design={design} />);
+    const renderer = container.querySelector('.design-renderer') as HTMLElement;
+
+    expect(renderer.style.maxWidth).toBe('528px');
+    expect(renderer.style.paddingLeft).toBe('24px');
+  });
+
   it('scales a fluid-height band with the locked height', () => {
     const { container } = render(<DesignRenderer design={lockedDesign} />);
     const cover = getElementWrapper(container, designElement_fluidCover.id);

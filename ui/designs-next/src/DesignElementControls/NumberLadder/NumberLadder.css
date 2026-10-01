@@ -1,5 +1,0 @@
-/* A stack rather than a row of controls, so it pads itself inside
-   whichever surface renders it. */
-.design-number-ladder {
-  padding: var(--space-2);
-}

@@ -2404,6 +2404,18 @@ declare module 'i18next' {
               '5xl': string;
             };
           };
+          contentWidth: {
+            label: string;
+            narrow: string;
+            regular: string;
+            wide: string;
+            full: string;
+            capDescription: string;
+            fullDescription: string;
+          };
+          sidePadding: {
+            label: string;
+          };
           pin: {
             label: {
               left: string;
