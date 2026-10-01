@@ -334,9 +334,15 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../../packages/file-system
       '@minddrop/vitest-config':
         specifier: workspace:*
         version: link:../../packages/vitest-config
+      '@minddrop/workspaces':
+        specifier: workspace:*
+        version: link:../../packages/workspaces
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
