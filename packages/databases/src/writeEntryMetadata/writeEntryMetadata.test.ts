@@ -23,9 +23,7 @@ const sidecarPath = resolveEntryMetadataFilePath(
 
 // The metadata to write
 const entryMetadata: DatabaseEntryMetadata = {
-  embeddedViewConfigs: {
-    'card:Tasks': { options: {}, data: {} },
-  },
+  color: 'red',
 };
 
 describe('writeEntryMetadata', () => {
@@ -63,7 +61,7 @@ describe('writeEntryMetadata', () => {
       {
         path: sidecarPath,
         textContent: JSON.stringify({
-          embeddedViewConfigs: { 'list:Tags': { options: {}, data: {} } },
+          color: 'blue',
         }),
       },
     ]);

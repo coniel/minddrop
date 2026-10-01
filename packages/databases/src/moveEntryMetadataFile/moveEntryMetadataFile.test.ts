@@ -15,7 +15,7 @@ const oldEntryPath = `${databaseDirPath(objectDatabase)}/Entry.md`;
 const newEntryPath = `${databaseDirPath(objectDatabase)}/Renamed.md`;
 
 const metadata: DatabaseEntryMetadata = {
-  embeddedViewConfigs: { 'card:Tasks': { options: {}, data: {} } },
+  color: 'red',
 };
 
 describe('moveEntryMetadataFile', () => {

@@ -15,6 +15,9 @@ import {
 import { resolveEntryMetadataFilePath } from '../utils';
 import { setEntryColor } from './setEntryColor';
 
+// Metadata the entry holds before its color is set
+const existingCreated = new Date('2020-03-03T00:00:00.000Z');
+
 // The sidecar path the entry's metadata is written to
 const sidecarPath = resolveEntryMetadataFilePath(
   databaseDirPath(objectDatabase),
@@ -46,14 +49,14 @@ describe('setEntryColor', () => {
     // Give the entry existing metadata
     DatabaseEntriesStore.update(objectEntry1.id, {
       metadata: {
-        embeddedViewConfigs: { 'card:Tasks': { options: {}, data: {} } },
+        created: existingCreated,
       },
     });
 
     await setEntryColor(objectEntry1.id, 'green');
 
     expect(storeItem(DatabaseEntriesStore, objectEntry1.id).metadata).toEqual({
-      embeddedViewConfigs: { 'card:Tasks': { options: {}, data: {} } },
+      created: existingCreated,
       color: 'green',
     });
   });

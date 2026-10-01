@@ -72,16 +72,14 @@ describe('mergeEntryMetadata', () => {
   });
 
   it("preserves the sidecar's other metadata", () => {
-    const embeddedViewConfigs = {
-      'card:Related': { options: {}, data: {} },
-    };
+    const color = 'red';
 
     const { entry } = mergeEntryMetadata(
       objectEntry1,
       objectDatabase.properties,
-      { embeddedViewConfigs },
+      { color },
     );
 
-    expect(entry.metadata.embeddedViewConfigs).toEqual(embeddedViewConfigs);
+    expect(entry.metadata.color).toBe(color);
   });
 });

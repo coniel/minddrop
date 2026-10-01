@@ -12,7 +12,7 @@ import { writeEntryMetadata } from '../writeEntryMetadata';
 import { readAllEntryMetadata } from './readAllEntryMetadata';
 
 const metadata: DatabaseEntryMetadata = {
-  embeddedViewConfigs: { 'card:Tasks': { options: {}, data: {} } },
+  color: 'red',
 };
 
 describe('readAllEntryMetadata', () => {

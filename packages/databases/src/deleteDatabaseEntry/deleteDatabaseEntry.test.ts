@@ -107,7 +107,7 @@ describe('deleteDatabaseEntry', () => {
       databaseDirPath(objectDatabase),
       databaseEntryFilePath(objectEntry1),
       {
-        embeddedViewConfigs: { 'card:Tasks': { options: {}, data: {} } },
+        color: 'red',
       },
     );
 

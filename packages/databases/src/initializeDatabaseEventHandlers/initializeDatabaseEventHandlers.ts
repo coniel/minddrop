@@ -34,7 +34,6 @@ import {
   onUpdateEntry,
   onUpdateEntryMetadata,
   onUpdateProperty,
-  onUpdateVirtualView,
 } from '../event-handlers';
 import {
   DatabaseCreatedEvent,
@@ -82,7 +81,6 @@ export function initializeDatabaseEventHandlers() {
     [Tags.events.Renamed]: onTagRenamed,
     [Tags.events.Deleted]: onTagDeleted,
     [TagGroups.events.Deleted]: onTagGroupDeleted,
-    [ContentViews.events.Updated]: onUpdateVirtualView,
     [Fs.events.Changed]: onFileSystemChanged,
   });
 

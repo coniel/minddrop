@@ -34,12 +34,7 @@ const urlSidecarPath = resolveEntryMetadataFilePath(
 );
 
 const entryMetadata: DatabaseEntryMetadata = {
-  embeddedViewConfigs: {
-    'card:Tasks': {
-      options: { columns: [['a', 'b'], ['c']] },
-      data: {},
-    },
-  },
+  color: 'red',
 };
 
 const { workspace_2 } = WorkspaceFixtures;
@@ -67,12 +62,14 @@ describe('updateEntryMetadata', () => {
   });
 
   it('writes the sidecar whole, replacing what it held', async () => {
-    // Write a sidecar holding superseded metadata
+    // Write a sidecar holding superseded metadata, with a field the
+    // update lacks.
     MockFs.addFiles([
       {
         path: objectSidecarPath,
         textContent: JSON.stringify({
-          embeddedViewConfigs: { 'list:Tags': { options: {}, data: {} } },
+          color: 'blue',
+          lastModified: '2024-01-01T00:00:00.000Z',
         }),
       },
     ]);
@@ -86,10 +83,10 @@ describe('updateEntryMetadata', () => {
 
   it('keeps each entry to its own sidecar', async () => {
     const metadata1: DatabaseEntryMetadata = {
-      embeddedViewConfigs: { 'card:Tags': { options: {}, data: {} } },
+      color: 'blue',
     };
     const metadata2: DatabaseEntryMetadata = {
-      embeddedViewConfigs: { 'list:Status': { options: {}, data: {} } },
+      color: 'green',
     };
 
     // Update entries in different databases
@@ -104,7 +101,7 @@ describe('updateEntryMetadata', () => {
 
   it('keeps only the last of successive updates to one entry', async () => {
     const superseded: DatabaseEntryMetadata = {
-      embeddedViewConfigs: { 'card:Tags': { options: {}, data: {} } },
+      color: 'blue',
     };
 
     await updateEntryMetadata(objectEntry1.id, superseded);

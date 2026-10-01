@@ -21,9 +21,7 @@ import { onUpdateEntryMetadata } from './entry-metadata-updated';
 
 // The updated metadata to sync
 const entryMetadata: DatabaseEntryMetadata = {
-  embeddedViewConfigs: {
-    'card:Tasks': { options: {}, data: {} },
-  },
+  color: 'red',
 };
 
 describe('onUpdateEntryMetadata', () => {

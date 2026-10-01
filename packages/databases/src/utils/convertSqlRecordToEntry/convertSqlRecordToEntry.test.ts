@@ -115,20 +115,12 @@ describe('convertSqlRecordToEntry', () => {
     const record: SqlEntryRecord = {
       ...objectEntry1SqlRecord,
       metadata: JSON.stringify({
-        embeddedViewConfigs: {
-          'layout-1:Content': {
-            options: { sortBy: 'title' },
-          },
-        },
+        created: objectEntry1.created,
       }),
     };
 
     const entry = convertSqlRecordToEntry(record, objectDatabase);
 
-    expect(entry.metadata).toEqual({
-      embeddedViewConfigs: {
-        'layout-1:Content': { options: { sortBy: 'title' } },
-      },
-    });
+    expect(entry.metadata.created).toEqual(objectEntry1.created);
   });
 });

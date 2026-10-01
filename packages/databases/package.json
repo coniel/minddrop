@@ -26,7 +26,6 @@
   "dependencies": {
     "@minddrop/collections": "workspace:*",
     "@minddrop/content-views": "workspace:*",
-    "@minddrop/designs": "workspace:*",
     "@minddrop/designs-next": "workspace:*",
     "@minddrop/entity-groups": "workspace:*",
     "@minddrop/events": "workspace:*",

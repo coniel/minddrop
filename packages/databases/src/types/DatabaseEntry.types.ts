@@ -73,11 +73,6 @@ export interface DatabaseEntry<TProperties extends PropertyMap = PropertyMap> {
   metadata: DatabaseEntryMetadata;
 }
 
-export interface DatabaseEntryViewConfig {
-  options?: object;
-  data?: object;
-}
-
 /**
  * App managed data belonging to one property of an entry.
  */
@@ -95,12 +90,6 @@ export interface DatabaseEntryMetadata {
    * The date the entry was last modified by the app.
    */
   lastModified?: Date;
-
-  /**
-   * Saved options/data for the virtual views backing view elements
-   * embedded in layouts, keyed by `propertyName:layoutId`.
-   */
-  embeddedViewConfigs?: Record<string, DatabaseEntryViewConfig>;
 
   /**
    * The entry's color, i.e. the value of the meta Color property.

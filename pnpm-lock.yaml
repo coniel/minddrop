@@ -2068,9 +2068,6 @@ importers:
       '@minddrop/content-views':
         specifier: workspace:*
         version: link:../content-views
-      '@minddrop/designs':
-        specifier: workspace:*
-        version: link:../designs
       '@minddrop/designs-next':
         specifier: workspace:*
         version: link:../designs-next

@@ -23,7 +23,7 @@ import {
   timestampDatabase,
   timestampEntry1,
 } from '../../test-utils';
-import { SqlEntryRecord } from '../../types';
+import { DatabaseEntryMetadata, SqlEntryRecord } from '../../types';
 import { resolveEntryMetadataFilePath } from '../../utils';
 import { writeEntryMetadata } from '../../writeEntryMetadata';
 import { sqlGetAllEntriesFull } from '../sqlGetAllEntriesFull';
@@ -161,8 +161,8 @@ describe('backgroundSyncDatabases', () => {
   });
 
   it("includes a changed entry's sidecar metadata in its upserted record", async () => {
-    const metadata = {
-      embeddedViewConfigs: { 'card:Related': { options: {}, data: {} } },
+    const metadata: DatabaseEntryMetadata = {
+      color: 'red',
     };
 
     await writeEntryMetadata(
@@ -229,7 +229,7 @@ describe('backgroundSyncDatabases', () => {
       databaseDirPath(collectionDatabase),
       deletedEntryPath,
       {
-        embeddedViewConfigs: { 'card:Related': { options: {}, data: {} } },
+        color: 'red',
       },
     );
 
@@ -250,7 +250,7 @@ describe('backgroundSyncDatabases', () => {
       databaseDirPath(collectionDatabase),
       databaseEntryFilePath(collectionEntry1),
       {
-        embeddedViewConfigs: { 'card:Related': { options: {}, data: {} } },
+        color: 'red',
       },
     );
 

@@ -1,7 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Collections } from '@minddrop/collections';
-import { ContentViews } from '@minddrop/content-views';
-import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { Events } from '@minddrop/events';
 import { History, Ledgers } from '@minddrop/history';
 import { ItemReferences } from '@minddrop/item-references';
@@ -34,15 +32,11 @@ import {
   resolveDatabaseHistorySubject,
   resolveDatabasePath,
   resolveWorkspaceDatabaseLedger,
-  viewMetadataKey,
   virtualCollectionId,
   virtualCollectionName,
-  virtualViewId,
 } from '../../utils';
 import { onItemAddressesChanged } from '../item-addresses-changed';
 import { onRenameDatabase } from './database-renamed';
-
-const { layout_card_2, layout_card_3 } = DesignFixtures;
 
 // The action performing the rename
 const action = historyAction_databaseRenamed;
@@ -90,21 +84,6 @@ describe('onRenameDatabase', () => {
       ),
       collectionEntry1.properties.References as string[],
     );
-
-    // Create virtual views for each collection property in each layout
-    [layout_card_2.id, layout_card_3.id].forEach((layoutId) => {
-      ContentViews.createVirtual({
-        id: virtualViewId(collectionEntry1.id, layoutId, 'Related'),
-        type: 'board',
-        dataSource: {
-          type: 'collection',
-          id: virtualCollectionId(collectionEntry1.id, 'Related'),
-        },
-        owner: collectionEntry1.id,
-        ownerKey: viewMetadataKey(layoutId, 'Related'),
-        name: 'Related',
-      });
-    });
   });
 
   afterEach(async () => {
@@ -311,26 +290,6 @@ describe('onRenameDatabase', () => {
     );
     // Member entries are untouched
     expect(related.items).toEqual([collectionEntry1.id, 'external-entry']);
-  });
-
-  it('leaves virtual views untouched', async () => {
-    const layoutId = layout_card_2.id;
-
-    await onRenameDatabase({
-      original: collectionDatabase,
-      updated: renamedDatabase,
-      action,
-    });
-
-    // The view should still exist unchanged
-    const view = ContentViews.get(
-      virtualViewId(collectionEntry1.id, layoutId, 'Related'),
-    );
-
-    expect(view.dataSource).toEqual({
-      type: 'collection',
-      id: virtualCollectionId(collectionEntry1.id, 'Related'),
-    });
   });
 
   it("rewrites referencing entries' files with the new addresses", async () => {

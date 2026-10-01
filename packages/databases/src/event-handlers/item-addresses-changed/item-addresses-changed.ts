@@ -1,16 +1,11 @@
-import { ContentViews } from '@minddrop/content-views';
 import { ItemAddressesChangedEventData } from '@minddrop/item-references';
-import { isEntityId } from '@minddrop/utils';
-import { persistVirtualViewConfig } from '../../persistVirtualViewConfig';
 import { recordDatabaseEntriesReferenceRename } from '../../recordDatabaseEntriesReferenceRename';
 import { getReferencingEntries } from '../../utils';
 import { writeDatabaseEntry } from '../../writeDatabaseEntry';
 
 /**
- * Rewrites entry files whose collection properties reference changed
- * items and re-persists embedded view configs referencing them, in
- * the workspace the items belong to, so durable references stay
- * current.
+ * Rewrites the entry files whose collection properties reference the
+ * changed items. Only the entries of the items' workspace are rewritten.
  *
  * The changed items' own records are left to whatever changed them,
  * which knows whether anything the record holds actually moved.
@@ -41,12 +36,5 @@ export async function onItemAddressesChanged(
     referencingEntries.map((entry) =>
       writeDatabaseEntry(entry.id, { workspaceId }),
     ),
-  );
-
-  // Re-persist embedded view configs referencing the changed items
-  await Promise.all(
-    ContentViews.getReferencing(changedIds, workspaceId)
-      .filter((view) => view.owner && isEntityId(view.owner, 'database-entry'))
-      .map((view) => persistVirtualViewConfig(view, workspaceId)),
   );
 }

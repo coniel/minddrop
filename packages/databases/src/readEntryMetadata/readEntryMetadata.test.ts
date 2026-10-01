@@ -35,12 +35,12 @@ describe('readEntryMetadata', () => {
   });
 
   it('reads the metadata from the sidecar', async () => {
-    // Write a sidecar holding view configs
+    // Write a sidecar with a color
     MockFs.addFiles([
       {
         path: sidecarPath,
         textContent: JSON.stringify({
-          embeddedViewConfigs: { 'card:Tasks': { options: {}, data: {} } },
+          color: 'red',
         }),
       },
     ]);
@@ -51,7 +51,7 @@ describe('readEntryMetadata', () => {
     );
 
     expect(metadata).toEqual({
-      embeddedViewConfigs: { 'card:Tasks': { options: {}, data: {} } },
+      color: 'red',
     });
   });
 

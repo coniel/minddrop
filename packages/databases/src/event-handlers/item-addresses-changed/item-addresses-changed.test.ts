@@ -1,6 +1,4 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { ContentViews } from '@minddrop/content-views';
-import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { History } from '@minddrop/history';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
@@ -25,12 +23,8 @@ import {
   databaseEntryAddress,
   resolveDatabaseEntryHistorySubject,
   resolveDatabaseEntryPath,
-  viewMetadataKey,
-  virtualViewId,
 } from '../../utils';
 import { onItemAddressesChanged } from './item-addresses-changed';
-
-const { contentViewType_referencing } = ContentViewFixtures;
 
 // The renamed state of relatedEntry1, used as the change's new address
 const renamedRelated = {
@@ -96,53 +90,6 @@ describe('onItemAddressesChanged', () => {
     // The referencing file should contain the new address
     expect(contents).toContain('Collection Database/Renamed Related');
     expect(contents).not.toContain('Collection Database/Related Entry 1');
-  });
-
-  it('re-persists embedded view configs referencing changed items', async () => {
-    // An embedded virtual view referencing the renamed entry
-    ContentViews.createVirtual({
-      id: virtualViewId(collectionEntry1.id, 'layout-1', 'Related'),
-      type: contentViewType_referencing.type,
-      dataSource: { type: 'collection', id: 'collection-1' },
-      owner: collectionEntry1.id,
-      ownerKey: viewMetadataKey('layout-1', 'Related'),
-      name: 'Related',
-      data: { items: [relatedEntry1.id] },
-    });
-
-    // Simulate a rename of the referenced entry
-    DatabaseEntriesStore.update(relatedEntry1.id, {
-      title: renamedRelated.title,
-      path: renamedRelated.path,
-    });
-
-    await onItemAddressesChanged({
-      workspaceId: workspace_1.id,
-      changes: [
-        {
-          id: relatedEntry1.id,
-          oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
-          newReference: databaseEntryAddress(
-            renamedRelated,
-            collectionDatabase,
-          ),
-        },
-      ],
-    });
-
-    const entry = DatabaseEntriesStore.get(collectionEntry1.id)!;
-
-    // The embedded config holds the entry's new durable address
-    expect(
-      entry.metadata.embeddedViewConfigs?.[
-        viewMetadataKey('layout-1', 'Related')
-      ],
-    ).toEqual({
-      options: contentViewType_referencing.defaultOptions,
-      data: {
-        items: [databaseEntryAddress(renamedRelated, collectionDatabase)],
-      },
-    });
   });
 
   it("rewrites the referencing entries of the changes' workspace", async () => {

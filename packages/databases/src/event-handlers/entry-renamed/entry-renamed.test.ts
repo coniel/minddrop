@@ -1,7 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Collections } from '@minddrop/collections';
-import { ContentViews } from '@minddrop/content-views';
-import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { Events } from '@minddrop/events';
 import { History, Ledgers } from '@minddrop/history';
 import { ItemReferences } from '@minddrop/item-references';
@@ -31,12 +29,9 @@ import {
   resolveEntryMetadataFilePath,
   virtualCollectionId,
   virtualCollectionName,
-  virtualViewId,
 } from '../../utils';
 import { onItemAddressesChanged } from '../item-addresses-changed';
 import { onRenameEntry } from './entry-renamed';
-
-const { layout_card_2 } = DesignFixtures;
 
 // The action performing the rename
 const action = historyAction_entryRenamed;
@@ -150,7 +145,7 @@ describe('onRenameEntry', () => {
 
   it('moves the sidecar from the old to the new entry path', async () => {
     const entryMetadata: DatabaseEntryMetadata = {
-      embeddedViewConfigs: { 'card:Related': { options: {}, data: {} } },
+      color: 'red',
     };
 
     // Write a sidecar for the original entry
@@ -234,38 +229,6 @@ describe('onRenameEntry', () => {
         'References',
       ),
     );
-  });
-
-  it('leaves virtual views untouched', async () => {
-    const layoutId = layout_card_2.id;
-    const viewId = virtualViewId(collectionEntry1.id, layoutId, 'Related');
-    const dataSource = {
-      type: 'collection' as const,
-      id: virtualCollectionId(collectionEntry1.id, 'Related'),
-    };
-
-    // Create a virtual view for a collection property
-    ContentViews.createVirtual({
-      id: viewId,
-      type: 'board',
-      dataSource,
-      owner: collectionEntry1.id,
-      name: 'Related',
-    });
-
-    // Update the store to reflect the rename
-    DatabaseEntriesStore.set(renamedEntry);
-
-    await onRenameEntry({
-      original: collectionEntry1,
-      updated: renamedEntry,
-      action,
-    });
-
-    // The view should still exist unchanged
-    const view = ContentViews.get(viewId);
-
-    expect(view.dataSource).toEqual(dataSource);
   });
 
   it("rewrites referencing entries' files with the new address", async () => {

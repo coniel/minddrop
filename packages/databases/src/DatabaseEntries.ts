@@ -71,7 +71,6 @@ export { findDatabaseEntryByReference as findByReference } from './utils';
 export { findEntryPropertyFileOwner as findPropertyFileOwner } from './utils';
 export { validateDatabaseEntryTitle as validateTitle } from './validateDatabaseEntryTitle';
 export { readDatabaseEntries as readFiles } from './readDatabaseEntries';
-export { createEntryVirtualViews as createVirtualViews } from './utils';
 export { entryPropertyValues as propertyValues } from './utils';
 export { getAllDatabaseEntries as getAll } from './getAllDatabaseEntries';
 export { getTaggedDatabaseEntries as getTagged } from './getTaggedDatabaseEntries';
