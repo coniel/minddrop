@@ -546,7 +546,7 @@
     "empty": {
       "title": "No entries yet",
       "addViaButton": "Click the + button at the top right to add a new entry.",
-      "dropOrPaste": "You can also drop or paste text, files, and links."
+      "drop": "You can also drop text, files, and links."
     },
     "entrySerializers": {
       "markdown": {

@@ -1,16 +1,46 @@
+import { DatabaseEntries } from '@minddrop/databases';
+import { DragAndDrop, DropEventData } from '@minddrop/drag-and-drop';
 import { useTranslation } from '@minddrop/i18n';
 import { Icon, Stack, Text } from '@minddrop/ui-primitives';
 import './DatabaseEmptyMode.css';
+
+// The data types the placeholder takes drops of from drags within
+// the app. None, since it takes content from outside the app only.
+const ACCEPTED_DATA_TYPES: string[] = [];
+
+export interface DatabaseEmptyModeProps {
+  /**
+   * The ID of the database the placeholder is shown for.
+   */
+  databaseId: string;
+}
 
 /**
  * Renders the placeholder shown in place of the views while the
  * database has no entries: an illustration and the ways to add one.
  */
-export const DatabaseEmptyMode: React.FC = () => {
+export const DatabaseEmptyMode: React.FC<DatabaseEmptyModeProps> = ({
+  databaseId,
+}) => {
   const { t } = useTranslation();
 
+  // Make the placeholder a drop target
+  const { droppableProps } = DragAndDrop.useDroppable({
+    type: 'database-empty-mode',
+    id: databaseId,
+    accepts: ACCEPTED_DATA_TYPES,
+    nativeAccepts: DatabaseEntries.constants.TransferDataTypes,
+    onDrop: handleDrop,
+  });
+
+  // Create entries in the database from content dropped in from
+  // outside the app.
+  function handleDrop(drop: DropEventData) {
+    DatabaseEntries.createFromTransferData(drop.data, databaseId);
+  }
+
   return (
-    <div className="database-empty-mode">
+    <div className="database-empty-mode" {...droppableProps}>
       <Stack align="center" gap={4}>
         {/* Concentric rings illustration with scattered icons */}
         <div className="database-empty-mode-illustration">
@@ -88,7 +118,7 @@ export const DatabaseEmptyMode: React.FC = () => {
           color="subtle"
           style={{ maxWidth: 380, textAlign: 'center' }}
         >
-          {t('databases.empty.dropOrPaste')}
+          {t('databases.empty.drop')}
         </Text>
       </Stack>
     </div>

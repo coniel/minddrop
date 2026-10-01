@@ -140,7 +140,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
     }
 
     if (isEmpty) {
-      return <DatabaseEmptyMode />;
+      return <DatabaseEmptyMode databaseId={databaseId} />;
     }
 
     return <DatabaseBrowseMode databaseId={databaseId} />;

@@ -607,7 +607,7 @@ declare module 'i18next' {
           empty: {
             title: string;
             addViaButton: string;
-            dropOrPaste: string;
+            drop: string;
           };
           entrySerializers: {
             markdown: {
