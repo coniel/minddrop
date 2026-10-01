@@ -5,6 +5,7 @@ summary: 'Blur-dismissed overlays inside Canvas must stopPropagation on mousedow
 paths:
   - 'ui/canvas/src/Canvas/Canvas.tsx'
   - 'features/queries/src/QueryBuilderCanvas/QueryBuilderCanvas.tsx'
+  - 'ui/components/src/AddContentPicker/**'
 tags: [canvas, focus, overlays, mousedown]
 ---
 
@@ -14,4 +15,4 @@ With the default `shortcutScope="focus"`, `Canvas` calls `viewport.focus()` in i
 
 Any overlay inside the canvas that dismisses itself on blur of an autofocused input (the searchable picker pattern) therefore breaks: pressing one of its options moves focus to the viewport, the input blurs, and the overlay unmounts before the click can deliver the selection. `preventDefault` on the overlay's mousedown does not help, since the viewport handler calls `focus()` explicitly.
 
-Such overlays must call `stopPropagation()` in their mousedown handler (see `QuerySourcePicker` in `features/queries`). The canvas view's `ContentViewNewEntryPicker` / `ContentViewEntryPicker` flows share this trap.
+Such overlays must call `stopPropagation()` in their mousedown handler (see `QuerySourcePicker` in `features/queries`). `AddContentPicker` in `ui/components` does so itself, which is what makes picking with the mouse work in the canvas view; its test (`AddContentPicker.test.tsx`) hosts it in a focus-taking element to keep it that way.

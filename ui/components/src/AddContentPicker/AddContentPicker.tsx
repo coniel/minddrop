@@ -69,6 +69,10 @@ export const AddContentPicker: React.FC<AddContentPickerProps> = ({
   // Keep focus in the search input when pressing the card's other
   // elements, so selection clicks never blur it.
   function handleMouseDown(event: React.MouseEvent) {
+    // Keep the press from a host which takes focus on mousedown.
+    // Its focus call would blur the input and dismiss the card.
+    event.stopPropagation();
+
     if (!(event.target instanceof HTMLInputElement)) {
       event.preventDefault();
     }
