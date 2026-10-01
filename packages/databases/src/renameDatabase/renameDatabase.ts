@@ -1,6 +1,8 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
+import { History } from '@minddrop/history';
 import { DatabasesStore } from '../DatabasesStore';
+import { DatabaseHistoryCauses } from '../constants';
 import { DatabaseRenamedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { Database } from '../types';
@@ -59,6 +61,7 @@ export async function renameDatabase(
   Events.dispatch(DatabaseRenamedEvent, {
     original: database,
     updated: renamedDatabase,
+    action: History.createAction(DatabaseHistoryCauses.DatabaseRenamed),
   });
 
   // Persist the updated config to the renamed directory

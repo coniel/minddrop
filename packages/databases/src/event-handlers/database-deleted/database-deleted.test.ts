@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { Designs } from '@minddrop/designs-next';
 import { DesignFixtures } from '@minddrop/designs-next/test-utils';
-import { History } from '@minddrop/history';
+import { History, Ledgers } from '@minddrop/history';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseSettingsStore } from '../../DatabaseSettingsStore';
 import { setDatabaseContentDefault } from '../../setDatabaseContentDefault';
@@ -18,6 +18,7 @@ import {
   collectionDatabase,
   collectionEntry1,
   collectionEntry1SqlRecord,
+  historyAction_databaseDeleted,
   objectDatabase,
   rootStorageDatabase,
   setup,
@@ -25,6 +26,7 @@ import {
 } from '../../test-utils';
 import {
   resolveDatabaseHistorySubject,
+  resolveWorkspaceDatabaseLedger,
   virtualCollectionId,
   virtualCollectionName,
 } from '../../utils';
@@ -33,6 +35,9 @@ import { onDeleteDatabase } from './database-deleted';
 const { ownedCardDesign_1 } = DesignFixtures;
 
 const { workspace_1 } = WorkspaceFixtures;
+
+// The action performing the deletion
+const action = historyAction_databaseDeleted;
 
 describe('onDeleteDatabase', () => {
   beforeEach(() => {
@@ -85,7 +90,7 @@ describe('onDeleteDatabase', () => {
 
   it('deletes the database and its entries from SQL', async () => {
     // Delete the collection database
-    await onDeleteDatabase(collectionDatabase);
+    await onDeleteDatabase({ ...collectionDatabase, action });
 
     // The database record should be gone from SQL
     expect(sqlGetAllDatabases()).not.toContainEqual(
@@ -98,12 +103,28 @@ describe('onDeleteDatabase', () => {
 
   it("closes the database's history", async () => {
     // Call the handler
-    await onDeleteDatabase(objectDatabase);
+    await onDeleteDatabase({ ...objectDatabase, action });
 
-    // The database's history should end with its deletion
+    // The database's history should end with its deletion, with the
+    // event's action on the record.
     expect(
       await History.read(resolveDatabaseHistorySubject(objectDatabase)),
-    ).toEqual([expect.objectContaining({ kind: 'deleted' })]);
+    ).toEqual([expect.objectContaining({ kind: 'deleted', action })]);
+  });
+
+  it("records the deletion in the workspace's databases ledger", async () => {
+    // Call the handler
+    await onDeleteDatabase({ ...objectDatabase, action });
+
+    // The ledger should record the deletion under the database's name,
+    // with its ID and the event's action.
+    expect(await Ledgers.read(resolveWorkspaceDatabaseLedger())).toEqual([
+      expect.objectContaining({
+        kind: 'deleted',
+        subject: { key: objectDatabase.name, id: objectDatabase.id },
+        action,
+      }),
+    ]);
   });
 
   it("deletes the database's designs", async () => {
@@ -113,14 +134,14 @@ describe('onDeleteDatabase', () => {
       workspace_1.id,
     );
 
-    await onDeleteDatabase(objectDatabase);
+    await onDeleteDatabase({ ...objectDatabase, action });
 
     expect(Designs.getByOwner(objectDatabase.id)).toEqual([]);
   });
 
   it('does nothing if the database has no collection properties', async () => {
     // Delete a database without collection properties
-    await onDeleteDatabase(objectDatabase);
+    await onDeleteDatabase({ ...objectDatabase, action });
 
     // Virtual collections should be unchanged
     const related = Collections.Store.get(
@@ -131,7 +152,7 @@ describe('onDeleteDatabase', () => {
 
   it('deletes all virtual collections for the database entries', async () => {
     // Delete the collection database
-    await onDeleteDatabase(collectionDatabase);
+    await onDeleteDatabase({ ...collectionDatabase, action });
 
     // All virtual collections should be deleted
     const related = Collections.Store.get(
@@ -148,7 +169,7 @@ describe('onDeleteDatabase', () => {
   it("removes the database's entries from collections referencing them", async () => {
     // Delete the database containing referenceEntry1, which is
     // referenced by collectionEntry1's References collection.
-    await onDeleteDatabase(rootStorageDatabase);
+    await onDeleteDatabase({ ...rootStorageDatabase, action });
 
     const references = Collections.get(
       virtualCollectionId(collectionEntry1.id, 'References'),
@@ -162,7 +183,7 @@ describe('onDeleteDatabase', () => {
     setDatabaseContentDefault('text', objectDatabase.id);
 
     // Delete the database
-    await onDeleteDatabase(objectDatabase);
+    await onDeleteDatabase({ ...objectDatabase, action });
 
     expect(DatabaseSettingsStore).toHaveStoredValue(
       'contentDefaults',

@@ -6,6 +6,7 @@ import { DatabaseEntryTemplatesStore } from '../../DatabaseEntryTemplatesStore';
 import { DatabaseDeletedEventData } from '../../events';
 import { getDatabaseEntryTemplates } from '../../getDatabaseEntryTemplates';
 import { recordDatabaseHistory } from '../../recordDatabaseHistory';
+import { recordWorkspaceDatabaseLedger } from '../../recordWorkspaceDatabaseLedger';
 import { removeEntriesFromCollections } from '../../removeEntriesFromCollections';
 import { sqlDeleteDatabase } from '../../sql';
 import { unsetDatabaseContentDefaults } from '../../unsetDatabaseContentDefaults';
@@ -20,7 +21,15 @@ export async function onDeleteDatabase(
   data: DatabaseDeletedEventData,
 ): Promise<void> {
   // Close the database's history
-  await recordDatabaseHistory(data, { kind: 'deleted' });
+  await recordDatabaseHistory(data, { kind: 'deleted', action: data.action });
+
+  // Record the deletion in the workspace's databases ledger, after the
+  // database's own history is closed.
+  await recordWorkspaceDatabaseLedger({
+    kind: 'deleted',
+    subject: { key: data.name, id: data.id },
+    action: data.action,
+  });
 
   // Delete from SQL
   sqlDeleteDatabase(data.id);

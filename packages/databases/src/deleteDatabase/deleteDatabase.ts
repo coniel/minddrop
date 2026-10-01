@@ -1,6 +1,8 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
+import { History } from '@minddrop/history';
 import { DatabasesStore } from '../DatabasesStore';
+import { DatabaseHistoryCauses } from '../constants';
 import { DatabaseDeletedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { resolveDatabasePath } from '../utils';
@@ -23,7 +25,10 @@ export async function deleteDatabase(id: string): Promise<void> {
 
   // Dispatch the delete event. Wait for its listeners to settle
   // before the directory is trashed.
-  await Events.dispatch(DatabaseDeletedEvent, database);
+  await Events.dispatch(DatabaseDeletedEvent, {
+    ...database,
+    action: History.createAction(DatabaseHistoryCauses.DatabaseDeleted),
+  });
 
   // Move the database directory to the system trash
   await Fs.trashDir(resolveDatabasePath(database));

@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { DatabasesStore } from '../DatabasesStore';
+import { DatabaseHistoryCauses } from '../constants';
 import { DatabaseRenamedEvent } from '../events';
 import {
   MockFs,
@@ -58,12 +59,19 @@ describe('renameDatabase', () => {
   it('dispatches a database renamed event', async () =>
     new Promise<void>((done) => {
       Events.addListener(DatabaseRenamedEvent, 'test', (data) => {
-        // Payload should contain the original and renamed database
-        expect(data.original).toEqual(objectDatabase);
-        expect(data.updated).toMatchObject({
-          id: objectDatabase.id,
-          name: newName,
-          path: newPath,
+        // Payload should contain the original and renamed database,
+        // and the action performing the rename.
+        expect(data).toMatchObject({
+          original: objectDatabase,
+          updated: {
+            id: objectDatabase.id,
+            name: newName,
+            path: newPath,
+          },
+          action: {
+            id: expect.stringMatching(/^action_/),
+            cause: DatabaseHistoryCauses.DatabaseRenamed,
+          },
         });
         done();
       });

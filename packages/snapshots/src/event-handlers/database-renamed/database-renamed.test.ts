@@ -4,7 +4,7 @@ import { cleanup, setup } from '../../test-utils';
 import { readRenameEvents } from '../../utils';
 import { onDatabaseRenamed } from './database-renamed';
 
-const { objectDatabase } = DatabaseFixtures;
+const { objectDatabase, historyAction_databaseRenamed } = DatabaseFixtures;
 
 describe('onDatabaseRenamed', () => {
   beforeEach(setup);
@@ -14,6 +14,7 @@ describe('onDatabaseRenamed', () => {
     await onDatabaseRenamed({
       original: objectDatabase,
       updated: { ...objectDatabase, name: 'Renamed Objects' },
+      action: historyAction_databaseRenamed,
     });
 
     // The ledger should contain a database rename event recording

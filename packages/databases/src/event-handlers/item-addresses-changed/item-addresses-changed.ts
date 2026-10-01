@@ -20,7 +20,7 @@ import { writeDatabaseEntry } from '../../writeDatabaseEntry';
 export async function onItemAddressesChanged(
   event: ItemAddressesChangedEventData,
 ): Promise<void> {
-  const { workspaceId, changes } = event;
+  const { workspaceId, changes, action } = event;
 
   // Collect the changed item IDs
   const changedIds = changes.map((change) => change.id);
@@ -29,7 +29,7 @@ export async function onItemAddressesChanged(
   // that their older records can be followed to the new address.
   await Promise.all(
     changes.map((change) =>
-      recordDatabaseEntriesReferenceRename(change, workspaceId),
+      recordDatabaseEntriesReferenceRename(change, workspaceId, action),
     ),
   );
 

@@ -7,8 +7,12 @@ import { cleanup, setup } from '../test-utils';
 import { readRenameEvents } from '../utils';
 import { initializeSnapshots } from './initializeSnapshots';
 
-const { objectDatabase, objectEntry1, historyAction_propertyRenamed } =
-  DatabaseFixtures;
+const {
+  objectDatabase,
+  objectEntry1,
+  historyAction_databaseRenamed,
+  historyAction_propertyRenamed,
+} = DatabaseFixtures;
 
 /**
  * Returns a copy of a database with the named property renamed
@@ -68,6 +72,7 @@ describe('initializeSnapshots', () => {
     Events.dispatch(Databases.events.Renamed, {
       original: objectDatabase,
       updated: { ...objectDatabase, name: 'Renamed Objects' },
+      action: historyAction_databaseRenamed,
     });
 
     // The record lands as an unawaited event side effect

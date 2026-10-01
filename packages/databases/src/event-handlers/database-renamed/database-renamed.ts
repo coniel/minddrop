@@ -5,6 +5,7 @@ import { Workspaces } from '@minddrop/workspaces';
 import { DatabaseRenamedEventData } from '../../events';
 import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
 import { recordDatabaseHistory } from '../../recordDatabaseHistory';
+import { recordWorkspaceDatabaseLedger } from '../../recordWorkspaceDatabaseLedger';
 import { sqlUpsertDatabase } from '../../sql';
 import {
   databaseEntryAddress,
@@ -25,7 +26,7 @@ import {
 export async function onRenameDatabase(
   data: DatabaseRenamedEventData,
 ): Promise<void> {
-  const { original, updated } = data;
+  const { original, updated, action } = data;
 
   // Record the rename against the database's history. The history
   // has already moved with the database's directory.
@@ -34,6 +35,16 @@ export async function onRenameDatabase(
     target: 'self',
     from: original.name,
     to: updated.name,
+    action,
+  });
+
+  // Record the rename in the workspace's databases ledger under the
+  // old name, after the database's own history has it.
+  await recordWorkspaceDatabaseLedger({
+    kind: 'rename',
+    subject: { key: original.name, id: original.id },
+    to: updated.name,
+    action,
   });
 
   // Read the database's entries, whose addresses the rename changes
@@ -87,6 +98,7 @@ export async function onRenameDatabase(
         oldReference: databaseEntryAddress(entry, original),
         newReference: databaseEntryAddress(entry, updated),
       })),
+      action,
     });
   }
 }

@@ -3,7 +3,7 @@ import { Collections } from '@minddrop/collections';
 import { ContentViews } from '@minddrop/content-views';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { Events } from '@minddrop/events';
-import { History } from '@minddrop/history';
+import { History, Ledgers } from '@minddrop/history';
 import { ItemReferences } from '@minddrop/item-references';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
@@ -22,6 +22,7 @@ import {
   collectionEntry1,
   databaseEntryFilePath,
   getRecordedSqlStatements,
+  historyAction_databaseRenamed,
   noPropertiesDatabase,
   objectDatabase,
   parentDir,
@@ -32,6 +33,7 @@ import {
 import {
   resolveDatabaseHistorySubject,
   resolveDatabasePath,
+  resolveWorkspaceDatabaseLedger,
   viewMetadataKey,
   virtualCollectionId,
   virtualCollectionName,
@@ -41,6 +43,9 @@ import { onItemAddressesChanged } from '../item-addresses-changed';
 import { onRenameDatabase } from './database-renamed';
 
 const { layout_card_2, layout_card_3 } = DesignFixtures;
+
+// The action performing the rename
+const action = historyAction_databaseRenamed;
 
 // The collection database renamed to a new name/ID
 const renamedDatabase = {
@@ -115,6 +120,7 @@ describe('onRenameDatabase', () => {
         ...objectDatabase,
         name: 'Renamed Objects',
       },
+      action,
     });
 
     // The unrelated virtual collection should be unchanged
@@ -135,9 +141,11 @@ describe('onRenameDatabase', () => {
     await onRenameDatabase({
       original: collectionDatabase,
       updated: renamedDatabase,
+      action,
     });
 
-    // The history at the new path should record the rename
+    // The history at the new path should record the rename with the
+    // event's action.
     expect(
       await History.read(resolveDatabaseHistorySubject(renamedDatabase)),
     ).toEqual([
@@ -146,14 +154,57 @@ describe('onRenameDatabase', () => {
         target: 'self',
         from: collectionDatabase.name,
         to: renamedDatabase.name,
+        action,
       }),
     ]);
   });
+
+  it("records the rename in the workspace's databases ledger under the old name", async () => {
+    // Call the handler
+    await onRenameDatabase({
+      original: collectionDatabase,
+      updated: renamedDatabase,
+      action,
+    });
+
+    // The ledger should record the rename from the old name, with the
+    // database's ID and the event's action.
+    expect(await Ledgers.read(resolveWorkspaceDatabaseLedger())).toEqual([
+      expect.objectContaining({
+        kind: 'rename',
+        subject: { key: collectionDatabase.name, id: collectionDatabase.id },
+        to: renamedDatabase.name,
+        action,
+      }),
+    ]);
+  });
+
+  it("puts the rename's action on the address change it dispatches", async () =>
+    new Promise<void>((done) => {
+      // Listen for the address change. The 'test' listener ID is taken
+      // by the rewrite listener registered in setup.
+      Events.addListener(
+        ItemReferences.events.AddressesChanged,
+        'test-capture',
+        (data) => {
+          // The address change should have the rename's action
+          expect(data.action).toEqual(action);
+          done();
+        },
+      );
+
+      onRenameDatabase({
+        original: collectionDatabase,
+        updated: renamedDatabase,
+        action,
+      });
+    }));
 
   it('leaves the entries untouched', async () => {
     await onRenameDatabase({
       original: collectionDatabase,
       updated: renamedDatabase,
+      action,
     });
 
     // Entry paths are addressed from their database, so a database
@@ -167,6 +218,7 @@ describe('onRenameDatabase', () => {
     await onRenameDatabase({
       original: collectionDatabase,
       updated: renamedDatabase,
+      action,
     });
 
     // Database record upserted with the new name and path
@@ -182,6 +234,7 @@ describe('onRenameDatabase', () => {
     await onRenameDatabase({
       original: collectionDatabase,
       updated: renamedDatabase,
+      action,
     });
 
     // Nothing an entry's record holds moves with its database, so the
@@ -202,6 +255,7 @@ describe('onRenameDatabase', () => {
     await onRenameDatabase({
       original: collectionDatabase,
       updated: renamedDatabase,
+      action,
     });
 
     // The database ID is unchanged, so no delete is needed
@@ -221,6 +275,7 @@ describe('onRenameDatabase', () => {
     await onRenameDatabase({
       original: collectionDatabase,
       updated: renamedDatabase,
+      action,
     });
 
     // Entry IDs are unchanged, so a delete event would remove the
@@ -239,6 +294,7 @@ describe('onRenameDatabase', () => {
     await onRenameDatabase({
       original: collectionDatabase,
       updated: renamedDatabase,
+      action,
     });
 
     // The collection exists under its unchanged ID with the new name
@@ -263,6 +319,7 @@ describe('onRenameDatabase', () => {
     await onRenameDatabase({
       original: collectionDatabase,
       updated: renamedDatabase,
+      action,
     });
 
     // The view should still exist unchanged
@@ -292,6 +349,7 @@ describe('onRenameDatabase', () => {
     await onRenameDatabase({
       original: rootStorageDatabase,
       updated: renamedRoot,
+      action,
     });
 
     // The rewrite lands as an unawaited event side effect, so
@@ -308,6 +366,7 @@ describe('onRenameDatabase', () => {
     await onRenameDatabase({
       original: noPropertiesDatabase,
       updated: { ...noPropertiesDatabase, name: 'Renamed' },
+      action,
     });
 
     // The database record is still re-synced

@@ -11,8 +11,14 @@ import {
 } from '../utils';
 import { recordDatabaseEntriesReferenceRename } from './recordDatabaseEntriesReferenceRename';
 
-const { collectionDatabase, collectionEntry1, relatedEntry1, relatedEntry2 } =
-  DatabaseFixtures;
+const {
+  collectionDatabase,
+  collectionEntry1,
+  collectionEntry2,
+  historyAction_databaseRenamed,
+  relatedEntry1,
+  relatedEntry2,
+} = DatabaseFixtures;
 const { workspace_1, workspace_2 } = WorkspaceFixtures;
 
 // The renamed state of relatedEntry1
@@ -49,6 +55,33 @@ describe('recordDatabaseEntriesReferenceRename', () => {
         from: change.oldReference,
         to: change.newReference,
       }),
+    ]);
+  });
+
+  it("stamps the action on every referencing entry's record", async () => {
+    // A second entry referencing the item
+    DatabaseEntriesStore.set(collectionEntry2);
+
+    // Record the change with an action
+    await recordDatabaseEntriesReferenceRename(
+      change,
+      workspace_1.id,
+      historyAction_databaseRenamed,
+    );
+
+    // Read both referencing entries' histories
+    const records = await Promise.all(
+      [collectionEntry1, collectionEntry2].map((entry) =>
+        History.read(
+          resolveDatabaseEntryHistorySubject(collectionDatabase, entry),
+        ),
+      ),
+    );
+
+    // Both entries' records should have the action
+    expect(records.flat().map((record) => record.action)).toEqual([
+      historyAction_databaseRenamed,
+      historyAction_databaseRenamed,
     ]);
   });
 

@@ -482,6 +482,27 @@ export const collectionEntry1SqlRecord: SqlEntryRecord = {
   ],
 };
 
+/**
+ * A second entry referencing the first related entry. Not loaded by
+ * the fixtures setup, so that tests counting the collection
+ * database's entries are unaffected; a test needing it sets it in the
+ * store.
+ */
+export const collectionEntry2: DatabaseEntry = {
+  id: 'database-entry_collection-entry-2',
+  title: 'Collection Entry 2',
+  database: collectionDatabase.id,
+  path: 'Collection Entry 2.md',
+  created: new Date('2024-01-01T00:00:00.000Z'),
+  lastModified: new Date('2024-01-01T00:00:00.000Z'),
+  properties: {
+    Title: 'Collection Entry 2',
+    Related: [relatedEntry1.id],
+    References: [],
+  },
+  metadata: {},
+};
+
 /******************************************************************************
  * Aggregate arrays
  *****************************************************************************/

@@ -76,6 +76,7 @@ export * from './resolveDatabaseEntryPath';
 export * from './resolveDatabaseEntryHistorySubject';
 export * from './resolveDatabaseHistorySubject';
 export * from './resolveDatabaseEntryLedger';
+export * from './resolveWorkspaceDatabaseLedger';
 export * from './serializeDatabase';
 export * from './serializeDatabaseEntryTemplate';
 export * from './matchesEntryFocusRequest';

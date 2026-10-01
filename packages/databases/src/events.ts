@@ -21,10 +21,20 @@ export interface DatabaseUpdatedEventData {
   original: Database;
   updated: Database;
 }
-export type DatabaseDeletedEventData = Database;
+export interface DatabaseDeletedEventData extends Database {
+  /**
+   * The action performing the deletion.
+   */
+  action: HistoryAction;
+}
 export interface DatabaseRenamedEventData {
   original: Database;
   updated: Database;
+
+  /**
+   * The action performing the rename.
+   */
+  action: HistoryAction;
 }
 
 // Property events

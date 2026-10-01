@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { DatabasesStore } from '../DatabasesStore';
+import { DatabaseHistoryCauses } from '../constants';
 import { DatabaseNotFoundError } from '../errors';
 import { DatabaseDeletedEvent } from '../events';
 import {
@@ -67,8 +68,15 @@ describe('deleteDatabase', () => {
   it('dispatches a database deleted event', async () =>
     new Promise<void>((done) => {
       Events.addListener(DatabaseDeletedEvent, 'test', (data) => {
-        // Payload should be the deleted database
-        expect(data).toEqual(objectDatabase);
+        // Payload should be the deleted database and the action
+        // performing the deletion.
+        expect(data).toEqual({
+          ...objectDatabase,
+          action: {
+            id: expect.stringMatching(/^action_/),
+            cause: DatabaseHistoryCauses.DatabaseDeleted,
+          },
+        });
         done();
       });
 

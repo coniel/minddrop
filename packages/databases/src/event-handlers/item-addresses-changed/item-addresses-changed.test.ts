@@ -15,6 +15,7 @@ import {
   collectionEntry1,
   databaseEntryFilePath,
   getRecordedSqlStatements,
+  historyAction_databaseRenamed,
   relatedEntry1,
   relatedEntry2,
   setup,
@@ -248,5 +249,40 @@ describe('onItemAddressesChanged', () => {
         to: databaseEntryAddress(renamedRelated, collectionDatabase),
       }),
     );
+  });
+
+  it("stamps the changes' action on the referencing entries' records", async () => {
+    // Simulate a rename of a referenced entry
+    DatabaseEntriesStore.update(relatedEntry1.id, {
+      title: renamedRelated.title,
+      path: renamedRelated.path,
+    });
+
+    await onItemAddressesChanged({
+      workspaceId: workspace_1.id,
+      changes: [
+        {
+          id: relatedEntry1.id,
+          oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
+          newReference: databaseEntryAddress(
+            renamedRelated,
+            collectionDatabase,
+          ),
+        },
+      ],
+      action: historyAction_databaseRenamed,
+    });
+
+    // The referencing entry's record should have the action
+    expect(
+      await History.read(
+        resolveDatabaseEntryHistorySubject(
+          collectionDatabase,
+          collectionEntry1,
+        ),
+      ),
+    ).toEqual([
+      expect.objectContaining({ action: historyAction_databaseRenamed }),
+    ]);
   });
 });

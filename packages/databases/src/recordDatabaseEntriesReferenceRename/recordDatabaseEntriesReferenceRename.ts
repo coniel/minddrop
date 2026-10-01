@@ -1,3 +1,4 @@
+import { HistoryAction } from '@minddrop/history';
 import { ItemAddressChange } from '@minddrop/item-references';
 import { Workspaces } from '@minddrop/workspaces';
 import { DatabasesStore } from '../DatabasesStore';
@@ -10,10 +11,12 @@ import { getReferencingEntries } from '../utils';
  *
  * @param change - The address change to record.
  * @param workspaceId - The ID of the workspace holding the entries.
+ * @param action - The action which changed the address, if any.
  */
 export async function recordDatabaseEntriesReferenceRename(
   change: ItemAddressChange,
   workspaceId: string,
+  action?: HistoryAction,
 ): Promise<void> {
   // Resolve the workspace's path
   const workspacePath = Workspaces.resolvePath(workspaceId);
@@ -44,6 +47,7 @@ export async function recordDatabaseEntriesReferenceRename(
           target: 'reference',
           from: change.oldReference,
           to: change.newReference,
+          action,
         },
         workspacePath,
       );
