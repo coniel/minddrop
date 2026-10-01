@@ -1,4 +1,5 @@
 export * from './Paths';
+export * from './applyNullableChanges';
 export * from './back-end-utils';
 export * from './bracketImageWidth';
 export * from './canScrollBy';
@@ -25,6 +26,7 @@ export * from './isSameValue';
 export * from './isImageUrl';
 export * from './isEditableTarget';
 export * from './isInteractiveTarget';
+export * from './isNumberInRange';
 export * from './isSerializedDate';
 export * from './isUntitledTitle';
 export * from './isUrl';
