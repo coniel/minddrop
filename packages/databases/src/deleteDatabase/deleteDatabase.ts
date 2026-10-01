@@ -21,8 +21,9 @@ export async function deleteDatabase(id: string): Promise<void> {
   // Remove the database from the store
   DatabasesStore.remove(id);
 
-  // Dispatch the delete event
-  Events.dispatch(DatabaseDeletedEvent, database);
+  // Dispatch the delete event. Wait for its listeners to settle
+  // before the directory is trashed.
+  await Events.dispatch(DatabaseDeletedEvent, database);
 
   // Move the database directory to the system trash
   await Fs.trashDir(resolveDatabasePath(database));
