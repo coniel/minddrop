@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { ContentViews } from '@minddrop/content-views';
 import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { Events } from '@minddrop/events';
+import { History, Ledgers } from '@minddrop/history';
 import {
   ItemAddressesChangedEventData,
   ItemReferences,
@@ -9,17 +10,19 @@ import {
 import { storeItem } from '@minddrop/stores/test-utils';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
-import {
-  cleanup,
-  collectionDatabase,
-  objectDatabase,
-  relatedEntry1,
-  setup,
-} from '../test-utils';
+import { DatabasesStore } from '../DatabasesStore';
+import { recordWorkspaceDatabaseLedger } from '../recordWorkspaceDatabaseLedger';
+import { DatabaseFixtures, cleanup, setup } from '../test-utils';
 import { BackgroundSyncChangeset } from '../types';
-import { convertEntryToSqlRecord, databaseEntryAddress } from '../utils';
+import {
+  convertEntryToSqlRecord,
+  databaseEntryAddress,
+  resolveDatabaseHistorySubject,
+  resolveWorkspaceDatabaseLedger,
+} from '../utils';
 import { handleBackgroundSyncResult } from './handleBackgroundSyncResult';
 
+const { collectionDatabase, objectDatabase, relatedEntry1 } = DatabaseFixtures;
 const { contentViewType_referencing } = ContentViewFixtures;
 const { workspace_1, workspace_2 } = WorkspaceFixtures;
 
@@ -33,10 +36,109 @@ const emptyChangeset: BackgroundSyncChangeset = {
   deletedEntryIds: [],
 };
 
+// The object database renamed while the app was closed
+const renamedDatabase = {
+  ...objectDatabase,
+  name: 'Renamed Objects',
+  path: 'Renamed Objects',
+};
+
 describe('handleBackgroundSyncResult', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
+
+  it('records a rename of a database made while the app was closed', async () => {
+    await handleBackgroundSyncResult({
+      ...emptyChangeset,
+      upsertedDatabases: [renamedDatabase],
+    });
+
+    // The database's history under its new path should record the
+    // rename from the name the store held.
+    expect(
+      await History.read(resolveDatabaseHistorySubject(renamedDatabase)),
+    ).toEqual([
+      expect.objectContaining({
+        kind: 'rename',
+        from: objectDatabase.name,
+        to: renamedDatabase.name,
+      }),
+    ]);
+  });
+
+  it('records a rename of a database put back from the trash under another name', async () => {
+    // Record the database deleted under an earlier name and remove it
+    // from the store.
+    await recordWorkspaceDatabaseLedger({
+      kind: 'deleted',
+      subject: { key: 'Old Objects', id: objectDatabase.id },
+    });
+    DatabasesStore.remove(objectDatabase.id);
+
+    await handleBackgroundSyncResult({
+      ...emptyChangeset,
+      upsertedDatabases: [objectDatabase],
+    });
+
+    // The database's history should record the rename from the
+    // deleted name.
+    expect(
+      await History.read(resolveDatabaseHistorySubject(objectDatabase)),
+    ).toEqual([
+      expect.objectContaining({
+        kind: 'rename',
+        from: 'Old Objects',
+        to: objectDatabase.name,
+      }),
+    ]);
+  });
+
+  it('records a deletion of a database made while the app was closed', async () => {
+    await handleBackgroundSyncResult({
+      ...emptyChangeset,
+      deletedDatabaseIds: [objectDatabase.id],
+    });
+
+    // The ledger should record the deletion under the name the store
+    // held.
+    expect(await Ledgers.read(resolveWorkspaceDatabaseLedger())).toEqual([
+      expect.objectContaining({
+        kind: 'deleted',
+        subject: { key: objectDatabase.name, id: objectDatabase.id },
+      }),
+    ]);
+  });
+
+  it('records nothing for a deleted database the store did not hold', async () => {
+    await handleBackgroundSyncResult({
+      ...emptyChangeset,
+      deletedDatabaseIds: ['database_unknown'],
+    });
+
+    expect(await Ledgers.read(resolveWorkspaceDatabaseLedger())).toEqual([]);
+  });
+
+  it("records the deletion in the changeset's workspace", async () => {
+    // The database held by the second workspace
+    DatabasesStore.in(workspace_2.id).set(objectDatabase);
+
+    await handleBackgroundSyncResult({
+      ...emptyChangeset,
+      workspaceId: workspace_2.id,
+      deletedDatabaseIds: [objectDatabase.id],
+    });
+
+    // The second workspace's ledger should record the deletion
+    expect(
+      await Ledgers.read(resolveWorkspaceDatabaseLedger(workspace_2.path)),
+    ).toEqual([
+      expect.objectContaining({
+        kind: 'deleted',
+        subject: { key: objectDatabase.name, id: objectDatabase.id },
+      }),
+    ]);
+  });
 
   it('dispatches address changes for entries that were renamed', async () => {
     const renamed = {

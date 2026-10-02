@@ -12,6 +12,8 @@ import { DatabasesBackgroundSyncedEvent } from '../events';
 import { loadDatabaseDesigns } from '../loadDatabaseDesigns';
 import { loadDatabaseEntryTemplates } from '../loadDatabaseEntryTemplates';
 import { loadDatabaseViews } from '../loadDatabaseViews';
+import { recordSyncedDatabaseDeletion } from '../recordSyncedDatabaseDeletion';
+import { recordSyncedDatabaseRename } from '../recordSyncedDatabaseRename';
 import { removeEntriesFromCollections } from '../removeEntriesFromCollections';
 import type { BackgroundSyncChangeset, Database } from '../types';
 import { convertSqlRecordToEntry, databaseEntryAddress } from '../utils';
@@ -38,8 +40,18 @@ export async function handleBackgroundSyncResult(
   for (const database of changeset.upsertedDatabases) {
     const restored = restoreDates<Database>(database);
 
+    // Get the store's record of the database before the sync
+    const stored = databasesStore.get(restored.id);
+
     databasesStore.set(restored);
     upsertedDatabases.push(restored);
+
+    // Record the database's rename, if the sync found one
+    await recordSyncedDatabaseRename(
+      restored,
+      stored?.name ?? null,
+      workspace.path,
+    );
   }
 
   // Load views, designs, and entry templates for newly
@@ -56,7 +68,19 @@ export async function handleBackgroundSyncResult(
   // templates, so that the item removals cannot write into the
   // deleted databases' directories.
   for (const id of changeset.deletedDatabaseIds) {
+    // Get the store's record of the deleted database
+    const deleted = databasesStore.get(id);
+
     databasesStore.remove(id);
+
+    // Check the store held the database. If not, there is no name
+    // to record its deletion under.
+    if (!deleted) {
+      continue;
+    }
+
+    // Record the deletion in the workspace's databases ledger
+    await recordSyncedDatabaseDeletion(deleted, workspace.path);
   }
 
   // Delete views belonging to deleted databases
