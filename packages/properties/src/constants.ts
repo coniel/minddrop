@@ -7,6 +7,7 @@ import {
   EmbeddableFilePropertyType,
   FileBasedPropertyType,
   PropertyType,
+  TimestampPropertyType,
 } from './types';
 
 /**
@@ -45,6 +46,14 @@ export const MetadataPropertySchemas = [
 export const METADATA_PROPERTY_TYPES = new Set<PropertyType>(
   MetadataPropertySchemas.map((schema) => schema.type),
 );
+
+/**
+ * Property types whose value is a creation or last-modified timestamp.
+ */
+export const TIMESTAMP_PROPERTY_TYPES = new Set<TimestampPropertyType>([
+  'created',
+  'last-modified',
+]);
 
 /**
  * Property types whose values can be ordered. Multi-value, file

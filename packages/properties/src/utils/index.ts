@@ -10,6 +10,7 @@ export * from './isUrlProperty';
 export * from './removePropertyValue';
 export * from './renamePropertyValue';
 export * from './renameSchemaProperty';
+export * from './resolveChangedPropertyNames';
 export * from './resolvePropertyNamesOfType';
 export * from './resolveNewOptionColor';
 export * from './resolveFilePropertyType';

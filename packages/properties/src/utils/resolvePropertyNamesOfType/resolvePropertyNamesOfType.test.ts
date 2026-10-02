@@ -16,6 +16,14 @@ describe('resolvePropertyNamesOfType', () => {
     ]);
   });
 
+  it('returns the names of the properties of any of several types', () => {
+    expect(resolvePropertyNamesOfType(schema, ['text', 'tags'])).toEqual([
+      'Status',
+      'Tags',
+      'Topics',
+    ]);
+  });
+
   it('returns nothing when the schema has no property of the type', () => {
     expect(resolvePropertyNamesOfType(schema, 'number')).toEqual([]);
   });

@@ -43,6 +43,7 @@ export {
   removePropertyValue as removeValue,
   renamePropertyValue as renameValue,
   renameSchemaProperty as rename,
+  resolveChangedPropertyNames as resolveChangedNames,
   resolveFilePropertyType,
   resolveNewOptionColor,
   resolvePropertyNamesOfType as resolveNamesOfType,

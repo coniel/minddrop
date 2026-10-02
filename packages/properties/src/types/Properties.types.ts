@@ -22,3 +22,12 @@ export type PropertyType =
   | 'pdf'
   | 'audio'
   | 'video';
+
+/**
+ * The property types whose value is a creation or last-modified
+ * timestamp.
+ */
+export type TimestampPropertyType = Extract<
+  PropertyType,
+  'created' | 'last-modified'
+>;
