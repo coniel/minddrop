@@ -1,6 +1,7 @@
 import { EntityId } from '@minddrop/utils';
+import type { CollectionEntityType } from '../constants';
 
-export type CollectionId = EntityId<'collection'>;
+export type CollectionId = EntityId<typeof CollectionEntityType>;
 
 export interface Collection {
   /**

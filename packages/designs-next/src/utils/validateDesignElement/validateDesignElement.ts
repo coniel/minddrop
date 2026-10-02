@@ -1,5 +1,6 @@
 import { isEntityId, isNumberInRange } from '@minddrop/utils';
 import {
+  DesignElementEntityType,
   ElementContentFits,
   ElementHeightModes,
   ElementWidthModes,
@@ -24,7 +25,10 @@ export function validateDesignElement(
   const element = candidate as Partial<DesignElement>;
 
   // The ID must be a typed element entity ID
-  if (typeof element.id !== 'string' || !isEntityId(element.id, 'element')) {
+  if (
+    typeof element.id !== 'string' ||
+    !isEntityId(element.id, DesignElementEntityType)
+  ) {
     return false;
   }
 
@@ -85,7 +89,7 @@ export function validateDesignElement(
   // The parent must be a typed element entity ID when present
   if (
     element.parent !== undefined &&
-    !isEntityId(element.parent as string, 'element')
+    !isEntityId(element.parent as string, DesignElementEntityType)
   ) {
     return false;
   }

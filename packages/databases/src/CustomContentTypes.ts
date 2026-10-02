@@ -1,4 +1,7 @@
-import { CustomContentTypeKinds } from './constants';
+import {
+  CustomContentTypeEntityType,
+  CustomContentTypeKinds,
+} from './constants';
 import { CustomContentTypeNotFoundError } from './errors';
 
 export const errors = {
@@ -6,6 +9,7 @@ export const errors = {
 };
 
 export const constants = {
+  EntityType: CustomContentTypeEntityType,
   Kinds: CustomContentTypeKinds,
 };
 

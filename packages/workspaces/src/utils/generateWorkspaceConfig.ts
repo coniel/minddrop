@@ -1,4 +1,5 @@
 import { entityId } from '@minddrop/utils';
+import { WorkspaceEntityType } from '../constants';
 import { Workspace } from '../types';
 
 type GenerateWorkspaceOptions = Pick<Workspace, 'path' | 'name' | 'icon'>;
@@ -14,7 +15,7 @@ export function generateWorkspaceConfig(
 ): Workspace {
   return {
     ...options,
-    id: entityId('workspace'),
+    id: entityId(WorkspaceEntityType),
     created: new Date(),
     lastModified: new Date(),
   };

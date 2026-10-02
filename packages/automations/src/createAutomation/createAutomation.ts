@@ -2,7 +2,7 @@ import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
 import { entityId } from '@minddrop/utils';
 import { AutomationsStore } from '../AutomationsStore';
-import { DefaultAutomationIcon } from '../constants';
+import { AutomationEntityType, DefaultAutomationIcon } from '../constants';
 import { AutomationCreatedEvent } from '../events';
 import { Automation } from '../types';
 import { writeAutomation } from '../writeAutomation';
@@ -24,7 +24,7 @@ export async function createAutomation(
 ): Promise<Automation> {
   // Generate the automation object
   const automation: Automation = {
-    id: entityId('automation'),
+    id: entityId(AutomationEntityType),
     created: new Date(),
     lastModified: new Date(),
     name: name || i18n.t('automations.labels.automation'),

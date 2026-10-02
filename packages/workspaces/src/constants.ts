@@ -1,3 +1,8 @@
+/**
+ * The entity type of workspaces, prefixing their IDs.
+ */
+export const WorkspaceEntityType = 'workspace';
+
 export const WorkspacesConfigFileName = 'workspaces.json';
 
 /**

@@ -2074,6 +2074,9 @@ importers:
 
   packages/databases:
     dependencies:
+      '@minddrop/automations':
+        specifier: workspace:*
+        version: link:../automations
       '@minddrop/collections':
         specifier: workspace:*
         version: link:../collections

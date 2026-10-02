@@ -1,3 +1,8 @@
+/**
+ * The entity type of automations, prefixing their IDs.
+ */
+export const AutomationEntityType = 'automation';
+
 export const AutomationsDirName = 'automations';
 export const AutomationFileExtension = 'json';
 

@@ -1,4 +1,5 @@
 import { entityId } from '@minddrop/utils';
+import { BlockEntityType } from '../constants';
 
 /**
  * Generates a block ID.
@@ -6,5 +7,5 @@ import { entityId } from '@minddrop/utils';
  * @returns A block ID.
  */
 export function generateBlockId(): string {
-  return entityId('block');
+  return entityId(BlockEntityType);
 }

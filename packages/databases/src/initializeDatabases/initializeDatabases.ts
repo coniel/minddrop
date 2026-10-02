@@ -1,6 +1,7 @@
 import { I18n } from '@minddrop/i18n';
 import { ItemReferences } from '@minddrop/item-references';
 import { loadCoreSerializers } from '../EntrySerializers';
+import { DatabaseEntityType, EntryEntityType } from '../constants';
 import { initializeDatabaseAutomations } from '../initializeDatabaseAutomations';
 import { initializeDatabaseEventHandlers } from '../initializeDatabaseEventHandlers';
 import { initializeDatabaseTemplates } from '../initializeDatabaseTemplates';
@@ -27,14 +28,14 @@ export function initializeDatabases(): void {
 
   // Register the item reference adapter for entry addresses
   ItemReferences.registerAdapter({
-    type: 'database-entry',
+    type: EntryEntityType,
     serialize: serializeEntryReference,
     match: matchEntryReference,
   });
 
   // Register the item reference adapter for database addresses
   ItemReferences.registerAdapter({
-    type: 'database',
+    type: DatabaseEntityType,
     serialize: serializeDatabaseReference,
     match: matchDatabaseReference,
   });

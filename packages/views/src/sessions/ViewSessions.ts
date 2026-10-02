@@ -1,3 +1,11 @@
+import { ViewSessionEntityType } from '../constants';
+
+// Const-asserted so the entity type keeps its literal type. IDs
+// minted from it are then typed by it.
+export const constants = {
+  EntityType: ViewSessionEntityType,
+} as const;
+
 export {
   ViewSessionsStore as Store,
   useViewSessions as useAll,

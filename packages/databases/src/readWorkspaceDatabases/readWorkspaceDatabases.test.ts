@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Paths, isEntityId } from '@minddrop/utils';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
-import { DatabaseConfigFileName } from '../constants';
+import { DatabaseConfigFileName, DatabaseEntityType } from '../constants';
 import {
   MockFs,
   cleanup,
@@ -64,7 +64,7 @@ describe('readWorkspaceDatabases', () => {
     const database = result.find((current) => current.path === databasePath);
 
     // The database should have a minted typed ID
-    expect(isEntityId(database!.id, 'database')).toBe(true);
+    expect(isEntityId(database!.id, DatabaseEntityType)).toBe(true);
 
     // The minted ID should be persisted back to the config file
     const config = MockFs.readJsonFile<Database>(configPath);

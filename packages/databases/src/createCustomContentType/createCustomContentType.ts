@@ -1,5 +1,6 @@
 import { entityId } from '@minddrop/utils';
 import { DatabaseSettingsStore } from '../DatabaseSettingsStore';
+import { CustomContentTypeEntityType } from '../constants';
 import { getDatabaseContentDefaults } from '../getDatabaseContentDefaults';
 import { CustomContentType, CustomContentTypeData } from '../types';
 import { normalizeContentTypeMatchers } from '../utils';
@@ -29,7 +30,7 @@ export function createCustomContentType(
   // Create the custom content type
   const customType: CustomContentType = {
     ...data,
-    id: entityId('custom-content-type'),
+    id: entityId(CustomContentTypeEntityType),
     matchers,
   };
 

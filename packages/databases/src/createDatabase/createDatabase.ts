@@ -1,3 +1,4 @@
+import { Automations } from '@minddrop/automations';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { entityId } from '@minddrop/utils';
@@ -42,7 +43,7 @@ export async function createDatabase(
   // Create automation instances from the provided automation templates
   const automations = [...(options.automations || [])].map((automation) => ({
     ...automation,
-    id: entityId('automation'),
+    id: entityId(Automations.constants.EntityType),
   }));
 
   // Generate the database config, applying the user-configured

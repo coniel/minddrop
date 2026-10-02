@@ -1,4 +1,9 @@
 /**
+ * The entity type of view sessions, prefixing their IDs.
+ */
+export const ViewSessionEntityType = 'session';
+
+/**
  * The id of the app's primary view area. Used as the fallback target
  * when a view event does not specify a `viewAreaId`.
  */

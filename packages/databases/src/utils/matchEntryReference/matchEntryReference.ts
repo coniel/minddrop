@@ -1,4 +1,5 @@
 import { ItemReferenceMatch } from '@minddrop/item-references';
+import { EntryEntityType } from '../../constants';
 import { matchEntryAddress } from '../matchEntryAddress';
 
 /**
@@ -22,5 +23,5 @@ export function matchEntryReference(
     return null;
   }
 
-  return { type: 'database-entry', id: match.entry?.id ?? null };
+  return { type: EntryEntityType, id: match.entry?.id ?? null };
 }

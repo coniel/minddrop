@@ -1,5 +1,9 @@
 import { isEntityId, isNumberInRange } from '@minddrop/utils';
-import { CardAspectRatios, MaxSidePadding } from '../../constants';
+import {
+  CardAspectRatios,
+  DesignEntityType,
+  MaxSidePadding,
+} from '../../constants';
 import { Design, DesignType } from '../../types';
 import { isContentWidth } from '../isContentWidth';
 import { validateDesignElement } from '../validateDesignElement';
@@ -22,7 +26,10 @@ export function validateDesign(candidate: unknown): candidate is Design {
   const design = candidate as Partial<Design>;
 
   // The ID must be a typed design entity ID
-  if (typeof design.id !== 'string' || !isEntityId(design.id, 'design')) {
+  if (
+    typeof design.id !== 'string' ||
+    !isEntityId(design.id, DesignEntityType)
+  ) {
     return false;
   }
 

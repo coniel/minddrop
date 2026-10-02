@@ -1,12 +1,13 @@
 import { PropertiesSchema, PropertyType } from '@minddrop/properties';
 import { EntityId } from '@minddrop/utils';
 import { ViewOpenMode } from '@minddrop/views';
+import type { DatabaseEntityType } from '../constants';
 import { LayoutContext } from '../layoutContexts';
 import { DatabaseAutomation } from './DatabaseAutomation.types';
 
 export type PropertyFileStorage = 'root' | 'common' | 'property' | 'entry';
 
-export type DatabaseId = EntityId<'database'>;
+export type DatabaseId = EntityId<typeof DatabaseEntityType>;
 
 export interface Database {
   /**

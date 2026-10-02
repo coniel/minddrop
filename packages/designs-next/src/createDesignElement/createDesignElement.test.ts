@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { NotRegisteredError } from '@minddrop/stores';
 import { isEntityId } from '@minddrop/utils';
 import { DesignElementConfigsRegistry } from '../DesignElementConfigsRegistry';
+import { DesignElementEntityType } from '../constants';
 import { registerDesignElementConfig } from '../registerDesignElementConfig';
 import { testElementConfig } from '../test-utils';
 import { createDesignElement } from './createDesignElement';
@@ -28,7 +29,7 @@ describe('createDesignElement', () => {
       widthMode: 'fluid',
       contentFit: 'fixed',
     });
-    expect(isEntityId(element.id, 'element')).toBe(true);
+    expect(isEntityId(element.id, DesignElementEntityType)).toBe(true);
   });
 
   it('places the element at the given position', () => {

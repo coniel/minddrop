@@ -33,6 +33,18 @@ export const DatabaseEntityType = 'database';
  */
 export const EntryEntityType = 'database-entry';
 
+/**
+ * The entity type name of a database entry template, used as the
+ * type prefix of its ID.
+ */
+export const DatabaseEntryTemplateEntityType = 'database-entry-template';
+
+/**
+ * The entity type name of a custom content type, used as the type
+ * prefix of its ID.
+ */
+export const CustomContentTypeEntityType = 'custom-content-type';
+
 export const DatabaseConfigFileName = 'database.json';
 export const MetadataDirName = 'metadata';
 export const EntryTemplatesDirName = 'templates';

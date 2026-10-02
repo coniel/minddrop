@@ -1,7 +1,8 @@
 import { ContentColor } from '@minddrop/ui-theme';
 import { EntityId } from '@minddrop/utils';
+import type { TagEntityType } from '../constants';
 
-export type TagId = EntityId<'tag'>;
+export type TagId = EntityId<typeof TagEntityType>;
 
 export interface Tag {
   /**

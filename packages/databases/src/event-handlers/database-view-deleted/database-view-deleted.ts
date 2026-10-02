@@ -1,5 +1,6 @@
 import { ContentViewDeletedEventData } from '@minddrop/content-views';
 import { isEntityId } from '@minddrop/utils';
+import { DatabaseEntityType } from '../../constants';
 import { getDatabase } from '../../getDatabase';
 import { removeDatabaseViewFile } from '../../removeDatabaseViewFile';
 import { updateDatabase } from '../../updateDatabase';
@@ -12,7 +13,7 @@ import { updateDatabase } from '../../updateDatabase';
 export async function onDatabaseViewDeleted(
   data: ContentViewDeletedEventData,
 ): Promise<void> {
-  if (!data.owner || !isEntityId(data.owner, 'database')) {
+  if (!data.owner || !isEntityId(data.owner, DatabaseEntityType)) {
     return;
   }
 

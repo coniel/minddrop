@@ -6,6 +6,16 @@ import type { UiIconName } from '@minddrop/ui-icons';
 export const QueryEntityType = 'query';
 
 /**
+ * The entity type of query nodes, prefixing their IDs.
+ */
+export const QueryNodeEntityType = 'query-node';
+
+/**
+ * The entity type of query connections, prefixing their IDs.
+ */
+export const QueryConnectionEntityType = 'query-connection';
+
+/**
  * The entity group type query groups are registered as.
  */
 export const QueryGroupsType = 'query-groups';

@@ -76,7 +76,7 @@ function resolveIdKeepers(
   // Group the configs by the ID they claim, skipping those with no
   // usable ID as they are re-minted regardless.
   databases.forEach((database) => {
-    if (!database.id || !isEntityId(database.id, 'database')) {
+    if (!database.id || !isEntityId(database.id, DatabaseEntityType)) {
       return;
     }
 

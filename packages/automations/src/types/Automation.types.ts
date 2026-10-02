@@ -1,6 +1,7 @@
 import { EntityId } from '@minddrop/utils';
+import type { AutomationEntityType } from '../constants';
 
-export type AutomationId = EntityId<'automation'>;
+export type AutomationId = EntityId<typeof AutomationEntityType>;
 
 export interface Automation {
   /**

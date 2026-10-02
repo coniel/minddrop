@@ -1,6 +1,6 @@
 import { WorkspaceLoadersRegistry } from './WorkspaceLoadersRegistry';
 import { WorkspacesStore } from './WorkspacesStore';
-import { DefaultWorkspaceIcon } from './constants';
+import { DefaultWorkspaceIcon, WorkspaceEntityType } from './constants';
 import { WorkspaceNotFoundError } from './errors';
 import {
   ActiveWorkspaceChangedEvent,
@@ -29,6 +29,7 @@ export const errors = {
 };
 
 export const constants = {
+  EntityType: WorkspaceEntityType,
   EntityDefaultIcon: DefaultWorkspaceIcon,
 };
 

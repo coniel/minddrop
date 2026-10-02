@@ -1,7 +1,8 @@
 import { VirtualDesignData } from '@minddrop/designs';
 import { EntityId } from '@minddrop/utils';
+import type { SpaceEntityType } from '../constants';
 
-export type SpaceId = EntityId<'space'>;
+export type SpaceId = EntityId<typeof SpaceEntityType>;
 
 export interface Space {
   /**

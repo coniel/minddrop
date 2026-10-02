@@ -1,4 +1,5 @@
 import { entityId } from '@minddrop/utils';
+import { QueryNodeEntityType } from '../../constants';
 import { QueryNode, QueryNodeType } from '../../types';
 
 /**
@@ -15,7 +16,11 @@ export function createQueryNode(
   position: { x: number; y: number },
 ): QueryNode {
   // Shared node fields
-  const base = { id: entityId('query-node'), x: position.x, y: position.y };
+  const base = {
+    id: entityId(QueryNodeEntityType),
+    x: position.x,
+    y: position.y,
+  };
 
   // Source nodes start without a source, showing their picker
   if (type === 'source') {

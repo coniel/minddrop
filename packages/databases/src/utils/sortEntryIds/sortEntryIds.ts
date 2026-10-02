@@ -1,5 +1,6 @@
 import { isEntityId } from '@minddrop/utils';
 import { EntriesStore } from '../../EntriesStore';
+import { EntryEntityType } from '../../constants';
 import { Entry } from '../../types';
 import { EntrySortOptions, sortEntries } from '../sortEntries';
 
@@ -22,7 +23,7 @@ export function sortEntryIds(
 
   for (const id of entryIds) {
     // IDs of other item types are not entries
-    if (!isEntityId(id, 'database-entry')) {
+    if (!isEntityId(id, EntryEntityType)) {
       unsortable.push(id);
 
       continue;

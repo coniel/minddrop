@@ -23,6 +23,7 @@ import { DatabasesStore } from '../DatabasesStore';
 import { EntriesStore } from '../EntriesStore';
 import { clearEntryFocusRequest } from '../EntryFocusRequestStore';
 import { EntrySerializersRegistry } from '../EntrySerializersRegistry';
+import { DatabaseEntityType, EntryEntityType } from '../constants';
 import { clearContentCaptureRegistry } from '../contentCaptureRegistry';
 import { locales } from '../locales';
 import { registerEntryFilterAdapter } from '../registerEntryFilterAdapter';
@@ -67,12 +68,12 @@ export function setup(options?: SetupDatabaseFixturesOptions) {
   // Register the item reference adapters registered at runtime
   // by initializeDatabases.
   ItemReferences.registerAdapter({
-    type: 'database-entry',
+    type: EntryEntityType,
     serialize: serializeEntryReference,
     match: matchEntryReference,
   });
   ItemReferences.registerAdapter({
-    type: 'database',
+    type: DatabaseEntityType,
     serialize: serializeDatabaseReference,
     match: matchDatabaseReference,
   });

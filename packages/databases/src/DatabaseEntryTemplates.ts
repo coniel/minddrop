@@ -1,3 +1,4 @@
+import { DatabaseEntryTemplateEntityType } from './constants';
 import { DatabaseEntryTemplateNotFoundError } from './errors';
 import {
   DatabaseEntryTemplateCreatedEvent,
@@ -16,6 +17,12 @@ export const events = {
 export const errors = {
   NotFound: DatabaseEntryTemplateNotFoundError,
 };
+
+// Const-asserted so the entity type keeps its literal type. IDs
+// minted from it are then typed by it.
+export const constants = {
+  EntityType: DatabaseEntryTemplateEntityType,
+} as const;
 
 export { DatabaseEntryTemplatesStore as Store } from './DatabaseEntryTemplatesStore';
 export { createDatabaseEntryTemplate as create } from './createDatabaseEntryTemplate';

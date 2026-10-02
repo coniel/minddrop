@@ -1,9 +1,10 @@
 import { PropertyMap } from '@minddrop/properties';
 import { ContentColor } from '@minddrop/ui-theme';
 import { EntityId } from '@minddrop/utils';
+import type { EntryEntityType } from '../constants';
 import { DatabaseId } from './Database.types';
 
-export type EntryId = EntityId<'database-entry'>;
+export type EntryId = EntityId<typeof EntryEntityType>;
 
 export interface Entry<TProperties extends PropertyMap = PropertyMap> {
   /**

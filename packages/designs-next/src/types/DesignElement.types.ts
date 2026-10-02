@@ -1,6 +1,7 @@
 import { EntityId } from '@minddrop/utils';
+import type { DesignElementEntityType } from '../constants';
 
-export type DesignElementId = EntityId<'element'>;
+export type DesignElementId = EntityId<typeof DesignElementEntityType>;
 
 export type ElementWidthMode =
   | 'fluid'

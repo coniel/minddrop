@@ -1,3 +1,4 @@
+import { AutomationEntityType } from './constants';
 import { AutomationNotFoundError } from './errors';
 import {
   AutomationCreatedEvent,
@@ -18,6 +19,12 @@ export const events = {
 export const errors = {
   NotFound: AutomationNotFoundError,
 };
+
+// Const-asserted so the entity type keeps its literal type. IDs
+// minted from it are then typed by it.
+export const constants = {
+  EntityType: AutomationEntityType,
+} as const;
 
 export { createAutomation as create } from './createAutomation';
 export { createVirtualAutomation as createVirtual } from './createVirtualAutomation';

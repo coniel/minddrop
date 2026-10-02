@@ -1,4 +1,5 @@
 import { Filters } from '@minddrop/filters';
+import { EntryEntityType } from '../constants';
 import { getAllEntries } from '../getAllEntries';
 import { getEntry } from '../getEntry';
 import { Entry } from '../types';
@@ -11,7 +12,7 @@ export function registerEntryFilterAdapter(): void {
   // Register entries, read through their property values and
   // labelled by title.
   Filters.registerAdapter<Entry>({
-    type: 'database-entry',
+    type: EntryEntityType,
     get: (id) => getEntry(id, false),
     getAll: getAllEntries,
     resolveValue: (entry, filter) =>

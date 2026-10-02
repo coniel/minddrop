@@ -1,10 +1,11 @@
 import { EntityId } from '@minddrop/utils';
+import type { ViewSessionEntityType } from '../constants';
 import { SessionHistoryEntry } from './SessionHistoryEntry.types';
 import { SessionSlot } from './SessionSlot.types';
 import { SessionView } from './SessionView.types';
 import { SessionViewState } from './SessionViewState.types';
 
-export type ViewSessionId = EntityId<'session'>;
+export type ViewSessionId = EntityId<typeof ViewSessionEntityType>;
 
 /**
  * A navigable surface with a history: the panes it shows, their

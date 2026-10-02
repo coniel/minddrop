@@ -1,5 +1,6 @@
 import { ContentViewCreatedEventData } from '@minddrop/content-views';
 import { isEntityId } from '@minddrop/utils';
+import { DatabaseEntityType } from '../../constants';
 import { getDatabase } from '../../getDatabase';
 import { updateDatabase } from '../../updateDatabase';
 import { writeDatabaseView } from '../../writeDatabaseView';
@@ -12,7 +13,7 @@ import { writeDatabaseView } from '../../writeDatabaseView';
 export async function onDatabaseViewCreated(
   data: ContentViewCreatedEventData,
 ): Promise<void> {
-  if (!data.owner || !isEntityId(data.owner, 'database')) {
+  if (!data.owner || !isEntityId(data.owner, DatabaseEntityType)) {
     return;
   }
 

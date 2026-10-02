@@ -5,7 +5,7 @@ import { setActiveWorkspaceScope } from '@minddrop/stores';
 import { entityId, isEntityId } from '@minddrop/utils';
 import { ActiveWorkspaceStore } from '../ActiveWorkspaceStore';
 import { WorkspacesStore } from '../WorkspacesStore';
-import { WorkspacesConfigFileName } from '../constants';
+import { WorkspaceEntityType, WorkspacesConfigFileName } from '../constants';
 import { WorkspacesLoadedEvent } from '../events';
 import { locales } from '../locales';
 import { readWorkspaceConfig } from '../readWorkspaceConfig';
@@ -55,11 +55,11 @@ export async function initializeWorkspaces(): Promise<void> {
 
   // Re-mint IDs that are not typed workspace IDs
   const workspaces = rawWorkspaces.map((workspace) => {
-    if (isEntityId(workspace.id, 'workspace')) {
+    if (isEntityId(workspace.id, WorkspaceEntityType)) {
       return workspace;
     }
 
-    const normalized = { ...workspace, id: entityId('workspace') };
+    const normalized = { ...workspace, id: entityId(WorkspaceEntityType) };
     normalizedIds.push(normalized.id);
 
     return normalized;

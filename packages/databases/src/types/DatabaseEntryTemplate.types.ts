@@ -1,8 +1,11 @@
 import { PropertyMap } from '@minddrop/properties';
 import { EntityId } from '@minddrop/utils';
+import type { DatabaseEntryTemplateEntityType } from '../constants';
 import { DatabaseId } from './Database.types';
 
-export type DatabaseEntryTemplateId = EntityId<'database-entry-template'>;
+export type DatabaseEntryTemplateId = EntityId<
+  typeof DatabaseEntryTemplateEntityType
+>;
 
 export interface DatabaseEntryTemplate {
   /**

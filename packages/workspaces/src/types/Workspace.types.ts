@@ -1,6 +1,7 @@
 import { EntityId } from '@minddrop/utils';
+import type { WorkspaceEntityType } from '../constants';
 
-export type WorkspaceId = EntityId<'workspace'>;
+export type WorkspaceId = EntityId<typeof WorkspaceEntityType>;
 
 export interface Workspace {
   /**

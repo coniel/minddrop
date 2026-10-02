@@ -1,5 +1,6 @@
 import { DesignUpdatedEventData, VirtualDesignData } from '@minddrop/designs';
 import { isEntityId } from '@minddrop/utils';
+import { SpaceEntityType } from '../../constants';
 import { getSpace } from '../../getSpace';
 import { updateSpace } from '../../updateSpace';
 
@@ -17,7 +18,7 @@ export async function onUpdateVirtualDesign(
   if (
     !updated.virtual ||
     !updated.owner ||
-    !isEntityId(updated.owner, 'space')
+    !isEntityId(updated.owner, SpaceEntityType)
   ) {
     return;
   }

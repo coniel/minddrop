@@ -6,6 +6,7 @@ import {
   DefaultLineHeight,
   DefaultTextColor,
   DesignElementGroups,
+  DesignEntityType,
   DesignTypeColumns,
   DesignTypeIcons,
   DesignTypeRows,
@@ -52,6 +53,7 @@ export const errors = {
 };
 
 export const constants = {
+  EntityType: DesignEntityType,
   Icon: DesignsIcon,
   TypeIcons: DesignTypeIcons,
   UnitPixelSize,

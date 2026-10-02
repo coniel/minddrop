@@ -1,4 +1,5 @@
 import { entityId } from '@minddrop/utils';
+import { ViewSessionEntityType } from '../../constants';
 import { dispatchViewArea } from '../dispatchViewArea';
 import { getViewSessionSet } from '../getViewSessionSet';
 import { updateViewSessionSet } from '../updateViewSessionSet';
@@ -30,7 +31,7 @@ export function duplicateViewSession(
   // leaving its history, transient state and slot claims behind.
   const duplicate = {
     ...sessions[index],
-    id: entityId('session'),
+    id: entityId(ViewSessionEntityType),
     backHistory: [],
     forwardHistory: [],
     viewState: {},

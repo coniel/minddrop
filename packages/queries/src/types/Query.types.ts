@@ -1,8 +1,9 @@
 import { PropertyFilterOperator, PropertyFilterValue } from '@minddrop/filters';
 import { PropertyType } from '@minddrop/properties';
 import { EntityId } from '@minddrop/utils';
+import type { QueryEntityType } from '../constants';
 
-export type QueryId = EntityId<'query'>;
+export type QueryId = EntityId<typeof QueryEntityType>;
 
 export interface Query {
   /**

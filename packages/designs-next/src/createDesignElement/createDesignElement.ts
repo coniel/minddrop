@@ -1,5 +1,6 @@
 import { entityId } from '@minddrop/utils';
 import { DesignElementConfigsRegistry } from '../DesignElementConfigsRegistry';
+import { DesignElementEntityType } from '../constants';
 import { DesignElement } from '../types';
 
 /**
@@ -22,7 +23,7 @@ export function createDesignElement(
   // The starter fields come first so the base fields always win
   return {
     ...config.resolveDefaults?.(),
-    id: entityId('element'),
+    id: entityId(DesignElementEntityType),
     type,
     column: position.column,
     row: position.row,

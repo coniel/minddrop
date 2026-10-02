@@ -1,8 +1,8 @@
+import type { AutomationId } from '@minddrop/automations';
 import { PropertyType } from '@minddrop/properties';
-import { EntityId } from '@minddrop/utils';
 import { DatabaseAutomationAction } from './DatabaseAutomationAction.types';
 
-export type DatabaseAutomationId = EntityId<'automation'>;
+export type DatabaseAutomationId = AutomationId;
 
 export type DatabaseAutomationTrigger =
   | 'create-entry'

@@ -1,5 +1,9 @@
 import { entityId } from '@minddrop/utils';
-import { DefaultSplitRatio, DefaultViewName } from '../constants';
+import {
+  DefaultSplitRatio,
+  DefaultViewName,
+  ViewSessionEntityType,
+} from '../constants';
 import { ViewSession } from '../types';
 
 /**
@@ -12,7 +16,7 @@ import { ViewSession } from '../types';
  */
 export function generateBlankViewSession(): ViewSession {
   return {
-    id: entityId('session'),
+    id: entityId(ViewSessionEntityType),
     main: { view: DefaultViewName },
     split: null,
     splitRatio: DefaultSplitRatio,

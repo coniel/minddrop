@@ -1,4 +1,5 @@
 import { entityId } from '@minddrop/utils';
+import { QueryConnectionEntityType } from '../../constants';
 import { Query, QueryConnection } from '../../types';
 
 /**
@@ -58,7 +59,11 @@ export function addQueryConnection(
     return query.connections;
   }
 
-  return [...query.connections, { id: entityId('query-connection'), from, to }];
+  // Add the new connection
+  return [
+    ...query.connections,
+    { id: entityId(QueryConnectionEntityType), from, to },
+  ];
 }
 
 /**

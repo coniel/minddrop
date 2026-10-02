@@ -1,5 +1,6 @@
 import { ContentViewUpdatedEventData } from '@minddrop/content-views';
 import { isEntityId } from '@minddrop/utils';
+import { DatabaseEntityType } from '../../constants';
 import { writeDatabaseView } from '../../writeDatabaseView';
 
 /**
@@ -11,7 +12,7 @@ export async function onDatabaseViewUpdated(
 ): Promise<void> {
   const { updated } = data;
 
-  if (updated.owner && isEntityId(updated.owner, 'database')) {
+  if (updated.owner && isEntityId(updated.owner, DatabaseEntityType)) {
     await writeDatabaseView(updated);
   }
 }

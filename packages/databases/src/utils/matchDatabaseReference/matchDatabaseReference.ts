@@ -1,4 +1,5 @@
 import { ItemReferenceMatch } from '@minddrop/item-references';
+import { DatabaseEntityType } from '../../constants';
 import { getAllDatabases } from '../../getAllDatabases';
 
 /**
@@ -30,5 +31,5 @@ export function matchDatabaseReference(
     return null;
   }
 
-  return { type: 'database', id: database.id };
+  return { type: DatabaseEntityType, id: database.id };
 }

@@ -1,7 +1,8 @@
 import { EntityId } from '@minddrop/utils';
+import type { DesignEntityType } from '../constants';
 import { DesignElement } from './DesignElement.types';
 
-export type DesignId = EntityId<'design'>;
+export type DesignId = EntityId<typeof DesignEntityType>;
 
 /**
  * What a design renders as.

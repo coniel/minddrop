@@ -15,6 +15,16 @@ import {
 } from './types';
 
 /**
+ * The entity type of designs, prefixing their IDs.
+ */
+export const DesignEntityType = 'design';
+
+/**
+ * The entity type of design elements, prefixing their IDs.
+ */
+export const DesignElementEntityType = 'element';
+
+/**
  * The icon representing designs and design editing.
  */
 export const DesignsIcon: UiIconName = 'pencil-ruler';

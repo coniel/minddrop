@@ -1,6 +1,7 @@
 import { EntityId } from '@minddrop/utils';
+import type { EntityGroupEntityType } from '../constants';
 
-export type EntityGroupId = EntityId<'entity-group'>;
+export type EntityGroupId = EntityId<typeof EntityGroupEntityType>;
 
 export interface EntityGroup {
   /**

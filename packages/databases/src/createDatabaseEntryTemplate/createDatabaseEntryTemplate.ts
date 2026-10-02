@@ -2,6 +2,7 @@ import { Events } from '@minddrop/events';
 import { Properties } from '@minddrop/properties';
 import { InvalidParameterError, entityId } from '@minddrop/utils';
 import { DatabaseEntryTemplatesStore } from '../DatabaseEntryTemplatesStore';
+import { DatabaseEntryTemplateEntityType } from '../constants';
 import { copyEntryTemplateFiles } from '../copyEntryTemplateFiles';
 import { DatabaseEntryTemplateCreatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
@@ -35,7 +36,7 @@ export async function createDatabaseEntryTemplate(
   const database = getDatabase(databaseId);
 
   // Generate an ID for the new template
-  const id = entityId('database-entry-template');
+  const id = entityId(DatabaseEntryTemplateEntityType);
 
   // Drop empty property values
   const prunedProperties = pruneEmptyPropertyValues(template.properties);

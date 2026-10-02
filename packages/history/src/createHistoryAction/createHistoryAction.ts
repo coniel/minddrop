@@ -1,4 +1,5 @@
 import { entityId } from '@minddrop/utils';
+import { HistoryActionEntityType } from '../constants';
 import { HistoryAction } from '../types';
 
 /**
@@ -9,5 +10,5 @@ import { HistoryAction } from '../types';
  */
 export function createHistoryAction(cause: string): HistoryAction {
   // Mint an ID for the action and pair it with its cause
-  return { id: entityId('action'), cause };
+  return { id: entityId(HistoryActionEntityType), cause };
 }

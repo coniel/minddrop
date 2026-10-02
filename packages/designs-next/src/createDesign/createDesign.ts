@@ -2,7 +2,11 @@ import { Events } from '@minddrop/events';
 import { createI18nKeyBuilder, i18n } from '@minddrop/i18n';
 import { EntityId, entityId } from '@minddrop/utils';
 import { DesignsStore } from '../DesignsStore';
-import { DesignTypeColumns, DesignTypeRows } from '../constants';
+import {
+  DesignEntityType,
+  DesignTypeColumns,
+  DesignTypeRows,
+} from '../constants';
 import { DesignCreatedEvent } from '../events';
 import { Design, DesignType } from '../types';
 import { writeDesign } from '../writeDesign';
@@ -42,7 +46,7 @@ export async function createDesign(
   options: CreateDesignOptions,
 ): Promise<Design> {
   const design: Design = {
-    id: entityId('design'),
+    id: entityId(DesignEntityType),
     name: options.name || i18n.t(typeKey(options.type)),
     type: options.type,
     columns: DesignTypeColumns[options.type],

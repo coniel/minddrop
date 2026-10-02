@@ -1,9 +1,10 @@
 import { EntityId } from '@minddrop/utils';
+import type { ContentViewEntityType } from '../constants';
 import { ContentViewFilterOptions } from './ContentViewFilterOptions.types';
 import { ContentViewSortOptions } from './ContentViewSortOptions.types';
 import { ViewDataSource } from './ViewDataSource.types';
 
-export type ContentViewId = EntityId<'content-view'>;
+export type ContentViewId = EntityId<typeof ContentViewEntityType>;
 
 export interface ContentView<
   TViewOptions extends object = object,

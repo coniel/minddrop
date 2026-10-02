@@ -2,6 +2,7 @@ import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
 import { entityId } from '@minddrop/utils';
 import { DesignsStore } from '../DesignsStore';
+import { DesignElementEntityType, DesignEntityType } from '../constants';
 import { DesignCreatedEvent } from '../events';
 import { getDesign } from '../getDesign';
 import { Design } from '../types';
@@ -25,13 +26,13 @@ export async function duplicateDesign(id: string): Promise<Design> {
 
   const design: Design = {
     ...source,
-    id: entityId('design'),
+    id: entityId(DesignEntityType),
     name: i18n.t('designsNext.copyName', { name: source.name }),
     // Element IDs are unique within a design, fresh ones keep the
     // copy independent of the source.
     elements: source.elements.map((element) => ({
       ...element,
-      id: entityId('element'),
+      id: entityId(DesignElementEntityType),
     })),
     created: new Date(),
     lastModified: new Date(),
