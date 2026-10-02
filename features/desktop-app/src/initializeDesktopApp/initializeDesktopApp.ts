@@ -27,7 +27,6 @@ import { I18n, initializeI18n } from '@minddrop/i18n';
 import { Properties } from '@minddrop/properties';
 import { Queries } from '@minddrop/queries';
 import { Search } from '@minddrop/search';
-import { Snapshots } from '@minddrop/snapshots';
 import { Spaces } from '@minddrop/spaces';
 import { Tags } from '@minddrop/tags';
 import { initializeDragLayer } from '@minddrop/ui-drag-and-drop';
@@ -148,10 +147,6 @@ async function runInitialization(): Promise<void> {
   Spaces.initialize();
   EntityGroups.initialize();
   Search.initialize();
-
-  // Subscribe to content package events before any workspace loads
-  // so no rename goes unrecorded.
-  Snapshots.initialize();
 
   // Register the workspace loader, which runs for a workspace the
   // first time it is switched to.

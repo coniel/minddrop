@@ -62,7 +62,6 @@
     "@minddrop/queries": "workspace:*",
     "@minddrop/search": "workspace:*",
     "@minddrop/selection": "workspace:*",
-    "@minddrop/snapshots": "workspace:*",
     "@minddrop/spaces": "workspace:*",
     "@minddrop/sql": "workspace:*",
     "@minddrop/stores": "workspace:*",
