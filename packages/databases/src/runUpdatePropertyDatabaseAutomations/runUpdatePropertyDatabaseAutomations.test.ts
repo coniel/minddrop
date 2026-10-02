@@ -80,6 +80,17 @@ describe('runUpdatePropertyDatabaseAutomations', () => {
     expect(actionConfig.run).not.toHaveBeenCalled();
   });
 
+  it('does nothing if the automation property has an equal list', () => {
+    const listEntry = { ...entry, properties: { title: ['a', 'b'] } };
+
+    runUpdatePropertyDatabaseAutomations(listEntry, {
+      ...listEntry,
+      properties: { title: ['a', 'b'] },
+    });
+
+    expect(actionConfig.run).not.toHaveBeenCalled();
+  });
+
   it('runs the automation action', () => {
     runUpdatePropertyDatabaseAutomations(entry, updatedEntry);
 

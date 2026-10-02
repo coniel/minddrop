@@ -1,7 +1,8 @@
-import { PropertiesSchema, PropertyMap } from '@minddrop/properties';
-
-// The timestamp meta property types which store a Date value
-type TimestampPropertyType = 'created' | 'last-modified';
+import {
+  PropertiesSchema,
+  PropertyMap,
+  TimestampPropertyType,
+} from '@minddrop/properties';
 
 /**
  * Sets the given date as the value of an entry's timestamp meta properties.

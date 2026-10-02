@@ -5,6 +5,7 @@ import { DatabaseEntryNotFoundError } from '../errors';
 import { DatabaseEntryUpdatedEvent } from '../events';
 import { readEntryMetadata } from '../readEntryMetadata';
 import {
+  DatabaseFixtures,
   MockFs,
   cleanup,
   databaseDirPath,
@@ -14,7 +15,10 @@ import {
   setup,
   timestampEntry1,
 } from '../test-utils';
+import { resolveEntryMetadataFilePath } from '../utils';
 import { updateDatabaseEntry } from './updateDatabaseEntry';
+
+const { collectionEntry1, relatedEntry1, relatedEntry2 } = DatabaseFixtures;
 
 const update = {
   properties: {
@@ -90,6 +94,74 @@ describe('updateDatabaseEntry', () => {
     const entry = await updateDatabaseEntry(objectEntry1.id, {});
 
     expect(entry).toEqual(objectEntry1);
+  });
+
+  describe('given values the entry already has', () => {
+    const repeatedUpdate = {
+      properties: { Content: objectEntry1.properties.Content },
+    };
+
+    it('leaves the entry in the store unchanged', async () => {
+      await updateDatabaseEntry(objectEntry1.id, repeatedUpdate);
+
+      expect(DatabaseEntriesStore).toHaveItem(objectEntry1.id, objectEntry1);
+    });
+
+    it('does not write the entry file', async () => {
+      MockFs.removeFile(databaseEntryFilePath(objectEntry1));
+
+      await updateDatabaseEntry(objectEntry1.id, repeatedUpdate);
+
+      expect(MockFs.exists(databaseEntryFilePath(objectEntry1))).toBeFalsy();
+    });
+
+    it('does not write the entry metadata sidecar', async () => {
+      await updateDatabaseEntry(objectEntry1.id, repeatedUpdate);
+
+      expect(
+        MockFs.exists(
+          resolveEntryMetadataFilePath(
+            databaseDirPath(objectDatabase),
+            objectEntry1.path,
+          ),
+        ),
+      ).toBeFalsy();
+    });
+
+    it('does not dispatch an entry updated event', async () => {
+      let dispatched = false;
+
+      Events.addListener(DatabaseEntryUpdatedEvent, 'test', () => {
+        dispatched = true;
+      });
+
+      await updateDatabaseEntry(objectEntry1.id, repeatedUpdate);
+      await Events.tests.awaitAllListeners();
+
+      expect(dispatched).toBe(false);
+    });
+
+    it('treats an equal list as no change', async () => {
+      await updateDatabaseEntry(collectionEntry1.id, {
+        properties: { Related: [relatedEntry1.id, relatedEntry2.id] },
+      });
+
+      expect(DatabaseEntriesStore).toHaveItem(
+        collectionEntry1.id,
+        collectionEntry1,
+      );
+    });
+
+    it('treats a new timestamp property value as no change', async () => {
+      await updateDatabaseEntry(timestampEntry1.id, {
+        properties: { 'Last Modified': new Date() },
+      });
+
+      expect(DatabaseEntriesStore).toHaveItem(
+        timestampEntry1.id,
+        timestampEntry1,
+      );
+    });
   });
 
   it('dispatches a entry update event', async () =>

@@ -1,3 +1,4 @@
+import { Properties } from '@minddrop/properties';
 import { DatabaseAutomationActionConfigsStore } from '../DatabaseAutomationActionConfigsStore';
 import { getDatabase } from '../getDatabase';
 import { DatabaseEntry } from '../types';
@@ -28,7 +29,9 @@ export function runUpdatePropertyDatabaseAutomations(
       const updatedPropertyValue = updated.properties[automation.property!];
 
       // If the property values are the same, there's nothing to do
-      if (originalPropertyValue === updatedPropertyValue) {
+      if (
+        Properties.isEqualValue(originalPropertyValue, updatedPropertyValue)
+      ) {
         return;
       }
 

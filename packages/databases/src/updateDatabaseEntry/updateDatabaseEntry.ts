@@ -1,5 +1,5 @@
 import { Events } from '@minddrop/events';
-import { PropertyMap } from '@minddrop/properties';
+import { Properties, PropertyMap } from '@minddrop/properties';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntryUpdatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
@@ -21,7 +21,10 @@ export interface DatabaseEntryUpdateData {
 }
 
 /**
- * Updates an existing database entry with the provided data.
+ * Updates an existing database entry with the provided data. An
+ * update which changes only timestamp properties, or nothing, leaves
+ * the entry as is. The entry is not written and no event is
+ * dispatched.
  *
  * @param id - The ID of the entry to update.
  * @param data - The data to update the entry with.
@@ -36,51 +39,50 @@ export async function updateDatabaseEntry(
   id: string,
   data: DatabaseEntryUpdateData,
 ): Promise<DatabaseEntry> {
-  let hasValidUpdateData = false;
+  // Get the entry and its database
   const originalEntry = getDatabaseEntry(id);
-  // Clone the existing entry
-  const updatedEntry = { ...originalEntry };
-
-  if (data.properties !== undefined) {
-    updatedEntry.properties = {
-      ...originalEntry.properties,
-      ...data.properties,
-    };
-    hasValidUpdateData = true;
-  }
-
-  // If no valid update data was provided, return the entry as is
-  if (!hasValidUpdateData) {
-    return updatedEntry;
-  }
-
-  // Update the last modified date
-  const now = new Date();
-  updatedEntry.lastModified = now;
-
   const database = getDatabase(originalEntry.database);
 
-  // Populate the last-modified timestamp property value so it persists to
-  // the entry file.
-  updatedEntry.properties = setTimestampProperties(
+  // Merge the update's property values into the entry's
+  const properties = { ...originalEntry.properties, ...data.properties };
+
+  // Get the names of the properties the update gives a different value
+  const changedPropertyNames = Properties.resolveChangedNames(
     database.properties,
-    updatedEntry.properties,
-    ['last-modified'],
-    now,
+    originalEntry.properties,
+    properties,
   );
 
-  // Filter for the properties the update gives a different value
-  const changedProperties = Object.keys(data.properties ?? {}).filter(
-    (name) => updatedEntry.properties[name] !== originalEntry.properties[name],
-  );
+  // If the update changes no property, return the entry as is
+  if (!changedPropertyNames.length) {
+    return originalEntry;
+  }
 
-  // Record the timestamp in the entry's metadata too, so that it does
-  // not drift from the property. Drop the metadata of the changed
-  // properties, as it described their old values.
-  updatedEntry.metadata = omitEntryPropertyMetadata(
-    { ...originalEntry.metadata, lastModified: now },
-    changedProperties,
-  );
+  // Get the update time
+  const now = new Date();
+
+  // Create the updated entry
+  const updatedEntry: DatabaseEntry = {
+    // Copy the original entry
+    ...originalEntry,
+    // Update the last modified date
+    lastModified: now,
+    // Populate the last-modified timestamp property value so it
+    // persists to the entry file.
+    properties: setTimestampProperties(
+      database.properties,
+      properties,
+      ['last-modified'],
+      now,
+    ),
+    // Record the timestamp in the entry's metadata too, so that it
+    // does not drift from the property. Drop the metadata of the
+    // changed properties, as it described their old values.
+    metadata: omitEntryPropertyMetadata(
+      { ...originalEntry.metadata, lastModified: now },
+      changedPropertyNames,
+    ),
+  };
 
   // Update the entry in the store
   DatabaseEntriesStore.update(id, updatedEntry);
