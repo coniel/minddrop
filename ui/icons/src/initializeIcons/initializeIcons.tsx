@@ -31,15 +31,14 @@ async function loadBuiltInContentIconSet(): Promise<ContentIconSetContents> {
     import('../content-icons.min.json'),
   ]);
 
-  // Wrap each icon's SVG contents in a framed SVG component
-  const icons = Object.entries(ContentIcons).reduce<ContentIconSet>(
-    (map, [name, content]) => ({
-      ...map,
-      [name]: (props: HTMLProps<SVGSVGElement>) => (
+  // Wrap each icon's SVG contents in a LucideIconSvg component
+  const icons: ContentIconSet = Object.fromEntries(
+    Object.entries(ContentIcons).map(([name, content]) => [
+      name,
+      (props: HTMLProps<SVGSVGElement>) => (
         <LucideIconSvg {...props}>{content}</LucideIconSvg>
       ),
-    }),
-    {},
+    ]),
   );
 
   return {
