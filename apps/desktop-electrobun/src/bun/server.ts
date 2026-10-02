@@ -4,6 +4,7 @@ import fsp from 'node:fs/promises';
 import path from 'path';
 import { bracketImageWidth } from '@minddrop/utils';
 import { getAllImageStats, getImageStats, getResizedImage } from './images';
+import { withCors } from './withCors';
 
 // Basic MIME type helper
 function getMimeType(filePath: string) {
@@ -59,16 +60,6 @@ async function resolveResizedPath(filePath: string, width: string | null) {
   }
 
   return getResizedImage(filePath, bracketedWidth);
-}
-
-// Wrap response with CORS headers
-function withCors(res: Response) {
-  const headers = new Headers(res.headers);
-  headers.set('Access-Control-Allow-Origin', '*');
-  headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  headers.set('Access-Control-Allow-Headers', 'Content-Type');
-
-  return new Response(res.body, { ...res, headers });
 }
 
 // Start the HTTP server on an available port.

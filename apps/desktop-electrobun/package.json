@@ -11,6 +11,7 @@
     "build:prod": "electrobun build --env=stable",
     "build:canary": "electrobun build --env=canary",
     "start": "bun run dev",
+    "test": "bun test",
     "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit"
   },
