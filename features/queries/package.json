@@ -31,6 +31,7 @@
     "@minddrop/properties": "workspace:*",
     "@minddrop/queries": "workspace:*",
     "@minddrop/selection": "workspace:*",
+    "@minddrop/tags": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
     "@minddrop/ui-canvas": "workspace:*",
     "@minddrop/ui-components": "workspace:*",

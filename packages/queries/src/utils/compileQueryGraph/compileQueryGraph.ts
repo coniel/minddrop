@@ -1,5 +1,6 @@
 import { Collections } from '@minddrop/collections';
 import {
+  EntryFilter,
   EntryFilterGroup,
   EntryIdFilter,
   EntryQueryScope,
@@ -11,24 +12,24 @@ import {
   QueryCollectionFilterNode,
   QueryNode,
   QuerySourceNode,
-  QuerySourceReference,
 } from '../../types';
 import { convertQueryFilterNodeToEntryFilter } from '../convertQueryFilterNodeToEntryFilter';
-import { getQueryDatabases } from '../getQueryDatabases';
+import { getQueryDatabase } from '../getQueryDatabase';
 
 export interface CompiledQueryNode {
   /**
-   * The database scopes flowing into the node: the union of its
-   * inputs' output scopes, with parallel branches into the same
-   * database combined with OR.
+   * The database scope flowing into the node: its inputs' output
+   * scopes merged, with parallel branches combined with OR. Null
+   * when no source flows into the node.
    */
-  inputScopes: EntryQueryScope[];
+  inputScope: EntryQueryScope | null;
 
   /**
-   * The database scopes flowing out of the node, after applying
-   * the node's own operation.
+   * The database scope flowing out of the node, after applying
+   * the node's own operation. Null when no source flows out of
+   * the node.
    */
-  outputScopes: EntryQueryScope[];
+  outputScope: EntryQueryScope | null;
 
   /**
    * The sort criteria accumulated along the node's upstream
@@ -53,31 +54,25 @@ export interface CompiledQueryNode {
 export type CompiledQueryGraph = Record<string, CompiledQueryNode>;
 
 /**
- * The entry IDs returned by the queries referenced by query
- * source nodes, keyed by query ID.
- */
-export type QuerySourceResults = Record<string, string[]>;
-
-/**
  * Compiles a query's node graph into per-node database scopes,
  * sort criteria and limits.
  *
- * Entries flow from source nodes through the graph: filter
- * nodes AND their comparison onto each scope, collection filter
- * nodes AND a membership test onto each scope, parallel branches
+ * Entries flow from the source node through the graph: filter
+ * nodes AND their comparison onto the scope, collection filter
+ * nodes AND a membership test onto the scope, parallel branches
  * merging into a node are combined with OR, sort nodes append
  * their criterion in flow order, and limit nodes carry the
  * smallest cap. Incomplete nodes pass their input through
  * unchanged.
  *
  * @param query - The query whose graph to compile.
- * @param queryResults - The results of the queries referenced by query source nodes, keyed by query ID.
+ * @param sourceResults - The results of the query the source node draws from, when it draws from a query.
  *
  * @returns The compiled graph, keyed by node ID.
  */
 export function compileQueryGraph(
   query: Query,
-  queryResults: QuerySourceResults = {},
+  sourceResults: string[] | null = null,
 ): CompiledQueryGraph {
   const compiled: CompiledQueryGraph = {};
 
@@ -92,9 +87,8 @@ export function compileQueryGraph(
       .map((connection) => compiled[connection.from])
       .filter(Boolean);
 
-    // Merge the inputs' scopes, ORing parallel branches into
-    // the same database.
-    const inputScopes = mergeScopes(inputs.map((input) => input.outputScopes));
+    // Merge the inputs' scopes, ORing parallel branches
+    const inputScope = mergeScopes(inputs.map((input) => input.outputScope));
 
     // Accumulate upstream sorts in flow order, primary first
     const sorts = mergeSorts(inputs.map((input) => input.sorts));
@@ -104,10 +98,10 @@ export function compileQueryGraph(
 
     compiled[node.id] = compileNode(
       node,
-      inputScopes,
+      inputScope,
       sorts,
       limit,
-      queryResults,
+      sourceResults,
     );
   });
 
@@ -119,50 +113,31 @@ export function compileQueryGraph(
  */
 function compileNode(
   node: QueryNode,
-  inputScopes: EntryQueryScope[],
+  inputScope: EntryQueryScope | null,
   sorts: EntrySort[],
   limit: number | null,
-  queryResults: QuerySourceResults,
+  sourceResults: string[] | null,
 ): CompiledQueryNode {
   // Source nodes emit their database's entries, or the results
   // of the query they draw from.
   if (node.type === 'source') {
     return {
-      inputScopes,
-      outputScopes: compileSourceScopes(node, queryResults),
+      inputScope,
+      outputScope: compileSourceScope(node, sourceResults),
       sorts,
       inputLimit: limit,
       limit,
     };
   }
 
-  // Filter nodes AND their comparison onto each input scope,
+  // Filter nodes AND their comparison onto the input scope,
   // incomplete filters pass entries through unchanged
   if (node.type === 'filter') {
     const condition = convertQueryFilterNodeToEntryFilter(node);
 
-    if (!condition) {
-      return {
-        inputScopes,
-        outputScopes: inputScopes,
-        sorts,
-        inputLimit: limit,
-        limit,
-      };
-    }
-
-    // Narrow each scope by the comparison
-    const outputScopes = inputScopes.map((scope) => ({
-      databaseId: scope.databaseId,
-      filter: {
-        combinator: 'and' as const,
-        filters: scope.filter ? [scope.filter, condition] : [condition],
-      },
-    }));
-
     return {
-      inputScopes,
-      outputScopes,
+      inputScope,
+      outputScope: condition ? narrowScope(inputScope, condition) : inputScope,
       sorts,
       inputLimit: limit,
       limit,
@@ -178,8 +153,8 @@ function compileNode(
     // an unconfigured filter does.
     if (!memberIds) {
       return {
-        inputScopes,
-        outputScopes: inputScopes,
+        inputScope,
+        outputScope: inputScope,
         sorts,
         inputLimit: limit,
         limit,
@@ -191,18 +166,9 @@ function compileNode(
       entryIds: memberIds,
     };
 
-    // Narrow each scope by the membership test
-    const outputScopes = inputScopes.map((scope) => ({
-      databaseId: scope.databaseId,
-      filter: {
-        combinator: 'and' as const,
-        filters: scope.filter ? [scope.filter, condition] : [condition],
-      },
-    }));
-
     return {
-      inputScopes,
-      outputScopes,
+      inputScope,
+      outputScope: narrowScope(inputScope, condition),
       sorts,
       inputLimit: limit,
       limit,
@@ -227,8 +193,8 @@ function compileNode(
         : sorts;
 
     return {
-      inputScopes,
-      outputScopes: inputScopes,
+      inputScope,
+      outputScope: inputScope,
       sorts: outputSorts,
       inputLimit: limit,
       limit,
@@ -241,8 +207,8 @@ function compileNode(
       node.count > 0 ? Math.min(limit ?? Infinity, node.count) : limit;
 
     return {
-      inputScopes,
-      outputScopes: inputScopes,
+      inputScope,
+      outputScope: inputScope,
       sorts,
       inputLimit: limit,
       limit: outputLimit,
@@ -251,8 +217,8 @@ function compileNode(
 
   // Results nodes collect their input unchanged
   return {
-    inputScopes,
-    outputScopes: inputScopes,
+    inputScope,
+    outputScope: inputScope,
     sorts,
     inputLimit: limit,
     limit,
@@ -260,66 +226,64 @@ function compileNode(
 }
 
 /**
- * Builds the scopes a source node emits, combining its sources
- * the way parallel branches merging into a node combine: scopes
- * on the same database are ORed, and an unfiltered scope
- * absorbs filtered ones.
- */
-function compileSourceScopes(
-  node: QuerySourceNode,
-  queryResults: QuerySourceResults,
-): EntryQueryScope[] {
-  return mergeScopes(
-    node.sources.map((source) =>
-      compileSourceReferenceScopes(source, queryResults),
-    ),
-  );
-}
-
-/**
- * Builds the scopes a single source reference emits: a
- * database's entries unfiltered, or one scope per database a
- * referenced query draws from, each restricted to that query's
- * results.
+ * Builds the scope a source node emits: its database's entries
+ * unfiltered, or the sourced query's database restricted to that
+ * query's results.
  *
- * Restricting by result IDs rather than inlining the referenced
- * query's scopes preserves its own sorts and limit, which a
- * scope filter cannot express.
+ * Restricting by result IDs rather than inlining the sourced
+ * query's scope preserves its own sorts and limit, which a scope
+ * filter cannot express.
  */
-function compileSourceReferenceScopes(
-  source: QuerySourceReference,
-  queryResults: QuerySourceResults,
-): EntryQueryScope[] {
-  // An unset reference emits nothing
+function compileSourceScope(
+  node: QuerySourceNode,
+  sourceResults: string[] | null,
+): EntryQueryScope | null {
+  const { source } = node;
+
+  // An unpicked source emits nothing
   if (!source.id) {
-    return [];
+    return null;
   }
 
   // Database sources emit all of the database's entries
   if (source.type === 'database') {
-    return [{ databaseId: source.id, filter: null }];
+    return { databaseId: source.id, filter: null };
   }
 
-  const entryIds = queryResults[source.id];
-  const referenced = getQuery(source.id, false);
+  const sourced = getQuery(source.id, false);
+  const databaseId = sourced ? getQueryDatabase(sourced) : null;
 
-  // A query which is missing, or whose results have not been
-  // resolved, emits nothing.
-  if (!entryIds || !referenced) {
-    return [];
+  // A query which is missing, has no database, or whose results
+  // have not been resolved, emits nothing.
+  if (!databaseId || !sourceResults) {
+    return null;
   }
 
-  const condition: EntryIdFilter = {
-    operator: 'id-is-one-of',
-    entryIds,
+  return narrowScope(
+    { databaseId, filter: null },
+    { operator: 'id-is-one-of', entryIds: sourceResults },
+  );
+}
+
+/**
+ * ANDs a condition onto a scope's filter. A null scope stays
+ * null, since it has no entries to narrow.
+ */
+function narrowScope(
+  scope: EntryQueryScope | null,
+  condition: EntryFilter | EntryFilterGroup,
+): EntryQueryScope | null {
+  if (!scope) {
+    return null;
+  }
+
+  return {
+    databaseId: scope.databaseId,
+    filter: {
+      combinator: 'and',
+      filters: scope.filter ? [scope.filter, condition] : [condition],
+    },
   };
-
-  // Restrict each of the referenced query's databases to its
-  // results.
-  return getQueryDatabases(referenced).map((databaseId) => ({
-    databaseId,
-    filter: { combinator: 'and' as const, filters: [condition] },
-  }));
 }
 
 /**
@@ -415,58 +379,43 @@ function sortTopologically(query: Query): QueryNode[] {
 }
 
 /**
- * Merges scope lists from parallel inputs, combining scopes on
- * the same database with OR. An unfiltered scope absorbs
- * filtered scopes on the same database.
+ * Merges the scopes of parallel inputs, combining their filters
+ * with OR. An unfiltered scope absorbs filtered ones, since it
+ * already matches every entry. A single input's scope passes
+ * through as is.
  */
-function mergeScopes(scopeLists: EntryQueryScope[][]): EntryQueryScope[] {
-  // Collect each database's incoming filters in input order
-  const filtersByDatabase = new Map<string, EntryFilterGroup[] | null>();
+function mergeScopes(
+  scopes: (EntryQueryScope | null)[],
+): EntryQueryScope | null {
+  // Ignore inputs without entries
+  const flowing = scopes.filter(
+    (scope): scope is EntryQueryScope => scope !== null,
+  );
 
-  scopeLists.forEach((scopes) => {
-    scopes.forEach((scope) => {
-      const existing = filtersByDatabase.get(scope.databaseId);
+  if (flowing.length === 0) {
+    return null;
+  }
 
-      // An unfiltered branch already matches all of the
-      // database's entries.
-      if (existing === null) {
-        return;
-      }
+  if (flowing.length === 1) {
+    return flowing[0];
+  }
 
-      // An unfiltered scope absorbs the database's filters
-      if (!scope.filter) {
-        filtersByDatabase.set(scope.databaseId, null);
+  // Every input draws from the query's one database
+  const { databaseId } = flowing[0];
 
-        return;
-      }
+  // An unfiltered branch already matches all of the database's
+  // entries.
+  if (flowing.some((scope) => !scope.filter)) {
+    return { databaseId, filter: null };
+  }
 
-      filtersByDatabase.set(scope.databaseId, [
-        ...(existing ?? []),
-        scope.filter,
-      ]);
-    });
-  });
-
-  // Build the merged scope list, ORing parallel filters
-  const merged: EntryQueryScope[] = [];
-
-  filtersByDatabase.forEach((filters, databaseId) => {
-    if (filters === null) {
-      merged.push({ databaseId, filter: null });
-
-      return;
-    }
-
-    if (filters.length === 1) {
-      merged.push({ databaseId, filter: filters[0] });
-
-      return;
-    }
-
-    merged.push({ databaseId, filter: { combinator: 'or', filters } });
-  });
-
-  return merged;
+  return {
+    databaseId,
+    filter: {
+      combinator: 'or',
+      filters: flowing.flatMap((scope) => (scope.filter ? [scope.filter] : [])),
+    },
+  };
 }
 
 /**

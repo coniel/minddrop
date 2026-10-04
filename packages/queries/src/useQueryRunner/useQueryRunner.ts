@@ -6,15 +6,15 @@ import { useQuery } from '../QueriesStore';
 import { QueryDeletedEvent, QueryUpdatedEvent } from '../events';
 import {
   getQueryCollectionReferences,
-  getQueryDatabases,
+  getQueryDatabase,
   getQueryReferencedQueryIds,
 } from '../utils';
 
 /**
  * Runs a query-derived computation, re-running it whenever the
- * query changes or the data its graph draws from updates: source
- * database SQL syncs, referenced collection changes, and edits
- * to the queries the graph sources.
+ * query changes or the data its graph draws from updates: the
+ * database's SQL syncs, referenced collection changes, and edits
+ * to the queries the source draws from.
  *
  * Returns the empty value when the query does not exist.
  *
@@ -49,11 +49,11 @@ export function useQueryRunner<TValue>(
       return;
     }
 
-    // The databases feeding the query's graph, including those
-    // of the queries it sources.
-    const sourceDatabaseIds = getQueryDatabases(query);
+    // The database the query draws from, directly or through
+    // the queries it sources.
+    const databaseId = getQueryDatabase(query);
 
-    // The queries the graph draws results from
+    // The queries the source draws results from
     const referencedQueryIds = getQueryReferencedQueryIds(query);
 
     // The collections the graph filters by, whose items are
@@ -78,12 +78,12 @@ export function useQueryRunner<TValue>(
     // Run the computation for the current document state
     rerun();
 
-    // Re-run when a source database's entries sync to SQL
+    // Re-run when the query's database's entries sync to SQL
     Events.addListener(
       Databases.events.EntriesSqlSynced,
       listenerId,
       (data) => {
-        if (sourceDatabaseIds.includes(data.databaseId)) {
+        if (data.databaseId === databaseId) {
           rerun();
         }
       },
@@ -93,9 +93,9 @@ export function useQueryRunner<TValue>(
     // databases.
     Events.addListener(Databases.events.BackgroundSynced, listenerId, rerun);
 
-    // Re-run when a source database's entries are reindexed
+    // Re-run when the query's database's entries are reindexed
     Events.addListener(Databases.events.SqlReindexed, listenerId, (data) => {
-      if (sourceDatabaseIds.includes(data.databaseId)) {
+      if (data.databaseId === databaseId) {
         rerun();
       }
     });
@@ -105,7 +105,7 @@ export function useQueryRunner<TValue>(
       Databases.events.PropertySqlSynced,
       listenerId,
       (data) => {
-        if (sourceDatabaseIds.includes(data.databaseId)) {
+        if (data.databaseId === databaseId) {
           rerun();
         }
       },
@@ -141,7 +141,7 @@ export function useQueryRunner<TValue>(
       }
     });
 
-    // Re-run when a query the graph sources is edited, since
+    // Re-run when a query the source draws from is edited, since
     // its results are compiled into this query.
     Events.addListener(QueryUpdatedEvent, listenerId, (data) => {
       if (referencedQueryIds.includes(data.updated.id)) {

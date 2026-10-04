@@ -49,7 +49,8 @@ export {
   addQueryConnection as addConnection,
   removeQueryConnection as removeConnection,
   removeQueryNodeConnections as removeNodeConnections,
-  getQueryDatabases as getDatabases,
+  getQueryDatabase as getDatabase,
+  getQueryReferencedQueryIds as getReferencedQueryIds,
 } from './utils';
 export { useQueryResults as useResults } from './useQueryResults';
 export { useQueryNodeResults as useNodeResults } from './useQueryNodeResults';

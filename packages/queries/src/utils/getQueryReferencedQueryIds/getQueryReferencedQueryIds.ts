@@ -1,56 +1,45 @@
 import { getQuery } from '../../getQuery';
-import { Query } from '../../types';
+import { Query, QuerySourceReference } from '../../types';
+import { getQuerySourceNode } from '../getQuerySourceNode';
 
 /**
- * Returns the IDs of the queries a query's graph draws results
- * from, following those queries' own sources.
+ * Returns the IDs of the queries a query draws results from,
+ * following each sourced query's own source, nearest first.
+ *
+ * A missing query is included, so its creation can be listened
+ * for. The chain stops where it loops back on itself.
  *
  * @param query - The query whose references to get.
  *
  * @returns The referenced query IDs.
  */
 export function getQueryReferencedQueryIds(query: Query): string[] {
-  return Array.from(collectQueryIds(query, new Set([query.id])));
-}
+  const queryIds: string[] = [];
 
-/**
- * Collects the query IDs referenced by a query's source nodes,
- * recursing into each referenced query.
- */
-function collectQueryIds(query: Query, visited: Set<string>): Set<string> {
-  const queryIds = new Set<string>();
+  // The queries already on the source chain
+  const visited = new Set<string>([query.id]);
+  let current: Query | null = query;
 
-  query.nodes.forEach((node) => {
-    if (node.type !== 'source') {
-      return;
+  // Follow query sources until one names a database
+  while (current) {
+    const source: QuerySourceReference | undefined =
+      getQuerySourceNode(current)?.source;
+
+    // The chain ends at a database or an unpicked source
+    if (source?.type !== 'query' || !source.id) {
+      break;
     }
 
-    node.sources.forEach((source) => {
-      if (source.type !== 'query' || !source.id) {
-        return;
-      }
+    // Stop at queries already on the chain
+    if (visited.has(source.id)) {
+      break;
+    }
 
-      // Stop at queries already on the reference path
-      if (visited.has(source.id)) {
-        return;
-      }
+    visited.add(source.id);
+    queryIds.push(source.id);
 
-      queryIds.add(source.id);
-
-      const referenced = getQuery(source.id, false);
-
-      // A missing query is still worth listening to, in case it
-      // is created later.
-      if (!referenced) {
-        return;
-      }
-
-      // Collect the references of the referenced query
-      collectQueryIds(referenced, new Set([...visited, source.id])).forEach(
-        (queryId) => queryIds.add(queryId),
-      );
-    });
-  });
+    current = getQuery(source.id, false);
+  }
 
   return queryIds;
 }

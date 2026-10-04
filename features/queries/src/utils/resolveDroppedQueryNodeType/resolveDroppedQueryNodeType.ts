@@ -1,10 +1,9 @@
 import { QueryNodeType } from '@minddrop/queries';
 import { DropEventData } from '@minddrop/selection';
-import { QueryNodeCardDataKey, QuerySourceCardDataKey } from '../../constants';
+import { QueryNodeCardDataKey } from '../../constants';
 
 interface QueryToolbarCardDropData {
-  [QuerySourceCardDataKey]?: boolean;
-  [QueryNodeCardDataKey]?: QueryNodeType;
+  [QueryNodeCardDataKey]?: Exclude<QueryNodeType, 'source' | 'results'>;
 }
 
 /**
@@ -16,15 +15,9 @@ interface QueryToolbarCardDropData {
  */
 export function resolveDroppedQueryNodeType(
   drop: DropEventData,
-): QueryNodeType | null {
-  // Type the drop data as the toolbar card payloads
+): Exclude<QueryNodeType, 'source' | 'results'> | null {
+  // Type the drop data as the toolbar card payload
   const data = drop.data as QueryToolbarCardDropData | null;
-
-  // Check if the source card was dropped. If so, it creates a source
-  // node.
-  if (data?.[QuerySourceCardDataKey]) {
-    return 'source';
-  }
 
   // Return the type a dropped node card creates, null without one
   return data?.[QueryNodeCardDataKey] ?? null;

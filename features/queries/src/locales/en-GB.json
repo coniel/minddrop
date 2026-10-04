@@ -20,7 +20,6 @@
       "selectProperty": "Property",
       "ascending": "Ascending",
       "descending": "Descending",
-      "propertyMismatch": "An input does not contain this property",
       "outputEntries": "Output entries",
       "searchEntries": "Search entries",
       "removeNode": "Remove node",
@@ -39,7 +38,6 @@
       "results": "Results"
     },
     "toolbar": {
-      "source": "Source",
       "filter": "Filter",
       "collectionFilter": "Collection filter",
       "sort": "Sort",

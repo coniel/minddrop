@@ -19,11 +19,6 @@ import { useQueryToolbarCardDraggable } from './useQueryToolbarCardDraggable';
 export const QueryBuilderToolbar: React.FC = () => (
   <ViewFloatingToolbar position="absolute">
     <ToolbarCard
-      type="source"
-      icon="database"
-      tooltip="queries.toolbar.source"
-    />
-    <ToolbarCard
       type="filter"
       icon="list-filter"
       tooltip="queries.toolbar.filter"
@@ -46,7 +41,7 @@ interface ToolbarCardProps {
   /**
    * The type of node the card creates.
    */
-  type: Exclude<QueryNodeType, 'results'>;
+  type: Exclude<QueryNodeType, 'source' | 'results'>;
 
   /**
    * The icon representing the node type.

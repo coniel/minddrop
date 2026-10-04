@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Databases } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
-import { Query, QuerySortNode } from '@minddrop/queries';
+import { Queries, Query, QuerySortNode } from '@minddrop/queries';
 import { QueryFixtures } from '@minddrop/queries/test-utils';
-import { render, screen } from '@minddrop/test-utils';
+import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { QuerySortNodeCard } from './QuerySortNodeCard';
 
@@ -68,34 +68,23 @@ describe('<QuerySortNodeCard />', () => {
     await cleanup();
   });
 
-  it('warns when an input does not contain the sort property', () => {
-    // A sort on a property missing from the source database
-    const { query, node } = queryWithSort({
-      property: 'Domain',
-      propertyType: 'text',
-    });
+  it('persists a property change along with its type', async () => {
+    const user = userEvent.setup();
+    const { query, node } = queryWithSort({ property: '', propertyType: '' });
 
     render(<QuerySortNodeCard query={query} node={node} />);
 
-    expect(
-      screen.getByText('An input does not contain this property'),
-    ).toBeInTheDocument();
+    // Pick a property of the query's database
+    await user.click(screen.getByText('Property'));
+    await user.click(screen.getByRole('option', { name: 'Content' }));
 
-    // The mismatched source is listed below the warning
-    expect(screen.getByText(objectDatabase.name)).toBeInTheDocument();
-  });
+    await waitFor(() => {
+      const sort = Queries.get(query.id).nodes.find(
+        (queryNode) => queryNode.id === node.id,
+      ) as QuerySortNode;
 
-  it('does not warn when the input contains the sort property', () => {
-    // A sort on a property of the source database
-    const { query, node } = queryWithSort({
-      property: 'Content',
-      propertyType: 'content',
+      expect(sort.property).toBe('Content');
+      expect(sort.propertyType).toBe('content');
     });
-
-    render(<QuerySortNodeCard query={query} node={node} />);
-
-    expect(
-      screen.queryByText('An input does not contain this property'),
-    ).toBeNull();
   });
 });

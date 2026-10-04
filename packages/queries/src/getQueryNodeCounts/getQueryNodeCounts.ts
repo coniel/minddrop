@@ -43,25 +43,30 @@ export async function getQueryNodeCounts(
     return {};
   }
 
-  // Run the queries feeding the graph's query source nodes
-  const queryResults = await resolveQuerySourceResults(query);
+  // Run the query the source node draws from, if any
+  const sourceResults = await resolveQuerySourceResults(query);
 
-  const compiled = compileQueryGraph(query, queryResults);
+  const compiled = compileQueryGraph(query, sourceResults);
 
-  // Count each distinct scope list once: pass-through nodes
-  // share their input's scope list by reference.
-  const countCache = new Map<EntryQueryScope[], number>();
+  // Count each distinct scope once: pass-through nodes share
+  // their input's scope by reference.
+  const countCache = new Map<EntryQueryScope, number>();
 
-  const countScopes = async (scopes: EntryQueryScope[]): Promise<number> => {
-    const cached = countCache.get(scopes);
+  const countScope = async (scope: EntryQueryScope | null): Promise<number> => {
+    // No entries flow without a scope
+    if (!scope) {
+      return 0;
+    }
+
+    const cached = countCache.get(scope);
 
     if (cached !== undefined) {
       return cached;
     }
 
-    const count = await Databases.sql.countScopedEntries(scopes);
+    const count = await Databases.sql.countScopedEntries([scope]);
 
-    countCache.set(scopes, count);
+    countCache.set(scope, count);
 
     return count;
   };
@@ -74,8 +79,8 @@ export async function getQueryNodeCounts(
       const compiledNode = compiled[node.id];
 
       const [input, output] = await Promise.all([
-        countScopes(compiledNode.inputScopes),
-        countScopes(compiledNode.outputScopes),
+        countScope(compiledNode.inputScope),
+        countScope(compiledNode.outputScope),
       ]);
 
       // Cap the counts by the limits flowing through the node

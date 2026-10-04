@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Databases } from '@minddrop/databases';
 import { DragAndDrop, DragMoveData } from '@minddrop/drag-and-drop';
 import { Queries, QueryNode, QueryNodeType } from '@minddrop/queries';
 import { DropEventData, Selection } from '@minddrop/selection';
@@ -36,11 +35,9 @@ import {
   QUERY_NODE_PORT_Y,
   QUERY_NODE_WIDTHS,
   QueryNodeCardDataKey,
-  QuerySourceCardDataKey,
 } from '../constants';
 import {
   connectQueryNodeToNearest,
-  getQueryMismatchedConnectionIds,
   resolveDroppedQueryNodeType,
 } from '../utils';
 import './QueryBuilderCanvas.css';
@@ -50,7 +47,7 @@ import './QueryBuilderCanvas.css';
 const SPLICE_HIT_THRESHOLD = 12;
 
 // The toolbar card data types the canvas accepts drops of
-const ACCEPTED_DATA_TYPES = [QueryNodeCardDataKey, QuerySourceCardDataKey];
+const ACCEPTED_DATA_TYPES = [QueryNodeCardDataKey];
 
 // The shared look of query edges: plain flow lines without
 // arrowheads.
@@ -125,20 +122,12 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
 
   const canvas = useCanvas();
 
-  // Subscribe to database changes so mismatch styling follows
-  // schema edits.
-  Databases.useAll();
-
   // The query's connections mapped onto canvas connections,
-  // anchored at the port height on the node edges. Mismatched
-  // filter trails take the warning color.
+  // anchored at the port height on the node edges.
   const connections = useMemo<CanvasConnection[]>(() => {
     if (!query) {
       return [];
     }
-
-    // The connections making up mismatched filter trails
-    const mismatchedIds = getQueryMismatchedConnectionIds(query);
 
     return query.connections.map((connection) => ({
       id: connection.id,
@@ -152,8 +141,6 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
         side: 'left' as const,
         offset: QUERY_NODE_PORT_Y,
       },
-      // Match the mismatch warning's color family
-      color: mismatchedIds.has(connection.id) ? ('yellow' as const) : undefined,
       thickness:
         connection.id === spliceTargetId ? ('thick' as const) : undefined,
     }));
@@ -517,14 +504,6 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
       setSpliceTargetId(null);
 
       if (!type) {
-        return;
-      }
-
-      // Source cards create an unconfigured source node, showing its
-      // search. Sources take no input, so they never splice.
-      if (type === 'source') {
-        addNode('source', canvasPoint);
-
         return;
       }
 

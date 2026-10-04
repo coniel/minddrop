@@ -19,6 +19,7 @@ import {
   ComboboxOptionGroup,
 } from '@minddrop/ui-primitives';
 import { QueryNodeShell } from '../QueryNodeShell';
+import { reconcileQueryNodesWithProperties } from '../utils';
 
 export interface QuerySourceNodeCardProps {
   /**
@@ -60,9 +61,8 @@ export interface QuerySourceNodeCardProps {
 }
 
 /**
- * Renders a source node with a picker for the databases and
- * queries whose entries it emits into the graph. Several
- * sources emit their entries combined.
+ * Renders a source node with a picker for the database or query
+ * whose entries it emits into the graph.
  */
 export const QuerySourceNodeCard: React.FC<QuerySourceNodeCardProps> = ({
   queryId,
@@ -106,10 +106,15 @@ export const QuerySourceNodeCard: React.FC<QuerySourceNodeCardProps> = ({
       });
     }
 
-    // Queries emit their results. A query drawing from itself
-    // would be a reference cycle, so it is left out.
+    // Queries emit their results. The query itself, and queries
+    // whose source chain leads back to it, would form a source
+    // cycle, so they are left out.
     const queryOptions = allQueries
-      .filter((sourceQuery) => sourceQuery.id !== queryId)
+      .filter(
+        (sourceQuery) =>
+          sourceQuery.id !== queryId &&
+          !Queries.getReferencedQueryIds(sourceQuery).includes(queryId),
+      )
       .map((sourceQuery) => {
         const value = sourceOptionValue({ type: 'query', id: sourceQuery.id });
 
@@ -133,29 +138,39 @@ export const QuerySourceNodeCard: React.FC<QuerySourceNodeCardProps> = ({
     return { groups: optionGroups, sources: sourceMap };
   }, [allDatabases, allQueries, queryId]);
 
-  // The picked sources' options, shown as chips in the trigger
-  const pickedValues = node.sources.map(sourceOptionValue);
-  const selectedOptions = groups
+  // The picked source's option, shown in the trigger
+  const pickedValue = sourceOptionValue(node.source);
+  const selectedOption = groups
     .flatMap((group) => group.items)
-    .filter((option) => pickedValues.includes(option.value));
+    .find((option) => option.value === pickedValue);
 
-  // Persist the picked sources
-  function handleSourcesChange(
+  // Persist the picked source, treating a cleared pick as unset,
+  // and fit the filter and sort nodes to the new source's
+  // database properties.
+  function handleSourceChange(
     picked: ComboboxOption | ComboboxOption[] | null,
   ): void {
-    // Single values never occur in multi-select mode
-    if (!Array.isArray(picked) || !query) {
+    // Multi values never occur in single-select mode
+    if (Array.isArray(picked) || !query) {
       return;
     }
 
-    Queries.update(queryId, {
-      nodes: Queries.updateNode<QuerySourceNode>(query.nodes, node.id, {
-        sources: picked.flatMap((option) => {
-          const source = sources.get(option.value);
+    const nodes = Queries.updateNode<QuerySourceNode>(query.nodes, node.id, {
+      source: (picked && sources.get(picked.value)) || {
+        type: 'database',
+        id: '',
+      },
+    });
 
-          return source ? [source] : [];
-        }),
-      }),
+    // The properties of the database the new source resolves to
+    const databaseId = Queries.getDatabase({ ...query, nodes });
+    const database = databaseId ? Databases.get(databaseId, false) : null;
+    const properties = database
+      ? Databases.withImplicitMetadataProperties(database.properties)
+      : [];
+
+    Queries.update(queryId, {
+      nodes: reconcileQueryNodesWithProperties(nodes, properties),
     });
   }
 
@@ -172,14 +187,14 @@ export const QuerySourceNodeCard: React.FC<QuerySourceNodeCardProps> = ({
       resolveConnectTarget={resolveConnectTarget}
     >
       <Combobox
-        multiple
         size="md"
+        valueVariant="text"
         groups={groups}
         placeholder={t('select')}
         searchPlaceholder="queries.sourcePicker.searchPlaceholder"
         emptyText={t('empty')}
-        value={selectedOptions}
-        onValueChange={handleSourcesChange}
+        value={selectedOption ?? null}
+        onValueChange={handleSourceChange}
       />
     </QueryNodeShell>
   );

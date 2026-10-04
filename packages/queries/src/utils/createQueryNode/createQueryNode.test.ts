@@ -10,7 +10,7 @@ describe('createQueryNode', () => {
       type: 'source',
       x: 10,
       y: 20,
-      sources: [],
+      source: { type: 'database', id: '' },
     });
   });
 

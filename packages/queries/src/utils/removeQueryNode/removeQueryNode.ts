@@ -14,7 +14,7 @@ export interface RemoveQueryNodeResult {
 
 /**
  * Removes a node and its connections from a query graph. The
- * results node cannot be removed.
+ * source and results nodes cannot be removed.
  *
  * @param query - The query to remove the node from.
  * @param nodeId - The ID of the node to remove.
@@ -27,8 +27,8 @@ export function removeQueryNode(
 ): RemoveQueryNodeResult {
   const node = query.nodes.find((queryNode) => queryNode.id === nodeId);
 
-  // The results node is permanent
-  if (!node || node.type === 'results') {
+  // The source and results nodes are permanent
+  if (!node || node.type === 'source' || node.type === 'results') {
     return { nodes: query.nodes, connections: query.connections };
   }
 

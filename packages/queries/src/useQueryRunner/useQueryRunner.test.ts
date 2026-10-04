@@ -49,7 +49,7 @@ const referencingQuery: Query = {
       type: 'source',
       x: 0,
       y: 0,
-      sources: [{ type: 'query', id: query_2.id }],
+      source: { type: 'query', id: query_2.id },
     },
   ],
 };

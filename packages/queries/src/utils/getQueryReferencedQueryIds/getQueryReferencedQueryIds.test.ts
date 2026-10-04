@@ -8,16 +8,11 @@ import { getQueryReferencedQueryIds } from './getQueryReferencedQueryIds';
 function querySourcing(query: Query, sourcedQueryId: string): Query {
   return {
     ...query,
-    nodes: [
-      ...query.nodes,
-      {
-        id: `query-node_query-source-${query.id}`,
-        type: 'source',
-        x: 0,
-        y: 0,
-        sources: [{ type: 'query', id: sourcedQueryId }],
-      },
-    ],
+    nodes: query.nodes.map((node) =>
+      node.type === 'source'
+        ? { ...node, source: { type: 'query', id: sourcedQueryId } }
+        : node,
+    ),
   };
 }
 

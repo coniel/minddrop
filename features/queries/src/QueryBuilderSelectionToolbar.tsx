@@ -53,13 +53,14 @@ export const QueryBuilderSelectionToolbar: React.FC<
       connection.from === singleNodeId || connection.to === singleNodeId,
   );
 
-  // The permanent results node cannot be removed
+  // The permanent source and results nodes cannot be removed
   const removable = !(
     selection.type === 'nodes' &&
-    selection.ids.every(
-      (nodeId) =>
-        query.nodes.find((node) => node.id === nodeId)?.type === 'results',
-    )
+    selection.ids.every((nodeId) => {
+      const type = query.nodes.find((node) => node.id === nodeId)?.type;
+
+      return type === 'source' || type === 'results';
+    })
   );
 
   // Break all of the single selected node's connections

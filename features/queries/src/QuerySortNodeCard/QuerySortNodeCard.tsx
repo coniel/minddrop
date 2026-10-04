@@ -13,7 +13,6 @@ import {
   CanvasPoint,
 } from '@minddrop/ui-canvas';
 import { Select, SelectOption, Stack } from '@minddrop/ui-primitives';
-import { QueryNodeMismatchWarning } from '../QueryNodeMismatchWarning';
 import { QueryNodeShell } from '../QueryNodeShell';
 import { getQueryUpstreamProperties } from '../utils';
 
@@ -64,9 +63,9 @@ const DIRECTION_OPTIONS: SelectOption<'ascending' | 'descending'>[] = [
 
 /**
  * Renders a sort node with property and direction pickers.
- * Selectable properties come from the databases upstream of the
- * node, excluding multi-value properties which have no single
- * sortable value.
+ * Selectable properties come from the query's database when its
+ * source flows into the node, excluding multi-value properties
+ * which have no single sortable value.
  */
 export const QuerySortNodeCard: React.FC<QuerySortNodeCardProps> = ({
   query,
@@ -76,7 +75,7 @@ export const QuerySortNodeCard: React.FC<QuerySortNodeCardProps> = ({
   onConnectRelease,
   resolveConnectTarget,
 }) => {
-  // Sortable properties of the databases feeding the node
+  // Sortable properties of the entries feeding the node
   const properties = useMemo(
     () =>
       getQueryUpstreamProperties(query, node.id).filter(
@@ -128,7 +127,6 @@ export const QuerySortNodeCard: React.FC<QuerySortNodeCardProps> = ({
       onConnect={onConnect}
       onConnectRelease={onConnectRelease}
       resolveConnectTarget={resolveConnectTarget}
-      warning={<QueryNodeMismatchWarning query={query} nodeId={node.id} />}
     >
       <Stack gap={2}>
         {/* Property picker */}

@@ -90,11 +90,6 @@ export interface QueryNodeShellProps {
   ): CanvasConnectionDragTarget | null;
 
   /**
-   * Warning content rendered at the bottom of the node's body.
-   */
-  warning?: React.ReactNode;
-
-  /**
    * The node's body content.
    */
   children?: React.ReactNode;
@@ -118,7 +113,6 @@ export const QueryNodeShell: React.FC<QueryNodeShellProps> = ({
   onConnect,
   onConnectRelease,
   resolveConnectTarget,
-  warning,
   children,
 }) => {
   // Whether the node's output entries list is shown
@@ -183,7 +177,7 @@ export const QueryNodeShell: React.FC<QueryNodeShellProps> = ({
       </Group>
 
       {/* The node's content */}
-      {(children || showOutput || warning) && (
+      {(children || showOutput) && (
         <Stack gap={2} className="queries-node-body">
           {children}
 
@@ -191,8 +185,6 @@ export const QueryNodeShell: React.FC<QueryNodeShellProps> = ({
           {showOutput && (
             <QueryNodeOutputList queryId={queryId} nodeId={node.id} />
           )}
-
-          {warning}
         </Stack>
       )}
 

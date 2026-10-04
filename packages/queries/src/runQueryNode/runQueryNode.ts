@@ -27,19 +27,19 @@ export async function runQueryNode(
     return [];
   }
 
-  // Run the queries feeding the graph's query source nodes
-  const queryResults = await resolveQuerySourceResults(query);
+  // Run the query the source node draws from, if any
+  const sourceResults = await resolveQuerySourceResults(query);
 
-  // Compile the graph and read the node's output scopes
-  const compiled = compileQueryGraph(query, queryResults)[nodeId];
+  // Compile the graph and read the node's output scope
+  const compiled = compileQueryGraph(query, sourceResults)[nodeId];
 
-  // No results without the node
-  if (!compiled) {
+  // No results without the node or a source flowing into it
+  if (!compiled?.outputScope) {
     return [];
   }
 
   return Databases.sql.queryScopedEntries(
-    compiled.outputScopes,
+    [compiled.outputScope],
     compiled.sorts,
     compiled.limit !== null ? { limit: compiled.limit } : undefined,
   );

@@ -17,9 +17,9 @@ export function createQueryNode(
   // Shared node fields
   const base = { id: entityId('query-node'), x: position.x, y: position.y };
 
-  // Source nodes start without sources, showing their picker
+  // Source nodes start without a source, showing their picker
   if (type === 'source') {
-    return { ...base, type, sources: [] };
+    return { ...base, type, source: { type: 'database', id: '' } };
   }
 
   // Filter nodes start unconfigured

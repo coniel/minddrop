@@ -8,13 +8,13 @@ import { resolveDataSourceDatabaseId } from './resolveDataSourceDatabaseId';
 
 const { collection_1 } = CollectionFixtures;
 const { objectDatabase } = DatabaseFixtures;
-const { query_1, query_twoDatabases_1 } = QueryFixtures;
+const { query_1 } = QueryFixtures;
 
 describe('resolveDataSourceDatabaseId', () => {
   beforeEach(() => {
     setup();
 
-    Queries.Store.load([query_1, query_twoDatabases_1]);
+    Queries.Store.load([query_1]);
   });
 
   afterEach(async () => {
@@ -34,12 +34,18 @@ describe('resolveDataSourceDatabaseId', () => {
     );
   });
 
-  it('resolves no database for a query fed by several', () => {
+  it('resolves no database for a query without a picked source', () => {
+    Queries.Store.set({
+      ...query_1,
+      nodes: query_1.nodes.map((node) =>
+        node.type === 'source'
+          ? { ...node, source: { type: 'database', id: '' } }
+          : node,
+      ),
+    });
+
     expect(
-      resolveDataSourceDatabaseId({
-        type: 'query',
-        id: query_twoDatabases_1.id,
-      }),
+      resolveDataSourceDatabaseId({ type: 'query', id: query_1.id }),
     ).toBeNull();
   });
 

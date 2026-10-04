@@ -17,11 +17,34 @@ describe('removeQueryNode', () => {
   });
 
   it('keeps connections not attached to the node', () => {
-    const { connections } = removeQueryNode(query_1, sourceNode.id);
+    // Splice a limit node between the filter and results nodes
+    const limitNode = {
+      id: 'limit',
+      type: 'limit' as const,
+      x: 0,
+      y: 0,
+      count: 5,
+    };
+    const query = {
+      ...query_1,
+      nodes: [...query_1.nodes, limitNode],
+      connections: [
+        query_1.connections[0],
+        { id: 'to-limit', from: filterNode.id, to: limitNode.id },
+        { id: 'from-limit', from: limitNode.id, to: resultsNode.id },
+      ],
+    };
 
-    expect(connections).toEqual([
-      { id: expect.any(String), from: filterNode.id, to: resultsNode.id },
-    ]);
+    const { connections } = removeQueryNode(query, limitNode.id);
+
+    expect(connections).toEqual([query_1.connections[0]]);
+  });
+
+  it('does not remove the source node', () => {
+    const { nodes, connections } = removeQueryNode(query_1, sourceNode.id);
+
+    expect(nodes).toBe(query_1.nodes);
+    expect(connections).toBe(query_1.connections);
   });
 
   it('does not remove the results node', () => {

@@ -44,7 +44,7 @@ const querySourceNode: QuerySourceNode = {
   type: 'source',
   x: 0,
   y: 0,
-  sources: [{ type: 'query', id: query_1.id }],
+  source: { type: 'query', id: query_1.id },
 };
 
 // Builds a graph running the fixture source through the given
@@ -91,30 +91,29 @@ describe('compileQueryGraph', () => {
   it('emits a source node database as an unfiltered scope', () => {
     const compiled = compileQueryGraph(query_1);
 
-    expect(compiled[sourceNode.id].outputScopes).toEqual([
-      { databaseId: 'database_objects', filter: null },
-    ]);
+    expect(compiled[sourceNode.id].outputScope).toEqual({
+      databaseId: 'database_objects',
+      filter: null,
+    });
   });
 
-  it('ANDs a filter node condition onto its input scopes', () => {
+  it('ANDs a filter node condition onto its input scope', () => {
     const compiled = compileQueryGraph(query_1);
 
-    expect(compiled[filterNode.id].outputScopes).toEqual([
-      {
-        databaseId: 'database_objects',
-        filter: {
-          combinator: 'and',
-          filters: [
-            {
-              property: 'Title',
-              propertyType: 'title',
-              operator: 'text-contains',
-              value: 'foo',
-            },
-          ],
-        },
+    expect(compiled[filterNode.id].outputScope).toEqual({
+      databaseId: 'database_objects',
+      filter: {
+        combinator: 'and',
+        filters: [
+          {
+            property: 'Title',
+            propertyType: 'title',
+            operator: 'text-contains',
+            value: 'foo',
+          },
+        ],
       },
-    ]);
+    });
   });
 
   it('chains successive filter nodes with AND', () => {
@@ -128,10 +127,9 @@ describe('compileQueryGraph', () => {
     );
 
     const compiled = compileQueryGraph(query);
-    const scope = compiled[resultsNode.id].outputScopes[0];
 
     // The second filter wraps the first filter's group with AND
-    expect(scope.filter).toEqual({
+    expect(compiled[resultsNode.id].outputScope?.filter).toEqual({
       combinator: 'and',
       filters: [
         {
@@ -155,7 +153,7 @@ describe('compileQueryGraph', () => {
     });
   });
 
-  it("restricts the sourced query's databases to its results", () => {
+  it("restricts the sourced query's database to its results", () => {
     QueriesStore.load([query_1]);
 
     const query = graphQuery(
@@ -163,89 +161,40 @@ describe('compileQueryGraph', () => {
       [{ from: querySourceNode.id, to: resultsNode.id }],
     );
 
-    const compiled = compileQueryGraph(query, {
-      [query_1.id]: ['database-entry_1', 'database-entry_2'],
-    });
+    const compiled = compileQueryGraph(query, [
+      'database-entry_1',
+      'database-entry_2',
+    ]);
 
-    expect(compiled[querySourceNode.id].outputScopes).toEqual([
-      {
-        databaseId: 'database_objects',
-        filter: {
-          combinator: 'and',
-          filters: [
-            {
-              operator: 'id-is-one-of',
-              entryIds: ['database-entry_1', 'database-entry_2'],
-            },
-          ],
-        },
+    expect(compiled[querySourceNode.id].outputScope).toEqual({
+      databaseId: 'database_objects',
+      filter: {
+        combinator: 'and',
+        filters: [
+          {
+            operator: 'id-is-one-of',
+            entryIds: ['database-entry_1', 'database-entry_2'],
+          },
+        ],
       },
-    ]);
-  });
-
-  it('emits a scope per source of a multi source node', () => {
-    const query = graphQuery(
-      [
-        {
-          ...querySourceNode,
-          sources: [
-            { type: 'database', id: 'database_objects' },
-            { type: 'database', id: 'database_urls' },
-          ],
-        },
-        resultsNode,
-      ],
-      [{ from: querySourceNode.id, to: resultsNode.id }],
-    );
-
-    const compiled = compileQueryGraph(query);
-
-    expect(compiled[querySourceNode.id].outputScopes).toEqual([
-      { databaseId: 'database_objects', filter: null },
-      { databaseId: 'database_urls', filter: null },
-    ]);
-  });
-
-  it('lets an unfiltered source absorb a query source on the same database', () => {
-    QueriesStore.load([query_1]);
-
-    // The fixture query sources the object database, so its
-    // results are a subset of that database's entries.
-    const query = graphQuery(
-      [
-        {
-          ...querySourceNode,
-          sources: [
-            { type: 'query', id: query_1.id },
-            { type: 'database', id: 'database_objects' },
-          ],
-        },
-        resultsNode,
-      ],
-      [{ from: querySourceNode.id, to: resultsNode.id }],
-    );
-
-    const compiled = compileQueryGraph(query, {
-      [query_1.id]: ['database-entry_1'],
     });
-
-    expect(compiled[querySourceNode.id].outputScopes).toEqual([
-      { databaseId: 'database_objects', filter: null },
-    ]);
   });
 
-  it('emits no scopes for a source without a picked source', () => {
+  it('emits no scope for a source without a picked source', () => {
     const query = graphQuery(
-      [{ ...querySourceNode, sources: [] }, resultsNode],
+      [
+        { ...querySourceNode, source: { type: 'database', id: '' } },
+        resultsNode,
+      ],
       [{ from: querySourceNode.id, to: resultsNode.id }],
     );
 
     const compiled = compileQueryGraph(query);
 
-    expect(compiled[querySourceNode.id].outputScopes).toEqual([]);
+    expect(compiled[querySourceNode.id].outputScope).toBeNull();
   });
 
-  it('emits no scopes for a query source whose results are unresolved', () => {
+  it('emits no scope for a query source whose results are unresolved', () => {
     QueriesStore.load([query_1]);
 
     const query = graphQuery(
@@ -255,30 +204,38 @@ describe('compileQueryGraph', () => {
 
     const compiled = compileQueryGraph(query);
 
-    expect(compiled[querySourceNode.id].outputScopes).toEqual([]);
+    expect(compiled[querySourceNode.id].outputScope).toBeNull();
   });
 
-  it('ANDs a collection membership test onto its input scopes', () => {
+  it('emits no scope for a query source whose query is missing', () => {
+    const query = graphQuery(
+      [querySourceNode, resultsNode],
+      [{ from: querySourceNode.id, to: resultsNode.id }],
+    );
+
+    const compiled = compileQueryGraph(query, ['database-entry_1']);
+
+    expect(compiled[querySourceNode.id].outputScope).toBeNull();
+  });
+
+  it('ANDs a collection membership test onto its input scope', () => {
     const compiled = compileQueryGraph(collectionFilterQuery({}));
 
-    expect(compiled[collectionFilter.id].outputScopes).toEqual([
-      {
-        databaseId: 'database_objects',
-        filter: {
-          combinator: 'and',
-          filters: [{ operator: 'id-is-one-of', entryIds: collection_1.items }],
-        },
+    expect(compiled[collectionFilter.id].outputScope).toEqual({
+      databaseId: 'database_objects',
+      filter: {
+        combinator: 'and',
+        filters: [{ operator: 'id-is-one-of', entryIds: collection_1.items }],
       },
-    ]);
+    });
   });
 
   it('compiles is-not-in collection filters to a negated membership test', () => {
     const compiled = compileQueryGraph(
       collectionFilterQuery({ operator: 'is-not-in' }),
     );
-    const scope = compiled[collectionFilter.id].outputScopes[0];
 
-    expect(scope.filter).toEqual({
+    expect(compiled[collectionFilter.id].outputScope?.filter).toEqual({
       combinator: 'and',
       filters: [{ operator: 'id-is-not-one-of', entryIds: collection_1.items }],
     });
@@ -299,9 +256,8 @@ describe('compileQueryGraph', () => {
     const compiled = compileQueryGraph(
       collectionFilterQuery({ source: 'any-collection', collection: '' }),
     );
-    const scope = compiled[collectionFilter.id].outputScopes[0];
 
-    expect(scope.filter).toEqual({
+    expect(compiled[collectionFilter.id].outputScope?.filter).toEqual({
       combinator: 'and',
       filters: [
         {
@@ -323,9 +279,8 @@ describe('compileQueryGraph', () => {
     const compiled = compileQueryGraph(
       collectionFilterQuery({ source: 'any-collection', collection: '' }),
     );
-    const scope = compiled[collectionFilter.id].outputScopes[0];
 
-    expect(scope.filter).toEqual({
+    expect(compiled[collectionFilter.id].outputScope?.filter).toEqual({
       combinator: 'and',
       filters: [{ operator: 'id-is-one-of', entryIds: collection_1.items }],
     });
@@ -336,9 +291,10 @@ describe('compileQueryGraph', () => {
       collectionFilterQuery({ collection: '' }),
     );
 
-    expect(compiled[collectionFilter.id].outputScopes).toEqual([
-      { databaseId: 'database_objects', filter: null },
-    ]);
+    expect(compiled[collectionFilter.id].outputScope).toEqual({
+      databaseId: 'database_objects',
+      filter: null,
+    });
   });
 
   it('passes entries through a collection filter referencing a missing collection', () => {
@@ -346,9 +302,10 @@ describe('compileQueryGraph', () => {
       collectionFilterQuery({ collection: 'collection_missing' }),
     );
 
-    expect(compiled[collectionFilter.id].outputScopes).toEqual([
-      { databaseId: 'database_objects', filter: null },
-    ]);
+    expect(compiled[collectionFilter.id].outputScope).toEqual({
+      databaseId: 'database_objects',
+      filter: null,
+    });
   });
 
   it('ORs parallel branches merging into a node', () => {
@@ -363,10 +320,9 @@ describe('compileQueryGraph', () => {
     );
 
     const compiled = compileQueryGraph(query);
-    const scope = compiled[resultsNode.id].inputScopes[0];
 
     // Both branch filters combine into a single OR group
-    expect(scope.filter).toEqual({
+    expect(compiled[resultsNode.id].inputScope?.filter).toEqual({
       combinator: 'or',
       filters: [
         {
@@ -395,29 +351,23 @@ describe('compileQueryGraph', () => {
     });
   });
 
-  it('keeps scopes of multiple sources separate', () => {
-    const secondSource: QueryNode = {
-      id: 'query-node_source-b',
-      type: 'source',
-      x: 0,
-      y: 0,
-      sources: [{ type: 'database', id: 'database_urls' }],
-    };
-
+  it('lets an unfiltered branch absorb a filtered one', () => {
     const query = graphQuery(
-      [sourceNode, secondSource, resultsNode],
+      [sourceNode, filterNode, resultsNode],
       [
+        { from: sourceNode.id, to: filterNode.id },
         { from: sourceNode.id, to: resultsNode.id },
-        { from: secondSource.id, to: resultsNode.id },
+        { from: filterNode.id, to: resultsNode.id },
       ],
     );
 
     const compiled = compileQueryGraph(query);
 
-    expect(compiled[resultsNode.id].outputScopes).toEqual([
-      { databaseId: 'database_objects', filter: null },
-      { databaseId: 'database_urls', filter: null },
-    ]);
+    // The unfiltered branch already matches every entry
+    expect(compiled[resultsNode.id].inputScope).toEqual({
+      databaseId: 'database_objects',
+      filter: null,
+    });
   });
 
   it('passes incomplete filter nodes through unchanged', () => {
@@ -436,9 +386,10 @@ describe('compileQueryGraph', () => {
 
     const compiled = compileQueryGraph(query);
 
-    expect(compiled[resultsNode.id].outputScopes).toEqual([
-      { databaseId: 'database_objects', filter: null },
-    ]);
+    expect(compiled[resultsNode.id].outputScope).toEqual({
+      databaseId: 'database_objects',
+      filter: null,
+    });
   });
 
   it('accumulates successive sort nodes primary first', () => {
@@ -513,8 +464,8 @@ describe('compileQueryGraph', () => {
 
     const compiled = compileQueryGraph(query);
 
-    expect(compiled[filterNode.id].inputScopes).toEqual([]);
-    expect(compiled[filterNode.id].outputScopes).toEqual([]);
-    expect(compiled[resultsNode.id].outputScopes).toEqual([]);
+    expect(compiled[filterNode.id].inputScope).toBeNull();
+    expect(compiled[filterNode.id].outputScope).toBeNull();
+    expect(compiled[resultsNode.id].outputScope).toBeNull();
   });
 });

@@ -21,7 +21,6 @@ import {
   PropertyFilterValueInput,
 } from '@minddrop/ui-filters';
 import { Select, Stack } from '@minddrop/ui-primitives';
-import { QueryNodeMismatchWarning } from '../QueryNodeMismatchWarning';
 import { QueryNodeShell } from '../QueryNodeShell';
 import { getQueryUpstreamProperties } from '../utils';
 
@@ -76,7 +75,7 @@ export const QueryFilterNodeCard: React.FC<QueryFilterNodeCardProps> = ({
   onConnectRelease,
   resolveConnectTarget,
 }) => {
-  // Properties of the databases feeding the node
+  // Properties of the entries feeding the node
   const properties = useMemo(
     () => getQueryUpstreamProperties(query, node.id),
     [query, node.id],
@@ -149,7 +148,6 @@ export const QueryFilterNodeCard: React.FC<QueryFilterNodeCardProps> = ({
       onConnect={onConnect}
       onConnectRelease={onConnectRelease}
       resolveConnectTarget={resolveConnectTarget}
-      warning={<QueryNodeMismatchWarning query={query} nodeId={node.id} />}
     >
       <Stack gap={2}>
         {/* Property picker */}

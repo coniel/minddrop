@@ -13,21 +13,6 @@ const { query_1 } = QueryFixtures;
 // The fixture query's filter node
 const filterNode = query_1.nodes[1] as QueryFilterNode;
 
-// Returns the fixture query with its filter node reconfigured
-function queryWithFilter(data: Partial<QueryFilterNode>) {
-  const node = { ...filterNode, ...data };
-
-  return {
-    query: {
-      ...query_1,
-      nodes: query_1.nodes.map((queryNode) =>
-        queryNode.id === filterNode.id ? node : queryNode,
-      ),
-    },
-    node,
-  };
-}
-
 // Mock node count execution, which requires a SQL database
 vi.mock('@minddrop/queries', async (importOriginal) => {
   const original = await importOriginal<typeof import('@minddrop/queries')>();
@@ -97,36 +82,5 @@ describe('<QueryFilterNodeCard />', () => {
       expect(node.operator).toBe('starts-with');
       expect(node.value).toBe('foo');
     });
-  });
-
-  it('warns when an input does not contain the filter property', () => {
-    // A filter for a property missing from the source database
-    const { query, node } = queryWithFilter({
-      property: 'Domain',
-      propertyType: 'text',
-    });
-
-    render(<QueryFilterNodeCard query={query} node={node} />);
-
-    expect(
-      screen.getByText('An input does not contain this property'),
-    ).toBeInTheDocument();
-
-    // The mismatched source is listed below the warning
-    expect(screen.getByText(objectDatabase.name)).toBeInTheDocument();
-  });
-
-  it('does not warn when the input contains the filter property', () => {
-    // A filter for a property of the source database
-    const { query, node } = queryWithFilter({
-      property: 'Content',
-      propertyType: 'content',
-    });
-
-    render(<QueryFilterNodeCard query={query} node={node} />);
-
-    expect(
-      screen.queryByText('An input does not contain this property'),
-    ).toBeNull();
   });
 });

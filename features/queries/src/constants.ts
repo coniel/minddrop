@@ -1,12 +1,8 @@
 import { QueryNodeType } from '@minddrop/queries';
 
-// Drag data key carried by the filter/sort/limit toolbar cards,
-// holding the node type to create
+// Drag data key carried by the toolbar cards, holding the node
+// type to create.
 export const QueryNodeCardDataKey = 'query-node-card';
-
-// Drag data key marking the source toolbar card, which spawns a
-// source picker on drop.
-export const QuerySourceCardDataKey = 'query-source-card';
 
 // The width of each node type's card on the canvas
 export const QUERY_NODE_WIDTHS: Record<QueryNodeType, number> = {

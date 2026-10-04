@@ -28,9 +28,6 @@ export function resolveDataSourceDatabaseId(
     return null;
   }
 
-  // Get the query's databases
-  const databaseIds = Queries.getDatabases(query);
-
-  // Return the database when exactly one feeds the query
-  return databaseIds.length === 1 ? databaseIds[0] : null;
+  // Return the database the query draws from
+  return Queries.getDatabase(query);
 }

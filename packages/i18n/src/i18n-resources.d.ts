@@ -1765,7 +1765,6 @@ declare module 'i18next' {
             selectProperty: string;
             ascending: string;
             descending: string;
-            propertyMismatch: string;
             outputEntries: string;
             searchEntries: string;
             removeNode: string;
@@ -1784,7 +1783,6 @@ declare module 'i18next' {
             results: string;
           };
           toolbar: {
-            source: string;
             filter: string;
             collectionFilter: string;
             sort: string;

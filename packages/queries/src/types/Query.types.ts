@@ -27,7 +27,7 @@ export interface Query {
 
   /**
    * The nodes making up the query graph. Always contains a
-   * results node.
+   * source node and a results node.
    */
   nodes: QueryNode[];
 
@@ -64,22 +64,21 @@ interface QueryNodeBase {
 }
 
 /**
- * A node emitting the raw entries a graph works on: all of a
- * database's entries, another query's results, or the combined
- * entries of several of both.
+ * The node emitting the raw entries a graph works on: all of a
+ * database's entries, or another query's results. Every query
+ * has exactly one, which cannot be removed.
  */
 export interface QuerySourceNode extends QueryNodeBase {
   type: 'source';
 
   /**
-   * The databases and queries the node emits the entries of.
-   * Empty until the user picks a source.
+   * The database or query the node emits the entries of.
    */
-  sources: QuerySourceReference[];
+  source: QuerySourceReference;
 }
 
 /**
- * A reference to one of the things a source node draws its
+ * A reference to the database or query a source node draws its
  * entries from.
  */
 export interface QuerySourceReference {
@@ -89,7 +88,8 @@ export interface QuerySourceReference {
   type: QuerySourceType;
 
   /**
-   * The ID of the referenced database or query.
+   * The ID of the referenced database or query. An empty string
+   * until the user picks a source.
    */
   id: string;
 }
