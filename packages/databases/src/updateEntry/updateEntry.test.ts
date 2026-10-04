@@ -146,10 +146,7 @@ describe('updateEntry', () => {
         properties: { Related: [relatedEntry1.id, relatedEntry2.id] },
       });
 
-      expect(EntriesStore).toHaveItem(
-        collectionEntry1.id,
-        collectionEntry1,
-      );
+      expect(EntriesStore).toHaveItem(collectionEntry1.id, collectionEntry1);
     });
 
     it('treats a new timestamp property value as no change', async () => {
@@ -157,10 +154,7 @@ describe('updateEntry', () => {
         properties: { 'Last Modified': new Date() },
       });
 
-      expect(EntriesStore).toHaveItem(
-        timestampEntry1.id,
-        timestampEntry1,
-      );
+      expect(EntriesStore).toHaveItem(timestampEntry1.id, timestampEntry1);
     });
   });
 

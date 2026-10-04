@@ -9,8 +9,8 @@ import {
 } from '@minddrop/item-references';
 import { storeItem } from '@minddrop/stores/test-utils';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
-import { EntriesStore } from '../EntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
+import { EntriesStore } from '../EntriesStore';
 import { recordWorkspaceDatabaseLedger } from '../recordWorkspaceDatabaseLedger';
 import { DatabaseFixtures, cleanup, setup } from '../test-utils';
 import { BackgroundSyncChangeset } from '../types';
@@ -166,9 +166,7 @@ describe('handleBackgroundSyncResult', () => {
     });
 
     // The store holds the new path
-    expect(storeItem(EntriesStore, relatedEntry1.id).path).toBe(
-      renamed.path,
-    );
+    expect(storeItem(EntriesStore, relatedEntry1.id).path).toBe(renamed.path);
 
     // The dispatch carries the old and new addresses
     expect(dispatched).toEqual({

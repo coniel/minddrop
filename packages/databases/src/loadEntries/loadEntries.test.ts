@@ -6,8 +6,8 @@ import {
   cleanup,
   collectionDatabase,
   collectionEntry1,
-  entries,
   databases,
+  entries,
   setup,
 } from '../test-utils';
 import { virtualCollectionId, virtualCollectionName } from '../utils';

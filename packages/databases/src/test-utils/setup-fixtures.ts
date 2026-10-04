@@ -5,11 +5,11 @@ import { EntriesStore } from '../EntriesStore';
 import { EntrySerializersRegistry } from '../EntrySerializersRegistry';
 import { coreEntrySerializers } from '../entry-serializers';
 import {
-  entries,
   databaseEntryTemplateFiles,
   databaseEntryTemplates,
   databaseFiles,
   databases,
+  entries,
   entryFiles,
   entryPropertyFiles,
 } from './fixtures';
