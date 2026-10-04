@@ -1,20 +1,17 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { DatabaseAutomationActionConfigsStore } from '../DatabaseAutomationActionConfigsStore';
-import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
+import { EntriesStore } from '../EntriesStore';
 import { coreDatabaseAutomationActionConfigs } from '../automation-action-configs';
-import {
-  DatabaseEntryCreatedEvent,
-  DatabaseEntryUpdatedEvent,
-} from '../events';
+import { EntryCreatedEvent, EntryUpdatedEvent } from '../events';
 import { cleanup, objectDatabase, objectEntry1, setup } from '../test-utils';
 import {
   Database,
   DatabaseAutomation,
   DatabaseAutomationAction,
   DatabaseAutomationActionConfig,
-  DatabaseEntry,
+  Entry,
 } from '../types';
 import { initializeDatabaseAutomations } from './initializeDatabaseAutomations';
 
@@ -75,7 +72,7 @@ const database: Database = {
   automations: [createAutomation, updateAutomation],
 };
 
-const entry: DatabaseEntry = {
+const entry: Entry = {
   ...objectEntry1,
   properties: {
     title: 'Original Title',
@@ -83,7 +80,7 @@ const entry: DatabaseEntry = {
   database: database.id,
 };
 
-const updatedEntry: DatabaseEntry = {
+const updatedEntry: Entry = {
   ...entry,
   properties: {
     title: 'Updated Title',
@@ -95,7 +92,7 @@ describe('initializeDatabaseAutomations', () => {
     setup();
 
     DatabasesStore.set(database);
-    DatabaseEntriesStore.set(entry);
+    EntriesStore.set(entry);
   });
 
   afterEach(cleanup);
@@ -122,7 +119,7 @@ describe('initializeDatabaseAutomations', () => {
 
       DatabaseAutomationActionConfigsStore.set(createActionConfig);
 
-      Events.dispatch(DatabaseEntryCreatedEvent, entry);
+      Events.dispatch(EntryCreatedEvent, entry);
     }));
 
   it('runs update-property automations on new entries', () =>
@@ -141,7 +138,7 @@ describe('initializeDatabaseAutomations', () => {
 
       DatabaseAutomationActionConfigsStore.set(updateActionConfig);
 
-      Events.dispatch(DatabaseEntryCreatedEvent, entry);
+      Events.dispatch(EntryCreatedEvent, entry);
     }));
 
   it('runs update-property automations on updated entries', () =>
@@ -160,8 +157,8 @@ describe('initializeDatabaseAutomations', () => {
 
       DatabaseAutomationActionConfigsStore.set(updateActionConfig);
 
-      DatabaseEntriesStore.update(entry.id, updatedEntry);
-      Events.dispatch(DatabaseEntryUpdatedEvent, {
+      EntriesStore.update(entry.id, updatedEntry);
+      Events.dispatch(EntryUpdatedEvent, {
         original: entry,
         updated: updatedEntry,
       });

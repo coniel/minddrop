@@ -1,4 +1,4 @@
-import { DatabaseEntry } from '@minddrop/databases';
+import { Entry } from '@minddrop/databases';
 import { i18n } from '@minddrop/i18n';
 import { SelectPropertySchema } from '@minddrop/properties';
 import { NO_VALUE_COLUMN } from '../../constants';
@@ -20,7 +20,7 @@ import { resolveEntryColumnValue } from '../resolveEntryColumnValue';
  * @returns The board's columns.
  */
 export function resolveKanbanColumns(
-  entries: DatabaseEntry[],
+  entries: Entry[],
   property: SelectPropertySchema,
   order: KanbanOrder,
   valueAliases?: Record<string, string>,

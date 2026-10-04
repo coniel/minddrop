@@ -197,13 +197,13 @@ To assert on an item's fields rather than the whole item, reach for `storeItem` 
 
 ```ts
 // GOOD
-const entry = storeItem(DatabaseEntriesStore, objectEntry1.id);
+const entry = storeItem(EntriesStore, objectEntry1.id);
 
 expect(entry.metadata.color).toBe('red');
 expect(entry.properties.Color).toBe('red');
 
 // BAD
-const entry = DatabaseEntriesStore.get(objectEntry1.id);
+const entry = EntriesStore.get(objectEntry1.id);
 
 expect(entry?.metadata.color).toBe('red');
 expect(entry?.properties.Color).toBe('red');

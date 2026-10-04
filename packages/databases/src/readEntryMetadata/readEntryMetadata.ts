@@ -1,6 +1,6 @@
 import { Fs } from '@minddrop/file-system';
 import { restoreDates } from '@minddrop/utils';
-import { DatabaseEntryMetadata } from '../types';
+import { EntryMetadata } from '../types';
 import { resolveEntryMetadataFilePath } from '../utils';
 
 /**
@@ -13,7 +13,7 @@ import { resolveEntryMetadataFilePath } from '../utils';
 export async function readEntryMetadata(
   databasePath: string,
   entryPath: string,
-): Promise<DatabaseEntryMetadata> {
+): Promise<EntryMetadata> {
   const filePath = resolveEntryMetadataFilePath(databasePath, entryPath);
 
   // Entries without a sidecar simply have no metadata

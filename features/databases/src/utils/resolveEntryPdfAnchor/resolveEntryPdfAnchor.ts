@@ -1,5 +1,5 @@
 import { parseAnchorFragment } from '@minddrop/ast';
-import { DatabaseEntries, DatabaseEntry } from '@minddrop/databases';
+import { DatabaseEntries, Entry } from '@minddrop/databases';
 import { PdfAnnotations } from '@minddrop/pdf';
 
 export interface EntryPdfAnchor {
@@ -23,7 +23,7 @@ export interface EntryPdfAnchor {
  * @returns The annotation's file path and ID, or null when the fragment names no annotation of the entry's pdf files.
  */
 export function resolveEntryPdfAnchor(
-  entry: DatabaseEntry,
+  entry: Entry,
   fragment: string,
 ): EntryPdfAnchor | null {
   // Parse the annotation ID from the anchor

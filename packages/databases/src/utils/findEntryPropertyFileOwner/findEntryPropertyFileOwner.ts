@@ -1,5 +1,5 @@
-import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
 import { getAllDatabases } from '../../getAllDatabases';
+import { getAllEntries } from '../../getAllEntries';
 import { resolveDatabasePath } from '../resolveDatabasePath';
 import { resolveEntryPropertyFiles } from '../resolveEntryPropertyFiles';
 
@@ -42,7 +42,7 @@ export function findEntryPropertyFileOwner(
 
   // Match the path against the property files of each of the
   // database's entries.
-  for (const entry of getAllDatabaseEntries(database.id)) {
+  for (const entry of getAllEntries(database.id)) {
     // Find the entry's property file at the path
     const file = resolveEntryPropertyFiles(entry, { workspacePath }).find(
       (candidate) => candidate.path === path,

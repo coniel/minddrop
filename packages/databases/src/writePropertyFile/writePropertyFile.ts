@@ -1,7 +1,7 @@
 import { Fs } from '@minddrop/file-system';
 import { ensurePropertyFileDirExists } from '../ensurePropertyFileDirExists';
-import { getDatabaseEntry } from '../getDatabaseEntry';
-import { updateDatabaseEntryProperty } from '../updateDatabaseEntryProperty';
+import { getEntry } from '../getEntry';
+import { updateEntryProperty } from '../updateEntryProperty';
 import { resolveIncrementalPropertyFilePath } from '../utils';
 
 /**
@@ -25,7 +25,7 @@ export async function writePropertyFile(
   updateEntry = true,
 ): Promise<string> {
   // Get the entry
-  const entry = getDatabaseEntry(entryId);
+  const entry = getEntry(entryId);
 
   // Ensure the file's destination directory exists
   await ensurePropertyFileDirExists(entry.id, propertyName);
@@ -42,7 +42,7 @@ export async function writePropertyFile(
 
   if (updateEntry) {
     // Update the entry's property value
-    await updateDatabaseEntryProperty(entry.id, propertyName, name);
+    await updateEntryProperty(entry.id, propertyName, name);
   }
 
   return path;

@@ -1,7 +1,7 @@
 import {
   CustomContentTypes,
-  DatabaseEntrySerializers,
   Databases,
+  EntrySerializers,
   PropertyFileStorage,
 } from '@minddrop/databases';
 import { SelectSetting, SettingsSection } from '@minddrop/ui-components';
@@ -24,7 +24,7 @@ export const DatabaseDefaultsSettings: React.FC = () => {
   // Get the custom content types
   const customContentTypes = CustomContentTypes.useAll();
   // Get the registered entry serializers
-  const entrySerializers = DatabaseEntrySerializers.useAll();
+  const entrySerializers = EntrySerializers.useAll();
 
   // Map the entry serializers to select options
   const entrySerializerOptions: SelectOption<string>[] = entrySerializers.map(

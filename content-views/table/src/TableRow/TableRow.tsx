@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { DatabaseEntry } from '@minddrop/databases';
+import { Entry } from '@minddrop/databases';
 import { useTranslation } from '@minddrop/i18n';
 import { Checkbox } from '@minddrop/ui-primitives';
 import { DateCell, DateDisplay } from '../DateCell';
@@ -16,7 +16,7 @@ interface TableRowProps {
   /**
    * The database entry to render.
    */
-  entry: DatabaseEntry;
+  entry: Entry;
 
   /**
    * The column definitions for the table.

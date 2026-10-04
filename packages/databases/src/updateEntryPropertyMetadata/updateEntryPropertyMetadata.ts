@@ -1,4 +1,4 @@
-import { getDatabaseEntry } from '../getDatabaseEntry';
+import { getEntry } from '../getEntry';
 import { EntryPropertyMetadata } from '../types';
 import { updateEntryMetadata } from '../updateEntryMetadata';
 
@@ -10,9 +10,9 @@ import { updateEntryMetadata } from '../updateEntryMetadata';
  * @param property - The name of the property.
  * @param data - The data to merge into the property's metadata.
  *
- * @throws {DatabaseEntryNotFoundError} If the entry does not exist.
+ * @throws {EntryNotFoundError} If the entry does not exist.
  *
- * @dispatches database-entries:entry:metadata-updated
+ * @dispatches databases:entry:metadata-updated
  */
 export async function updateEntryPropertyMetadata(
   entryId: string,
@@ -20,7 +20,7 @@ export async function updateEntryPropertyMetadata(
   data: EntryPropertyMetadata,
 ): Promise<void> {
   // Get the entry's metadata
-  const { metadata } = getDatabaseEntry(entryId);
+  const { metadata } = getEntry(entryId);
 
   // Merge the data into the property's metadata
   await updateEntryMetadata(entryId, {

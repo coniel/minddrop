@@ -7,15 +7,15 @@ import {
 import { restoreDates } from '@minddrop/utils';
 import type {
   Database,
-  DatabaseEntry,
-  DatabaseEntryId,
-  DatabaseEntryMetadata,
   DatabaseId,
+  Entry,
+  EntryId,
+  EntryMetadata,
 } from '../../types';
 import type { SqlEntryRecord } from '../../types';
 
 /**
- * Converts a SqlEntryRecord back to a DatabaseEntry. Inverse
+ * Converts a SqlEntryRecord back to an entry. Inverse
  * of `convertEntryToSqlRecord`.
  *
  * @param record - The SQL entry record.
@@ -26,7 +26,7 @@ import type { SqlEntryRecord } from '../../types';
 export function convertSqlRecordToEntry(
   record: SqlEntryRecord,
   database: Database,
-): DatabaseEntry {
+): Entry {
   // Reconstruct the properties map from the flat property records
   const properties: PropertyMap = {};
 
@@ -43,12 +43,10 @@ export function convertSqlRecordToEntry(
   }
 
   // Parse and restore dates in the metadata JSON
-  const metadata = restoreDates<DatabaseEntryMetadata>(
-    JSON.parse(record.metadata),
-  );
+  const metadata = restoreDates<EntryMetadata>(JSON.parse(record.metadata));
 
   return {
-    id: record.id as DatabaseEntryId,
+    id: record.id as EntryId,
     database: record.databaseId as DatabaseId,
     path: record.path,
     title: record.title,

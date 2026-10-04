@@ -1,4 +1,4 @@
-import { DatabaseEntryMetadata } from '../../types';
+import { EntryMetadata } from '../../types';
 
 /**
  * Returns an entry's metadata without the metadata of the given
@@ -9,9 +9,9 @@ import { DatabaseEntryMetadata } from '../../types';
  * @returns The metadata without the properties' metadata.
  */
 export function omitEntryPropertyMetadata(
-  metadata: DatabaseEntryMetadata,
+  metadata: EntryMetadata,
   propertyNames: string[],
-): DatabaseEntryMetadata {
+): EntryMetadata {
   // Split the property metadata off the rest of the metadata
   const { properties, ...rest } = metadata;
 

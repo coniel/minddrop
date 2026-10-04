@@ -8,17 +8,17 @@ import {
   contentCaptureKey,
   moveContentCapture,
 } from '../../contentCaptureRegistry';
-import { DatabaseEntryRenamedEventData } from '../../events';
+import { EntryRenamedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
 import { moveEntryMetadataFile } from '../../moveEntryMetadataFile';
-import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
-import { recordDatabaseEntryLedger } from '../../recordDatabaseEntryLedger';
+import { recordEntriesLedger } from '../../recordEntriesLedger';
+import { recordEntryHistory } from '../../recordEntryHistory';
 import { sqlUpsertEntries } from '../../sql';
 import {
   convertEntryToSqlRecord,
-  databaseEntryAddress,
-  resolveDatabaseEntryHistorySubject,
+  entryAddress,
   resolveDatabasePath,
+  resolveEntryHistorySubject,
   virtualCollectionId,
   virtualCollectionName,
 } from '../../utils';
@@ -29,7 +29,7 @@ import {
  *
  * @param data - The renamed entry's data.
  */
-export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
+export async function onRenameEntry(data: EntryRenamedEventData) {
   const { original, updated, action } = data;
 
   // Get the database to access its properties schema
@@ -44,7 +44,7 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
 
   // Record the rename before moving the history, so it lands in the
   // log the move carries across.
-  await recordDatabaseEntryHistory(database, original, {
+  await recordEntryHistory(database, original, {
     kind: 'rename',
     target: 'self',
     from: original.title,
@@ -53,7 +53,7 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
   });
 
   // Resolve the entry's history subject
-  const { ownerPath, subjectType } = resolveDatabaseEntryHistorySubject(
+  const { ownerPath, subjectType } = resolveEntryHistorySubject(
     database,
     original,
   );
@@ -71,7 +71,7 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
   // the title the app hands out, and nothing references it by that
   // title.
   if (!isUntitledTitle(original.title)) {
-    await recordDatabaseEntryLedger(database, {
+    await recordEntriesLedger(database, {
       kind: 'rename',
       subject: { key: original.title },
       to: updated.title,
@@ -118,8 +118,8 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
     changes: [
       {
         id: updated.id,
-        oldReference: databaseEntryAddress(original, database),
-        newReference: databaseEntryAddress(updated, database),
+        oldReference: entryAddress(original, database),
+        newReference: entryAddress(updated, database),
       },
     ],
     action,

@@ -3,11 +3,11 @@ import { Events } from '@minddrop/events';
 import { ItemReferences } from '@minddrop/item-references';
 import { Workspaces } from '@minddrop/workspaces';
 import { DatabaseRenamedEventData } from '../../events';
-import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
+import { getAllEntries } from '../../getAllEntries';
 import { recordDatabaseRename } from '../../recordDatabaseRename';
 import { sqlUpsertDatabase } from '../../sql';
 import {
-  databaseEntryAddress,
+  entryAddress,
   virtualCollectionId,
   virtualCollectionName,
 } from '../../utils';
@@ -32,7 +32,7 @@ export async function onRenameDatabase(
   await recordDatabaseRename(updated, original.name, action);
 
   // Read the database's entries, whose addresses the rename changes
-  const entries = getAllDatabaseEntries(updated.id);
+  const entries = getAllEntries(updated.id);
 
   // Update the SQL record with the new name and path
   sqlUpsertDatabase({
@@ -79,8 +79,8 @@ export async function onRenameDatabase(
       workspaceId: Workspaces.getActive().id,
       changes: entries.map((entry) => ({
         id: entry.id,
-        oldReference: databaseEntryAddress(entry, original),
-        newReference: databaseEntryAddress(entry, updated),
+        oldReference: entryAddress(entry, original),
+        newReference: entryAddress(entry, updated),
       })),
       action,
     });

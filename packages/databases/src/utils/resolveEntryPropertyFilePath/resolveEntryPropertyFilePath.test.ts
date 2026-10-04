@@ -13,7 +13,7 @@ import {
   rootStorageEntry1,
   setup,
 } from '../../test-utils';
-import { DatabaseEntry } from '../../types';
+import { Entry } from '../../types';
 import { resolveEntryPropertyFilePath } from './resolveEntryPropertyFilePath';
 
 describe('resolveEntryPropertyFilePath', () => {
@@ -70,7 +70,7 @@ describe('resolveEntryPropertyFilePath', () => {
 
   it('resolves the path of an entry given as an object', () => {
     // An entry which is not in the store
-    const entry: DatabaseEntry = {
+    const entry: Entry = {
       ...entryStorageEntry1,
       id: 'database-entry_not-stored',
       title: 'Elsewhere',

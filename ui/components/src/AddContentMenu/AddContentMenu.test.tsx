@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DatabaseEntries, DatabaseEntry } from '@minddrop/databases';
+import { DatabaseEntries, Entry } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { fireEvent, render, screen, userEvent } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';
@@ -10,7 +10,7 @@ const { objectDatabase, objectEntry1, entryTemplate1, entryTemplatesDatabase } =
 
 // An entry modified after everything the fixtures carry, so it
 // fills the recent list. Its title is one no other entry shares.
-const recentEntry: DatabaseEntry = {
+const recentEntry: Entry = {
   ...objectEntry1,
   id: 'database-entry_recent',
   title: 'Recent entry',

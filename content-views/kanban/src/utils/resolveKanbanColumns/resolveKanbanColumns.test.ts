@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DatabaseEntry, DatabaseEntryId } from '@minddrop/databases';
+import { Entry, EntryId } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { I18n, initializeI18n } from '@minddrop/i18n';
 import { locales } from '../../locales';
@@ -140,10 +140,7 @@ describe('resolveKanbanColumns', () => {
  * @param status - The status value the entry holds, if any.
  * @returns The entry fixture.
  */
-function withStatus(
-  id: DatabaseEntryId,
-  status: string | undefined,
-): DatabaseEntry {
+function withStatus(id: EntryId, status: string | undefined): Entry {
   return {
     ...objectEntry1,
     id,

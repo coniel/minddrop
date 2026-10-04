@@ -3,7 +3,7 @@ import { Collections } from '@minddrop/collections';
 import { ContentViews } from '@minddrop/content-views';
 import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { History, Ledgers } from '@minddrop/history';
-import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
+import { recordEntryHistory } from '../../recordEntryHistory';
 import {
   sqlGetEntrySyncRecords,
   sqlUpsertDatabase,
@@ -25,8 +25,8 @@ import {
   setupTestSqlDatabase,
 } from '../../test-utils';
 import {
-  resolveDatabaseEntryHistorySubject,
-  resolveDatabaseEntryLedger,
+  resolveEntriesLedger,
+  resolveEntryHistorySubject,
   virtualCollectionId,
   virtualCollectionName,
 } from '../../utils';
@@ -166,7 +166,7 @@ describe('onDeleteEntry', () => {
   });
 
   it("closes a named entry's history, which outlives it", async () => {
-    await recordDatabaseEntryHistory(objectDatabase, objectEntry1, {
+    await recordEntryHistory(objectDatabase, objectEntry1, {
       kind: 'created',
     });
 
@@ -174,7 +174,7 @@ describe('onDeleteEntry', () => {
 
     expect(
       await History.read(
-        resolveDatabaseEntryHistorySubject(objectDatabase, objectEntry1),
+        resolveEntryHistorySubject(objectDatabase, objectEntry1),
       ),
     ).toEqual([
       expect.objectContaining({ kind: 'created' }),
@@ -185,7 +185,7 @@ describe('onDeleteEntry', () => {
   it("deletes an untitled entry's history", async () => {
     const untitled = { ...objectEntry1, title: 'Untitled' };
 
-    await recordDatabaseEntryHistory(objectDatabase, untitled, {
+    await recordEntryHistory(objectDatabase, untitled, {
       kind: 'created',
     });
 
@@ -194,9 +194,7 @@ describe('onDeleteEntry', () => {
     // The title goes back into the pool, so the next new entry must
     // not inherit what was recorded under it.
     expect(
-      await History.read(
-        resolveDatabaseEntryHistorySubject(objectDatabase, untitled),
-      ),
+      await History.read(resolveEntryHistorySubject(objectDatabase, untitled)),
     ).toEqual([]);
   });
 
@@ -205,9 +203,7 @@ describe('onDeleteEntry', () => {
     await onDeleteEntry(objectEntry1);
 
     // The ledger should record the deletion under the entry's title
-    expect(
-      await Ledgers.read(resolveDatabaseEntryLedger(objectDatabase)),
-    ).toEqual([
+    expect(await Ledgers.read(resolveEntriesLedger(objectDatabase))).toEqual([
       expect.objectContaining({
         kind: 'deleted',
         subject: { key: objectEntry1.title },
@@ -224,9 +220,7 @@ describe('onDeleteEntry', () => {
 
     // The deletion should be in the ledger although the entry's history
     // was deleted.
-    expect(
-      await Ledgers.read(resolveDatabaseEntryLedger(objectDatabase)),
-    ).toEqual([
+    expect(await Ledgers.read(resolveEntriesLedger(objectDatabase))).toEqual([
       expect.objectContaining({
         kind: 'deleted',
         subject: { key: 'Untitled' },

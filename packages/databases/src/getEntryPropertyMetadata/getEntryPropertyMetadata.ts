@@ -1,4 +1,4 @@
-import { getDatabaseEntry } from '../getDatabaseEntry';
+import { getEntry } from '../getEntry';
 import { EntryPropertyMetadata } from '../types';
 
 /**
@@ -9,13 +9,13 @@ import { EntryPropertyMetadata } from '../types';
  * @param property - The name of the property.
  * @returns The property's metadata, empty when it has none.
  *
- * @throws {DatabaseEntryNotFoundError} If the entry does not exist.
+ * @throws {EntryNotFoundError} If the entry does not exist.
  */
 export function getEntryPropertyMetadata<
   TMetadata extends EntryPropertyMetadata = EntryPropertyMetadata,
 >(entryId: string, property: string): TMetadata {
   // Get the entry
-  const entry = getDatabaseEntry(entryId);
+  const entry = getEntry(entryId);
 
   // Return the property's metadata, empty when it has none
   return (entry.metadata.properties?.[property] ?? {}) as TMetadata;

@@ -4,13 +4,13 @@ import {
   getContentCapture,
   recordContentCapture,
 } from '../../contentCaptureRegistry';
-import { DatabaseEntryWrittenEventData } from '../../events';
-import { readDatabaseEntryLastContentCapture } from '../../readDatabaseEntryLastContentCapture';
-import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
+import { EntryWrittenEventData } from '../../events';
+import { readEntryLastContentCapture } from '../../readEntryLastContentCapture';
+import { recordEntryHistory } from '../../recordEntryHistory';
 import {
   resolveContentCaptureGap,
-  resolveDatabaseEntryPath,
   resolveDatabasePath,
+  resolveEntryPath,
 } from '../../utils';
 
 /**
@@ -18,7 +18,7 @@ import {
  * write replaced.
  */
 export async function onEntryWritten(
-  data: DatabaseEntryWrittenEventData,
+  data: EntryWrittenEventData,
 ): Promise<void> {
   const { entry, database, previousContents } = data;
 
@@ -36,7 +36,7 @@ export async function onEntryWritten(
   // session.
   const lastCapture =
     getContentCapture(key) ??
-    (await readDatabaseEntryLastContentCapture(database, entry));
+    (await readEntryLastContentCapture(database, entry));
 
   // Check whether the content has already been captured, which makes
   // capturing idempotent.
@@ -55,10 +55,10 @@ export async function onEntryWritten(
   }
 
   // Record the content the write replaced
-  await recordDatabaseEntryHistory(database, entry, {
+  await recordEntryHistory(database, entry, {
     kind: 'content',
     contents: previousContents,
-    extension: Fs.getFileExtension(resolveDatabaseEntryPath(entry, database)),
+    extension: Fs.getFileExtension(resolveEntryPath(entry, database)),
   });
 
   recordContentCapture(key, { capturedAt, contentHash });

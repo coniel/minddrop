@@ -8,12 +8,11 @@ import { PdfAnnotationFixtures } from '@minddrop/pdf/test-utils';
 import { cleanup, setup, setupPdfFixtures } from '../test-utils';
 import { quoteEntryPdfAnnotation } from './quoteEntryPdfAnnotation';
 
-const { databaseEntry_pdf_1, databaseEntry_pdf_1PropertyFilePath } =
-  DatabaseFixtures;
+const { entry_pdf_1, entry_pdf_1PropertyFilePath } = DatabaseFixtures;
 const { pdfAnnotation_1 } = PdfAnnotationFixtures;
 
 // The path of the pdf entry's document
-const path = databaseEntry_pdf_1PropertyFilePath;
+const path = entry_pdf_1PropertyFilePath;
 
 describe('quoteEntryPdfAnnotation', () => {
   // The references inserted
@@ -68,7 +67,7 @@ describe('quoteEntryPdfAnnotation', () => {
       {
         viewAreaId: 'view-area',
         pane: 'split',
-        reference: DatabaseEntries.resolveReference(databaseEntry_pdf_1.id),
+        reference: DatabaseEntries.resolveReference(entry_pdf_1.id),
         fragment: resolveAnchorFragment(pdfAnnotation_1.id),
         label: pdfAnnotation_1.text,
         quote: true,

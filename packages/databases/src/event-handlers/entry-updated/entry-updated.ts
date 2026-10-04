@@ -1,6 +1,6 @@
-import { DatabaseEntryUpdatedEventData } from '../../events';
+import { EntryUpdatedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
-import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
+import { recordEntryHistory } from '../../recordEntryHistory';
 import { sqlUpsertEntries } from '../../sql';
 import { convertEntryToSqlRecord, resolvePropertyChanges } from '../../utils';
 
@@ -9,7 +9,7 @@ import { convertEntryToSqlRecord, resolvePropertyChanges } from '../../utils';
  * entry to SQL and records the properties the update changed.
  */
 export async function onUpdateEntry(
-  data: DatabaseEntryUpdatedEventData,
+  data: EntryUpdatedEventData,
 ): Promise<void> {
   const { original, updated } = data;
   const database = getDatabase(updated.database);
@@ -33,7 +33,7 @@ export async function onUpdateEntry(
   }
 
   // Record the properties changed by this update as one change
-  await recordDatabaseEntryHistory(database, updated, {
+  await recordEntryHistory(database, updated, {
     kind: 'property',
     changes,
   });

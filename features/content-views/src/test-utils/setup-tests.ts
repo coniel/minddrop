@@ -3,7 +3,7 @@ import {
   cleanupContentViewFixtures,
   setupContentViewFixtures,
 } from '@minddrop/content-views/test-utils';
-import { registerDatabaseEntryFilterAdapter } from '@minddrop/databases/test-utils';
+import { registerEntryFilterAdapter } from '@minddrop/databases/test-utils';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
@@ -31,7 +31,7 @@ export function setup() {
   setupContentViewFixtures(MockFs);
 
   // Register the entry filter adapter, as Databases.initialize does
-  registerDatabaseEntryFilterAdapter();
+  registerEntryFilterAdapter();
 }
 
 export async function cleanup(): Promise<void> {

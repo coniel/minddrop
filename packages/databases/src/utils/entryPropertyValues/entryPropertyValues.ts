@@ -4,7 +4,7 @@ import {
   PropertyMap,
   PropertyValue,
 } from '@minddrop/properties';
-import { DatabaseEntry } from '../../types';
+import { Entry } from '../../types';
 import { resolveEntryMetadataPropertyValues } from '../resolveEntryMetadataPropertyValues';
 import { resolveEntryPropertyFilePath } from '../resolveEntryPropertyFilePath';
 
@@ -20,7 +20,7 @@ import { resolveEntryPropertyFilePath } from '../resolveEntryPropertyFilePath';
  * @returns A map of property names to values.
  */
 export function entryPropertyValues(
-  entry: DatabaseEntry,
+  entry: Entry,
   properties: PropertiesSchema,
 ): PropertyMap {
   const values: Record<string, PropertyValue> = {

@@ -2,11 +2,11 @@ import { Collections } from '@minddrop/collections';
 import { Designs } from '@minddrop/designs-next';
 import { Properties } from '@minddrop/properties';
 import { DatabasePropertyRenamedEventData } from '../../events';
-import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
-import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
+import { getAllEntries } from '../../getAllEntries';
 import { recordDatabaseHistory } from '../../recordDatabaseHistory';
-import { renameDatabaseEntriesProperty } from '../../renameDatabaseEntriesProperty';
+import { recordEntryHistory } from '../../recordEntryHistory';
 import { renameDatabaseEntryTemplatesProperty } from '../../renameDatabaseEntryTemplatesProperty';
+import { renameEntriesProperty } from '../../renameEntriesProperty';
 import { renamePropertyFileDir } from '../../renamePropertyFileDir';
 import { sqlRenameProperty } from '../../sql';
 import { updateDatabaseDesignsElements } from '../../updateDatabaseDesignsElements';
@@ -56,7 +56,7 @@ export async function onRenameProperty(
 
   // Re-key the property's value in the database's entries that
   // have one.
-  const renamedEntries = await renameDatabaseEntriesProperty(
+  const renamedEntries = await renameEntriesProperty(
     database.id,
     oldProperty,
     newName,
@@ -66,7 +66,7 @@ export async function onRenameProperty(
   // property.
   await Promise.all(
     renamedEntries.map((entry) =>
-      recordDatabaseEntryHistory(database, entry, {
+      recordEntryHistory(database, entry, {
         kind: 'rename',
         target: 'property',
         from: oldName,
@@ -89,7 +89,7 @@ export async function onRenameProperty(
   }
 
   // Get entries belonging to this database
-  const entries = getAllDatabaseEntries(database.id);
+  const entries = getAllEntries(database.id);
 
   // Update virtual collection IDs and names
   await Promise.all(

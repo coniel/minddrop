@@ -7,15 +7,16 @@ import {
   MULTI_VALUE_PROPERTY_TYPES,
   TEXT_PROPERTY_TYPES,
 } from '../constants';
-import { DatabaseEntriesSqlSyncedEvent } from '../events';
+import { EntriesSqlSyncedEvent } from '../events';
 import type { SqlEntryPropertyRecord, SqlEntryRecord } from '../types';
 
 /**
- * Upserts one or more entries into the SQL database.
- * Uses a transaction for bulk operations and dispatches
- * a DatabaseEntriesSqlSyncedEvent.
+ * Upserts one or more entries into the SQL database in a single
+ * transaction.
  *
  * @param workspaceId - The ID of the workspace whose database to target. Defaults to the active workspace.
+ *
+ * @dispatches databases:entries:sql-synced
  */
 export function sqlUpsertEntries(
   databaseId: string,
@@ -69,7 +70,7 @@ export function sqlUpsertEntries(
 
   // Dispatch SQL synced event unless silenced
   if (!options?.silent) {
-    Events.dispatch(DatabaseEntriesSqlSyncedEvent, {
+    Events.dispatch(EntriesSqlSyncedEvent, {
       action: 'upsert',
       entryIds: entries.map((entry) => entry.id),
       databaseId,

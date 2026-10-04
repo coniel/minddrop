@@ -7,15 +7,15 @@ import { cleanup, setup, setupPdfFixtures } from '../test-utils';
 import { loadEntryPdfs } from './loadEntryPdfs';
 
 const {
-  databaseEntry_pdf_1,
-  databaseEntry_pdf_1PropertyFilePath,
+  entry_pdf_1,
+  entry_pdf_1PropertyFilePath,
   rootStorageEntry1,
   pdfPropertyName,
 } = DatabaseFixtures;
 const { pdfAnnotations } = PdfAnnotationFixtures;
 
 // The path of the pdf entry's document
-const path = databaseEntry_pdf_1PropertyFilePath;
+const path = entry_pdf_1PropertyFilePath;
 
 describe('loadEntryPdfs', () => {
   beforeEach(() => {
@@ -27,13 +27,13 @@ describe('loadEntryPdfs', () => {
 
   it("loads the pdf property's annotations under its file path", () => {
     // The entry keeps annotations for its pdf property
-    DatabaseEntries.Store.update(databaseEntry_pdf_1.id, {
+    DatabaseEntries.Store.update(entry_pdf_1.id, {
       metadata: {
         properties: { [pdfPropertyName]: { annotations: pdfAnnotations } },
       },
     });
 
-    loadEntryPdfs(databaseEntry_pdf_1);
+    loadEntryPdfs(entry_pdf_1);
 
     expect(PdfAnnotations.Store).toHaveItem(path, {
       path,
@@ -43,17 +43,17 @@ describe('loadEntryPdfs', () => {
 
   it("loads the pdf property's page last read under its file path", () => {
     // Record a page last read for the entry's pdf property
-    DatabaseEntries.Store.update(databaseEntry_pdf_1.id, {
+    DatabaseEntries.Store.update(entry_pdf_1.id, {
       metadata: { properties: { [pdfPropertyName]: { page: 4 } } },
     });
 
-    loadEntryPdfs(databaseEntry_pdf_1);
+    loadEntryPdfs(entry_pdf_1);
 
     expect(Pdf.getReadPage(path)).toBe(4);
   });
 
   it('loads an empty document for a property without annotations', () => {
-    loadEntryPdfs(databaseEntry_pdf_1);
+    loadEntryPdfs(entry_pdf_1);
 
     expect(PdfAnnotations.Store).toHaveItem(path, { path, annotations: [] });
   });

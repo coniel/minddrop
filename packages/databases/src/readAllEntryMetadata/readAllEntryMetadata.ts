@@ -1,7 +1,7 @@
 import { Fs } from '@minddrop/file-system';
 import { restoreDates } from '@minddrop/utils';
 import { listEntryMetadataKeys } from '../listEntryMetadataKeys';
-import { DatabaseEntryMetadata } from '../types';
+import { EntryMetadata } from '../types';
 import { resolveDatabaseMetadataDirPath } from '../utils';
 
 /**
@@ -12,13 +12,13 @@ import { resolveDatabaseMetadataDirPath } from '../utils';
  */
 export async function readAllEntryMetadata(
   databasePath: string,
-): Promise<Record<string, DatabaseEntryMetadata>> {
+): Promise<Record<string, EntryMetadata>> {
   const keys = await listEntryMetadataKeys(databasePath);
   const dirPath = resolveDatabaseMetadataDirPath(databasePath);
   const paths = keys.map((key) => `${dirPath}/${key}.json`);
 
   const contents = await Fs.readTextFiles(paths);
-  const metadata: Record<string, DatabaseEntryMetadata> = {};
+  const metadata: Record<string, EntryMetadata> = {};
 
   keys.forEach((key, index) => {
     const text = contents.get(paths[index]);

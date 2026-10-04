@@ -8,15 +8,15 @@ import { moveEntryPdfs } from './moveEntryPdfs';
 
 const {
   database_pdf,
-  databaseEntry_pdf_1,
-  databaseEntry_pdf_1PropertyFilePath,
+  entry_pdf_1,
+  entry_pdf_1PropertyFilePath,
   pdfPropertyName,
   validPdfPropertyFile,
 } = DatabaseFixtures;
 const { pdfAnnotations } = PdfAnnotationFixtures;
 
 // The entry renamed
-const original = databaseEntry_pdf_1;
+const original = entry_pdf_1;
 const updated = { ...original, title: 'Renamed', path: 'Renamed/Renamed.md' };
 
 describe('moveEntryPdfs', () => {
@@ -62,16 +62,13 @@ describe('moveEntryPdfs', () => {
     // Load the annotations under the file's path. Under the fixture
     // database's property directory storage it does not depend on the
     // entry's title.
-    PdfAnnotations.load(databaseEntry_pdf_1PropertyFilePath, pdfAnnotations);
+    PdfAnnotations.load(entry_pdf_1PropertyFilePath, pdfAnnotations);
 
     moveEntryPdfs(original, updated);
 
-    expect(PdfAnnotations.Store).toHaveItem(
-      databaseEntry_pdf_1PropertyFilePath,
-      {
-        path: databaseEntry_pdf_1PropertyFilePath,
-        annotations: pdfAnnotations,
-      },
-    );
+    expect(PdfAnnotations.Store).toHaveItem(entry_pdf_1PropertyFilePath, {
+      path: entry_pdf_1PropertyFilePath,
+      annotations: pdfAnnotations,
+    });
   });
 });

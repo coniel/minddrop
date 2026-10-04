@@ -9,14 +9,14 @@ import {
 } from '@minddrop/item-references';
 import { storeItem } from '@minddrop/stores/test-utils';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
-import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
+import { EntriesStore } from '../EntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
 import { recordWorkspaceDatabaseLedger } from '../recordWorkspaceDatabaseLedger';
 import { DatabaseFixtures, cleanup, setup } from '../test-utils';
 import { BackgroundSyncChangeset } from '../types';
 import {
   convertEntryToSqlRecord,
-  databaseEntryAddress,
+  entryAddress,
   resolveDatabaseHistorySubject,
   resolveWorkspaceDatabaseLedger,
 } from '../utils';
@@ -166,7 +166,7 @@ describe('handleBackgroundSyncResult', () => {
     });
 
     // The store holds the new path
-    expect(storeItem(DatabaseEntriesStore, relatedEntry1.id).path).toBe(
+    expect(storeItem(EntriesStore, relatedEntry1.id).path).toBe(
       renamed.path,
     );
 
@@ -176,8 +176,8 @@ describe('handleBackgroundSyncResult', () => {
       changes: [
         {
           id: relatedEntry1.id,
-          oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
-          newReference: databaseEntryAddress(renamed, collectionDatabase),
+          oldReference: entryAddress(relatedEntry1, collectionDatabase),
+          newReference: entryAddress(renamed, collectionDatabase),
         },
       ],
     });
@@ -215,8 +215,8 @@ describe('handleBackgroundSyncResult', () => {
       changes: [
         {
           id: relatedEntry1.id,
-          oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
-          newReference: databaseEntryAddress(relatedEntry1, objectDatabase),
+          oldReference: entryAddress(relatedEntry1, collectionDatabase),
+          newReference: entryAddress(relatedEntry1, objectDatabase),
         },
       ],
     });

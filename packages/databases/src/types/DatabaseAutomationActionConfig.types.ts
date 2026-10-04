@@ -4,7 +4,7 @@ import {
   PropertySetterConfig,
 } from './DatabaseAutomation.types';
 import { DatabaseAutomationAction } from './DatabaseAutomationAction.types';
-import { DatabaseEntry } from './DatabaseEntry.types';
+import { Entry } from './Entry.types';
 
 export interface DatabaseAutomationActionConfig {
   /**
@@ -27,10 +27,7 @@ export interface DatabaseAutomationActionConfig {
    *
    * @param entry - The entry the action was triggered on.
    */
-  run: (
-    action: DatabaseAutomationAction,
-    entry: DatabaseEntry,
-  ) => void | Promise<void>;
+  run: (action: DatabaseAutomationAction, entry: Entry) => void | Promise<void>;
 
   /**
    * The types of triggers supported by the action.
@@ -69,7 +66,7 @@ export interface DatabaseAutomationUpdatePropertyActionConfig
    */
   run: (
     action: DatabaseAutomationAction,
-    entry: DatabaseEntry,
+    entry: Entry,
     updatedPropertyValue: PropertyValue,
     originalPropertyValue: PropertyValue,
   ) => void | Promise<void>;

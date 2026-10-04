@@ -1,4 +1,4 @@
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
+import { EntriesStore } from '../../EntriesStore';
 
 /**
  * Checks whether an entry title is already in use within a
@@ -19,7 +19,7 @@ export function isEntryTitleTaken(
   // Compare titles case-insensitively
   const normalizedTitle = title.toLowerCase();
 
-  return DatabaseEntriesStore.getAllArray().some(
+  return EntriesStore.getAllArray().some(
     (entry) =>
       entry.database === databaseId &&
       entry.id !== excludeEntryId &&

@@ -14,7 +14,7 @@ export {
   clearEntryFocusRequest,
   getEntryFocusRequest,
 } from '../EntryFocusRequestStore';
-export { registerDatabaseEntryFilterAdapter } from '../registerDatabaseEntryFilterAdapter';
+export { registerEntryFilterAdapter } from '../registerEntryFilterAdapter';
 
 export const DatabaseFixtures = {
   ...Fixtures,

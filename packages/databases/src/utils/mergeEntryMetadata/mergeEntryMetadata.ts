@@ -1,12 +1,12 @@
 import { PropertiesSchema } from '@minddrop/properties';
-import { DatabaseEntry, DatabaseEntryMetadata } from '../../types';
+import { Entry, EntryMetadata } from '../../types';
 import { getTimestampProperty } from '../getTimestampProperty';
 
 export interface MergedEntryMetadata {
   /**
    * The entry with its sidecar metadata and resolved timestamps.
    */
-  entry: DatabaseEntry;
+  entry: Entry;
 
   /**
    * Whether the sidecar's timestamps differ from the resolved ones
@@ -30,9 +30,9 @@ export interface MergedEntryMetadata {
  * @returns The merged entry and whether its sidecar needs writing.
  */
 export function mergeEntryMetadata(
-  entry: DatabaseEntry,
+  entry: Entry,
   schema: PropertiesSchema,
-  metadata: DatabaseEntryMetadata | undefined,
+  metadata: EntryMetadata | undefined,
 ): MergedEntryMetadata {
   const sidecar = metadata ?? {};
 

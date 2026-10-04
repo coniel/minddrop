@@ -8,8 +8,8 @@ import {
 import { History } from '@minddrop/history';
 import { storeItem } from '@minddrop/stores/test-utils';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabaseEntryTemplatesStore } from '../../DatabaseEntryTemplatesStore';
+import { EntriesStore } from '../../EntriesStore';
 import { DatabaseHistoryCauses } from '../../constants';
 import {
   sqlGetAllEntriesFull,
@@ -37,8 +37,8 @@ import {
   withoutDatabaseProperty,
 } from '../../test-utils';
 import {
-  resolveDatabaseEntryHistorySubject,
   resolveDatabaseHistorySubject,
+  resolveEntryHistorySubject,
   resolveEntryMetadataFilePath,
   virtualCollectionId,
   virtualCollectionName,
@@ -243,7 +243,7 @@ describe('onRemoveProperty', () => {
 
       // The value should be gone from the store
       expect(
-        storeItem(DatabaseEntriesStore, objectEntry1.id).properties,
+        storeItem(EntriesStore, objectEntry1.id).properties,
       ).not.toHaveProperty('Icon');
       // And from the entry's file
       expect(
@@ -258,7 +258,7 @@ describe('onRemoveProperty', () => {
 
       expect(
         await History.read(
-          resolveDatabaseEntryHistorySubject(objectDatabase, objectEntry1),
+          resolveEntryHistorySubject(objectDatabase, objectEntry1),
         ),
       ).toContainEqual(
         expect.objectContaining({
@@ -281,13 +281,13 @@ describe('onRemoveProperty', () => {
         properties: { Content: objectEntry1.properties.Content },
       };
 
-      DatabaseEntriesStore.set(withoutIcon);
+      EntriesStore.set(withoutIcon);
 
       await removeIconProperty();
 
       expect(
         await History.read(
-          resolveDatabaseEntryHistorySubject(objectDatabase, withoutIcon),
+          resolveEntryHistorySubject(objectDatabase, withoutIcon),
         ),
       ).toEqual([]);
     });
@@ -307,7 +307,7 @@ describe('onRemoveProperty', () => {
 
       // The value should be gone from the entry
       expect(
-        storeItem(DatabaseEntriesStore, propertyStorageEntry1.id).properties,
+        storeItem(EntriesStore, propertyStorageEntry1.id).properties,
       ).not.toHaveProperty('Image');
       // The stored file should still be there
       expect(MockFs.exists(storedImagePath)).toBe(true);
@@ -316,7 +316,7 @@ describe('onRemoveProperty', () => {
 
   it("drops the property's metadata from the entries which have any", async () => {
     // Give two of the entry's properties metadata
-    DatabaseEntriesStore.update(objectEntry1.id, {
+    EntriesStore.update(objectEntry1.id, {
       metadata: {
         properties: { Icon: { crop: 'square' }, Content: { page: 3 } },
       },
@@ -330,7 +330,7 @@ describe('onRemoveProperty', () => {
     });
 
     expect(
-      storeItem(DatabaseEntriesStore, objectEntry1.id).metadata.properties,
+      storeItem(EntriesStore, objectEntry1.id).metadata.properties,
     ).toEqual({ Content: { page: 3 } });
   });
 

@@ -1,28 +1,28 @@
 import { MockFileSystem } from '@minddrop/file-system';
-import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
-import { DatabaseEntrySerializersRegistry } from '../DatabaseEntrySerializersRegistry';
 import { DatabaseEntryTemplatesStore } from '../DatabaseEntryTemplatesStore';
 import { DatabasesStore } from '../DatabasesStore';
+import { EntriesStore } from '../EntriesStore';
+import { EntrySerializersRegistry } from '../EntrySerializersRegistry';
 import { coreEntrySerializers } from '../entry-serializers';
 import {
-  databaseEntries,
-  databaseEntryFiles,
-  databaseEntryPropertyFiles,
+  entries,
   databaseEntryTemplateFiles,
   databaseEntryTemplates,
   databaseFiles,
   databases,
+  entryFiles,
+  entryPropertyFiles,
 } from './fixtures';
 
 export interface SetupDatabaseFixturesOptions {
   loadDatabases?: boolean;
   loadDatabaseFiles?: boolean;
-  loadDatabaseEntries?: boolean;
-  loadDatabaseEntryFiles?: boolean;
-  loadDatabaseEntryPropertyFiles?: boolean;
+  loadEntries?: boolean;
+  loadEntryFiles?: boolean;
+  loadEntryPropertyFiles?: boolean;
   loadDatabaseEntryTemplates?: boolean;
   loadDatabaseEntryTemplateFiles?: boolean;
-  loadDatabaseEntrySerializers?: boolean;
+  loadEntrySerializers?: boolean;
 }
 
 export function setupDatabaseFixtures(
@@ -30,10 +30,10 @@ export function setupDatabaseFixtures(
   options: SetupDatabaseFixturesOptions = {
     loadDatabases: true,
     loadDatabaseFiles: true,
-    loadDatabaseEntries: true,
-    loadDatabaseEntryFiles: true,
-    loadDatabaseEntryPropertyFiles: true,
-    loadDatabaseEntrySerializers: true,
+    loadEntries: true,
+    loadEntryFiles: true,
+    loadEntryPropertyFiles: true,
+    loadEntrySerializers: true,
   },
 ) {
   if (options.loadDatabases !== false) {
@@ -41,9 +41,9 @@ export function setupDatabaseFixtures(
     DatabasesStore.load(databases);
   }
 
-  if (options.loadDatabaseEntries !== false) {
+  if (options.loadEntries !== false) {
     // Load database entries into the store
-    DatabaseEntriesStore.load(databaseEntries);
+    EntriesStore.load(entries);
   }
 
   if (options.loadDatabaseEntryTemplates !== false) {
@@ -51,19 +51,19 @@ export function setupDatabaseFixtures(
     DatabaseEntryTemplatesStore.load(databaseEntryTemplates);
   }
 
-  if (options.loadDatabaseEntrySerializers !== false) {
+  if (options.loadEntrySerializers !== false) {
     // Load database entry serializers into the store
-    DatabaseEntrySerializersRegistry.store.load(coreEntrySerializers);
+    EntrySerializersRegistry.store.load(coreEntrySerializers);
   }
 
-  if (options.loadDatabaseEntryFiles !== false) {
+  if (options.loadEntryFiles !== false) {
     // Add database entry files to the file system
-    MockFs.addFiles(databaseEntryFiles);
+    MockFs.addFiles(entryFiles);
   }
 
-  if (options.loadDatabaseEntryPropertyFiles !== false) {
+  if (options.loadEntryPropertyFiles !== false) {
     // Add database entry property files to the file system
-    MockFs.addFiles(databaseEntryPropertyFiles);
+    MockFs.addFiles(entryPropertyFiles);
   }
 
   if (options.loadDatabaseEntryTemplateFiles !== false) {
@@ -80,7 +80,7 @@ export function setupDatabaseFixtures(
 export function cleanupDatabaseFixtures() {
   // Clear stores
   DatabasesStore.clear();
-  DatabaseEntriesStore.clear();
+  EntriesStore.clear();
   DatabaseEntryTemplatesStore.clear();
-  DatabaseEntrySerializersRegistry.clear();
+  EntrySerializersRegistry.clear();
 }

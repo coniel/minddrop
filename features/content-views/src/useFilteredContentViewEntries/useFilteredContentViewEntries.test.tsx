@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { ContentView } from '@minddrop/content-views';
 import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
-import { DatabaseEntries, DatabaseEntry } from '@minddrop/databases';
+import { DatabaseEntries, Entry } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { PropertyFilter } from '@minddrop/filters';
 import {
@@ -25,13 +25,13 @@ const tableView: ContentView = {
 };
 const { objectEntry1 } = DatabaseFixtures;
 
-const done: DatabaseEntry = {
+const done: Entry = {
   ...objectEntry1,
   id: 'database-entry_done',
   properties: { Status: 'Done' },
 };
 
-const todo: DatabaseEntry = {
+const todo: Entry = {
   ...objectEntry1,
   id: 'database-entry_todo',
   properties: { Status: 'Todo' },

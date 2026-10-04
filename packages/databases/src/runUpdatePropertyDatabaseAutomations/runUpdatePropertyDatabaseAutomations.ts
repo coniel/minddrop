@@ -1,7 +1,7 @@
 import { Properties } from '@minddrop/properties';
 import { DatabaseAutomationActionConfigsStore } from '../DatabaseAutomationActionConfigsStore';
 import { getDatabase } from '../getDatabase';
-import { DatabaseEntry } from '../types';
+import { Entry } from '../types';
 
 /**
  * Runs update-property automations on the given entry.
@@ -10,8 +10,8 @@ import { DatabaseEntry } from '../types';
  * @param updated - The updated entry.
  */
 export function runUpdatePropertyDatabaseAutomations(
-  original: DatabaseEntry,
-  updated: DatabaseEntry,
+  original: Entry,
+  updated: Entry,
 ): void {
   // Get the entry's parent database
   const database = getDatabase(original.database);

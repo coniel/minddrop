@@ -1,7 +1,7 @@
 import { Collections } from '@minddrop/collections';
-import { DatabaseEntryCreatedEventData } from '../../events';
+import { EntryCreatedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
-import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
+import { recordEntryHistory } from '../../recordEntryHistory';
 import { sqlUpsertEntries } from '../../sql';
 import {
   convertEntryToSqlRecord,
@@ -14,7 +14,7 @@ import {
  * entry's history and creates virtual collections for collection
  * properties.
  */
-export async function onCreateEntry(data: DatabaseEntryCreatedEventData) {
+export async function onCreateEntry(data: EntryCreatedEventData) {
   // Get the database to access its properties schema
   const database = getDatabase(data.database);
 
@@ -23,7 +23,7 @@ export async function onCreateEntry(data: DatabaseEntryCreatedEventData) {
   sqlUpsertEntries(database.id, [record]);
 
   // Open the entry's history
-  await recordDatabaseEntryHistory(database, data, {
+  await recordEntryHistory(database, data, {
     kind: 'created',
   });
 

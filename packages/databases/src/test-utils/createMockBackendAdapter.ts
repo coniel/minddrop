@@ -1,6 +1,6 @@
 import { registerDatabaseBackendAdapter } from '../DatabaseBackendAdapter';
 import type { InitializeBackendResult } from '../sql';
-import { databaseEntrySqlRecords, databases } from './fixtures';
+import { databases, entrySqlRecords } from './fixtures';
 
 export interface MockBackendAdapter {
   /**
@@ -37,7 +37,7 @@ export function createMockBackendAdapter(
   // Fixture based initialization result with overrides applied
   const initializeBackendResult: InitializeBackendResult = {
     databases,
-    entries: databaseEntrySqlRecords,
+    entries: entrySqlRecords,
     schemaChanged: false,
     ...result,
   };

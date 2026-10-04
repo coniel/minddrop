@@ -1,6 +1,6 @@
 import { DatabaseEntries } from '@minddrop/databases';
 import { ReferenceSource } from '@minddrop/editor';
-import { resolveEntryReference } from '../resolveEntryReference';
+import { resolveEntryEditorReference } from '../resolveEntryEditorReference';
 
 // How many entries are offered before anything has been searched for
 const RecentEntryCount = 10;
@@ -13,8 +13,10 @@ const RecentEntryCount = 10;
  */
 export const entryReferenceSource: ReferenceSource = {
   getRecent: () =>
-    DatabaseEntries.getRecent(RecentEntryCount).map(resolveEntryReference),
+    DatabaseEntries.getRecent(RecentEntryCount).map(
+      resolveEntryEditorReference,
+    ),
 
   search: (query) =>
-    DatabaseEntries.searchByTitle(query).map(resolveEntryReference),
+    DatabaseEntries.searchByTitle(query).map(resolveEntryEditorReference),
 };

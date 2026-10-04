@@ -3,10 +3,10 @@ import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { ItemReferences } from '@minddrop/item-references';
 import { InvalidParameterError } from '@minddrop/utils';
-import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
+import { EntriesStore } from '../EntriesStore';
 import { DatabaseUpdatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
-import { getDatabaseEntry } from '../getDatabaseEntry';
+import { getEntry } from '../getEntry';
 import {
   MockFs,
   cleanup,
@@ -56,9 +56,7 @@ describe('setDatabasePropertyFileStorage', () => {
       ),
     ).toBe(true);
     // The entry file itself is untouched
-    expect(getDatabaseEntry(rootStorageEntry1.id).path).toBe(
-      rootStorageEntry1.path,
-    );
+    expect(getEntry(rootStorageEntry1.id).path).toBe(rootStorageEntry1.path);
     expect(getDatabase(rootStorageDatabase.id).propertyFileStorage).toBe(
       'common',
     );
@@ -146,7 +144,7 @@ describe('setDatabasePropertyFileStorage', () => {
     expect(await Fs.exists(`${path}/${entryTitle}/${entryTitle}.md`)).toBe(
       true,
     );
-    expect(getDatabaseEntry(rootStorageEntry1.id).path).toBe(
+    expect(getEntry(rootStorageEntry1.id).path).toBe(
       `${entryTitle}/${entryTitle}.md`,
     );
     // The property file moves into the entry directory
@@ -182,9 +180,7 @@ describe('setDatabasePropertyFileStorage', () => {
 
     // The entry file is unwrapped back into the database root
     expect(await Fs.exists(`${path}/${entryTitle}.md`)).toBe(true);
-    expect(getDatabaseEntry(entryStorageEntry1.id).path).toBe(
-      `${entryTitle}.md`,
-    );
+    expect(getEntry(entryStorageEntry1.id).path).toBe(`${entryTitle}.md`);
     // The property file moves to the database root
     expect(await Fs.exists(`${path}/image.png`)).toBe(true);
     // The wrapper directory is removed
@@ -199,7 +195,7 @@ describe('setDatabasePropertyFileStorage', () => {
       title: 'Entry Storage Entry 2',
       path: `${entryStorageDatabase.path}/Entry Storage Entry 2/Entry Storage Entry 2.md`,
     };
-    DatabaseEntriesStore.load([secondEntry]);
+    EntriesStore.load([secondEntry]);
     MockFs.addFiles([
       secondEntry.path,
       `${databaseDirPath(entryStorageDatabase)}/Entry Storage Entry 2/image.png`,
@@ -215,8 +211,8 @@ describe('setDatabasePropertyFileStorage', () => {
 
     // The incremented file's property value is rewritten
     const values = [
-      getDatabaseEntry(entryStorageEntry1.id).properties.Image,
-      getDatabaseEntry(secondEntry.id).properties.Image,
+      getEntry(entryStorageEntry1.id).properties.Image,
+      getEntry(secondEntry.id).properties.Image,
     ];
     expect(values.sort()).toEqual(['image 1.png', 'image.png']);
   });
@@ -224,7 +220,7 @@ describe('setDatabasePropertyFileStorage', () => {
   it('increments collisions when property dirs collapse to common', async () => {
     // Give the entry a second file property whose file shares the same name,
     // living in a different property directory
-    DatabaseEntriesStore.update(propertyStorageEntry1.id, {
+    EntriesStore.update(propertyStorageEntry1.id, {
       properties: { Image: 'image.png', File: 'image.png' },
     });
     MockFs.addFiles([
@@ -240,7 +236,7 @@ describe('setDatabasePropertyFileStorage', () => {
     expect(await Fs.exists(`${path}/Media/image 1.png`)).toBe(true);
 
     // The first property keeps its name, the second is rewritten
-    const entry = getDatabaseEntry(propertyStorageEntry1.id);
+    const entry = getEntry(propertyStorageEntry1.id);
     expect(entry.properties.Image).toBe('image.png');
     expect(entry.properties.File).toBe('image 1.png');
   });
@@ -249,7 +245,7 @@ describe('setDatabasePropertyFileStorage', () => {
     const entryTitle = propertyStorageEntry1.title;
 
     // Give the entry a file property whose file matches the entry's own file name
-    DatabaseEntriesStore.update(propertyStorageEntry1.id, {
+    EntriesStore.update(propertyStorageEntry1.id, {
       properties: { File: `${entryTitle}.md` },
     });
     MockFs.addFiles([
@@ -264,7 +260,7 @@ describe('setDatabasePropertyFileStorage', () => {
     expect(await Fs.exists(`${path}/${entryTitle}/${entryTitle}.md`)).toBe(
       true,
     );
-    expect(getDatabaseEntry(propertyStorageEntry1.id).path).toBe(
+    expect(getEntry(propertyStorageEntry1.id).path).toBe(
       `${entryTitle}/${entryTitle}.md`,
     );
 
@@ -272,7 +268,7 @@ describe('setDatabasePropertyFileStorage', () => {
     expect(await Fs.exists(`${path}/${entryTitle}/${entryTitle} 1.md`)).toBe(
       true,
     );
-    expect(getDatabaseEntry(propertyStorageEntry1.id).properties.File).toBe(
+    expect(getEntry(propertyStorageEntry1.id).properties.File).toBe(
       `${entryTitle} 1.md`,
     );
   });
@@ -296,7 +292,7 @@ describe('setDatabasePropertyFileStorage', () => {
 
   it('skips property files that are missing on disk', async () => {
     // Point an entry's image at a file that does not exist on disk
-    DatabaseEntriesStore.update(rootStorageEntry1.id, {
+    EntriesStore.update(rootStorageEntry1.id, {
       properties: { Image: 'ghost.png' },
     });
 

@@ -1,0 +1,59 @@
+import { Fs } from '@minddrop/file-system';
+import { InvalidParameterError } from '@minddrop/utils';
+import { getDatabase } from '../../getDatabase';
+import { Database, Entry } from '../../types';
+import { resolveDatabasePath } from '../resolveDatabasePath';
+
+/**
+ * Resolves an entry's file system path from its database relative
+ * path.
+ *
+ * @param entry - The entry to resolve the path of.
+ * @param database - The database the entry belongs to. Looked up from the entry when omitted.
+ * @param workspacePath - The workspace path. Defaults to the active workspace.
+ * @returns The path to the entry's primary file.
+ *
+ * @throws {DatabaseNotFoundError} If the entry's database does not exist.
+ */
+export function resolveEntryPath(
+  entry: Entry,
+  database?: Database,
+  workspacePath?: string,
+): string;
+
+/**
+ * Resolves a database relative entry path to a file system path.
+ *
+ * @param path - The entry path, relative to its database.
+ * @param database - The database the path is relative to.
+ * @param workspacePath - The workspace path. Defaults to the active workspace.
+ * @returns The path to the entry's primary file.
+ */
+export function resolveEntryPath(
+  path: string,
+  database: Database,
+  workspacePath?: string,
+): string;
+
+export function resolveEntryPath(
+  entry: Entry | string,
+  database?: Database,
+  workspacePath?: string,
+): string {
+  if (typeof entry === 'string') {
+    // A bare path names no database to fall back to, which the
+    // signatures above require alongside it.
+    if (!database) {
+      throw new InvalidParameterError(
+        'A database is required to resolve an entry path',
+      );
+    }
+
+    return Fs.concatPath(resolveDatabasePath(database, workspacePath), entry);
+  }
+
+  return Fs.concatPath(
+    resolveDatabasePath(database ?? getDatabase(entry.database), workspacePath),
+    entry.path,
+  );
+}

@@ -1,5 +1,5 @@
 import { PropertyType, PropertyValue } from '@minddrop/properties';
-import { DatabaseEntry } from '../../types';
+import { Entry } from '../../types';
 
 /**
  * Resolves the value an entry holds for a metadata backed
@@ -10,7 +10,7 @@ import { DatabaseEntry } from '../../types';
  * @returns The metadata value, or undefined for types not backed by metadata.
  */
 export function resolveEntryMetadataValue(
-  entry: DatabaseEntry,
+  entry: Entry,
   type: PropertyType,
 ): PropertyValue | undefined {
   if (type === 'title') {

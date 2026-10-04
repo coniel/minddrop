@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { i18n } from '@minddrop/i18n';
 import { InvalidParameterError } from '@minddrop/utils';
-import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
+import { EntriesStore } from '../EntriesStore';
 import { PropertyFilesDirNameKey } from '../constants';
 import {
   MockFs,
@@ -92,7 +92,7 @@ describe('ensurePropertyFileDirExists', () => {
 
   it('throws when the entry directory is missing for entry based storage', async () => {
     // Point the entry at a directory which does not exist
-    DatabaseEntriesStore.update(entryStorageEntry1.id, {
+    EntriesStore.update(entryStorageEntry1.id, {
       path: `${entryStorageDatabase.path}/Missing/Missing.md`,
     });
 

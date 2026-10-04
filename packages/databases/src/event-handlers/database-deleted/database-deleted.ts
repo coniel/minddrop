@@ -1,8 +1,8 @@
 import { Collections } from '@minddrop/collections';
 import { ContentViews } from '@minddrop/content-views';
 import { Designs } from '@minddrop/designs-next';
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabaseEntryTemplatesStore } from '../../DatabaseEntryTemplatesStore';
+import { EntriesStore } from '../../EntriesStore';
 import { DatabaseDeletedEventData } from '../../events';
 import { getDatabaseEntryTemplates } from '../../getDatabaseEntryTemplates';
 import { recordDatabaseHistory } from '../../recordDatabaseHistory';
@@ -62,7 +62,7 @@ export async function onDeleteDatabase(
   );
 
   // Get entries belonging to this database
-  const entries = DatabaseEntriesStore.getAllArray().filter(
+  const entries = EntriesStore.getAllArray().filter(
     (entry) => entry.database === data.id,
   );
 

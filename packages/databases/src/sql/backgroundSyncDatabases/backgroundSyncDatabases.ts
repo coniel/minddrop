@@ -1,18 +1,18 @@
 import { Fs } from '@minddrop/file-system';
-import { loadCoreSerializers } from '../../DatabaseEntrySerializers';
+import { loadCoreSerializers } from '../../EntrySerializers';
 import { listEntryMetadataKeys } from '../../listEntryMetadataKeys';
-import { readDatabaseEntries } from '../../readDatabaseEntries';
+import { readEntries } from '../../readEntries';
 import { readEntryMetadata } from '../../readEntryMetadata';
 import { readWorkspaceDatabases } from '../../readWorkspaceDatabases';
 import type {
   BackgroundSyncChangeset,
   Database,
-  DatabaseEntry,
+  Entry,
   EntrySyncRecord,
 } from '../../types';
 import {
   convertEntryToSqlRecord,
-  databaseEntryAddress,
+  entryAddress,
   entryMetadataKey,
   matchEntriesToSqlRecords,
   mergeEntryMetadata,
@@ -123,7 +123,7 @@ export async function backgroundSyncDatabases(
   // Staged per-database sync data for the resolution pass
   const staged: {
     database: Database;
-    entries: DatabaseEntry[];
+    entries: Entry[];
     existingRecords: EntrySyncRecord[];
     deletedIds: string[];
   }[] = [];
@@ -133,7 +133,7 @@ export async function backgroundSyncDatabases(
   for (const database of fileSystemDatabases) {
     // Read the entries from disk. Their metadata is read after the
     // diff, for the changed entries only.
-    const rawEntries = await readDatabaseEntries(database, workspacePath);
+    const rawEntries = await readEntries(database, workspacePath);
 
     // Get existing sync records from SQL. Their paths are addressed
     // from the database, so a database directory renamed while the app
@@ -152,7 +152,7 @@ export async function backgroundSyncDatabases(
     // the location it last occupied.
     entries.forEach((entry) => {
       entryIdByAddress.set(
-        databaseEntryAddress(entry, database).toLowerCase(),
+        entryAddress(entry, database).toLowerCase(),
         entry.id,
       );
     });
@@ -163,7 +163,7 @@ export async function backgroundSyncDatabases(
 
   // Entries whose sidecar timestamps need writing, collected during the
   // diff pass and written in one batch at the end.
-  const outdatedSidecars: { database: Database; entry: DatabaseEntry }[] = [];
+  const outdatedSidecars: { database: Database; entry: Entry }[] = [];
 
   // Pass 2: resolve entry references, diff, and update SQL
   for (const { database, entries, existingRecords, deletedIds } of staged) {

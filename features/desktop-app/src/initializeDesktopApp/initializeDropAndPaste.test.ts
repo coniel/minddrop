@@ -6,7 +6,7 @@ import { createDataTransfer } from '@minddrop/utils/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { initializeDropAndPaste } from './initializeDropAndPaste';
 
-const { objectDatabase, databaseEntries } = DatabaseFixtures;
+const { objectDatabase, entries } = DatabaseFixtures;
 
 /**
  * Creates a dragover, drop or paste event transferring plain text.
@@ -66,7 +66,7 @@ describe('initializeDropAndPaste', () => {
     document.body.dispatchEvent(createTransferEvent('paste', 'Pasted'));
 
     await waitFor(() => {
-      expect(DatabaseEntries.Store).toHaveItemCount(databaseEntries.length + 1);
+      expect(DatabaseEntries.Store).toHaveItemCount(entries.length + 1);
     });
   });
 
@@ -74,7 +74,7 @@ describe('initializeDropAndPaste', () => {
     document.body.dispatchEvent(createTransferEvent('drop', 'Dropped'));
 
     await waitFor(() => {
-      expect(DatabaseEntries.Store).toHaveItemCount(databaseEntries.length + 1);
+      expect(DatabaseEntries.Store).toHaveItemCount(entries.length + 1);
     });
   });
 
@@ -121,7 +121,7 @@ describe('initializeDropAndPaste', () => {
 
     await settle();
 
-    expect(DatabaseEntries.Store).toHaveItems(databaseEntries);
+    expect(DatabaseEntries.Store).toHaveItems(entries);
 
     target.remove();
   });
@@ -136,7 +136,7 @@ describe('initializeDropAndPaste', () => {
 
     await settle();
 
-    expect(DatabaseEntries.Store).toHaveItems(databaseEntries);
+    expect(DatabaseEntries.Store).toHaveItems(entries);
 
     input.remove();
   });
@@ -152,7 +152,7 @@ describe('initializeDropAndPaste', () => {
 
     await settle();
 
-    expect(DatabaseEntries.Store).toHaveItems(databaseEntries);
+    expect(DatabaseEntries.Store).toHaveItems(entries);
 
     target.remove();
   });
@@ -167,7 +167,7 @@ describe('initializeDropAndPaste', () => {
 
     await settle();
 
-    expect(DatabaseEntries.Store).toHaveItems(databaseEntries);
+    expect(DatabaseEntries.Store).toHaveItems(entries);
 
     input.remove();
   });
@@ -179,6 +179,6 @@ describe('initializeDropAndPaste', () => {
 
     await settle();
 
-    expect(DatabaseEntries.Store).toHaveItems(databaseEntries);
+    expect(DatabaseEntries.Store).toHaveItems(entries);
   });
 });

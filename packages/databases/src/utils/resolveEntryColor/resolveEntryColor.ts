@@ -1,5 +1,5 @@
 import { ContentColor, ContentColors } from '@minddrop/ui-theme';
-import { Database, DatabaseEntry } from '../../types';
+import { Database, Entry } from '../../types';
 
 /**
  * Resolves the color a database entry displays as, per the
@@ -14,7 +14,7 @@ import { Database, DatabaseEntry } from '../../types';
  */
 export function resolveEntryColor(
   database: Database,
-  entry: DatabaseEntry,
+  entry: Entry,
 ): ContentColor | null {
   // Resolve via the configured select property when set
   if (database.colorProperty) {

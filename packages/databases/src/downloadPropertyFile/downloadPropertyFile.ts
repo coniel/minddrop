@@ -1,6 +1,6 @@
 import { Fs } from '@minddrop/file-system';
 import { getFileExtensionFromUrl, titleFromUrl } from '@minddrop/utils';
-import { getDatabaseEntry } from '../getDatabaseEntry';
+import { getEntry } from '../getEntry';
 import { resolveIncrementalPropertyFilePath } from '../utils';
 
 /**
@@ -20,7 +20,7 @@ export async function downloadPropertyFile(
   url: string,
 ): Promise<string | false> {
   // Ensure the entry exists, throwing if it does not
-  getDatabaseEntry(entryId);
+  getEntry(entryId);
 
   const fileTitle = titleFromUrl(url);
   const fileExtension = getFileExtensionFromUrl(url);

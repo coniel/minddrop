@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   DatabaseEntries,
-  DatabaseEntrySerializers,
   Databases,
+  EntrySerializers,
 } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import {
@@ -126,7 +126,7 @@ describe('<DatabaseEntryRenderer />', () => {
   afterEach(async () => {
     await cleanup();
     DatabaseEntries.Store.clear();
-    DatabaseEntrySerializers.Store.clear();
+    EntrySerializers.Store.clear();
     DesignElementConfigsRegistry.clear();
   });
 
@@ -182,7 +182,7 @@ describe('<DatabaseEntryRenderer />', () => {
     // Add the database's directory and load the serializers. The
     // update writes the entry file through them.
     MockFs.addFiles([databaseDirPath(designDatabase)]);
-    DatabaseEntrySerializers.loadCoreSerializers();
+    EntrySerializers.loadCoreSerializers();
 
     render(
       <DatabaseEntryRenderer

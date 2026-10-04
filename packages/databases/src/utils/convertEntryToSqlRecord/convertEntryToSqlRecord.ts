@@ -1,13 +1,13 @@
 import type { PropertyType } from '@minddrop/properties';
-import type { Database, DatabaseEntry } from '../../types';
+import type { Database, Entry } from '../../types';
 import type { SqlEntryPropertyRecord, SqlEntryRecord } from '../../types';
 
 /**
- * Converts a DatabaseEntry to a SqlEntryRecord using the
+ * Converts an entry to a SqlEntryRecord using the
  * database schema for property type information.
  */
 export function convertEntryToSqlRecord(
-  entry: DatabaseEntry,
+  entry: Entry,
   database: Database,
 ): SqlEntryRecord {
   const properties: SqlEntryPropertyRecord[] = [];

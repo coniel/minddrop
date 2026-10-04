@@ -1,14 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DatabaseAutomationActionConfigsStore } from '../DatabaseAutomationActionConfigsStore';
-import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
+import { EntriesStore } from '../EntriesStore';
 import { cleanup, objectDatabase, objectEntry1, setup } from '../test-utils';
 import {
   Database,
   DatabaseAutomation,
   DatabaseAutomationAction,
   DatabaseAutomationActionConfig,
-  DatabaseEntry,
+  Entry,
 } from '../types';
 import { runUpdatePropertyDatabaseAutomations } from './runUpdatePropertyDatabaseAutomations';
 
@@ -42,7 +42,7 @@ const database: Database = {
   automations: [automation],
 };
 
-const entry: DatabaseEntry = {
+const entry: Entry = {
   ...objectEntry1,
   properties: {
     title: 'Original Title',
@@ -50,7 +50,7 @@ const entry: DatabaseEntry = {
   database: database.id,
 };
 
-const updatedEntry: DatabaseEntry = {
+const updatedEntry: Entry = {
   ...objectEntry1,
   properties: {
     title: 'Updated Title',
@@ -62,7 +62,7 @@ describe('runUpdatePropertyDatabaseAutomations', () => {
     setup();
 
     DatabaseAutomationActionConfigsStore.set(actionConfig);
-    DatabaseEntriesStore.set(entry);
+    EntriesStore.set(entry);
     DatabasesStore.set(database);
   });
 

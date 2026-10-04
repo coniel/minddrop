@@ -1,4 +1,4 @@
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
+import { EntriesStore } from '../../EntriesStore';
 
 /**
  * Resolves a per-database map into a per-entry map. Each entry maps
@@ -19,7 +19,7 @@ export function resolveEntryDatabaseValues<TValue>(
   // Match each entry to its database's value
   for (const entryId of entryIds) {
     // Get the entry
-    const entry = DatabaseEntriesStore.get(entryId);
+    const entry = EntriesStore.get(entryId);
 
     if (!entry) {
       continue;

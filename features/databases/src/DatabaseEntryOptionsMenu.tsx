@@ -3,7 +3,7 @@ import { Collections } from '@minddrop/collections';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { CollectionSelectionSubmenu } from '@minddrop/ui-components';
-import { DatabaseEntryRenderSource } from '@minddrop/ui-databases';
+import { EntryRenderSource } from '@minddrop/ui-databases';
 import {
   ActionMenuItem,
   DropdownMenuColorSelectionItem,
@@ -29,7 +29,7 @@ export interface DatabaseEntryOptionsMenuProps {
    * specific options, e.g. remove from collection when rendered
    * from a collection.
    */
-  source?: DatabaseEntryRenderSource;
+  source?: EntryRenderSource;
 }
 
 /**

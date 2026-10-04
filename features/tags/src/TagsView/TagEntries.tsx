@@ -1,4 +1,4 @@
-import { DatabaseEntries, DatabaseEntry, Databases } from '@minddrop/databases';
+import { DatabaseEntries, Databases, Entry } from '@minddrop/databases';
 import { Tag } from '@minddrop/tags';
 import {
   MenuGroup,
@@ -62,7 +62,7 @@ export const TagEntries: React.FC<TagEntriesProps> = ({ tag }) => {
  * by the database it belongs to, which opens the entry when
  * clicked.
  */
-const TagEntry: React.FC<{ entry: DatabaseEntry }> = ({ entry }) => {
+const TagEntry: React.FC<{ entry: Entry }> = ({ entry }) => {
   const openView = Views.useOpenView();
 
   // Open the entry, using its database's configured open mode

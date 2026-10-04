@@ -1,7 +1,7 @@
 import { Properties, PropertyType } from '@minddrop/properties';
 import { getDatabase } from '../../getDatabase';
-import { getDatabaseEntry } from '../../getDatabaseEntry';
-import { DatabaseEntry, EntryPropertyFile } from '../../types';
+import { getEntry } from '../../getEntry';
+import { Entry, EntryPropertyFile } from '../../types';
 import { resolveEntryPropertyFilePath } from '../resolveEntryPropertyFilePath';
 
 export interface ResolveEntryPropertyFilesOptions {
@@ -26,14 +26,13 @@ export interface ResolveEntryPropertyFilesOptions {
  * @returns The entry's property files.
  */
 export function resolveEntryPropertyFiles(
-  entry: DatabaseEntry | string,
+  entry: Entry | string,
   options: ResolveEntryPropertyFilesOptions = {},
 ): EntryPropertyFile[] {
   const { propertyTypes, workspacePath } = options;
 
   // Look the entry up when given its ID
-  const resolvedEntry =
-    typeof entry === 'string' ? getDatabaseEntry(entry) : entry;
+  const resolvedEntry = typeof entry === 'string' ? getEntry(entry) : entry;
 
   // Get the entry's database
   const database = getDatabase(resolvedEntry.database);

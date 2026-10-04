@@ -1,7 +1,7 @@
 import { i18n } from '@minddrop/i18n';
 import { Properties } from '@minddrop/properties';
 import { Database } from '../../types';
-import { EntrySortOptions } from '../sortDatabaseEntries';
+import { EntrySortOptions } from '../sortEntries';
 
 export interface SortableEntryProperty {
   /**

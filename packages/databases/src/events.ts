@@ -3,10 +3,10 @@ import { PropertySchema, SelectPropertySchema } from '@minddrop/properties';
 import { BaseOpenViewEventData } from '@minddrop/views';
 import {
   Database,
-  DatabaseEntry,
-  DatabaseEntryMetadata,
-  DatabaseEntryRenderSource,
   DatabaseEntryTemplate,
+  Entry,
+  EntryMetadata,
+  EntryRenderSource,
   SqlEntryRecord,
 } from './types';
 
@@ -204,9 +204,9 @@ export interface OpenDatabaseViewEventData extends BaseOpenViewEventData {
   configurationPanelOpen?: boolean;
 }
 
-export const OpenDatabaseEntryViewEvent = 'database-entries:entry:open';
+export const OpenEntryViewEvent = 'databases:entry:open';
 
-export interface OpenDatabaseEntryViewEventData extends BaseOpenViewEventData {
+export interface OpenEntryViewEventData extends BaseOpenViewEventData {
   /**
    * The ID of the database entry to open.
    */
@@ -214,20 +214,20 @@ export interface OpenDatabaseEntryViewEventData extends BaseOpenViewEventData {
 }
 
 // Entry events
-export const DatabaseEntryCreatedEvent = 'databases:entry:created';
-export const DatabaseEntryUpdatedEvent = 'databases:entry:updated';
-export const DatabaseEntryDeletedEvent = 'databases:entry:deleted';
-export const DatabaseEntryRenamedEvent = 'databases:entry:renamed';
+export const EntryCreatedEvent = 'databases:entry:created';
+export const EntryUpdatedEvent = 'databases:entry:updated';
+export const EntryDeletedEvent = 'databases:entry:deleted';
+export const EntryRenamedEvent = 'databases:entry:renamed';
 
-export type DatabaseEntryCreatedEventData = DatabaseEntry;
-export interface DatabaseEntryUpdatedEventData {
-  original: DatabaseEntry;
-  updated: DatabaseEntry;
+export type EntryCreatedEventData = Entry;
+export interface EntryUpdatedEventData {
+  original: Entry;
+  updated: Entry;
 }
-export type DatabaseEntryDeletedEventData = DatabaseEntry;
-export interface DatabaseEntryRenamedEventData {
-  original: DatabaseEntry;
-  updated: DatabaseEntry;
+export type EntryDeletedEventData = Entry;
+export interface EntryRenamedEventData {
+  original: Entry;
+  updated: Entry;
 
   /**
    * The action performing the rename.
@@ -237,13 +237,13 @@ export interface DatabaseEntryRenamedEventData {
 
 // Entry written event - fired after an entry file is written, and not
 // at all when the write would have changed nothing.
-export const DatabaseEntryWrittenEvent = 'databases:entry:written';
+export const EntryWrittenEvent = 'databases:entry:written';
 
-export interface DatabaseEntryWrittenEventData {
+export interface EntryWrittenEventData {
   /**
    * The entry that was written.
    */
-  entry: DatabaseEntry;
+  entry: Entry;
 
   /**
    * The entry's database.
@@ -264,29 +264,29 @@ export interface DatabaseEntryWrittenEventData {
 
 // Entry duplicated event - fired after an entry is duplicated, before
 // the duplicate is added to the source collection.
-export const DatabaseEntryDuplicatedEvent = 'databases:entry:duplicated';
+export const EntryDuplicatedEvent = 'databases:entry:duplicated';
 
-export interface DatabaseEntryDuplicatedEventData {
+export interface EntryDuplicatedEventData {
   /**
    * The entry that was duplicated.
    */
-  original: DatabaseEntry;
+  original: Entry;
 
   /**
    * The newly created duplicate.
    */
-  duplicate: DatabaseEntry;
+  duplicate: Entry;
 
   /**
    * The source the original entry was rendered from when duplicated.
    */
-  source?: DatabaseEntryRenderSource;
+  source?: EntryRenderSource;
 }
 
 // Entries cleared event - fired when all of a database's entries are deleted
-export const DatabaseEntriesClearedEvent = 'databases:entries:cleared';
+export const EntriesClearedEvent = 'databases:entries:cleared';
 
-export interface DatabaseEntriesClearedEventData {
+export interface EntriesClearedEventData {
   /**
    * The ID of the database whose entries were cleared.
    */
@@ -295,14 +295,13 @@ export interface DatabaseEntriesClearedEventData {
   /**
    * The entries that were deleted.
    */
-  entries: DatabaseEntry[];
+  entries: Entry[];
 }
 
 // Entry metadata event - fired when entry metadata is updated
-export const DatabaseEntryMetadataUpdatedEvent =
-  'database-entries:entry:metadata-updated';
+export const EntryMetadataUpdatedEvent = 'databases:entry:metadata-updated';
 
-export interface DatabaseEntryMetadataUpdatedEventData {
+export interface EntryMetadataUpdatedEventData {
   /**
    * The ID of the entry whose metadata was updated.
    */
@@ -316,15 +315,15 @@ export interface DatabaseEntryMetadataUpdatedEventData {
   /**
    * The updated metadata.
    */
-  metadata: DatabaseEntryMetadata;
+  metadata: EntryMetadata;
 }
 
 // SQL synced events - fired after SQL operations complete
 
 // Entries synced event - fired after SQL entry changes
-export const DatabaseEntriesSqlSyncedEvent = 'database-entries:sql-synced';
+export const EntriesSqlSyncedEvent = 'databases:entries:sql-synced';
 
-export interface DatabaseEntriesSqlSyncedEventData {
+export interface EntriesSqlSyncedEventData {
   /**
    * Whether entries were upserted or deleted.
    */
@@ -451,16 +450,16 @@ declare module '@minddrop/events/EventDataMap' {
     'databases:entry-template:updated': DatabaseEntryTemplateUpdatedEventData;
     'databases:entry-template:deleted': DatabaseEntryTemplateDeletedEventData;
     'databases:view:open': OpenDatabaseViewEventData;
-    'database-entries:entry:open': OpenDatabaseEntryViewEventData;
-    'databases:entry:created': DatabaseEntryCreatedEventData;
-    'databases:entry:updated': DatabaseEntryUpdatedEventData;
-    'databases:entry:deleted': DatabaseEntryDeletedEventData;
-    'databases:entry:renamed': DatabaseEntryRenamedEventData;
-    'databases:entry:written': DatabaseEntryWrittenEventData;
-    'databases:entry:duplicated': DatabaseEntryDuplicatedEventData;
-    'databases:entries:cleared': DatabaseEntriesClearedEventData;
-    'database-entries:entry:metadata-updated': DatabaseEntryMetadataUpdatedEventData;
-    'database-entries:sql-synced': DatabaseEntriesSqlSyncedEventData;
+    'databases:entry:open': OpenEntryViewEventData;
+    'databases:entry:created': EntryCreatedEventData;
+    'databases:entry:updated': EntryUpdatedEventData;
+    'databases:entry:deleted': EntryDeletedEventData;
+    'databases:entry:renamed': EntryRenamedEventData;
+    'databases:entry:written': EntryWrittenEventData;
+    'databases:entry:duplicated': EntryDuplicatedEventData;
+    'databases:entries:cleared': EntriesClearedEventData;
+    'databases:entry:metadata-updated': EntryMetadataUpdatedEventData;
+    'databases:entries:sql-synced': EntriesSqlSyncedEventData;
     'databases:database:sql-synced': DatabaseSqlSyncedEventData;
     'databases:property:sql-synced': DatabasePropertySqlSyncedEventData;
     'databases:sql-background-synced': DatabasesBackgroundSyncedEventData;

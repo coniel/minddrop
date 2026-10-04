@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { entryTemplatesDatabase, objectEntry1 } from '../../test-utils';
-import { Database, DatabaseEntry } from '../../types';
+import { Database, Entry } from '../../types';
 import { resolveEntryColor } from './resolveEntryColor';
 
 // A database coloring entries by its 'Status' select property
@@ -10,7 +10,7 @@ const selectColoredDatabase: Database = {
 };
 
 // An entry in the select colored database
-const baseEntry: DatabaseEntry = {
+const baseEntry: Entry = {
   ...objectEntry1,
   database: entryTemplatesDatabase.id,
   properties: {},
@@ -19,7 +19,7 @@ const baseEntry: DatabaseEntry = {
 
 describe('resolveEntryColor', () => {
   it('resolves the meta color when no color property is set', () => {
-    const entry: DatabaseEntry = {
+    const entry: Entry = {
       ...baseEntry,
       metadata: { color: 'red' },
     };
@@ -32,7 +32,7 @@ describe('resolveEntryColor', () => {
   });
 
   it("resolves the select value's option color", () => {
-    const entry: DatabaseEntry = {
+    const entry: Entry = {
       ...baseEntry,
       properties: { Status: 'Done' },
     };
@@ -41,7 +41,7 @@ describe('resolveEntryColor', () => {
   });
 
   it('uses the first value of multiselect values', () => {
-    const entry: DatabaseEntry = {
+    const entry: Entry = {
       ...baseEntry,
       properties: { Status: ['Todo', 'Done'] },
     };
@@ -50,7 +50,7 @@ describe('resolveEntryColor', () => {
   });
 
   it('ignores the meta color while a select source is active', () => {
-    const entry: DatabaseEntry = {
+    const entry: Entry = {
       ...baseEntry,
       metadata: { color: 'red' },
     };
@@ -59,7 +59,7 @@ describe('resolveEntryColor', () => {
   });
 
   it('resolves null for unknown select values', () => {
-    const entry: DatabaseEntry = {
+    const entry: Entry = {
       ...baseEntry,
       properties: { Status: 'Unknown' },
     };
@@ -68,7 +68,7 @@ describe('resolveEntryColor', () => {
   });
 
   it('falls back to the meta color when the color property no longer resolves', () => {
-    const entry: DatabaseEntry = {
+    const entry: Entry = {
       ...baseEntry,
       metadata: { color: 'purple' },
     };
@@ -92,7 +92,7 @@ describe('resolveEntryColor', () => {
     };
 
     it('prefers the file backed property value over the metadata', () => {
-      const entry: DatabaseEntry = {
+      const entry: Entry = {
         ...baseEntry,
         properties: { Color: 'green' },
         metadata: { color: 'red' },
@@ -102,7 +102,7 @@ describe('resolveEntryColor', () => {
     });
 
     it('falls back to the metadata for invalid property values', () => {
-      const entry: DatabaseEntry = {
+      const entry: Entry = {
         ...baseEntry,
         properties: { Color: 'not-a-color' },
         metadata: { color: 'red' },

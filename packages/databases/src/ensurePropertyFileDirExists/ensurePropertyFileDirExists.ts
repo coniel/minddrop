@@ -3,8 +3,8 @@ import { i18n } from '@minddrop/i18n';
 import { InvalidParameterError } from '@minddrop/utils';
 import { PropertyFilesDirNameKey } from '../constants';
 import { getDatabase } from '../getDatabase';
-import { getDatabaseEntry } from '../getDatabaseEntry';
-import { resolveDatabaseEntryPath, resolveDatabasePath } from '../utils';
+import { getEntry } from '../getEntry';
+import { resolveDatabasePath, resolveEntryPath } from '../utils';
 
 /**
  * Ensures that the directory into which an entry property's file
@@ -21,7 +21,7 @@ export async function ensurePropertyFileDirExists(
   propertyName: string,
 ): Promise<void> {
   // Get the entry
-  const entry = getDatabaseEntry(entryId);
+  const entry = getEntry(entryId);
   // Get the database
   const database = getDatabase(entry.database);
   const databasePath = resolveDatabasePath(database);
@@ -43,7 +43,7 @@ export async function ensurePropertyFileDirExists(
   // If the databases uses entry based storage, ensure the entry
   // subdirectory exists.
   if (database.propertyFileStorage === 'entry') {
-    const entryPath = resolveDatabaseEntryPath(entry, database);
+    const entryPath = resolveEntryPath(entry, database);
 
     if (!(await Fs.exists(Fs.parentDirPath(entryPath)))) {
       throw new InvalidParameterError(

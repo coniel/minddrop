@@ -3,8 +3,8 @@ import { ContentView, ContentViews } from '@minddrop/content-views';
 import {
   Database,
   DatabaseEntries,
-  DatabaseEntry,
   Databases,
+  Entry,
 } from '@minddrop/databases';
 import { Queries, Query } from '@minddrop/queries';
 import { Space, Spaces } from '@minddrop/spaces';
@@ -119,7 +119,7 @@ function toDatabaseOption(database: Database): EntitySearchOption {
  * Entries take their database's icon, as they do wherever they are
  * listed, and rank by when they were last changed.
  */
-function toEntryOption(entry: DatabaseEntry): EntitySearchOption {
+function toEntryOption(entry: Entry): EntitySearchOption {
   return {
     id: entry.id,
     label: entry.title,

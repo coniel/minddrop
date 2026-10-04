@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { initializeI18n } from '@minddrop/i18n';
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
+import { EntriesStore } from '../../EntriesStore';
 import { DatabaseFixtures, cleanup, setup } from '../../test-utils';
 import { entryPropertyValues } from './entryPropertyValues';
 
@@ -15,7 +15,7 @@ const {
   propertyStorageEntry1,
   databaseDirPath,
   database_pdf,
-  databaseEntry_pdf_1,
+  entry_pdf_1,
   pdfPropertyName,
   validPdfPropertyFile,
   genericFilePropertyName,
@@ -65,12 +65,9 @@ describe('entryPropertyValues', () => {
 
   it("resolves a pdf value to the file's path", () => {
     DatabasesStore.set(database_pdf);
-    DatabaseEntriesStore.set(databaseEntry_pdf_1);
+    EntriesStore.set(entry_pdf_1);
 
-    const values = entryPropertyValues(
-      databaseEntry_pdf_1,
-      database_pdf.properties,
-    );
+    const values = entryPropertyValues(entry_pdf_1, database_pdf.properties);
 
     expect(values[pdfPropertyName]).toBe(
       `${databaseDirPath(database_pdf)}/${pdfPropertyName}/${validPdfPropertyFile.name}`,

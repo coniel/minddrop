@@ -1,6 +1,6 @@
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
-import { DatabaseEntry } from '../../types';
+import { EntriesStore } from '../../EntriesStore';
+import { Entry } from '../../types';
 
 /**
  * Returns the entries whose collection property values reference
@@ -14,11 +14,11 @@ import { DatabaseEntry } from '../../types';
 export function getReferencingEntries(
   entryIds: string[],
   workspaceId?: string,
-): DatabaseEntry[] {
+): Entry[] {
   const referencedIds = new Set(entryIds);
   const databasesStore = DatabasesStore.in(workspaceId);
 
-  return DatabaseEntriesStore.in(workspaceId)
+  return EntriesStore.in(workspaceId)
     .getAllArray()
     .filter((entry) => {
       // Look up the entry's database schema

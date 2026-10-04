@@ -6,12 +6,12 @@ import {
   objectDatabase,
   setup,
 } from '../test-utils';
-import { DatabaseEntryMetadata } from '../types';
+import { EntryMetadata } from '../types';
 import { resolveEntryMetadataFilePath } from '../utils';
 import { writeEntryMetadata } from '../writeEntryMetadata';
 import { readAllEntryMetadata } from './readAllEntryMetadata';
 
-const metadata: DatabaseEntryMetadata = {
+const metadata: EntryMetadata = {
   color: 'red',
 };
 

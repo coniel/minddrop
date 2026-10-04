@@ -131,7 +131,7 @@ through the ui-primitives re-export:
 16 database templates under `src/database-templates/` (Blank, Books, Contacts,
 Documents, Expenses, Images, Journal, Movies, Music, Notes, Projects, Recipes,
 Tasks, Videos, Vocabulary, Weblinks), plus
-`src/test-utils/fixtures/database-entries.fixtures.ts` and
+`src/test-utils/fixtures/entries.fixtures.ts` and
 `src/test-utils/fixtures/databases.fixtures.ts`. All persisted seed data
 containing `lucide:<name>:<color>` strings (mostly `:default`; fixtures
 use real color names).

@@ -1,5 +1,5 @@
 import { PropertyType, PropertyValue } from '@minddrop/properties';
-import { DatabaseEntry } from '../../types';
+import { Entry } from '../../types';
 import { resolveEntryMetadataValue } from '../resolveEntryMetadataValue';
 
 /**
@@ -12,7 +12,7 @@ import { resolveEntryMetadataValue } from '../resolveEntryMetadataValue';
  * @returns The property value, or undefined when the entry has none.
  */
 export function resolveEntryPropertyValue(
-  entry: DatabaseEntry,
+  entry: Entry,
   name: string,
   type: PropertyType,
 ): PropertyValue | undefined {

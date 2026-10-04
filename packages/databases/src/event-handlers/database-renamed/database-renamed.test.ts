@@ -3,13 +3,13 @@ import { Collections } from '@minddrop/collections';
 import { Events } from '@minddrop/events';
 import { History, Ledgers } from '@minddrop/history';
 import { ItemReferences } from '@minddrop/item-references';
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
+import { EntriesStore } from '../../EntriesStore';
 import {
-  DatabaseEntriesSqlSyncedEvent,
-  DatabaseEntriesSqlSyncedEventData,
   DatabaseSqlSyncedEvent,
   DatabaseSqlSyncedEventData,
+  EntriesSqlSyncedEvent,
+  EntriesSqlSyncedEventData,
 } from '../../events';
 import { sqlGetAllDatabases, sqlGetEntrySyncRecords } from '../../sql';
 import {
@@ -18,7 +18,7 @@ import {
   cleanupRecordingTestSqlDatabase,
   collectionDatabase,
   collectionEntry1,
-  databaseEntryFilePath,
+  entryFilePath,
   getRecordedSqlStatements,
   historyAction_databaseRenamed,
   noPropertiesDatabase,
@@ -188,9 +188,7 @@ describe('onRenameDatabase', () => {
 
     // Entry paths are addressed from their database, so a database
     // rename does not move them.
-    expect(DatabaseEntriesStore.get(collectionEntry1.id)).toEqual(
-      collectionEntry1,
-    );
+    expect(EntriesStore.get(collectionEntry1.id)).toEqual(collectionEntry1);
   });
 
   it('upserts the database in SQL', async () => {
@@ -242,10 +240,10 @@ describe('onRenameDatabase', () => {
   });
 
   it('does not dispatch a delete sync event for the entries', async () => {
-    const deleteEvents: DatabaseEntriesSqlSyncedEventData[] = [];
+    const deleteEvents: EntriesSqlSyncedEventData[] = [];
 
     // Capture entry delete sync events
-    Events.addListener(DatabaseEntriesSqlSyncedEvent, 'test', (data) => {
+    Events.addListener(EntriesSqlSyncedEvent, 'test', (data) => {
       if (data.action === 'delete') {
         deleteEvents.push(data);
       }
@@ -314,9 +312,9 @@ describe('onRenameDatabase', () => {
     // The rewrite lands as an unawaited event side effect, so
     // poll for the referencing file to contain the new address.
     await vi.waitFor(() => {
-      expect(
-        MockFs.readTextFile(databaseEntryFilePath(collectionEntry1)),
-      ).toContain('Renamed Root/Reference Entry 1');
+      expect(MockFs.readTextFile(entryFilePath(collectionEntry1))).toContain(
+        'Renamed Root/Reference Entry 1',
+      );
     });
   });
 

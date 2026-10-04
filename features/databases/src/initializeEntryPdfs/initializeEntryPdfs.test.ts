@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { resolveAnchorFragment } from '@minddrop/ast';
-import { DatabaseEntries, DatabaseEntry, Databases } from '@minddrop/databases';
+import { DatabaseEntries, Databases, Entry } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import {
   InsertEditorReferenceEvent,
@@ -18,9 +18,9 @@ import { initializeEntryPdfs } from './initializeEntryPdfs';
 
 const {
   database_pdf,
-  databaseEntry_pdf_1,
-  databaseEntry_pdf_2,
-  databaseEntry_pdf_1PropertyFilePath,
+  entry_pdf_1,
+  entry_pdf_2,
+  entry_pdf_1PropertyFilePath,
   historyAction_entryRenamed,
   pdfPropertyName,
   validPdfPropertyFile,
@@ -30,7 +30,7 @@ const { pdfAnnotation_1, pdfAnnotation_2, pdfAnnotations } =
 const { workspace_1 } = WorkspaceFixtures;
 
 // The path of the first pdf entry's document
-const path = databaseEntry_pdf_1PropertyFilePath;
+const path = entry_pdf_1PropertyFilePath;
 
 describe('initializeEntryPdfs', () => {
   let removeEventListeners: VoidFunction;
@@ -51,10 +51,10 @@ describe('initializeEntryPdfs', () => {
     // Remove the second pdf entry. It shares the first's file name, so
     // under the fixture database's property storage it would load its
     // lack of annotations over the first's.
-    DatabaseEntries.Store.remove(databaseEntry_pdf_2.id);
+    DatabaseEntries.Store.remove(entry_pdf_2.id);
 
     // Give the entry annotations for its pdf property
-    storeEntryAnnotations(databaseEntry_pdf_1.id, pdfAnnotations);
+    storeEntryAnnotations(entry_pdf_1.id, pdfAnnotations);
 
     Events.dispatch(Workspaces.events.WorkspaceLoaded, workspace_1);
 
@@ -67,7 +67,7 @@ describe('initializeEntryPdfs', () => {
   });
 
   it("loads a created entry's annotations", async () => {
-    const entry = storeEntryAnnotations(databaseEntry_pdf_1.id, pdfAnnotations);
+    const entry = storeEntryAnnotations(entry_pdf_1.id, pdfAnnotations);
 
     Events.dispatch(DatabaseEntries.events.Created, entry);
 
@@ -82,13 +82,10 @@ describe('initializeEntryPdfs', () => {
   it("loads a duplicated entry's annotations", async () => {
     // Give the duplicate annotations. Under the fixture database's
     // property storage it shares the original's file.
-    const duplicate = storeEntryAnnotations(
-      databaseEntry_pdf_2.id,
-      pdfAnnotations,
-    );
+    const duplicate = storeEntryAnnotations(entry_pdf_2.id, pdfAnnotations);
 
     Events.dispatch(DatabaseEntries.events.Duplicated, {
-      original: databaseEntry_pdf_1,
+      original: entry_pdf_1,
       duplicate,
     });
 
@@ -104,13 +101,10 @@ describe('initializeEntryPdfs', () => {
     PdfAnnotations.load(path, []);
 
     // Give the entry annotations for its pdf property
-    const updated = storeEntryAnnotations(
-      databaseEntry_pdf_1.id,
-      pdfAnnotations,
-    );
+    const updated = storeEntryAnnotations(entry_pdf_1.id, pdfAnnotations);
 
     Events.dispatch(DatabaseEntries.events.Updated, {
-      original: databaseEntry_pdf_1,
+      original: entry_pdf_1,
       updated,
     });
 
@@ -130,8 +124,9 @@ describe('initializeEntryPdfs', () => {
 
     await waitFor(() => {
       expect(
-        storeItem(DatabaseEntries.Store, databaseEntry_pdf_1.id).metadata
-          .properties?.[pdfPropertyName],
+        storeItem(DatabaseEntries.Store, entry_pdf_1.id).metadata.properties?.[
+          pdfPropertyName
+        ],
       ).toEqual({ annotations: [annotation] });
     });
   });
@@ -145,8 +140,9 @@ describe('initializeEntryPdfs', () => {
 
     await waitFor(() => {
       expect(
-        storeItem(DatabaseEntries.Store, databaseEntry_pdf_1.id).metadata
-          .properties?.[pdfPropertyName],
+        storeItem(DatabaseEntries.Store, entry_pdf_1.id).metadata.properties?.[
+          pdfPropertyName
+        ],
       ).toEqual({ annotations: [recoloured, pdfAnnotation_2] });
     });
   });
@@ -158,8 +154,9 @@ describe('initializeEntryPdfs', () => {
 
     await waitFor(() => {
       expect(
-        storeItem(DatabaseEntries.Store, databaseEntry_pdf_1.id).metadata
-          .properties?.[pdfPropertyName],
+        storeItem(DatabaseEntries.Store, entry_pdf_1.id).metadata.properties?.[
+          pdfPropertyName
+        ],
       ).toEqual({ annotations: [pdfAnnotation_2] });
     });
   });
@@ -169,8 +166,9 @@ describe('initializeEntryPdfs', () => {
 
     await waitFor(() => {
       expect(
-        storeItem(DatabaseEntries.Store, databaseEntry_pdf_1.id).metadata
-          .properties?.[pdfPropertyName],
+        storeItem(DatabaseEntries.Store, entry_pdf_1.id).metadata.properties?.[
+          pdfPropertyName
+        ],
       ).toEqual({ page: 6 });
     });
   });
@@ -190,7 +188,7 @@ describe('initializeEntryPdfs', () => {
     expect(await inserted).toEqual({
       viewAreaId: 'view-area',
       pane: 'main',
-      reference: DatabaseEntries.resolveReference(databaseEntry_pdf_1.id),
+      reference: DatabaseEntries.resolveReference(entry_pdf_1.id),
       fragment: resolveAnchorFragment(pdfAnnotation_1.id),
       label: pdfAnnotation_1.text,
       quote: true,
@@ -200,7 +198,7 @@ describe('initializeEntryPdfs', () => {
   it("unloads a deleted entry's annotations", async () => {
     PdfAnnotations.load(path, pdfAnnotations);
 
-    Events.dispatch(DatabaseEntries.events.Deleted, databaseEntry_pdf_1);
+    Events.dispatch(DatabaseEntries.events.Deleted, entry_pdf_1);
 
     await waitFor(() => {
       expect(PdfAnnotations.Store).not.toHaveItem(path);
@@ -212,7 +210,7 @@ describe('initializeEntryPdfs', () => {
     // file has a path of its own.
     Databases.Store.update(database_pdf.id, { propertyFileStorage: 'entry' });
 
-    const entries = [databaseEntry_pdf_1, databaseEntry_pdf_2];
+    const entries = [entry_pdf_1, entry_pdf_2];
 
     entries.forEach((entry) => {
       PdfAnnotations.load(entryPropertyFilePath(entry), pdfAnnotations);
@@ -234,7 +232,7 @@ describe('initializeEntryPdfs', () => {
     Databases.Store.update(database_pdf.id, { propertyFileStorage: 'entry' });
 
     // The entry before and after the rename
-    const original = databaseEntry_pdf_1;
+    const original = entry_pdf_1;
     const updated = {
       ...original,
       title: 'Renamed',
@@ -264,13 +262,13 @@ describe('initializeEntryPdfs', () => {
 
   it("reloads the entries' annotations when the database moves its property files", async () => {
     // Give the entry annotations for its pdf property
-    storeEntryAnnotations(databaseEntry_pdf_1.id, pdfAnnotations);
+    storeEntryAnnotations(entry_pdf_1.id, pdfAnnotations);
 
     // Move the database's files into its entries' directories
     Databases.Store.update(database_pdf.id, { propertyFileStorage: 'entry' });
 
     // The file's path after the move
-    const movedPath = entryPropertyFilePath(databaseEntry_pdf_1);
+    const movedPath = entryPropertyFilePath(entry_pdf_1);
 
     Events.dispatch(Databases.events.Updated, {
       original: database_pdf,
@@ -289,10 +287,10 @@ describe('initializeEntryPdfs', () => {
     // Remove the second pdf entry. It shares the first's file name, so
     // under common storage it would load its lack of annotations over
     // the first's.
-    DatabaseEntries.Store.remove(databaseEntry_pdf_2.id);
+    DatabaseEntries.Store.remove(entry_pdf_2.id);
 
     // Give the entry annotations for its pdf property
-    storeEntryAnnotations(databaseEntry_pdf_1.id, pdfAnnotations);
+    storeEntryAnnotations(entry_pdf_1.id, pdfAnnotations);
 
     // Switch the database to common storage in a renamed directory
     Databases.Store.update(database_pdf.id, {
@@ -301,7 +299,7 @@ describe('initializeEntryPdfs', () => {
     });
 
     // The file's path after the rename
-    const movedPath = entryPropertyFilePath(databaseEntry_pdf_1);
+    const movedPath = entryPropertyFilePath(entry_pdf_1);
 
     Events.dispatch(Databases.events.Updated, {
       original: {
@@ -321,7 +319,7 @@ describe('initializeEntryPdfs', () => {
 
   it('leaves the annotations alone when a database change moves no files', async () => {
     // Give the entry annotations for its pdf property
-    storeEntryAnnotations(databaseEntry_pdf_1.id, pdfAnnotations);
+    storeEntryAnnotations(entry_pdf_1.id, pdfAnnotations);
 
     Events.dispatch(Databases.events.Updated, {
       original: database_pdf,
@@ -346,7 +344,7 @@ describe('initializeEntryPdfs', () => {
 function storeEntryAnnotations(
   entryId: string,
   annotations: PdfAnnotation[],
-): DatabaseEntry {
+): Entry {
   DatabaseEntries.Store.update(entryId, {
     metadata: { properties: { [pdfPropertyName]: { annotations } } },
   });
@@ -361,7 +359,7 @@ function storeEntryAnnotations(
  * @param entry - The pdf entry.
  * @returns The document's path.
  */
-function entryPropertyFilePath(entry: DatabaseEntry): string {
+function entryPropertyFilePath(entry: Entry): string {
   return DatabaseEntries.propertyFilePath(
     entry,
     pdfPropertyName,

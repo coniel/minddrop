@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { History, HistoryRecord } from '@minddrop/history';
 import { ContentCaptureGapMs } from '../../constants';
-import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
+import { recordEntryHistory } from '../../recordEntryHistory';
 import { cleanup, objectDatabase, objectEntry1, setup } from '../../test-utils';
-import { resolveDatabaseEntryHistorySubject } from '../../utils';
+import { resolveEntryHistorySubject } from '../../utils';
 import { onEntryWritten } from './entry-written';
 
 const written = {
@@ -18,7 +18,7 @@ const written = {
  */
 async function contentRecords(): Promise<HistoryRecord[]> {
   const records = await History.read(
-    resolveDatabaseEntryHistorySubject(objectDatabase, objectEntry1),
+    resolveEntryHistorySubject(objectDatabase, objectEntry1),
   );
 
   return records.filter((record) => record.kind === 'content');
@@ -41,7 +41,7 @@ describe('onEntryWritten', () => {
     expect(record).toBeDefined();
     expect(
       await History.readContent({
-        ...resolveDatabaseEntryHistorySubject(objectDatabase, objectEntry1),
+        ...resolveEntryHistorySubject(objectDatabase, objectEntry1),
         file: record.kind === 'content' ? record.file : '',
       }),
     ).toBe('The contents the write replaced');
@@ -115,7 +115,7 @@ describe('onEntryWritten', () => {
  * a capture made in an earlier session leaves.
  */
 async function seedEarlierSessionCapture(): Promise<void> {
-  await recordDatabaseEntryHistory(objectDatabase, objectEntry1, {
+  await recordEntryHistory(objectDatabase, objectEntry1, {
     kind: 'content',
     contents: written.previousContents,
     extension: 'md',

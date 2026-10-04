@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
-import { DatabaseEntryNotFoundError } from '../errors';
+import { EntriesStore } from '../EntriesStore';
+import { EntryNotFoundError } from '../errors';
 import { cleanup, objectEntry1, setup } from '../test-utils';
 import { getEntryPropertyMetadata } from './getEntryPropertyMetadata';
 
@@ -12,7 +12,7 @@ describe('getEntryPropertyMetadata', () => {
     setup();
 
     // Give the entry's Paper property metadata
-    DatabaseEntriesStore.update(objectEntry1.id, {
+    EntriesStore.update(objectEntry1.id, {
       metadata: { properties: { Paper: paperMetadata } },
     });
   });
@@ -31,7 +31,7 @@ describe('getEntryPropertyMetadata', () => {
 
   it('throws if the entry does not exist', () => {
     expect(() => getEntryPropertyMetadata('missing', 'Paper')).toThrow(
-      DatabaseEntryNotFoundError,
+      EntryNotFoundError,
     );
   });
 });

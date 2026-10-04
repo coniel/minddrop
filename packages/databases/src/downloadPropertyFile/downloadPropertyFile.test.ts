@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Fs } from '@minddrop/file-system';
-import { DatabaseEntryNotFoundError } from '../errors';
+import { EntryNotFoundError } from '../errors';
 import {
   MockFs,
   cleanup,
@@ -24,7 +24,7 @@ describe('downloadPropertyFile', () => {
   it('throws if the entry does not exist', async () => {
     await expect(() =>
       downloadPropertyFile('missing-entry', imagePropertyName, url),
-    ).rejects.toThrowError(DatabaseEntryNotFoundError);
+    ).rejects.toThrowError(EntryNotFoundError);
   });
 
   it("downloads the file to the property's file path", async () => {

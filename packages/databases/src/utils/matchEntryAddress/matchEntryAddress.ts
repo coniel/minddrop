@@ -1,0 +1,63 @@
+import { getAllDatabases } from '../../getAllDatabases';
+import { getAllEntries } from '../../getAllEntries';
+import { Database, Entry } from '../../types';
+
+export interface EntryAddressMatch {
+  /**
+   * The database named by the address' first segment.
+   */
+  database: Database;
+
+  /**
+   * The entry named by the address' second segment, or null when the
+   * database holds no entry under that title.
+   */
+  entry: Entry | null;
+}
+
+/**
+ * Matches an entry address, `<database name>/<entry title>`, against
+ * the databases and entries in the stores. Matching is case-insensitive,
+ * as titles double as file names on a potentially case-insensitive file
+ * system.
+ *
+ * @param address - The address to match.
+ * @param workspaceId - The workspace to match the address in. Omit for the active workspace.
+ * @returns The matched database and entry, or null if the address names no database.
+ */
+export function matchEntryAddress(
+  address: string,
+  workspaceId?: string,
+): EntryAddressMatch | null {
+  const segments = address.split('/');
+
+  // Entry addresses are exactly two segments
+  if (segments.length !== 2) {
+    return null;
+  }
+
+  const [databaseName, title] = segments;
+
+  // Neither segment may be empty
+  if (!databaseName || !title) {
+    return null;
+  }
+
+  // The first segment names a database rather than identifying it, so
+  // it is resolved against the database names.
+  const database = getAllDatabases(workspaceId).find(
+    (candidate) => candidate.name.toLowerCase() === databaseName.toLowerCase(),
+  );
+
+  // Addresses outside an existing database name nothing
+  if (!database) {
+    return null;
+  }
+
+  // Find the database's entry under the title, if there is one
+  const entry = getAllEntries(database.id, workspaceId).find(
+    (candidate) => candidate.title.toLowerCase() === title.toLowerCase(),
+  );
+
+  return { database, entry: entry ?? null };
+}

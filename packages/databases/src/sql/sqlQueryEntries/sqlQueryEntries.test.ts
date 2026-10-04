@@ -64,7 +64,7 @@ const gammaEntry: SqlEntryRecord = {
 };
 
 // Entry in a different database, used to verify scoping
-const otherDatabaseEntry: SqlEntryRecord = {
+const otherEntry: SqlEntryRecord = {
   ...objectEntry1SqlRecord,
   id: 'database-entry_delta',
   databaseId: urlDatabase.id,
@@ -115,7 +115,7 @@ describe('sqlQueryEntries', () => {
     sqlUpsertEntries(databaseId, [alphaEntry, betaEntry, gammaEntry], {
       silent: true,
     });
-    sqlUpsertEntries(urlDatabase.id, [otherDatabaseEntry], { silent: true });
+    sqlUpsertEntries(urlDatabase.id, [otherEntry], { silent: true });
   });
 
   afterAll(() => {

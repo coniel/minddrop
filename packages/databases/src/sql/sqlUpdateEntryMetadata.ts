@@ -1,6 +1,6 @@
 import { Sql } from '@minddrop/sql';
 import { Workspaces } from '@minddrop/workspaces';
-import type { DatabaseEntryMetadata } from '../types';
+import type { EntryMetadata } from '../types';
 
 /**
  * Updates the metadata column for a single entry in the SQL database.
@@ -11,7 +11,7 @@ import type { DatabaseEntryMetadata } from '../types';
  */
 export function sqlUpdateEntryMetadata(
   entryId: string,
-  metadata: DatabaseEntryMetadata,
+  metadata: EntryMetadata,
   workspaceId?: string,
 ): void {
   Sql.run(

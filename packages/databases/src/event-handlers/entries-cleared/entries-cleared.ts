@@ -1,6 +1,6 @@
 import { Collections } from '@minddrop/collections';
 import { ContentViews } from '@minddrop/content-views';
-import { DatabaseEntriesClearedEventData } from '../../events';
+import { EntriesClearedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
 import { removeEntriesFromCollections } from '../../removeEntriesFromCollections';
 import { sqlDeleteEntries } from '../../sql';
@@ -12,7 +12,7 @@ import { virtualCollectionId } from '../../utils';
  * collection properties, and removes them from collections
  * referencing them.
  */
-export async function onClearEntries(data: DatabaseEntriesClearedEventData) {
+export async function onClearEntries(data: EntriesClearedEventData) {
   const { databaseId, entries } = data;
 
   // Nothing to do if no entries were cleared

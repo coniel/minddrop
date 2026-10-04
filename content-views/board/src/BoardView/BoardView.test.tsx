@@ -3,7 +3,7 @@ import { Collections } from '@minddrop/collections';
 import { CollectionFixtures } from '@minddrop/collections/test-utils';
 import { ContentViewTypes, ContentViews } from '@minddrop/content-views';
 import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
-import { DatabaseEntries, DatabaseEntry, Databases } from '@minddrop/databases';
+import { DatabaseEntries, Databases, Entry } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import {
   DragSource,
@@ -41,7 +41,7 @@ const view = {
 
 // An entry modified after everything the fixtures carry, so the
 // picker lists it among the recent entries.
-const recentEntry: DatabaseEntry = {
+const recentEntry: Entry = {
   ...objectEntry1,
   id: 'database-entry_recent',
   title: 'Recent entry',

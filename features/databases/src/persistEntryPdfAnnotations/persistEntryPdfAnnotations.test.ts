@@ -7,15 +7,12 @@ import { storeItem } from '@minddrop/stores/test-utils';
 import { cleanup, setup, setupPdfFixtures } from '../test-utils';
 import { persistEntryPdfAnnotations } from './persistEntryPdfAnnotations';
 
-const {
-  databaseEntry_pdf_1,
-  databaseEntry_pdf_1PropertyFilePath,
-  pdfPropertyName,
-} = DatabaseFixtures;
+const { entry_pdf_1, entry_pdf_1PropertyFilePath, pdfPropertyName } =
+  DatabaseFixtures;
 const { pdfAnnotations } = PdfAnnotationFixtures;
 
 // The path of the pdf entry's document
-const path = databaseEntry_pdf_1PropertyFilePath;
+const path = entry_pdf_1PropertyFilePath;
 
 describe('persistEntryPdfAnnotations', () => {
   beforeEach(() => {
@@ -31,8 +28,9 @@ describe('persistEntryPdfAnnotations', () => {
     await persistEntryPdfAnnotations(path);
 
     expect(
-      storeItem(DatabaseEntries.Store, databaseEntry_pdf_1.id).metadata
-        .properties?.[pdfPropertyName],
+      storeItem(DatabaseEntries.Store, entry_pdf_1.id).metadata.properties?.[
+        pdfPropertyName
+      ],
     ).toEqual({ annotations: pdfAnnotations });
   });
 
@@ -42,8 +40,9 @@ describe('persistEntryPdfAnnotations', () => {
     await persistEntryPdfAnnotations('/elsewhere/paper.pdf');
 
     expect(
-      storeItem(DatabaseEntries.Store, databaseEntry_pdf_1.id).metadata
-        .properties?.[pdfPropertyName],
+      storeItem(DatabaseEntries.Store, entry_pdf_1.id).metadata.properties?.[
+        pdfPropertyName
+      ],
     ).toBeUndefined();
   });
 });

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
+import { EntriesStore } from '../../EntriesStore';
 import {
   cleanup,
   collectionEntry1,
@@ -33,7 +33,7 @@ describe('getReferencingEntries', () => {
 
   it('includes self-references', () => {
     // Make an entry reference itself
-    DatabaseEntriesStore.update(relatedEntry1.id, {
+    EntriesStore.update(relatedEntry1.id, {
       properties: { ...relatedEntry1.properties, Related: [relatedEntry1.id] },
     });
 

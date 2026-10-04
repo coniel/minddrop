@@ -4,9 +4,9 @@ import { Events } from '@minddrop/events';
 import { ItemAddressChange, ItemReferences } from '@minddrop/item-references';
 import { restoreDates } from '@minddrop/utils';
 import { Workspaces } from '@minddrop/workspaces';
-import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntryTemplatesStore } from '../DatabaseEntryTemplatesStore';
 import { DatabasesStore } from '../DatabasesStore';
+import { EntriesStore } from '../EntriesStore';
 import { DatabaseNotFoundError } from '../errors';
 import { DatabasesBackgroundSyncedEvent } from '../events';
 import { loadDatabaseDesigns } from '../loadDatabaseDesigns';
@@ -16,7 +16,7 @@ import { recordSyncedDatabaseDeletion } from '../recordSyncedDatabaseDeletion';
 import { recordSyncedDatabaseRename } from '../recordSyncedDatabaseRename';
 import { removeEntriesFromCollections } from '../removeEntriesFromCollections';
 import type { BackgroundSyncChangeset, Database } from '../types';
-import { convertSqlRecordToEntry, databaseEntryAddress } from '../utils';
+import { convertSqlRecordToEntry, entryAddress } from '../utils';
 
 /**
  * Applies a background sync changeset to the synced workspace's
@@ -31,7 +31,7 @@ export async function handleBackgroundSyncResult(
 ): Promise<void> {
   const workspace = Workspaces.get(changeset.workspaceId);
   const databasesStore = DatabasesStore.in(workspace.id);
-  const entriesStore = DatabaseEntriesStore.in(workspace.id);
+  const entriesStore = EntriesStore.in(workspace.id);
   const templatesStore = DatabaseEntryTemplatesStore.in(workspace.id);
 
   // Upsert new or updated databases
@@ -138,8 +138,8 @@ export async function handleBackgroundSyncResult(
       (existing.title !== entry.title || existing.database !== entry.database);
 
     if (addressChanged) {
-      const oldReference = databaseEntryAddress(existing);
-      const newReference = databaseEntryAddress(entry);
+      const oldReference = entryAddress(existing);
+      const newReference = entryAddress(entry);
 
       // The entry must be nameable either side of the change
       if (oldReference && newReference) {

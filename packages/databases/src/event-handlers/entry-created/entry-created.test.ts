@@ -15,7 +15,7 @@ import {
   setupTestSqlDatabase,
 } from '../../test-utils';
 import {
-  resolveDatabaseEntryHistorySubject,
+  resolveEntryHistorySubject,
   virtualCollectionId,
   virtualCollectionName,
 } from '../../utils';
@@ -145,7 +145,7 @@ describe('onCreateEntry', () => {
 
     expect(
       await History.read(
-        resolveDatabaseEntryHistorySubject(objectDatabase, objectEntry1),
+        resolveEntryHistorySubject(objectDatabase, objectEntry1),
       ),
     ).toEqual([expect.objectContaining({ kind: 'created' })]);
   });

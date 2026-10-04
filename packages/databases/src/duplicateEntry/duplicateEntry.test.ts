@@ -1,0 +1,200 @@
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Collections } from '@minddrop/collections';
+import { Events } from '@minddrop/events';
+import { EntriesStore } from '../EntriesStore';
+import { EntryNotFoundError } from '../errors';
+import { EntryDuplicatedEvent } from '../events';
+import {
+  MockFs,
+  cleanup,
+  commonStorageDatabase,
+  commonStorageEntry1,
+  databaseDirPath,
+  entryFilePath,
+  entryStorageDatabase,
+  entryStorageEntry1,
+  mockDate,
+  objectDatabase,
+  objectEntry1,
+  rootStorageDatabase,
+  rootStorageEntry1,
+  setup,
+} from '../test-utils';
+import { EntryMetadata } from '../types';
+import { resolveEntryPath } from '../utils';
+import { duplicateEntry } from './duplicateEntry';
+
+describe('duplicateEntry', () => {
+  beforeEach(setup);
+
+  afterEach(cleanup);
+
+  it('throws if the entry does not exist', async () => {
+    // Duplicating a missing entry should throw
+    await expect(duplicateEntry('missing')).rejects.toThrow(EntryNotFoundError);
+  });
+
+  it('creates a new entry with an incremented title', async () => {
+    const duplicate = await duplicateEntry(objectEntry1.id);
+
+    // The duplicate should be a new entry with an incremented title
+    expect(duplicate.id).not.toBe(objectEntry1.id);
+    expect(duplicate.title).toBe('Test Entry 1');
+    // The duplicate's file should be written next to the source file
+    expect(
+      MockFs.exists(`${databaseDirPath(objectDatabase)}/Test Entry 1.md`),
+    ).toBe(true);
+    // The duplicate should be in the store
+    expect(EntriesStore).toHaveItem(duplicate.id);
+  });
+
+  it('marks the duplicate with its origin', async () => {
+    const duplicate = await duplicateEntry(objectEntry1.id);
+
+    // The duplicate records the entry it was made from
+    expect(duplicate.duplicatedFrom).toBe(objectEntry1.id);
+    // The mark is session state, kept out of the entry file
+    expect(
+      MockFs.readTextFile(resolveEntryPath(duplicate, objectDatabase)),
+    ).not.toContain('duplicatedFrom');
+  });
+
+  it('leaves the source entry intact', async () => {
+    await duplicateEntry(objectEntry1.id);
+
+    // The source entry and its file should be untouched
+    expect(EntriesStore).toHaveItem(objectEntry1.id, objectEntry1);
+    expect(MockFs.exists(entryFilePath(objectEntry1))).toBe(true);
+  });
+
+  it('copies simple property values onto the duplicate', async () => {
+    const duplicate = await duplicateEntry(objectEntry1.id);
+
+    // The source entry's simple values should be copied as is
+    expect(duplicate.properties.Content).toBe('Test content');
+    expect(duplicate.properties.Icon).toBe('lucide:shapes:blue');
+  });
+
+  it('sets fresh timestamps on the duplicate', async () => {
+    const duplicate = await duplicateEntry(objectEntry1.id);
+
+    // The duplicate should not inherit the source entry's timestamps
+    expect(duplicate.created).toEqual(mockDate);
+    expect(duplicate.lastModified).toEqual(mockDate);
+  });
+
+  it('copies loose property files for root storage', async () => {
+    const duplicate = await duplicateEntry(rootStorageEntry1.id);
+
+    // The file should be copied with an incremented name
+    expect(duplicate.properties.Image).toBe('image 1.png');
+    expect(
+      MockFs.exists(`${databaseDirPath(rootStorageDatabase)}/image 1.png`),
+    ).toBe(true);
+    // The source file should remain in place
+    expect(
+      MockFs.exists(`${databaseDirPath(rootStorageDatabase)}/image.png`),
+    ).toBe(true);
+  });
+
+  it('copies property files into shared property directories', async () => {
+    const duplicate = await duplicateEntry(commonStorageEntry1.id);
+
+    // The file should be copied into the shared directory with an
+    // incremented name.
+    expect(duplicate.properties.Image).toBe('image 1.png');
+    expect(
+      MockFs.exists(
+        `${databaseDirPath(commonStorageDatabase)}/${commonStorageDatabase.propertyFilesDir}/image 1.png`,
+      ),
+    ).toBe(true);
+  });
+
+  it('copies property files into the duplicate subdirectory for entry-based storage', async () => {
+    const duplicate = await duplicateEntry(entryStorageEntry1.id);
+
+    // The duplicate should get its own subdirectory
+    expect(duplicate.title).toBe('Entry Storage Entry 1 1');
+    // The file keeps its name since the duplicate's subdirectory is empty
+    expect(duplicate.properties.Image).toBe('image.png');
+    expect(
+      MockFs.exists(
+        `${databaseDirPath(entryStorageDatabase)}/Entry Storage Entry 1 1/image.png`,
+      ),
+    ).toBe(true);
+  });
+
+  it('skips file based properties whose source file is missing', async () => {
+    // Remove the source entry's stored image file
+    MockFs.removeFile(`${databaseDirPath(rootStorageDatabase)}/image.png`);
+
+    const duplicate = await duplicateEntry(rootStorageEntry1.id);
+
+    // The duplicate should be created without the image property value
+    expect(duplicate.properties.Image).toBeUndefined();
+  });
+
+  it('copies the source entry metadata onto the duplicate', async () => {
+    const metadata: EntryMetadata = {
+      color: 'red',
+    };
+
+    // Set up metadata on the source entry
+    EntriesStore.update(objectEntry1.id, { metadata });
+
+    const duplicate = await duplicateEntry(objectEntry1.id);
+
+    // The duplicate should have the source entry's metadata
+    expect(duplicate.metadata).toEqual(metadata);
+  });
+
+  it('adds the duplicate to the source collection', async () => {
+    // Set up a collection containing the source entry
+    Collections.createVirtual('collection-1', 'Collection 1', [
+      objectEntry1.id,
+    ]);
+
+    const duplicate = await duplicateEntry(objectEntry1.id, {
+      type: 'collection',
+      id: 'collection-1',
+    });
+
+    // The duplicate should be added to the collection
+    expect(Collections.get('collection-1').items).toContain(duplicate.id);
+  });
+
+  it('leaves collections untouched for non-collection sources', async () => {
+    // Set up a collection containing the source entry
+    Collections.createVirtual('collection-1', 'Collection 1', [
+      objectEntry1.id,
+    ]);
+
+    await duplicateEntry(objectEntry1.id, {
+      type: 'database',
+      id: objectDatabase.id,
+    });
+
+    // The collection should only contain the source entry
+    expect(Collections.get('collection-1').items).toEqual([objectEntry1.id]);
+  });
+
+  it('dispatches an entry duplicated event', async () =>
+    new Promise<void>((done) => {
+      Events.addListener(EntryDuplicatedEvent, 'test', (data) => {
+        // Payload should contain the original, the duplicate,
+        // and the source
+        expect(data.original).toEqual(objectEntry1);
+        expect(data.duplicate.title).toBe('Test Entry 1');
+        expect(data.source).toEqual({
+          type: 'database',
+          id: objectDatabase.id,
+        });
+        done();
+      });
+
+      duplicateEntry(objectEntry1.id, {
+        type: 'database',
+        id: objectDatabase.id,
+      });
+    }));
+});

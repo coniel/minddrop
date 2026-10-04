@@ -1,5 +1,5 @@
 import { Fs } from '@minddrop/file-system';
-import { DatabaseEntryMetadata } from '../types';
+import { EntryMetadata } from '../types';
 import {
   resolveDatabaseMetadataDirPath,
   resolveEntryMetadataFilePath,
@@ -16,7 +16,7 @@ import {
 export async function writeEntryMetadata(
   databasePath: string,
   entryPath: string,
-  metadata: DatabaseEntryMetadata,
+  metadata: EntryMetadata,
 ): Promise<void> {
   const filePath = resolveEntryMetadataFilePath(databasePath, entryPath);
 

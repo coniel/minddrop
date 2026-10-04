@@ -3,8 +3,8 @@ import { Collections } from '@minddrop/collections';
 import { Events } from '@minddrop/events';
 import { History, Ledgers } from '@minddrop/history';
 import { ItemReferences } from '@minddrop/item-references';
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
-import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
+import { EntriesStore } from '../../EntriesStore';
+import { recordEntryHistory } from '../../recordEntryHistory';
 import { sqlGetAllEntriesFull, sqlUpsertDatabase } from '../../sql';
 import {
   MockFs,
@@ -13,8 +13,8 @@ import {
   collectionDatabase,
   collectionEntry1,
   databaseDirPath,
-  databaseEntryFilePath,
   databases,
+  entryFilePath,
   historyAction_entryRenamed,
   objectDatabase,
   objectEntry1,
@@ -22,10 +22,10 @@ import {
   setup,
   setupTestSqlDatabase,
 } from '../../test-utils';
-import { DatabaseEntryMetadata } from '../../types';
+import { EntryMetadata } from '../../types';
 import {
-  resolveDatabaseEntryHistorySubject,
-  resolveDatabaseEntryLedger,
+  resolveEntriesLedger,
+  resolveEntryHistorySubject,
   resolveEntryMetadataFilePath,
   virtualCollectionId,
   virtualCollectionName,
@@ -46,7 +46,7 @@ const renamedEntry = {
 // The entry's metadata sidecar before and after the rename
 const oldSidecarPath = resolveEntryMetadataFilePath(
   databaseDirPath(collectionDatabase),
-  databaseEntryFilePath(collectionEntry1),
+  entryFilePath(collectionEntry1),
 );
 const newSidecarPath = resolveEntryMetadataFilePath(
   databaseDirPath(collectionDatabase),
@@ -144,7 +144,7 @@ describe('onRenameEntry', () => {
   });
 
   it('moves the sidecar from the old to the new entry path', async () => {
-    const entryMetadata: DatabaseEntryMetadata = {
+    const entryMetadata: EntryMetadata = {
       color: 'red',
     };
 
@@ -157,7 +157,7 @@ describe('onRenameEntry', () => {
     ]);
 
     // Update the store to reflect the rename
-    DatabaseEntriesStore.set(renamedEntry);
+    EntriesStore.set(renamedEntry);
 
     await onRenameEntry({
       original: collectionEntry1,
@@ -176,7 +176,7 @@ describe('onRenameEntry', () => {
     const renamedObjectEntry = { ...objectEntry1, title: 'Renamed' };
 
     // Update the store to reflect the rename
-    DatabaseEntriesStore.update(objectEntry1.id, {
+    EntriesStore.update(objectEntry1.id, {
       title: renamedObjectEntry.title,
     });
 
@@ -198,7 +198,7 @@ describe('onRenameEntry', () => {
 
   it('updates virtual collection names to the new entry title', async () => {
     // Update the store to reflect the rename
-    DatabaseEntriesStore.set(renamedEntry);
+    EntriesStore.set(renamedEntry);
 
     await onRenameEntry({
       original: collectionEntry1,
@@ -240,7 +240,7 @@ describe('onRenameEntry', () => {
     };
 
     // Update the store to reflect the rename
-    DatabaseEntriesStore.update(relatedEntry1.id, {
+    EntriesStore.update(relatedEntry1.id, {
       title: renamedRelated.title,
       path: renamedRelated.path,
     });
@@ -254,9 +254,9 @@ describe('onRenameEntry', () => {
     // The rewrite lands as an unawaited event side effect, so
     // poll for the referencing file to contain the new address.
     await vi.waitFor(() => {
-      expect(
-        MockFs.readTextFile(databaseEntryFilePath(collectionEntry1)),
-      ).toContain('Collection Database/Renamed Related');
+      expect(MockFs.readTextFile(entryFilePath(collectionEntry1))).toContain(
+        'Collection Database/Renamed Related',
+      );
     });
   });
 
@@ -278,7 +278,7 @@ describe('onRenameEntry', () => {
 
   it("records the rename and moves the entry's history", async () => {
     // Record something against the entry under its old title
-    await recordDatabaseEntryHistory(objectDatabase, objectEntry1, {
+    await recordEntryHistory(objectDatabase, objectEntry1, {
       kind: 'created',
     });
 
@@ -292,7 +292,7 @@ describe('onRenameEntry', () => {
     // The rename should be recorded in it with the event's action.
     expect(
       await History.read(
-        resolveDatabaseEntryHistorySubject(objectDatabase, {
+        resolveEntryHistorySubject(objectDatabase, {
           ...objectEntry1,
           title: 'Renamed',
         }),
@@ -319,9 +319,7 @@ describe('onRenameEntry', () => {
 
     // The ledger should record the rename under the old title, with
     // the event's action.
-    expect(
-      await Ledgers.read(resolveDatabaseEntryLedger(objectDatabase)),
-    ).toEqual([
+    expect(await Ledgers.read(resolveEntriesLedger(objectDatabase))).toEqual([
       expect.objectContaining({
         kind: 'rename',
         subject: { key: objectEntry1.title },
@@ -344,9 +342,9 @@ describe('onRenameEntry', () => {
 
     // Nothing references an entry by the title the app handed out, so
     // the ledger has nothing to resolve from it.
-    expect(
-      await Ledgers.read(resolveDatabaseEntryLedger(objectDatabase)),
-    ).toEqual([]);
+    expect(await Ledgers.read(resolveEntriesLedger(objectDatabase))).toEqual(
+      [],
+    );
   });
 
   it("puts the rename's action on the address change it dispatches", async () =>
@@ -381,7 +379,7 @@ describe('onRenameEntry', () => {
 
     // Update the store to reflect the rename, so the reference rewrite
     // sees the new title.
-    DatabaseEntriesStore.update(relatedEntry1.id, {
+    EntriesStore.update(relatedEntry1.id, {
       title: renamedRelated.title,
       path: renamedRelated.path,
     });
@@ -397,10 +395,7 @@ describe('onRenameEntry', () => {
     await vi.waitFor(async () => {
       expect(
         await History.read(
-          resolveDatabaseEntryHistorySubject(
-            collectionDatabase,
-            collectionEntry1,
-          ),
+          resolveEntryHistorySubject(collectionDatabase, collectionEntry1),
         ),
       ).toHaveLength(1);
     });
@@ -409,16 +404,13 @@ describe('onRenameEntry', () => {
     const records = await Promise.all([
       // The entry's own history
       History.read(
-        resolveDatabaseEntryHistorySubject(collectionDatabase, renamedRelated),
+        resolveEntryHistorySubject(collectionDatabase, renamedRelated),
       ),
       // The entries ledger
-      Ledgers.read(resolveDatabaseEntryLedger(collectionDatabase)),
+      Ledgers.read(resolveEntriesLedger(collectionDatabase)),
       // The referencing entry's history
       History.read(
-        resolveDatabaseEntryHistorySubject(
-          collectionDatabase,
-          collectionEntry1,
-        ),
+        resolveEntryHistorySubject(collectionDatabase, collectionEntry1),
       ),
     ]);
 

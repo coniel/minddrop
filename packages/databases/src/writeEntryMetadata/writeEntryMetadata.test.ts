@@ -3,12 +3,12 @@ import {
   MockFs,
   cleanup,
   databaseDirPath,
-  databaseEntryFilePath,
+  entryFilePath,
   objectDatabase,
   objectEntry1,
   setup,
 } from '../test-utils';
-import { DatabaseEntryMetadata } from '../types';
+import { EntryMetadata } from '../types';
 import {
   resolveDatabaseMetadataDirPath,
   resolveEntryMetadataFilePath,
@@ -18,11 +18,11 @@ import { writeEntryMetadata } from './writeEntryMetadata';
 // The path of the entry's metadata sidecar
 const sidecarPath = resolveEntryMetadataFilePath(
   databaseDirPath(objectDatabase),
-  databaseEntryFilePath(objectEntry1),
+  entryFilePath(objectEntry1),
 );
 
 // The metadata to write
-const entryMetadata: DatabaseEntryMetadata = {
+const entryMetadata: EntryMetadata = {
   color: 'red',
 };
 
@@ -34,7 +34,7 @@ describe('writeEntryMetadata', () => {
   it('writes the metadata to the sidecar', async () => {
     await writeEntryMetadata(
       databaseDirPath(objectDatabase),
-      databaseEntryFilePath(objectEntry1),
+      entryFilePath(objectEntry1),
       entryMetadata,
     );
 
@@ -44,7 +44,7 @@ describe('writeEntryMetadata', () => {
   it('creates the metadata directory if it does not exist', async () => {
     await writeEntryMetadata(
       databaseDirPath(objectDatabase),
-      databaseEntryFilePath(objectEntry1),
+      entryFilePath(objectEntry1),
       entryMetadata,
     );
 
@@ -68,7 +68,7 @@ describe('writeEntryMetadata', () => {
 
     await writeEntryMetadata(
       databaseDirPath(objectDatabase),
-      databaseEntryFilePath(objectEntry1),
+      entryFilePath(objectEntry1),
       entryMetadata,
     );
 

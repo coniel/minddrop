@@ -1,5 +1,5 @@
 import { getDatabase } from '../../getDatabase';
-import { DatabaseEntry } from '../../types';
+import { Entry } from '../../types';
 
 /**
  * Resolves the icon an entry is displayed with: its own icon
@@ -10,7 +10,7 @@ import { DatabaseEntry } from '../../types';
  *
  * @throws {DatabaseNotFoundError} If the entry's database does not exist.
  */
-export function resolveEntryIcon(entry: DatabaseEntry): string {
+export function resolveEntryIcon(entry: Entry): string {
   const database = getDatabase(entry.database);
 
   // Read the entry's icon property value, if the database has an

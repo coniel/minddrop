@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { DatabaseEntries, DatabaseEntry } from '@minddrop/databases';
+import { DatabaseEntries, Entry } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';
@@ -8,7 +8,7 @@ import { DatabaseEntriesSearchField } from './DatabaseEntriesSearchField';
 const { objectEntry1, rootStorageEntry1 } = DatabaseFixtures;
 
 // A second entry sharing objectEntry1's title
-const duplicateTitleEntry: DatabaseEntry = {
+const duplicateTitleEntry: Entry = {
   ...objectEntry1,
   id: 'database-entry_duplicate-title',
 };

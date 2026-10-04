@@ -1,9 +1,9 @@
 import { Collections } from '@minddrop/collections';
 import { toJsonValue } from '@minddrop/utils';
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
+import { EntriesStore } from '../../EntriesStore';
 import { DatabasePropertyAddedEventData } from '../../events';
 import { recordDatabaseHistory } from '../../recordDatabaseHistory';
-import { sqlReindexDatabaseEntries } from '../../sql';
+import { sqlReindexEntries } from '../../sql';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
 
 /**
@@ -31,7 +31,7 @@ export async function onAddProperty(
   });
 
   // Re-index all entries in SQL for the new property
-  sqlReindexDatabaseEntries(database);
+  sqlReindexEntries(database);
 
   // Only handle collection properties for virtual collections
   if (property.type !== 'collection') {
@@ -39,7 +39,7 @@ export async function onAddProperty(
   }
 
   // Get entries belonging to this database
-  const entries = DatabaseEntriesStore.getAllArray().filter(
+  const entries = EntriesStore.getAllArray().filter(
     (entry) => entry.database === database.id,
   );
 

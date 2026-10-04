@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DatabaseAutomationActionConfigsStore } from '../DatabaseAutomationActionConfigsStore';
-import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
+import { EntriesStore } from '../EntriesStore';
 import { cleanup, objectDatabase, objectEntry1, setup } from '../test-utils';
 import {
   DatabaseAutomation,
   DatabaseAutomationAction,
   DatabaseAutomationActionConfig,
-  DatabaseEntry,
+  Entry,
 } from '../types';
 import { runCreateEntryDatabaseAutomations } from './runCreateEntryDatabaseAutomations';
 
@@ -34,7 +34,7 @@ const automation: DatabaseAutomation = {
   actions: [action],
 };
 
-const entry: DatabaseEntry = {
+const entry: Entry = {
   ...objectEntry1,
   database: 'database_automation-test',
 };
@@ -45,7 +45,7 @@ describe('runCreateEntryDatabaseAutomations', () => {
 
     DatabaseAutomationActionConfigsStore.set(actionConfig);
 
-    DatabaseEntriesStore.set(entry);
+    EntriesStore.set(entry);
   });
 
   afterEach(cleanup);

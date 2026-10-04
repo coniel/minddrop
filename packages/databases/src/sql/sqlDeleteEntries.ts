@@ -1,14 +1,15 @@
 import { Events } from '@minddrop/events';
 import { Sql } from '@minddrop/sql';
 import { Workspaces } from '@minddrop/workspaces';
-import { DatabaseEntriesSqlSyncedEvent } from '../events';
+import { EntriesSqlSyncedEvent } from '../events';
 
 /**
  * Deletes one or more entries from the SQL database.
  * CASCADE takes care of cleaning up related property rows.
- * Dispatches a DatabaseEntriesSqlSyncedEvent.
  *
  * @param workspaceId - The ID of the workspace whose database to target. Defaults to the active workspace.
+ *
+ * @dispatches databases:entries:sql-synced
  */
 export function sqlDeleteEntries(
   databaseId: string,
@@ -29,7 +30,7 @@ export function sqlDeleteEntries(
 
   // Dispatch SQL synced event unless silenced
   if (!options?.silent) {
-    Events.dispatch(DatabaseEntriesSqlSyncedEvent, {
+    Events.dispatch(EntriesSqlSyncedEvent, {
       action: 'delete',
       entryIds,
       databaseId,

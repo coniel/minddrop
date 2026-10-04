@@ -1,13 +1,13 @@
 import { DatabaseAutomationActionConfigsStore } from '../DatabaseAutomationActionConfigsStore';
 import { getDatabase } from '../getDatabase';
-import { DatabaseAutomationActionConfig, DatabaseEntry } from '../types';
+import { DatabaseAutomationActionConfig, Entry } from '../types';
 
 /**
  * Runs create-entry automations on the given entry.
  *
  * @param entry - The entry to run create-entry automations on.
  */
-export function runCreateEntryDatabaseAutomations(entry: DatabaseEntry): void {
+export function runCreateEntryDatabaseAutomations(entry: Entry): void {
   // Get the entry's parent database
   const database = getDatabase(entry.database);
 

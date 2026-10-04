@@ -10,7 +10,7 @@ import {
   ContentViewTypeComponentProps,
   ContentViews,
 } from '@minddrop/content-views';
-import { DatabaseEntries, DatabaseEntry, Databases } from '@minddrop/databases';
+import { DatabaseEntries, Databases, Entry } from '@minddrop/databases';
 import { ContentColor, ScrollArea } from '@minddrop/ui-primitives';
 import { TableEditContext } from '../TableEditContext';
 import { TableHeader } from '../TableHeader';
@@ -160,8 +160,8 @@ export const TableViewComponent: React.FC<
     [columns],
   );
 
-  const entriesById = useMemo<Record<string, DatabaseEntry>>(() => {
-    const map: Record<string, DatabaseEntry> = {};
+  const entriesById = useMemo<Record<string, Entry>>(() => {
+    const map: Record<string, Entry> = {};
 
     for (const entry of allEntries) {
       map[entry.id] = entry;

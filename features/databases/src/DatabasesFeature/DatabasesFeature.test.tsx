@@ -23,13 +23,13 @@ const {
   objectDatabase,
   objectEntry1,
   rootStorageEntry1,
-  databaseEntry_pdf_1,
-  databaseEntry_pdf_1PropertyFilePath,
+  entry_pdf_1,
+  entry_pdf_1PropertyFilePath,
 } = DatabaseFixtures;
 const { pdfAnnotation_1, pdfAnnotations } = PdfAnnotationFixtures;
 
 // The path of the pdf entry's document
-const pdfPath = databaseEntry_pdf_1PropertyFilePath;
+const pdfPath = entry_pdf_1PropertyFilePath;
 
 // The view area links are opened from
 const viewAreaId = 'view-area';
@@ -139,7 +139,7 @@ describe('DatabasesFeature', () => {
     });
 
     Events.dispatch(Events.events.OpenReference, {
-      reference: DatabaseEntries.resolveReference(databaseEntry_pdf_1.id),
+      reference: DatabaseEntries.resolveReference(entry_pdf_1.id),
       fragment: resolveAnchorFragment(pdfAnnotation_1.id),
       viewAreaId,
       sourcePane: 'split',
@@ -163,7 +163,7 @@ describe('DatabasesFeature', () => {
     );
 
     Events.dispatch(Events.events.OpenReference, {
-      reference: DatabaseEntries.resolveReference(databaseEntry_pdf_1.id),
+      reference: DatabaseEntries.resolveReference(entry_pdf_1.id),
       fragment: resolveAnchorFragment(pdfAnnotation_1.id),
       viewAreaId,
       sourcePane: 'split',

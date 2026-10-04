@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
+import { EntriesStore } from '../../EntriesStore';
 import {
   cleanup,
   objectEntry1,
@@ -35,7 +35,7 @@ describe('isGloballyUniqueEntryTitle', () => {
 
   it('excludes the given entry from the check', () => {
     // Give a second entry the same title, making it ambiguous
-    DatabaseEntriesStore.update(rootStorageEntry1.id, {
+    EntriesStore.update(rootStorageEntry1.id, {
       title: referenceEntry1.title,
     });
 

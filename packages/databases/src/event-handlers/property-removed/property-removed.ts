@@ -1,14 +1,14 @@
 import { Collections } from '@minddrop/collections';
 import { Designs } from '@minddrop/designs-next';
 import { toJsonValue } from '@minddrop/utils';
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
-import { clearDatabaseEntriesProperty } from '../../clearDatabaseEntriesProperty';
+import { EntriesStore } from '../../EntriesStore';
 import { clearDatabaseEntryTemplatesProperty } from '../../clearDatabaseEntryTemplatesProperty';
+import { clearEntriesProperty } from '../../clearEntriesProperty';
 import { DatabasePropertyRemovedEventData } from '../../events';
-import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
-import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
+import { getAllEntries } from '../../getAllEntries';
 import { recordDatabaseHistory } from '../../recordDatabaseHistory';
-import { sqlReindexDatabaseEntries } from '../../sql';
+import { recordEntryHistory } from '../../recordEntryHistory';
+import { sqlReindexEntries } from '../../sql';
 import { updateDatabaseDesignsElements } from '../../updateDatabaseDesignsElements';
 import { updateEntryMetadata } from '../../updateEntryMetadata';
 import { omitEntryPropertyMetadata, virtualCollectionId } from '../../utils';
@@ -40,15 +40,15 @@ export async function onRemoveProperty(
   // Drop the property's value from the database's entries. The files
   // a file based property stored for them are deliberately left in
   // place.
-  const cleared = await clearDatabaseEntriesProperty(database.id, property);
+  const cleared = await clearEntriesProperty(database.id, property);
 
   // Re-index all entries in SQL without the removed property
-  sqlReindexDatabaseEntries(database);
+  sqlReindexEntries(database);
 
   // Record the value dropped from each entry
   await Promise.all(
     cleared.map(({ entry, value }) =>
-      recordDatabaseEntryHistory(database, entry, {
+      recordEntryHistory(database, entry, {
         kind: 'property',
         changes: [{ property: property.name, from: value, to: null }],
         action,
@@ -66,7 +66,7 @@ export async function onRemoveProperty(
 
   // Drop the property's metadata from the entries which have any
   await Promise.all(
-    getAllDatabaseEntries(database.id)
+    getAllEntries(database.id)
       .filter((entry) => entry.metadata.properties?.[property.name])
       .map((entry) =>
         updateEntryMetadata(
@@ -82,7 +82,7 @@ export async function onRemoveProperty(
   }
 
   // Get entries belonging to this database
-  const entries = DatabaseEntriesStore.getAllArray().filter(
+  const entries = EntriesStore.getAllArray().filter(
     (entry) => entry.database === database.id,
   );
 

@@ -1,16 +1,16 @@
 import { I18n } from '@minddrop/i18n';
 import { ItemReferences } from '@minddrop/item-references';
-import { loadCoreSerializers } from '../DatabaseEntrySerializers';
+import { loadCoreSerializers } from '../EntrySerializers';
 import { initializeDatabaseAutomations } from '../initializeDatabaseAutomations';
 import { initializeDatabaseEventHandlers } from '../initializeDatabaseEventHandlers';
 import { initializeDatabaseTemplates } from '../initializeDatabaseTemplates';
 import { locales } from '../locales';
-import { registerDatabaseEntryFilterAdapter } from '../registerDatabaseEntryFilterAdapter';
+import { registerEntryFilterAdapter } from '../registerEntryFilterAdapter';
 import {
-  matchDatabaseEntryReference,
   matchDatabaseReference,
-  serializeDatabaseEntryReference,
+  matchEntryReference,
   serializeDatabaseReference,
+  serializeEntryReference,
 } from '../utils';
 
 /**
@@ -28,8 +28,8 @@ export function initializeDatabases(): void {
   // Register the item reference adapter for entry addresses
   ItemReferences.registerAdapter({
     type: 'database-entry',
-    serialize: serializeDatabaseEntryReference,
-    match: matchDatabaseEntryReference,
+    serialize: serializeEntryReference,
+    match: matchEntryReference,
   });
 
   // Register the item reference adapter for database addresses
@@ -40,7 +40,7 @@ export function initializeDatabases(): void {
   });
 
   // Register the entry filter adapter
-  registerDatabaseEntryFilterAdapter();
+  registerEntryFilterAdapter();
 
   // Register event handlers
   initializeDatabaseEventHandlers();

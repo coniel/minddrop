@@ -1,7 +1,7 @@
 import { ItemAddressesChangedEventData } from '@minddrop/item-references';
-import { recordDatabaseEntriesReferenceRename } from '../../recordDatabaseEntriesReferenceRename';
+import { recordEntriesReferenceRename } from '../../recordEntriesReferenceRename';
 import { getReferencingEntries } from '../../utils';
-import { writeDatabaseEntry } from '../../writeDatabaseEntry';
+import { writeEntry } from '../../writeEntry';
 
 /**
  * Rewrites the entry files whose collection properties reference the
@@ -24,7 +24,7 @@ export async function onItemAddressesChanged(
   // that their older records can be followed to the new address.
   await Promise.all(
     changes.map((change) =>
-      recordDatabaseEntriesReferenceRename(change, workspaceId, action),
+      recordEntriesReferenceRename(change, workspaceId, action),
     ),
   );
 
@@ -33,8 +33,6 @@ export async function onItemAddressesChanged(
 
   // Rewrite each referencing entry's file
   await Promise.all(
-    referencingEntries.map((entry) =>
-      writeDatabaseEntry(entry.id, { workspaceId }),
-    ),
+    referencingEntries.map((entry) => writeEntry(entry.id, { workspaceId })),
   );
 }

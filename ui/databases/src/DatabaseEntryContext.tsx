@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useMemo } from 'react';
-import { DatabaseEntryRenderSource } from '@minddrop/databases';
+import { EntryRenderSource } from '@minddrop/databases';
 
-export type { DatabaseEntryRenderSource } from '@minddrop/databases';
+export type { EntryRenderSource } from '@minddrop/databases';
 
 /**
  * Context describing how database entries rendered within it
@@ -27,7 +27,7 @@ export interface DatabaseEntryContextValue {
   /**
    * The source the entries are rendered from.
    */
-  source?: DatabaseEntryRenderSource;
+  source?: EntryRenderSource;
 
   /**
    * The ID of the view the entries render in, matched against

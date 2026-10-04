@@ -37,7 +37,7 @@ const { contentViewType_table } = ContentViewFixtures;
 
 interface SetupOptions {
   loadDatabases?: boolean;
-  loadDatabaseEntries?: boolean;
+  loadEntries?: boolean;
   loadDatabaseEntryTemplates?: boolean;
   loadDatabaseTemplates?: boolean;
 }
@@ -59,7 +59,7 @@ export const MockFs = initializeMockFileSystem([
 export function setup(
   options: SetupOptions = {
     loadDatabases: true,
-    loadDatabaseEntries: true,
+    loadEntries: true,
     loadDatabaseEntryTemplates: true,
     loadDatabaseTemplates: true,
   },
@@ -71,9 +71,9 @@ export function setup(
     Databases.Store.load(DatabaseFixtures.databases);
   }
 
-  if (options.loadDatabaseEntries !== false) {
+  if (options.loadEntries !== false) {
     // Load entries into the store
-    DatabaseEntries.Store.load(DatabaseFixtures.databaseEntries);
+    DatabaseEntries.Store.load(DatabaseFixtures.entries);
   }
 
   // Load the custom content types into the settings
@@ -103,12 +103,12 @@ export function setup(
 export function setupPdfFixtures(): void {
   Databases.Store.load([DatabaseFixtures.database_pdf]);
   DatabaseEntries.Store.load([
-    DatabaseFixtures.databaseEntry_pdf_1,
-    DatabaseFixtures.databaseEntry_pdf_2,
+    DatabaseFixtures.entry_pdf_1,
+    DatabaseFixtures.entry_pdf_2,
   ]);
   MockFs.addFiles([
     ...DatabaseFixtures.databaseFiles_pdf,
-    ...DatabaseFixtures.databaseEntryFiles_pdf,
+    ...DatabaseFixtures.entryFiles_pdf,
   ]);
 }
 

@@ -66,7 +66,7 @@ The tell is the argument list. If a function takes a caller-specific object and 
 // Shaped for its caller: named after the filter, takes the filter,
 // but reads only the property name and type.
 function resolveFilterValue(
-  entry: DatabaseEntry,
+  entry: Entry,
   filter: PropertyFilter,
 ): PropertyValue | undefined {
   if (Properties.constants.MetadataTypes.has(filter.propertyType)) {
@@ -81,7 +81,7 @@ What this does is resolve an entry's property value from a name and a type. Filt
 
 ```ts
 function resolveEntryPropertyValue(
-  entry: DatabaseEntry,
+  entry: Entry,
   name: string,
   type: PropertyType,
 ): PropertyValue | undefined;

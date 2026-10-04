@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { DatabaseEntries, DatabaseEntry } from '@minddrop/databases';
+import { DatabaseEntries, Entry } from '@minddrop/databases';
 import { useTranslation } from '@minddrop/i18n';
 import {
   ContentIcon,
@@ -17,7 +17,7 @@ export interface PreviewEntryMenuProps {
   /**
    * The database's entries.
    */
-  entries: DatabaseEntry[];
+  entries: Entry[];
 
   /**
    * The ID of the previewed entry.
@@ -78,7 +78,7 @@ export const PreviewEntryMenu: React.FC<PreviewEntryMenuProps> = ({
   }
 
   // Renders an entry's menu item
-  function renderItem(entry: DatabaseEntry) {
+  function renderItem(entry: Entry) {
     return (
       <DropdownSearchableMenuItem
         key={entry.id}

@@ -1,13 +1,13 @@
 import { PropertyValue } from '@minddrop/properties';
 import { getWebpageMetadata } from '@minddrop/utils';
 import { downloadPropertyFile } from '../downloadPropertyFile';
-import { renameDatabaseEntry } from '../renameDatabaseEntry';
+import { renameEntry } from '../renameEntry';
 import {
   DatabaseAutomationAction,
   DatabaseAutomationUpdatePropertyActionConfig,
-  DatabaseEntry,
+  Entry,
 } from '../types';
-import { updateDatabaseEntry } from '../updateDatabaseEntry';
+import { updateEntry } from '../updateEntry';
 
 interface MetadataPropertyMapping {
   title?: string;
@@ -31,7 +31,7 @@ export const FetchWebpageMetadataActionConfig: DatabaseAutomationUpdatePropertyA
 
     supportedTriggerPropertyTypes: ['url'],
 
-    run: updateDatabaseEntryWithMetadata,
+    run: updateEntryWithMetadata,
 
     /**
      * Map of webpage metadata values to database properties.
@@ -60,9 +60,9 @@ export const FetchWebpageMetadataActionConfig: DatabaseAutomationUpdatePropertyA
     ],
   };
 
-async function updateDatabaseEntryWithMetadata(
+async function updateEntryWithMetadata(
   action: DatabaseAutomationAction,
-  entry: DatabaseEntry,
+  entry: Entry,
   updatedPropertyValue: PropertyValue,
 ): Promise<void> {
   const propertyMapping = action.propertyMapping as MetadataPropertyMapping;
@@ -72,7 +72,7 @@ async function updateDatabaseEntryWithMetadata(
     return;
   }
 
-  const updatedDatabaseEntry = entry;
+  const updatedEntry = entry;
   // Fetch webpage metadata
   const metadata = await getWebpageMetadata(updatedPropertyValue);
 
@@ -90,7 +90,7 @@ async function updateDatabaseEntryWithMetadata(
 
   if (metadata.icon && propertyMapping.icon) {
     iconPromise = downloadPropertyFile(
-      updatedDatabaseEntry.id,
+      updatedEntry.id,
       propertyMapping.icon,
       metadata.icon,
     );
@@ -100,7 +100,7 @@ async function updateDatabaseEntryWithMetadata(
 
   if (metadata.image && propertyMapping.image) {
     imagePromise = downloadPropertyFile(
-      updatedDatabaseEntry.id,
+      updatedEntry.id,
       propertyMapping.image,
       metadata.image,
     );
@@ -127,12 +127,12 @@ async function updateDatabaseEntryWithMetadata(
   }
 
   // Update the entry's non-title properties
-  await updateDatabaseEntry(updatedDatabaseEntry.id, {
+  await updateEntry(updatedEntry.id, {
     properties,
   });
 
   // Rename the entry using the webpage title if available
   if (metadata.title && propertyMapping.title) {
-    await renameDatabaseEntry(updatedDatabaseEntry.id, metadata.title);
+    await renameEntry(updatedEntry.id, metadata.title);
   }
 }

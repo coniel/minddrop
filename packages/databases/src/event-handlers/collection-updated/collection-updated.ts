@@ -1,9 +1,9 @@
 import { CollectionUpdatedEventData } from '@minddrop/collections';
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
+import { EntriesStore } from '../../EntriesStore';
 import { getDatabase } from '../../getDatabase';
 import { sqlUpsertEntries } from '../../sql';
 import { convertEntryToSqlRecord, parseVirtualCollectionId } from '../../utils';
-import { writeDatabaseEntry } from '../../writeDatabaseEntry';
+import { writeEntry } from '../../writeEntry';
 
 /**
  * Called when a collection is updated. If the collection is virtual,
@@ -24,7 +24,7 @@ export async function onUpdateCollection(
   const { entryId, propertyName } = parseVirtualCollectionId(updated.id);
 
   // Get the entry from the store
-  const entry = DatabaseEntriesStore.get(entryId);
+  const entry = EntriesStore.get(entryId);
 
   if (!entry) {
     return;
@@ -40,10 +40,10 @@ export async function onUpdateCollection(
   };
 
   // Update the entry in the store
-  DatabaseEntriesStore.update(entryId, updatedEntry);
+  EntriesStore.update(entryId, updatedEntry);
 
   // Write the updated entry to the file system
-  await writeDatabaseEntry(entryId);
+  await writeEntry(entryId);
 
   // Update the SQL record with the new membership
   const database = getDatabase(entry.database);

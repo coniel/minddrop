@@ -1,5 +1,5 @@
-import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
+import { EntriesStore } from '../EntriesStore';
 import { Database } from '../types';
 
 /**
@@ -15,7 +15,7 @@ export function getDatabasesFromEntries(entryIds: string[]): Database[] {
 
   for (const entryId of entryIds) {
     // Get the entry from the store
-    const entry = DatabaseEntriesStore.get(entryId);
+    const entry = EntriesStore.get(entryId);
 
     // Skip entries that don't exist
     if (entry) {

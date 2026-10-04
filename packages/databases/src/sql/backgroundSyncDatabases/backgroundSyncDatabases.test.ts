@@ -10,9 +10,9 @@ import {
   collectionDatabase,
   collectionEntry1,
   databaseDirPath,
-  databaseEntryFilePath,
-  databaseEntrySqlRecords,
   databases,
+  entryFilePath,
+  entrySqlRecords,
   getRecordedSqlStatements,
   parentDir,
   referenceEntry1,
@@ -23,7 +23,7 @@ import {
   timestampDatabase,
   timestampEntry1,
 } from '../../test-utils';
-import { DatabaseEntryMetadata, SqlEntryRecord } from '../../types';
+import { EntryMetadata, SqlEntryRecord } from '../../types';
 import { resolveEntryMetadataFilePath } from '../../utils';
 import { writeEntryMetadata } from '../../writeEntryMetadata';
 import { sqlGetAllEntriesFull } from '../sqlGetAllEntriesFull';
@@ -112,7 +112,7 @@ describe('backgroundSyncDatabases', () => {
     // Entry records carry the pre-rename entry paths
     sqlUpsertEntries(
       collectionDatabase.id,
-      databaseEntrySqlRecords
+      entrySqlRecords
         .filter((record) => record.databaseId === collectionDatabase.id)
         .map((record) => ({
           ...record,
@@ -141,7 +141,7 @@ describe('backgroundSyncDatabases', () => {
 
   it('drops references to entries deleted offline', async () => {
     // Remove a referenced entry's file as if deleted offline
-    MockFs.removeFile(databaseEntryFilePath(relatedEntry2));
+    MockFs.removeFile(entryFilePath(relatedEntry2));
 
     await backgroundSyncDatabases(workspace_1.id, parentDir);
 
@@ -161,13 +161,13 @@ describe('backgroundSyncDatabases', () => {
   });
 
   it("includes a changed entry's sidecar metadata in its upserted record", async () => {
-    const metadata: DatabaseEntryMetadata = {
+    const metadata: EntryMetadata = {
       color: 'red',
     };
 
     await writeEntryMetadata(
       databaseDirPath(collectionDatabase),
-      databaseEntryFilePath(collectionEntry1),
+      entryFilePath(collectionEntry1),
       metadata,
     );
 
@@ -180,7 +180,7 @@ describe('backgroundSyncDatabases', () => {
   });
 
   it("seeds a changed entry's sidecar with its stat derived timestamps", async () => {
-    MockFs.setFileStats(databaseEntryFilePath(collectionEntry1), {
+    MockFs.setFileStats(entryFilePath(collectionEntry1), {
       created: statDate,
       lastModified: statDate,
     });
@@ -189,7 +189,7 @@ describe('backgroundSyncDatabases', () => {
 
     const metadata = await readEntryMetadata(
       databaseDirPath(collectionDatabase),
-      databaseEntryFilePath(collectionEntry1),
+      entryFilePath(collectionEntry1),
     );
 
     expect(metadata.created).toEqual(statDate);
@@ -199,7 +199,7 @@ describe('backgroundSyncDatabases', () => {
   it('keeps a seeded entry timestamps when its file is rewritten', async () => {
     await writeEntryMetadata(
       databaseDirPath(collectionDatabase),
-      databaseEntryFilePath(collectionEntry1),
+      entryFilePath(collectionEntry1),
       {
         created: sidecarDate,
         lastModified: sidecarDate,
@@ -207,7 +207,7 @@ describe('backgroundSyncDatabases', () => {
     );
 
     // The rewrite replaced the inode, resetting the file's stat dates
-    MockFs.setFileStats(databaseEntryFilePath(collectionEntry1), {
+    MockFs.setFileStats(entryFilePath(collectionEntry1), {
       created: statDate,
       lastModified: statDate,
     });
@@ -248,7 +248,7 @@ describe('backgroundSyncDatabases', () => {
   it('keeps the sidecar of an entry which still exists', async () => {
     await writeEntryMetadata(
       databaseDirPath(collectionDatabase),
-      databaseEntryFilePath(collectionEntry1),
+      entryFilePath(collectionEntry1),
       {
         color: 'red',
       },
@@ -260,7 +260,7 @@ describe('backgroundSyncDatabases', () => {
       MockFs.exists(
         resolveEntryMetadataFilePath(
           databaseDirPath(collectionDatabase),
-          databaseEntryFilePath(collectionEntry1),
+          entryFilePath(collectionEntry1),
         ),
       ),
     ).toBe(true);
@@ -280,8 +280,8 @@ describe('backgroundSyncDatabases', () => {
     // Append to the entry's body as an external editor would,
     // leaving its Last Modified property untouched
     MockFs.writeTextFile(
-      databaseEntryFilePath(timestampEntry1),
-      `${MockFs.readTextFile(databaseEntryFilePath(timestampEntry1))}\n\nAdded externally`,
+      entryFilePath(timestampEntry1),
+      `${MockFs.readTextFile(entryFilePath(timestampEntry1))}\n\nAdded externally`,
     );
 
     await backgroundSyncDatabases(workspace_1.id, parentDir);
@@ -297,7 +297,7 @@ describe('backgroundSyncDatabases', () => {
 /**
  * Returns the file system path of the entry a SQL record indexes.
  */
-function databaseEntryFilePathFor(record: SqlEntryRecord): string {
+function entryFilePathFor(record: SqlEntryRecord): string {
   const database = databases.find(({ id }) => id === record.databaseId)!;
 
   return `${databaseDirPath(database)}/${record.path}`;
@@ -312,7 +312,7 @@ function seedSqlEntries(
 ): void {
   databases.forEach((database) => {
     // Collect the database's transformed entry records
-    const records = databaseEntrySqlRecords
+    const records = entrySqlRecords
       .filter((record) => record.databaseId === database.id)
       .map(transform);
 
@@ -331,9 +331,7 @@ function indexAtCurrentContents(): void {
   // Reseed the records with the current on-disk content hashes
   seedSqlEntries((record) => ({
     ...record,
-    contentHash: Fs.hashContents(
-      MockFs.readTextFile(databaseEntryFilePathFor(record)),
-    ),
+    contentHash: Fs.hashContents(MockFs.readTextFile(entryFilePathFor(record))),
   }));
 
   // Drop the reseeding statements from the log

@@ -1,4 +1,4 @@
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
+import { EntriesStore } from '../../EntriesStore';
 
 /**
  * Checks whether an entry title is used by only one entry across every
@@ -19,7 +19,7 @@ export function isGloballyUniqueEntryTitle(
   // Compare titles case-insensitively
   const normalizedTitle = title.toLowerCase();
 
-  const matches = DatabaseEntriesStore.getAllArray().filter(
+  const matches = EntriesStore.getAllArray().filter(
     (entry) =>
       entry.id !== excludeEntryId &&
       entry.title.toLowerCase() === normalizedTitle,

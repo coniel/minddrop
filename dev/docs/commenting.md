@@ -599,8 +599,8 @@ The tags go in three groups, each separated by a blank line: `@param` and
 
 `@throws` names the error type in braces, then the condition. Document
 every error a caller can get back, including ones raised by the getters
-and helpers the function calls: `deleteDatabaseEntry` documents
-`DatabaseEntryNotFoundError` even though `getDatabaseEntry` is what
+and helpers the function calls: `deleteEntry` documents
+`EntryNotFoundError` even though `getEntry` is what
 throws it. `@dispatches` takes the event name alone.
 
 **The description is the gist, not an inventory.** A function which does

@@ -1,15 +1,15 @@
 import { Fs } from '@minddrop/file-system';
 import { Sql } from '@minddrop/sql';
 import { Workspaces } from '@minddrop/workspaces';
-import { loadCoreSerializers } from '../../DatabaseEntrySerializers';
+import { loadCoreSerializers } from '../../EntrySerializers';
 import { SqlDatabaseFileName } from '../../constants';
 import { readAllEntryMetadata } from '../../readAllEntryMetadata';
-import { readDatabaseEntries } from '../../readDatabaseEntries';
+import { readEntries } from '../../readEntries';
 import { readWorkspaceDatabases } from '../../readWorkspaceDatabases';
-import type { Database, DatabaseEntry, SqlEntryRecord } from '../../types';
+import type { Database, Entry, SqlEntryRecord } from '../../types';
 import {
   convertEntryToSqlRecord,
-  databaseEntryAddress,
+  entryAddress,
   entryMetadataKey,
   mergeEntryMetadata,
   resolveCollectionProperties,
@@ -133,11 +133,11 @@ async function rebuildSqlFromFilesystem(
   const entryIdByAddress = new Map<string, string>();
 
   // Staged read results per database
-  const staged: { database: Database; entries: DatabaseEntry[] }[] = [];
+  const staged: { database: Database; entries: Entry[] }[] = [];
 
   // Entries whose sidecar timestamps need writing, collected during the
   // read pass and written in one batch at the end.
-  const outdatedSidecars: { database: Database; entry: DatabaseEntry }[] = [];
+  const outdatedSidecars: { database: Database; entry: Entry }[] = [];
 
   // Pass 1: read all entries so references can resolve across databases
   for (const database of databases) {
@@ -155,7 +155,7 @@ async function rebuildSqlFromFilesystem(
 
     // Read entries and metadata from disk in parallel
     const [rawEntries, metadataMap] = await Promise.all([
-      readDatabaseEntries(database, workspacePath),
+      readEntries(database, workspacePath),
       readAllEntryMetadata(resolveDatabasePath(database, workspacePath)),
     ]);
 
@@ -180,7 +180,7 @@ async function rebuildSqlFromFilesystem(
     // Index the entries by address
     entriesWithMetadata.forEach((entry) => {
       entryIdByAddress.set(
-        databaseEntryAddress(entry, database).toLowerCase(),
+        entryAddress(entry, database).toLowerCase(),
         entry.id,
       );
     });

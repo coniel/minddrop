@@ -1,7 +1,7 @@
 import { DatabasePropertyOptionRenamedEventData } from '../../events';
-import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
 import { recordDatabaseHistory } from '../../recordDatabaseHistory';
-import { renameDatabaseEntriesPropertyOption } from '../../renameDatabaseEntriesPropertyOption';
+import { recordEntryHistory } from '../../recordEntryHistory';
+import { renameEntriesPropertyOption } from '../../renameEntriesPropertyOption';
 import { sqlUpsertEntries } from '../../sql';
 import { convertEntryToSqlRecord } from '../../utils';
 
@@ -27,7 +27,7 @@ export async function onRenamePropertyOption(
   });
 
   // Rewrite the option value in the entries which have it
-  const entries = await renameDatabaseEntriesPropertyOption(
+  const entries = await renameEntriesPropertyOption(
     database.id,
     property,
     oldValue,
@@ -45,7 +45,7 @@ export async function onRenamePropertyOption(
   // Record the rename against each of them
   await Promise.all(
     entries.map((entry) =>
-      recordDatabaseEntryHistory(database, entry, {
+      recordEntryHistory(database, entry, {
         kind: 'rename',
         target: 'value-label',
         property: property.name,

@@ -18,19 +18,19 @@ import {
   cleanupWorkspaceFixtures,
   setupWorkspaceFixtures,
 } from '@minddrop/workspaces/test-utils';
-import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
-import { DatabaseEntrySerializersRegistry } from '../DatabaseEntrySerializersRegistry';
 import { DatabaseSettingsStore } from '../DatabaseSettingsStore';
 import { DatabasesStore } from '../DatabasesStore';
+import { EntriesStore } from '../EntriesStore';
 import { clearEntryFocusRequest } from '../EntryFocusRequestStore';
+import { EntrySerializersRegistry } from '../EntrySerializersRegistry';
 import { clearContentCaptureRegistry } from '../contentCaptureRegistry';
 import { locales } from '../locales';
-import { registerDatabaseEntryFilterAdapter } from '../registerDatabaseEntryFilterAdapter';
+import { registerEntryFilterAdapter } from '../registerEntryFilterAdapter';
 import {
-  matchDatabaseEntryReference,
   matchDatabaseReference,
-  serializeDatabaseEntryReference,
+  matchEntryReference,
   serializeDatabaseReference,
+  serializeEntryReference,
 } from '../utils';
 import { customContentTypes } from './fixtures';
 import {
@@ -68,8 +68,8 @@ export function setup(options?: SetupDatabaseFixturesOptions) {
   // by initializeDatabases.
   ItemReferences.registerAdapter({
     type: 'database-entry',
-    serialize: serializeDatabaseEntryReference,
-    match: matchDatabaseEntryReference,
+    serialize: serializeEntryReference,
+    match: matchEntryReference,
   });
   ItemReferences.registerAdapter({
     type: 'database',
@@ -78,7 +78,7 @@ export function setup(options?: SetupDatabaseFixturesOptions) {
   });
 
   // Register the entry filter adapter, as initializeDatabases does
-  registerDatabaseEntryFilterAdapter();
+  registerEntryFilterAdapter();
 
   // Mock the current date
   vi.useFakeTimers();
@@ -106,8 +106,8 @@ export async function cleanup(): Promise<void> {
 
   // Clear stores
   DatabasesStore.clear();
-  DatabaseEntriesStore.clear();
-  DatabaseEntrySerializersRegistry.clear();
+  EntriesStore.clear();
+  EntrySerializersRegistry.clear();
   Collections.Store.clear();
 
   Filters.unregisterAdapter('database-entry');

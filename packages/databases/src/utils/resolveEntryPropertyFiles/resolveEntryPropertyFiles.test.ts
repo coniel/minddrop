@@ -1,14 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
+import { EntriesStore } from '../../EntriesStore';
 import {
   cleanup,
   databaseDirPath,
-  databaseEntry_pdf_1,
   database_pdf,
   entryStorageDatabase,
   entryStorageEntry1,
+  entry_pdf_1,
   genericFilePropertyName,
   imagePropertyName,
   pdfPropertyName,
@@ -18,7 +18,7 @@ import {
   setup,
   validPdfPropertyFile,
 } from '../../test-utils';
-import { DatabaseEntry } from '../../types';
+import { Entry } from '../../types';
 import { resolveEntryPropertyFilePath } from '../resolveEntryPropertyFilePath';
 import { resolveEntryPropertyFiles } from './resolveEntryPropertyFiles';
 
@@ -31,7 +31,7 @@ describe('resolveEntryPropertyFiles', () => {
 
   it('returns the files of every file based property', () => {
     // Give the entry a value for its generic file property as well
-    DatabaseEntriesStore.update(rootStorageEntry1.id, {
+    EntriesStore.update(rootStorageEntry1.id, {
       properties: {
         ...rootStorageEntry1.properties,
         [genericFilePropertyName]: 'notes.txt',
@@ -52,22 +52,22 @@ describe('resolveEntryPropertyFiles', () => {
 
   it('restricts the files to the given property types', () => {
     DatabasesStore.set(database_pdf);
-    DatabaseEntriesStore.set(databaseEntry_pdf_1);
+    EntriesStore.set(entry_pdf_1);
 
     expect(
-      resolveEntryPropertyFiles(databaseEntry_pdf_1.id, {
+      resolveEntryPropertyFiles(entry_pdf_1.id, {
         propertyTypes: ['image'],
       }),
     ).toEqual([]);
     expect(
-      resolveEntryPropertyFiles(databaseEntry_pdf_1.id, {
+      resolveEntryPropertyFiles(entry_pdf_1.id, {
         propertyTypes: ['pdf'],
       }),
     ).toEqual([
       {
         property: pdfPropertyName,
         path: resolveEntryPropertyFilePath(
-          databaseEntry_pdf_1.id,
+          entry_pdf_1.id,
           pdfPropertyName,
           validPdfPropertyFile.name,
         ),
@@ -77,7 +77,7 @@ describe('resolveEntryPropertyFiles', () => {
 
   it('skips properties without a file value', () => {
     // Give the entry an empty value for its generic file property
-    DatabaseEntriesStore.update(rootStorageEntry1.id, {
+    EntriesStore.update(rootStorageEntry1.id, {
       properties: {
         ...rootStorageEntry1.properties,
         [genericFilePropertyName]: '',
@@ -106,7 +106,7 @@ describe('resolveEntryPropertyFiles', () => {
 
   it('resolves the files of an entry given as an object', () => {
     // An entry which is not in the store
-    const entry: DatabaseEntry = {
+    const entry: Entry = {
       ...entryStorageEntry1,
       id: 'database-entry_not-stored',
       title: 'Elsewhere',

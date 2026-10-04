@@ -1,5 +1,5 @@
 import { DatabaseUpdatedEventData } from '../../events';
-import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
+import { getAllEntries } from '../../getAllEntries';
 import { sqlUpsertDatabase, sqlUpsertEntries } from '../../sql';
 import { convertEntryToSqlRecord } from '../../utils';
 
@@ -31,7 +31,7 @@ export function onUpdateDatabase(data: DatabaseUpdatedEventData): void {
   }
 
   // Refresh the entries' records so SQL holds their new paths
-  const records = getAllDatabaseEntries(updated.id).map((entry) =>
+  const records = getAllEntries(updated.id).map((entry) =>
     convertEntryToSqlRecord(entry, updated),
   );
 

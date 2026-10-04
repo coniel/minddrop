@@ -1,10 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { History } from '@minddrop/history';
-import {
-  DatabaseEntryCreatedEvent,
-  DatabaseEntryWrittenEvent,
-} from '../events';
+import { EntryCreatedEvent, EntryWrittenEvent } from '../events';
 import { sqlUpsertDatabase } from '../sql';
 import {
   cleanup,
@@ -14,7 +11,7 @@ import {
   setup,
   setupTestSqlDatabase,
 } from '../test-utils';
-import { resolveDatabaseEntryHistorySubject } from '../utils';
+import { resolveEntryHistorySubject } from '../utils';
 import { initializeDatabaseEventHandlers } from './initializeDatabaseEventHandlers';
 
 describe('initializeDatabaseEventHandlers', () => {
@@ -45,20 +42,20 @@ describe('initializeDatabaseEventHandlers', () => {
   });
 
   it('records history when an entry is created', async () => {
-    Events.dispatch(DatabaseEntryCreatedEvent, objectEntry1);
+    Events.dispatch(EntryCreatedEvent, objectEntry1);
 
     // The record lands as an unawaited event side effect
     await vi.waitFor(async () => {
       expect(
         await History.read(
-          resolveDatabaseEntryHistorySubject(objectDatabase, objectEntry1),
+          resolveEntryHistorySubject(objectDatabase, objectEntry1),
         ),
       ).toEqual([expect.objectContaining({ kind: 'created' })]);
     });
   });
 
   it('records history when an entry is written', async () => {
-    Events.dispatch(DatabaseEntryWrittenEvent, {
+    Events.dispatch(EntryWrittenEvent, {
       entry: objectEntry1,
       database: objectDatabase,
       previousContents: 'The contents the write replaced',
@@ -69,7 +66,7 @@ describe('initializeDatabaseEventHandlers', () => {
     await vi.waitFor(async () => {
       expect(
         await History.read(
-          resolveDatabaseEntryHistorySubject(objectDatabase, objectEntry1),
+          resolveEntryHistorySubject(objectDatabase, objectEntry1),
         ),
       ).toEqual([expect.objectContaining({ kind: 'content' })]);
     });

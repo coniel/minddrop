@@ -7,7 +7,7 @@ import {
 } from '@minddrop/collections/test-utils';
 import { ContentViewTypes } from '@minddrop/content-views';
 import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
-import { DatabaseEntries, DatabaseEntry, Databases } from '@minddrop/databases';
+import { DatabaseEntries, Databases, Entry } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { DragAndDrop } from '@minddrop/drag-and-drop';
 import {
@@ -81,7 +81,7 @@ describe('<ContentViewRenderer />', () => {
    * @param entry - The entry to drag.
    * @param target - The element to drop it on.
    */
-  function dropEntry(entry: DatabaseEntry, target: Element) {
+  function dropEntry(entry: Entry, target: Element) {
     render(<DragSource data={{ [DatabaseEntriesDataKey]: [entry] }} />);
 
     dragAndDrop(screen.getByTestId('drag-source'), target);

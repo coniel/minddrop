@@ -1,4 +1,4 @@
-import { DatabaseEntryMetadataUpdatedEventData } from '../../events';
+import { EntryMetadataUpdatedEventData } from '../../events';
 import { sqlUpdateEntryMetadata } from '../../sql';
 
 /**
@@ -6,7 +6,7 @@ import { sqlUpdateEntryMetadata } from '../../sql';
  * metadata to the SQL database.
  */
 export function onUpdateEntryMetadata(
-  data: DatabaseEntryMetadataUpdatedEventData,
+  data: EntryMetadataUpdatedEventData,
 ): void {
   sqlUpdateEntryMetadata(data.entryId, data.metadata);
 }

@@ -2,10 +2,10 @@ import { FC, useCallback, useMemo, useState } from 'react';
 import {
   Database,
   DatabaseEntries,
-  DatabaseEntry,
   DatabaseEntryTemplate,
   DatabaseEntryTemplates,
   Databases,
+  Entry,
 } from '@minddrop/databases';
 import {
   DropdownMenu,
@@ -33,7 +33,7 @@ export interface CreateDatabaseEntryButtonProps
    * Called with the newly created entry after it
    * has been persisted.
    */
-  onCreateEntry: (entry: DatabaseEntry) => void;
+  onCreateEntry: (entry: Entry) => void;
 }
 
 /**

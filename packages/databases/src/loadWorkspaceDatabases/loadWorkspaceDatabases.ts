@@ -4,9 +4,9 @@ import { getDatabaseBackendAdapter } from '../DatabaseBackendAdapter';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseNotFoundError } from '../errors';
 import { loadDatabaseDesigns } from '../loadDatabaseDesigns';
-import { loadDatabaseEntries } from '../loadDatabaseEntries';
 import { loadDatabaseEntryTemplates } from '../loadDatabaseEntryTemplates';
 import { loadDatabaseViews } from '../loadDatabaseViews';
+import { loadEntries } from '../loadEntries';
 import type { Database } from '../types';
 import { convertSqlRecordToEntry } from '../utils';
 
@@ -34,7 +34,7 @@ export async function loadWorkspaceDatabases(
   // Load database configs into the workspace's store record
   DatabasesStore.in(workspace.id).load(databases);
 
-  // Convert SQL entry records to DatabaseEntry objects
+  // Convert SQL entry records to Entry objects
   const entries = result.entries.map((record) =>
     convertSqlRecordToEntry(
       record,
@@ -43,7 +43,7 @@ export async function loadWorkspaceDatabases(
   );
 
   // Load entries and hydrate virtual collections
-  loadDatabaseEntries(databases, entries, workspace.id);
+  loadEntries(databases, entries, workspace.id);
 
   // Load database views, designs, and entry templates from the
   // databases' config directories.

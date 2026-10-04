@@ -1,7 +1,7 @@
 import { Properties } from '@minddrop/properties';
-import { DatabaseEntrySerializer } from '../types';
+import { EntrySerializer } from '../types';
 
-export const yamlEntrySerializer: DatabaseEntrySerializer = {
+export const yamlEntrySerializer: EntrySerializer = {
   id: 'yaml',
   name: 'databases.entrySerializers.yaml.name',
   description: 'databases.entrySerializers.yaml.description',

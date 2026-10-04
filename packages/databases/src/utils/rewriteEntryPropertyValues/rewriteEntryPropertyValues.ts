@@ -1,12 +1,12 @@
 import { PropertyChange } from '@minddrop/history';
 import { Properties, PropertyValue } from '@minddrop/properties';
-import { DatabaseEntry } from '../../types';
+import { Entry } from '../../types';
 
 export interface RewrittenEntryPropertyValues {
   /**
    * The entry with the values rewritten.
    */
-  entry: DatabaseEntry;
+  entry: Entry;
 
   /**
    * The properties whose values the rewrite changed.
@@ -23,7 +23,7 @@ export interface RewrittenEntryPropertyValues {
  * @returns The rewritten entry and the changes made, or null when no value changed.
  */
 export function rewriteEntryPropertyValues(
-  entry: DatabaseEntry,
+  entry: Entry,
   propertyNames: string[],
   rewrite: (value: PropertyValue) => PropertyValue,
 ): RewrittenEntryPropertyValues | null {

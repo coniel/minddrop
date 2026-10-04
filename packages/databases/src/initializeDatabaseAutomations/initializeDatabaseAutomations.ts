@@ -1,10 +1,7 @@
 import { Events } from '@minddrop/events';
 import { DatabaseAutomationActionConfigsStore } from '../DatabaseAutomationActionConfigsStore';
 import { coreDatabaseAutomationActionConfigs } from '../automation-action-configs';
-import {
-  DatabaseEntryCreatedEvent,
-  DatabaseEntryUpdatedEvent,
-} from '../events';
+import { EntryCreatedEvent, EntryUpdatedEvent } from '../events';
 import { runCreateEntryDatabaseAutomations } from '../runCreateEntryDatabaseAutomations';
 import { runUpdatePropertyDatabaseAutomations } from '../runUpdatePropertyDatabaseAutomations';
 
@@ -26,22 +23,18 @@ export function initializeDatabaseAutomations(): void {
   );
 
   // Listen for new entries being created and run create-entry automations
-  Events.addListener(
-    DatabaseEntryCreatedEvent,
-    Listeners['create-entry'],
-    (entry) => {
-      runCreateEntryDatabaseAutomations(entry);
+  Events.addListener(EntryCreatedEvent, Listeners['create-entry'], (entry) => {
+    runCreateEntryDatabaseAutomations(entry);
 
-      // Also run update-property automations with empty properties
-      // on the original entry as new properties are considered to be
-      // 'updated' from nothing to something.
-      runUpdatePropertyDatabaseAutomations({ ...entry, properties: {} }, entry);
-    },
-  );
+    // Also run update-property automations with empty properties
+    // on the original entry as new properties are considered to be
+    // 'updated' from nothing to something.
+    runUpdatePropertyDatabaseAutomations({ ...entry, properties: {} }, entry);
+  });
 
   // Listen for entries being updated and run update-property automations
   Events.addListener(
-    DatabaseEntryUpdatedEvent,
+    EntryUpdatedEvent,
     Listeners['update-property'],
     ({ original, updated }) =>
       runUpdatePropertyDatabaseAutomations(original, updated),
@@ -56,9 +49,6 @@ export function initializeDatabaseAutomations(): void {
 export function cleanupDatabaseAutomations(): void {
   DatabaseAutomationActionConfigsStore.clear();
 
-  Events.removeListener(DatabaseEntryCreatedEvent, Listeners['create-entry']);
-  Events.removeListener(
-    DatabaseEntryUpdatedEvent,
-    Listeners['update-property'],
-  );
+  Events.removeListener(EntryCreatedEvent, Listeners['create-entry']);
+  Events.removeListener(EntryUpdatedEvent, Listeners['update-property']);
 }

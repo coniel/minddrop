@@ -99,6 +99,7 @@ Store definitions and their hooks (`CollectionsStore`, `useCollection`, `useColl
 - `use*` for React hooks.
 - `write*` means writing to the file system (`writeCollection`, `writeDatabaseConfig`). Store and config mutations are `update*`. Comments follow the same vocabulary: "Update the collection" above an `update` call, "Write the collection" only above a file write.
 - `read*` reads an entity from the file system without touching the store (`readCollection`). `load*` reads everything under a directory into the store and dispatches the loaded event (`loadTags`).
+- Function, type, event and error names include their entity's full name (`DatabaseEntryTemplate`, `createDatabaseEntryTemplate`), except where the shorter noun is unambiguous across the whole app. An entry is always a database entry, so `packages/databases` names it `Entry` (`createEntry`, `EntryCreatedEvent`, `EntryNotFoundError`). Other entities keep their full names.
 
 ## Getters
 

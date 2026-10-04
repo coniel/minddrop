@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
+import { EntriesStore } from '../../EntriesStore';
 import {
   sqlGetAllDatabases,
   sqlGetEntrySyncRecords,
@@ -70,7 +70,7 @@ describe('onUpdateDatabase', () => {
     // dispatching.
     const newPath = `${databaseDirPath(objectDatabase)}/${objectEntry1.title}.json`;
 
-    DatabaseEntriesStore.update(objectEntry1.id, { path: newPath });
+    EntriesStore.update(objectEntry1.id, { path: newPath });
 
     onUpdateDatabase({
       original: objectDatabase,
@@ -87,7 +87,7 @@ describe('onUpdateDatabase', () => {
     // Repath the entry as the storage change does before dispatching
     const newPath = `${databaseDirPath(objectDatabase)}/${objectEntry1.title}/${objectEntry1.title}.md`;
 
-    DatabaseEntriesStore.update(objectEntry1.id, { path: newPath });
+    EntriesStore.update(objectEntry1.id, { path: newPath });
 
     onUpdateDatabase({
       original: objectDatabase,

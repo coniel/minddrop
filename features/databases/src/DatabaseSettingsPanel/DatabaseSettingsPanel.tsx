@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
-  DatabaseEntrySerializers,
   Databases,
+  EntrySerializers,
   PropertyFileStorage,
 } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
@@ -56,7 +56,7 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
     TranslationKey | undefined
   >(undefined);
   // The registered entry serializers, offered as file format options
-  const entrySerializers = DatabaseEntrySerializers.useAll();
+  const entrySerializers = EntrySerializers.useAll();
 
   // Select options for the registered entry serializers
   const entrySerializerOptions: SelectOption<string>[] = entrySerializers.map(

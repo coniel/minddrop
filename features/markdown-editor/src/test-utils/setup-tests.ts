@@ -14,7 +14,7 @@ export function setup() {
   Databases.Store.load(DatabaseFixtures.databases);
 
   // Load the entries offered as references
-  DatabaseEntries.Store.load(DatabaseFixtures.databaseEntries);
+  DatabaseEntries.Store.load(DatabaseFixtures.entries);
 }
 
 /**

@@ -8,8 +8,8 @@ import {
   collectionDatabase,
   collectionEntry1,
   databaseDirPath,
-  databaseEntryFilePath,
   databases,
+  entryFilePath,
   parentDir,
   referenceEntry1,
   relatedEntry1,
@@ -131,7 +131,7 @@ describe('initializeDatabasesBackend', () => {
   it('drops unresolvable reference values', async () => {
     // Write old-format member values into the entry file
     MockFs.writeTextFile(
-      databaseEntryFilePath(collectionEntry1),
+      entryFilePath(collectionEntry1),
       `---
 Title: Collection Entry 1
 Related:
@@ -153,7 +153,7 @@ References: []
   });
 
   it('seeds an entry sidecar with its stat derived timestamps', async () => {
-    MockFs.setFileStats(databaseEntryFilePath(collectionEntry1), {
+    MockFs.setFileStats(entryFilePath(collectionEntry1), {
       created: statDate,
       lastModified: statDate,
     });
@@ -162,7 +162,7 @@ References: []
 
     const metadata = await readEntryMetadata(
       databaseDirPath(collectionDatabase),
-      databaseEntryFilePath(collectionEntry1),
+      entryFilePath(collectionEntry1),
     );
 
     expect(metadata.created).toEqual(statDate);
@@ -172,7 +172,7 @@ References: []
   it('uses a seeded sidecar rather than re-seeding from stat', async () => {
     await writeEntryMetadata(
       databaseDirPath(collectionDatabase),
-      databaseEntryFilePath(collectionEntry1),
+      entryFilePath(collectionEntry1),
       {
         created: sidecarDate,
         lastModified: sidecarDate,
@@ -180,7 +180,7 @@ References: []
     );
 
     // Stat reports a rewritten file, as an atomic write leaves behind
-    MockFs.setFileStats(databaseEntryFilePath(collectionEntry1), {
+    MockFs.setFileStats(entryFilePath(collectionEntry1), {
       created: statDate,
       lastModified: statDate,
     });
@@ -199,7 +199,7 @@ References: []
     // And the sidecar is left as it was
     const metadata = await readEntryMetadata(
       databaseDirPath(collectionDatabase),
-      databaseEntryFilePath(collectionEntry1),
+      entryFilePath(collectionEntry1),
     );
 
     expect(metadata.created).toEqual(sidecarDate);

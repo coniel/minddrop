@@ -2,8 +2,8 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { History } from '@minddrop/history';
 import { storeItem } from '@minddrop/stores/test-utils';
 import { TagFixtures } from '@minddrop/tags/test-utils';
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
+import { EntriesStore } from '../../EntriesStore';
 import { sqlGetEntryPropertyValues, sqlUpsertDatabase } from '../../sql';
 import {
   MockFs,
@@ -17,9 +17,9 @@ import {
   setupRecordingTestSqlDatabase,
 } from '../../test-utils';
 import {
-  resolveDatabaseEntryHistorySubject,
-  resolveDatabaseEntryPath,
   resolveDatabasePath,
+  resolveEntryHistorySubject,
+  resolveEntryPath,
 } from '../../utils';
 import { onTagRenamed } from './tag-renamed';
 
@@ -63,7 +63,7 @@ describe('onTagRenamed', () => {
 
     // Add the tags database and its entry to the stores
     DatabasesStore.set(tagsDatabase);
-    DatabaseEntriesStore.set(taggedEntry);
+    EntriesStore.set(taggedEntry);
 
     // Add the database's SQL record so entry upserts satisfy the
     // foreign key. The statement is then dropped from the recording.
@@ -89,13 +89,13 @@ describe('onTagRenamed', () => {
 
     // The entry's value should carry the new name in place of the
     // old one.
-    const entry = storeItem(DatabaseEntriesStore, taggedEntry.id);
+    const entry = storeItem(EntriesStore, taggedEntry.id);
     expect(entry.properties.Tags).toEqual(['Later', 'Home']);
   });
 
   it('dedupes when the new name is already present', async () => {
     // Reference both the old and new names
-    DatabaseEntriesStore.update(taggedEntry.id, {
+    EntriesStore.update(taggedEntry.id, {
       properties: { ...taggedEntry.properties, Tags: ['Urgent', 'Later'] },
     });
 
@@ -106,7 +106,7 @@ describe('onTagRenamed', () => {
     });
 
     // The mapped name should collapse into the existing one
-    const entry = storeItem(DatabaseEntriesStore, taggedEntry.id);
+    const entry = storeItem(EntriesStore, taggedEntry.id);
     expect(entry.properties.Tags).toEqual(['Later']);
   });
 
@@ -119,7 +119,7 @@ describe('onTagRenamed', () => {
 
     // The entry file should contain the new name and not the old
     const contents = MockFs.readTextFile(
-      resolveDatabaseEntryPath(taggedEntry, tagsDatabase),
+      resolveEntryPath(taggedEntry, tagsDatabase),
     );
     expect(contents).toContain('Later');
     expect(contents).not.toContain('Urgent');
@@ -149,7 +149,7 @@ describe('onTagRenamed', () => {
     });
 
     // The entry should be unchanged
-    const entry = storeItem(DatabaseEntriesStore, taggedEntry.id);
+    const entry = storeItem(EntriesStore, taggedEntry.id);
     expect(entry.properties.Tags).toEqual(['Urgent', 'Home']);
 
     // No SQL statements should have been executed
@@ -164,7 +164,7 @@ describe('onTagRenamed', () => {
     });
 
     // The tagless database's entry should be unchanged
-    const entry = storeItem(DatabaseEntriesStore, objectEntry1.id);
+    const entry = storeItem(EntriesStore, objectEntry1.id);
     expect(entry).toEqual(objectEntry1);
   });
 
@@ -176,7 +176,7 @@ describe('onTagRenamed', () => {
     });
 
     const records = await History.read(
-      resolveDatabaseEntryHistorySubject(tagsDatabase, taggedEntry),
+      resolveEntryHistorySubject(tagsDatabase, taggedEntry),
     );
 
     expect(records).toContainEqual(
@@ -199,7 +199,7 @@ describe('onTagRenamed', () => {
       path: 'Second Tagged Entry.md',
     };
 
-    DatabaseEntriesStore.set(secondEntry);
+    EntriesStore.set(secondEntry);
 
     await onTagRenamed({
       original: originalTag,
@@ -209,7 +209,7 @@ describe('onTagRenamed', () => {
 
     const records = await Promise.all(
       [taggedEntry, secondEntry].map((entry) =>
-        History.read(resolveDatabaseEntryHistorySubject(tagsDatabase, entry)),
+        History.read(resolveEntryHistorySubject(tagsDatabase, entry)),
       ),
     );
     const actions = records.flat().map((record) => record.action);
@@ -232,7 +232,7 @@ describe('onTagRenamed', () => {
       properties: { ...taggedEntry.properties, Tags: ['Home'] },
     };
 
-    DatabaseEntriesStore.set(untagged);
+    EntriesStore.set(untagged);
 
     await onTagRenamed({
       original: originalTag,
@@ -241,9 +241,7 @@ describe('onTagRenamed', () => {
     });
 
     expect(
-      await History.read(
-        resolveDatabaseEntryHistorySubject(tagsDatabase, untagged),
-      ),
+      await History.read(resolveEntryHistorySubject(tagsDatabase, untagged)),
     ).toEqual([]);
   });
 });

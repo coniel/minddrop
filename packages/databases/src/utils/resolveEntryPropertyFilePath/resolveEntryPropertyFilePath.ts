@@ -1,6 +1,6 @@
 import { getDatabase } from '../../getDatabase';
-import { getDatabaseEntry } from '../../getDatabaseEntry';
-import { DatabaseEntry } from '../../types';
+import { getEntry } from '../../getEntry';
+import { Entry } from '../../types';
 import { resolveDatabasePath } from '../resolveDatabasePath';
 import { resolvePropertyFilePath } from '../resolvePropertyFilePath';
 import { resolvePropertyFilesDirName } from '../resolvePropertyFilesDirName';
@@ -15,14 +15,13 @@ import { resolvePropertyFilesDirName } from '../resolvePropertyFilesDirName';
  * @returns The path to the property file.
  */
 export function resolveEntryPropertyFilePath(
-  entry: DatabaseEntry | string,
+  entry: Entry | string,
   propertyName: string,
   fileName: string,
   workspacePath?: string,
 ): string {
   // Look the entry up when given its ID
-  const resolvedEntry =
-    typeof entry === 'string' ? getDatabaseEntry(entry) : entry;
+  const resolvedEntry = typeof entry === 'string' ? getEntry(entry) : entry;
 
   // Get the entry's database
   const database = getDatabase(resolvedEntry.database);

@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { History } from '@minddrop/history';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
+import { EntriesStore } from '../../EntriesStore';
 import { sqlUpsertDatabase } from '../../sql';
 import {
   MockFs,
@@ -11,7 +11,7 @@ import {
   clearRecordedSqlStatements,
   collectionDatabase,
   collectionEntry1,
-  databaseEntryFilePath,
+  entryFilePath,
   getRecordedSqlStatements,
   historyAction_databaseRenamed,
   relatedEntry1,
@@ -20,9 +20,9 @@ import {
   setupRecordingTestSqlDatabase,
 } from '../../test-utils';
 import {
-  databaseEntryAddress,
-  resolveDatabaseEntryHistorySubject,
-  resolveDatabaseEntryPath,
+  entryAddress,
+  resolveEntryHistorySubject,
+  resolveEntryPath,
 } from '../../utils';
 import { onItemAddressesChanged } from './item-addresses-changed';
 
@@ -64,7 +64,7 @@ describe('onItemAddressesChanged', () => {
 
   it("rewrites referencing entries' files with current addresses", async () => {
     // Simulate a rename of a referenced entry
-    DatabaseEntriesStore.update(relatedEntry1.id, {
+    EntriesStore.update(relatedEntry1.id, {
       title: renamedRelated.title,
       path: renamedRelated.path,
     });
@@ -74,18 +74,13 @@ describe('onItemAddressesChanged', () => {
       changes: [
         {
           id: relatedEntry1.id,
-          oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
-          newReference: databaseEntryAddress(
-            renamedRelated,
-            collectionDatabase,
-          ),
+          oldReference: entryAddress(relatedEntry1, collectionDatabase),
+          newReference: entryAddress(renamedRelated, collectionDatabase),
         },
       ],
     });
 
-    const contents = MockFs.readTextFile(
-      databaseEntryFilePath(collectionEntry1),
-    );
+    const contents = MockFs.readTextFile(entryFilePath(collectionEntry1));
 
     // The referencing file should contain the new address
     expect(contents).toContain('Collection Database/Renamed Related');
@@ -96,7 +91,7 @@ describe('onItemAddressesChanged', () => {
     // The database and its entries held by the second workspace as
     // well, with the referenced entry already renamed there.
     DatabasesStore.in(workspace_2.id).set(collectionDatabase);
-    DatabaseEntriesStore.in(workspace_2.id).load([
+    EntriesStore.in(workspace_2.id).load([
       collectionEntry1,
       renamedRelated,
       relatedEntry2,
@@ -107,11 +102,8 @@ describe('onItemAddressesChanged', () => {
       changes: [
         {
           id: relatedEntry1.id,
-          oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
-          newReference: databaseEntryAddress(
-            renamedRelated,
-            collectionDatabase,
-          ),
+          oldReference: entryAddress(relatedEntry1, collectionDatabase),
+          newReference: entryAddress(renamedRelated, collectionDatabase),
         },
       ],
     });
@@ -120,20 +112,20 @@ describe('onItemAddressesChanged', () => {
     // address, the active workspace's file is untouched.
     expect(
       MockFs.readTextFile(
-        resolveDatabaseEntryPath(
+        resolveEntryPath(
           collectionEntry1,
           collectionDatabase,
           workspace_2.path,
         ),
       ),
     ).toContain('Collection Database/Renamed Related');
-    expect(
-      MockFs.readTextFile(databaseEntryFilePath(collectionEntry1)),
-    ).not.toContain('Collection Database/Renamed Related');
+    expect(MockFs.readTextFile(entryFilePath(collectionEntry1))).not.toContain(
+      'Collection Database/Renamed Related',
+    );
   });
 
   it('does nothing for unreferenced items', async () => {
-    const before = MockFs.readTextFile(databaseEntryFilePath(collectionEntry1));
+    const before = MockFs.readTextFile(entryFilePath(collectionEntry1));
 
     await onItemAddressesChanged({
       workspaceId: workspace_1.id,
@@ -146,9 +138,7 @@ describe('onItemAddressesChanged', () => {
       ],
     });
 
-    expect(MockFs.readTextFile(databaseEntryFilePath(collectionEntry1))).toBe(
-      before,
-    );
+    expect(MockFs.readTextFile(entryFilePath(collectionEntry1))).toBe(before);
 
     // No entry upsert statements should have been executed
     const entryUpserts = getRecordedSqlStatements().filter((statement) =>
@@ -160,7 +150,7 @@ describe('onItemAddressesChanged', () => {
 
   it('records the change against entries which reference it', async () => {
     // Simulate a rename of a referenced entry
-    DatabaseEntriesStore.update(relatedEntry1.id, {
+    EntriesStore.update(relatedEntry1.id, {
       title: renamedRelated.title,
       path: renamedRelated.path,
     });
@@ -170,11 +160,8 @@ describe('onItemAddressesChanged', () => {
       changes: [
         {
           id: relatedEntry1.id,
-          oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
-          newReference: databaseEntryAddress(
-            renamedRelated,
-            collectionDatabase,
-          ),
+          oldReference: entryAddress(relatedEntry1, collectionDatabase),
+          newReference: entryAddress(renamedRelated, collectionDatabase),
         },
       ],
     });
@@ -183,24 +170,21 @@ describe('onItemAddressesChanged', () => {
     // older records to the new address.
     expect(
       await History.read(
-        resolveDatabaseEntryHistorySubject(
-          collectionDatabase,
-          collectionEntry1,
-        ),
+        resolveEntryHistorySubject(collectionDatabase, collectionEntry1),
       ),
     ).toContainEqual(
       expect.objectContaining({
         kind: 'rename',
         target: 'reference',
-        from: databaseEntryAddress(relatedEntry1, collectionDatabase),
-        to: databaseEntryAddress(renamedRelated, collectionDatabase),
+        from: entryAddress(relatedEntry1, collectionDatabase),
+        to: entryAddress(renamedRelated, collectionDatabase),
       }),
     );
   });
 
   it("stamps the changes' action on the referencing entries' records", async () => {
     // Simulate a rename of a referenced entry
-    DatabaseEntriesStore.update(relatedEntry1.id, {
+    EntriesStore.update(relatedEntry1.id, {
       title: renamedRelated.title,
       path: renamedRelated.path,
     });
@@ -210,11 +194,8 @@ describe('onItemAddressesChanged', () => {
       changes: [
         {
           id: relatedEntry1.id,
-          oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
-          newReference: databaseEntryAddress(
-            renamedRelated,
-            collectionDatabase,
-          ),
+          oldReference: entryAddress(relatedEntry1, collectionDatabase),
+          newReference: entryAddress(renamedRelated, collectionDatabase),
         },
       ],
       action: historyAction_databaseRenamed,
@@ -223,10 +204,7 @@ describe('onItemAddressesChanged', () => {
     // The referencing entry's record should have the action
     expect(
       await History.read(
-        resolveDatabaseEntryHistorySubject(
-          collectionDatabase,
-          collectionEntry1,
-        ),
+        resolveEntryHistorySubject(collectionDatabase, collectionEntry1),
       ),
     ).toEqual([
       expect.objectContaining({ action: historyAction_databaseRenamed }),

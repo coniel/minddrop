@@ -2,18 +2,18 @@ import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { Properties } from '@minddrop/properties';
 import { InvalidParameterError, validateDirName } from '@minddrop/utils';
-import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
+import { EntriesStore } from '../EntriesStore';
 import { DatabaseUpdatedEvent } from '../events';
-import { getAllDatabaseEntries } from '../getAllDatabaseEntries';
+import { getAllEntries } from '../getAllEntries';
 import { getDatabase } from '../getDatabase';
 import { Database, PropertyFileStorage } from '../types';
-import { updateDatabaseEntryProperty } from '../updateDatabaseEntryProperty';
+import { updateEntryProperty } from '../updateEntryProperty';
 import {
-  resolveDatabaseEntryPath,
   resolveDatabasePath,
   resolveDatabasePropertyDirs,
   resolveEntryFilePath,
+  resolveEntryPath,
   resolveEntryPropertyFilePath,
   resolvePropertyFilePath,
   resolvePropertyFilesDirName,
@@ -65,7 +65,7 @@ export async function setDatabasePropertyFileStorage(
   const wasEntry = oldStorage === 'entry';
   const willEntry = storage === 'entry';
 
-  const entries = getAllDatabaseEntries(id);
+  const entries = getAllEntries(id);
   const fileProperties = database.properties.filter(Properties.isFileBased);
   const databasePath = resolveDatabasePath(database);
 
@@ -73,7 +73,7 @@ export async function setDatabasePropertyFileStorage(
   // Each entry's file extension.
   const entryMoves = entries.map((entry) => ({
     entry,
-    entryPath: resolveDatabaseEntryPath(entry, database),
+    entryPath: resolveEntryPath(entry, database),
     fileExtension: Fs.getFileExtension(entry.path),
   }));
 
@@ -128,7 +128,7 @@ export async function setDatabasePropertyFileStorage(
       }
 
       // Update the entry's stored path before any later re-serialization
-      DatabaseEntriesStore.update(entry.id, {
+      EntriesStore.update(entry.id, {
         path: Fs.relativePath(databasePath, newEntryPath),
       });
     }
@@ -163,11 +163,7 @@ export async function setDatabasePropertyFileStorage(
 
     // Persist the new file name when a collision forced a rename
     if (finalName !== move.fileName) {
-      await updateDatabaseEntryProperty(
-        move.entryId,
-        move.propertyName,
-        finalName,
-      );
+      await updateEntryProperty(move.entryId, move.propertyName, finalName);
     }
   }
 

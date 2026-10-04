@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import {
   DatabaseEntries,
-  DatabaseEntry,
   Databases,
+  Entry,
   LayoutContext,
 } from '@minddrop/databases';
 import { Design } from '@minddrop/designs-next';
@@ -11,7 +11,7 @@ import { PropertyValue } from '@minddrop/properties';
 import { Selection } from '@minddrop/selection';
 import {
   DatabaseEntriesDataKey,
-  DatabaseEntryRenderSource,
+  EntryRenderSource,
   useDatabaseEntryContext,
 } from '@minddrop/ui-databases';
 import { DesignRenderer } from '@minddrop/ui-designs-next';
@@ -68,7 +68,7 @@ export const DatabaseEntryRenderer: React.FC<DatabaseEntryRendererProps> =
     // A view rendering many entries resolves the design once and
     // passes it down, a lone entry resolves its own.
     if (other.design !== undefined) {
-      return <Entry entry={entry} {...other} />;
+      return <EntryWithDesign entry={entry} {...other} />;
     }
 
     return <EntryWithResolvedDesign entry={entry} {...other} />;
@@ -76,31 +76,32 @@ export const DatabaseEntryRenderer: React.FC<DatabaseEntryRendererProps> =
 
 DatabaseEntryRenderer.displayName = 'DatabaseEntryRenderer';
 
-interface EntryProps extends Omit<DatabaseEntryRendererProps, 'entryId'> {
+interface EntryWithDesignProps
+  extends Omit<DatabaseEntryRendererProps, 'entryId'> {
   /**
    * The entry to render.
    */
-  entry: DatabaseEntry;
+  entry: Entry;
 }
 
 /**
  * Renders an entry with the design its database renders the
  * context with.
  */
-const EntryWithResolvedDesign: React.FC<EntryProps> = (props) => {
+const EntryWithResolvedDesign: React.FC<EntryWithDesignProps> = (props) => {
   const design = Databases.useDefaultDesign(
     props.entry.database,
     props.layoutContext,
   );
 
-  return <Entry {...props} design={design} />;
+  return <EntryWithDesign {...props} design={design} />;
 };
 
 /**
  * Renders an entry with its design, or its title alone when it has
  * none.
  */
-const Entry: React.FC<EntryProps> = ({
+const EntryWithDesign: React.FC<EntryWithDesignProps> = ({
   entry,
   layoutContext,
   design,
@@ -359,7 +360,7 @@ interface EntryOptionsMenuButtonProps {
   /**
    * The source the entry is rendered from.
    */
-  source?: DatabaseEntryRenderSource;
+  source?: EntryRenderSource;
 }
 
 /**

@@ -3,7 +3,7 @@ import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { entryReferenceSource } from './entryReferenceSource';
 
-const { databaseEntries, rootStorageEntry1 } = DatabaseFixtures;
+const { entries, rootStorageEntry1 } = DatabaseFixtures;
 
 // How many entries the source offers before anything is searched for
 const RecentEntryCount = 10;
@@ -16,7 +16,7 @@ describe('entryReferenceSource', () => {
   describe('getRecent', () => {
     it('offers the most recently modified entries', () => {
       // The titles of the most recently modified entries, newest first
-      const recentTitles = [...databaseEntries]
+      const recentTitles = [...entries]
         .sort(
           (entryA, entryB) =>
             entryB.lastModified.getTime() - entryA.lastModified.getTime(),
@@ -33,7 +33,7 @@ describe('entryReferenceSource', () => {
 
     it('offers no more than the recent entry count', () => {
       // The fixtures hold more entries than the source offers
-      expect(databaseEntries.length).toBeGreaterThan(RecentEntryCount);
+      expect(entries.length).toBeGreaterThan(RecentEntryCount);
 
       expect(entryReferenceSource.getRecent().length).toBe(RecentEntryCount);
     });

@@ -6,15 +6,12 @@ import { PdfAnnotationFixtures } from '@minddrop/pdf/test-utils';
 import { cleanup, setup, setupPdfFixtures } from '../../test-utils';
 import { resolveEntryPdfAnchor } from './resolveEntryPdfAnchor';
 
-const {
-  databaseEntry_pdf_1,
-  databaseEntry_pdf_1PropertyFilePath,
-  rootStorageEntry1,
-} = DatabaseFixtures;
+const { entry_pdf_1, entry_pdf_1PropertyFilePath, rootStorageEntry1 } =
+  DatabaseFixtures;
 const { pdfAnnotation_1, pdfAnnotations } = PdfAnnotationFixtures;
 
 // The path of the pdf entry's document
-const path = databaseEntry_pdf_1PropertyFilePath;
+const path = entry_pdf_1PropertyFilePath;
 
 describe('resolveEntryPdfAnchor', () => {
   beforeEach(() => {
@@ -28,7 +25,7 @@ describe('resolveEntryPdfAnchor', () => {
   it("resolves an anchor naming an annotation of the entry's pdf", () => {
     expect(
       resolveEntryPdfAnchor(
-        databaseEntry_pdf_1,
+        entry_pdf_1,
         resolveAnchorFragment(pdfAnnotation_1.id),
       ),
     ).toEqual({ path, annotationId: pdfAnnotation_1.id });
@@ -36,10 +33,7 @@ describe('resolveEntryPdfAnchor', () => {
 
   it('resolves no anchor naming an annotation the entry lacks', () => {
     expect(
-      resolveEntryPdfAnchor(
-        databaseEntry_pdf_1,
-        resolveAnchorFragment('missing'),
-      ),
+      resolveEntryPdfAnchor(entry_pdf_1, resolveAnchorFragment('missing')),
     ).toBeNull();
   });
 
@@ -53,6 +47,6 @@ describe('resolveEntryPdfAnchor', () => {
   });
 
   it('resolves no fragment which is not an anchor', () => {
-    expect(resolveEntryPdfAnchor(databaseEntry_pdf_1, 'Heading')).toBeNull();
+    expect(resolveEntryPdfAnchor(entry_pdf_1, 'Heading')).toBeNull();
   });
 });

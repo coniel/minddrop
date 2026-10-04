@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import {
   Database,
   DatabaseEntries,
-  DatabaseEntry,
-  DatabaseEntryCreationOption,
   DatabaseEntryTemplate,
   DatabaseEntryTemplates,
   Databases,
+  Entry,
+  EntryCreationOption,
 } from '@minddrop/databases';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import {
@@ -95,7 +95,7 @@ export const AddContentMenu = React.forwardRef<
     // Resolve the suggested databases and templates, in the order given
     const suggestions = suggested
       .map(resolveSuggestion)
-      .filter((suggestion): suggestion is DatabaseEntryCreationOption =>
+      .filter((suggestion): suggestion is EntryCreationOption =>
         Boolean(suggestion),
       );
 
@@ -125,7 +125,7 @@ export const AddContentMenu = React.forwardRef<
     // database's or an entry template's.
     function resolveSuggestion(
       suggestionId: string,
-    ): DatabaseEntryCreationOption | null {
+    ): EntryCreationOption | null {
       // Check whether the ID is a database's
       const database = Databases.get(suggestionId, false);
 
@@ -163,7 +163,7 @@ export const AddContentMenu = React.forwardRef<
     }
 
     // Report an existing entry as added
-    function addExistingEntry(entry: DatabaseEntry, secondary: boolean) {
+    function addExistingEntry(entry: Entry, secondary: boolean) {
       reportAdded({ id: entry.id, created: false }, secondary);
     }
 
@@ -184,10 +184,7 @@ export const AddContentMenu = React.forwardRef<
 
     // Render a creation option, labelled with the entry name it
     // creates.
-    function renderCreationItem({
-      database,
-      template,
-    }: DatabaseEntryCreationOption) {
+    function renderCreationItem({ database, template }: EntryCreationOption) {
       return (
         <SearchableMenuItem
           key={template ? `${database.id}:${template.id}` : database.id}
@@ -204,7 +201,7 @@ export const AddContentMenu = React.forwardRef<
     }
 
     // Render an existing entry's option
-    function renderEntryItem(entry: DatabaseEntry) {
+    function renderEntryItem(entry: Entry) {
       return (
         <SearchableMenuItem
           key={entry.id}

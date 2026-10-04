@@ -1,11 +1,11 @@
 import { Events } from '@minddrop/events';
 import { Workspaces } from '@minddrop/workspaces';
-import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
-import { DatabaseEntryMetadataUpdatedEvent } from '../events';
+import { EntriesStore } from '../EntriesStore';
+import { EntryMetadataUpdatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
-import { getDatabaseEntry } from '../getDatabaseEntry';
-import { DatabaseEntryMetadata } from '../types';
-import { resolveDatabaseEntryPath, resolveDatabasePath } from '../utils';
+import { getEntry } from '../getEntry';
+import { EntryMetadata } from '../types';
+import { resolveDatabasePath, resolveEntryPath } from '../utils';
 import { writeEntryMetadata } from '../writeEntryMetadata';
 
 /**
@@ -16,26 +16,26 @@ import { writeEntryMetadata } from '../writeEntryMetadata';
  * @param metadata - The new metadata for the entry.
  * @param workspaceId - The workspace the entry belongs to. Omit for the active workspace.
  *
- * @throws {DatabaseEntryNotFoundError} If the entry does not exist.
+ * @throws {EntryNotFoundError} If the entry does not exist.
  * @throws {DatabaseNotFoundError} If the entry database does not exist.
  *
- * @dispatches database-entries:entry:metadata-updated
+ * @dispatches databases:entry:metadata-updated
  */
 export async function updateEntryMetadata(
   entryId: string,
-  metadata: DatabaseEntryMetadata,
+  metadata: EntryMetadata,
   workspaceId?: string,
 ): Promise<void> {
   // Look up the entry and its database to find the database path
-  const entry = getDatabaseEntry(entryId, true, workspaceId);
+  const entry = getEntry(entryId, true, workspaceId);
   const database = getDatabase(entry.database, true, workspaceId);
 
   // Set the metadata on the stored entry so successive updates
   // compose from current state.
-  DatabaseEntriesStore.in(workspaceId).update(entryId, { metadata });
+  EntriesStore.in(workspaceId).update(entryId, { metadata });
 
   // Dispatch metadata updated event
-  Events.dispatch(DatabaseEntryMetadataUpdatedEvent, {
+  Events.dispatch(EntryMetadataUpdatedEvent, {
     entryId,
     databaseId: entry.database,
     metadata,
@@ -46,7 +46,7 @@ export async function updateEntryMetadata(
   // Write the entry's metadata sidecar
   await writeEntryMetadata(
     resolveDatabasePath(database, workspacePath),
-    resolveDatabaseEntryPath(entry, database, workspacePath),
+    resolveEntryPath(entry, database, workspacePath),
     metadata,
   );
 }

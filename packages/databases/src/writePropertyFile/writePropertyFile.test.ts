@@ -7,7 +7,7 @@ import {
   commonStorageDatabase,
   commonStorageEntry1,
   databaseDirPath,
-  databaseEntryFilePath,
+  entryFilePath,
   entryStorageDatabase,
   entryStorageEntry1,
   imagePropertyName,
@@ -139,10 +139,9 @@ describe('writePropertyFile', () => {
 
     it('throws if the entry directory does not exist', async () => {
       // Remove the entry directory
-      MockFs.removeDir(
-        Fs.parentDirPath(databaseEntryFilePath(entryStorageEntry1)),
-        { recursive: true },
-      );
+      MockFs.removeDir(Fs.parentDirPath(entryFilePath(entryStorageEntry1)), {
+        recursive: true,
+      });
 
       await expect(async () =>
         writePropertyFile(entryStorageEntry1.id, imagePropertyName, file),

@@ -1,4 +1,4 @@
-import { DatabaseEntries, DatabaseEntry } from '@minddrop/databases';
+import { DatabaseEntries, Entry } from '@minddrop/databases';
 import { Pdf, PdfAnnotations } from '@minddrop/pdf';
 import { PdfPropertyMetadata } from '../types';
 
@@ -9,7 +9,7 @@ import { PdfPropertyMetadata } from '../types';
  *
  * @param entry - The entry.
  */
-export function loadEntryPdfs(entry: DatabaseEntry): void {
+export function loadEntryPdfs(entry: Entry): void {
   // Load each pdf file's annotations and page last read
   DatabaseEntries.propertyFiles(entry, { propertyTypes: ['pdf'] }).forEach(
     ({ property, path }) => {

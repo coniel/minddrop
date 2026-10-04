@@ -1,16 +1,16 @@
 import { Properties } from '@minddrop/properties';
 import { TagDeletedEventData } from '@minddrop/tags';
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
-import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
+import { EntriesStore } from '../../EntriesStore';
 import { getAllDatabases } from '../../getAllDatabases';
-import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
+import { getAllEntries } from '../../getAllEntries';
+import { recordEntryHistory } from '../../recordEntryHistory';
 import { sqlUpsertEntries } from '../../sql';
 import { SqlEntryRecord } from '../../types';
 import {
   convertEntryToSqlRecord,
   rewriteEntryPropertyValues,
 } from '../../utils';
-import { writeDatabaseEntry } from '../../writeDatabaseEntry';
+import { writeEntry } from '../../writeEntry';
 
 /**
  * Called when a tag is deleted. Removes the tag's name from the
@@ -35,7 +35,7 @@ export async function onTagDeleted(data: TagDeletedEventData): Promise<void> {
     // The rewritten entries' SQL records, upserted as a batch
     const updatedRecords: SqlEntryRecord[] = [];
 
-    for (const entry of getAllDatabaseEntries(database.id)) {
+    for (const entry of getAllEntries(database.id)) {
       // Remove the deleted tag from the entry's tags values
       const rewritten = rewriteEntryPropertyValues(
         entry,
@@ -49,13 +49,13 @@ export async function onTagDeleted(data: TagDeletedEventData): Promise<void> {
       }
 
       // Update the entry in the store
-      DatabaseEntriesStore.update(entry.id, rewritten.entry);
+      EntriesStore.update(entry.id, rewritten.entry);
 
       // Write the updated entry to the file system
-      await writeDatabaseEntry(entry.id);
+      await writeEntry(entry.id);
 
       // Record every value the deletion changed in one record
-      await recordDatabaseEntryHistory(database, entry, {
+      await recordEntryHistory(database, entry, {
         kind: 'property',
         changes: rewritten.changes,
         action,

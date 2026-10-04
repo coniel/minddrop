@@ -1,7 +1,7 @@
 import { ContentColor } from '@minddrop/ui-theme';
 import { getDatabase } from '../getDatabase';
-import { getDatabaseEntry } from '../getDatabaseEntry';
-import { updateDatabaseEntry } from '../updateDatabaseEntry';
+import { getEntry } from '../getEntry';
+import { updateEntry } from '../updateEntry';
 import { updateEntryMetadata } from '../updateEntryMetadata';
 
 /**
@@ -11,16 +11,16 @@ import { updateEntryMetadata } from '../updateEntryMetadata';
  * @param entryId - The ID of the entry to color.
  * @param color - The color to set, or null to clear it.
  *
- * @dispatches database-entries:entry:metadata-updated
+ * @throws {EntryNotFoundError} If the entry does not exist.
  *
- * @throws {DatabaseEntryNotFoundError} If the entry does not exist.
+ * @dispatches databases:entry:metadata-updated
  */
 export async function setEntryColor(
   entryId: string,
   color: ContentColor | null,
 ): Promise<void> {
   // Get the entry
-  const entry = getDatabaseEntry(entryId);
+  const entry = getEntry(entryId);
   // Get the database
   const database = getDatabase(entry.database);
 
@@ -40,7 +40,7 @@ export async function setEntryColor(
   );
 
   if (colorProperty) {
-    await updateDatabaseEntry(entryId, {
+    await updateEntry(entryId, {
       properties: { [colorProperty.name]: color },
     });
   }

@@ -9,9 +9,9 @@ import { History } from '@minddrop/history';
 import { Properties } from '@minddrop/properties';
 import { storeItem } from '@minddrop/stores/test-utils';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabaseEntryTemplatesStore } from '../../DatabaseEntryTemplatesStore';
 import { DatabasesStore } from '../../DatabasesStore';
+import { EntriesStore } from '../../EntriesStore';
 import { DatabaseHistoryCauses } from '../../constants';
 import {
   sqlGetAllEntriesFull,
@@ -36,8 +36,8 @@ import {
 } from '../../test-utils';
 import { Database } from '../../types';
 import {
-  resolveDatabaseEntryHistorySubject,
   resolveDatabaseHistorySubject,
+  resolveEntryHistorySubject,
   virtualCollectionId,
   virtualCollectionName,
 } from '../../utils';
@@ -165,9 +165,9 @@ describe('onRenameProperty', () => {
     await renameProperty(objectDatabase, 'Icon', 'Symbol');
 
     // The entry should hold its value under the new name
-    expect(
-      storeItem(DatabaseEntriesStore, objectEntry1.id).properties.Symbol,
-    ).toBe(objectEntry1.properties.Icon);
+    expect(storeItem(EntriesStore, objectEntry1.id).properties.Symbol).toBe(
+      objectEntry1.properties.Icon,
+    );
   });
 
   it("re-keys the property in the database's entry templates", async () => {
@@ -278,7 +278,7 @@ describe('onRenameProperty', () => {
 
     expect(
       await History.read(
-        resolveDatabaseEntryHistorySubject(objectDatabase, objectEntry1),
+        resolveEntryHistorySubject(objectDatabase, objectEntry1),
       ),
     ).toContainEqual(
       expect.objectContaining({
@@ -299,13 +299,13 @@ describe('onRenameProperty', () => {
       path: 'With Icon.md',
     };
 
-    DatabaseEntriesStore.set(withIcon);
+    EntriesStore.set(withIcon);
 
     await renameProperty(objectDatabase, 'Icon', 'Symbol');
 
     const records = await Promise.all(
       [objectEntry1, withIcon].map((entry) =>
-        History.read(resolveDatabaseEntryHistorySubject(objectDatabase, entry)),
+        History.read(resolveEntryHistorySubject(objectDatabase, entry)),
       ),
     );
 
@@ -326,13 +326,13 @@ describe('onRenameProperty', () => {
       properties: { Content: objectEntry1.properties.Content },
     };
 
-    DatabaseEntriesStore.set(withoutIcon);
+    EntriesStore.set(withoutIcon);
 
     await renameProperty(objectDatabase, 'Icon', 'Symbol');
 
     expect(
       await History.read(
-        resolveDatabaseEntryHistorySubject(objectDatabase, withoutIcon),
+        resolveEntryHistorySubject(objectDatabase, withoutIcon),
       ),
     ).toEqual([]);
   });

@@ -12,8 +12,6 @@ import { DatabaseNotFoundError } from './errors';
 import {
   DatabaseCreatedEvent,
   DatabaseDeletedEvent,
-  DatabaseEntriesSqlSyncedEvent,
-  DatabaseEntryMetadataUpdatedEvent,
   DatabasePropertyAddedEvent,
   DatabasePropertyOptionRenamedEvent,
   DatabasePropertyRemovedEvent,
@@ -25,6 +23,8 @@ import {
   DatabaseSqlSyncedEvent,
   DatabaseUpdatedEvent,
   DatabasesBackgroundSyncedEvent,
+  EntriesSqlSyncedEvent,
+  EntryMetadataUpdatedEvent,
   OpenDatabaseViewEvent,
 } from './events';
 import { LAYOUT_CONTEXTS, layoutContextBaseType } from './layoutContexts';
@@ -45,7 +45,7 @@ import {
   sqlGetVersion,
   sqlQueryEntries,
   sqlQueryScopedEntries,
-  sqlReindexDatabaseEntries,
+  sqlReindexEntries,
   sqlRenameProperty,
   sqlUpdateEntryMetadata,
   sqlUpsertDatabase,
@@ -64,8 +64,8 @@ export const events = {
   PropertyRemoved: DatabasePropertyRemovedEvent,
   PropertyRenamed: DatabasePropertyRenamedEvent,
   PropertyOptionRenamed: DatabasePropertyOptionRenamedEvent,
-  EntryMetadataUpdated: DatabaseEntryMetadataUpdatedEvent,
-  EntriesSqlSynced: DatabaseEntriesSqlSyncedEvent,
+  EntryMetadataUpdated: EntryMetadataUpdatedEvent,
+  EntriesSqlSynced: EntriesSqlSyncedEvent,
   SqlSynced: DatabaseSqlSyncedEvent,
   PropertySqlSynced: DatabasePropertySqlSyncedEvent,
   SqlReindexed: DatabaseSqlReindexedEvent,
@@ -99,7 +99,7 @@ export const sql = {
   upsertEntries: sqlUpsertEntries,
   deleteEntries: sqlDeleteEntries,
   renameProperty: sqlRenameProperty,
-  reindexDatabaseEntries: sqlReindexDatabaseEntries,
+  reindexEntries: sqlReindexEntries,
   updateEntryMetadata: sqlUpdateEntryMetadata,
   getDatabaseName: sqlGetDatabaseName,
   getDatabaseIcon: sqlGetDatabaseIcon,
@@ -127,7 +127,7 @@ export { getAllDatabases as getAll } from './getAllDatabases';
 export { addDatabaseProperty as addProperty } from './addDatabaseProperty';
 export { createDatabase as create } from './createDatabase';
 export { deleteDatabase as delete } from './deleteDatabase';
-export { clearDatabaseEntries as clearEntries } from './clearDatabaseEntries';
+export { clearEntries } from './clearEntries';
 export { getDatabase as get } from './getDatabase';
 export { getDatabasesFromEntries as getFromEntries } from './getDatabasesFromEntries';
 export { initializeDatabases as initialize } from './initializeDatabases';
@@ -144,7 +144,7 @@ export { setDatabaseDefault as setDefault } from './setDatabaseDefault';
 export { useDatabaseDefaults as useDefaults } from './DatabaseSettingsStore';
 export { useDatabaseContentDefaults as useContentDefaults } from './DatabaseSettingsStore';
 export { setDatabaseContentDefault as setContentDefault } from './setDatabaseContentDefault';
-export { setDatabaseEntrySerializer as setEntrySerializer } from './setDatabaseEntrySerializer';
+export { setEntrySerializer } from './setEntrySerializer';
 export { setDatabasePropertyFileStorage as setPropertyFileStorage } from './setDatabasePropertyFileStorage';
 export { updateDatabaseProperty as updateProperty } from './updateDatabaseProperty';
 export { useDatabase as use, useDatabases as useAll } from './DatabasesStore';

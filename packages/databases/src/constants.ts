@@ -31,7 +31,7 @@ export const DatabaseEntityType = 'database';
  * The entity type name of a database entry, used as the type prefix
  * of its ID.
  */
-export const DatabaseEntryEntityType = 'database-entry';
+export const EntryEntityType = 'database-entry';
 
 export const DatabaseConfigFileName = 'database.json';
 export const MetadataDirName = 'metadata';

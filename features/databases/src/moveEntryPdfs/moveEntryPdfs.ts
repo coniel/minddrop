@@ -1,4 +1,4 @@
-import { DatabaseEntries, DatabaseEntry } from '@minddrop/databases';
+import { DatabaseEntries, Entry } from '@minddrop/databases';
 import { Pdf, PdfAnnotations } from '@minddrop/pdf';
 
 /**
@@ -9,10 +9,7 @@ import { Pdf, PdfAnnotations } from '@minddrop/pdf';
  * @param original - The entry before the change.
  * @param updated - The entry after the change.
  */
-export function moveEntryPdfs(
-  original: DatabaseEntry,
-  updated: DatabaseEntry,
-): void {
+export function moveEntryPdfs(original: Entry, updated: Entry): void {
   // Resolve the pdf files before the change
   const previousFiles = DatabaseEntries.propertyFiles(original, {
     propertyTypes: ['pdf'],

@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { storeItem } from '@minddrop/stores/test-utils';
-import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
-import { DatabaseEntryNotFoundError } from '../errors';
+import { EntriesStore } from '../EntriesStore';
+import { EntryNotFoundError } from '../errors';
 import {
   MockFs,
   cleanup,
   databaseDirPath,
-  databaseEntryFilePath,
+  entryFilePath,
   objectDatabase,
   objectEntry1,
   setup,
@@ -21,7 +21,7 @@ const existingCreated = new Date('2020-03-03T00:00:00.000Z');
 // The sidecar path the entry's metadata is written to
 const sidecarPath = resolveEntryMetadataFilePath(
   databaseDirPath(objectDatabase),
-  databaseEntryFilePath(objectEntry1),
+  entryFilePath(objectEntry1),
 );
 
 describe('setEntryColor', () => {
@@ -32,9 +32,7 @@ describe('setEntryColor', () => {
   it('sets the color on the stored entry metadata', async () => {
     await setEntryColor(objectEntry1.id, 'red');
 
-    expect(
-      storeItem(DatabaseEntriesStore, objectEntry1.id).metadata.color,
-    ).toBe('red');
+    expect(storeItem(EntriesStore, objectEntry1.id).metadata.color).toBe('red');
   });
 
   it('persists the color to the metadata sidecar', async () => {
@@ -47,7 +45,7 @@ describe('setEntryColor', () => {
 
   it('preserves the rest of the metadata', async () => {
     // Give the entry existing metadata
-    DatabaseEntriesStore.update(objectEntry1.id, {
+    EntriesStore.update(objectEntry1.id, {
       metadata: {
         created: existingCreated,
       },
@@ -55,7 +53,7 @@ describe('setEntryColor', () => {
 
     await setEntryColor(objectEntry1.id, 'green');
 
-    expect(storeItem(DatabaseEntriesStore, objectEntry1.id).metadata).toEqual({
+    expect(storeItem(EntriesStore, objectEntry1.id).metadata).toEqual({
       created: existingCreated,
       color: 'green',
     });
@@ -65,9 +63,7 @@ describe('setEntryColor', () => {
     await setEntryColor(objectEntry1.id, 'red');
     await setEntryColor(objectEntry1.id, null);
 
-    expect(storeItem(DatabaseEntriesStore, objectEntry1.id).metadata).toEqual(
-      {},
-    );
+    expect(storeItem(EntriesStore, objectEntry1.id).metadata).toEqual({});
   });
 
   describe('with a declared color property', () => {
@@ -84,7 +80,7 @@ describe('setEntryColor', () => {
     it('mirrors the color into the property value', async () => {
       await setEntryColor(objectEntry1.id, 'red');
 
-      const entry = storeItem(DatabaseEntriesStore, objectEntry1.id);
+      const entry = storeItem(EntriesStore, objectEntry1.id);
 
       // Both the metadata and the file backed property hold the color
       expect(entry.metadata.color).toBe('red');
@@ -95,7 +91,7 @@ describe('setEntryColor', () => {
       await setEntryColor(objectEntry1.id, 'red');
       await setEntryColor(objectEntry1.id, null);
 
-      const entry = storeItem(DatabaseEntriesStore, objectEntry1.id);
+      const entry = storeItem(EntriesStore, objectEntry1.id);
 
       expect(entry.metadata.color).toBeUndefined();
       expect(entry.properties.Color).toBeNull();
@@ -104,7 +100,7 @@ describe('setEntryColor', () => {
 
   it('throws if the entry does not exist', async () => {
     await expect(setEntryColor('missing-entry', 'red')).rejects.toThrowError(
-      DatabaseEntryNotFoundError,
+      EntryNotFoundError,
     );
   });
 });

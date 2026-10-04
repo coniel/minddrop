@@ -3,7 +3,7 @@ import {
   MockFs,
   cleanup,
   databaseDirPath,
-  databaseEntryFilePath,
+  entryFilePath,
   objectDatabase,
   objectEntry1,
   setup,
@@ -14,7 +14,7 @@ import { readEntryMetadata } from './readEntryMetadata';
 // The path of the entry's metadata sidecar
 const sidecarPath = resolveEntryMetadataFilePath(
   databaseDirPath(objectDatabase),
-  databaseEntryFilePath(objectEntry1),
+  entryFilePath(objectEntry1),
 );
 
 // The date stored in the sidecar as an ISO string
@@ -28,7 +28,7 @@ describe('readEntryMetadata', () => {
   it('returns an empty object when the entry has no sidecar', async () => {
     const metadata = await readEntryMetadata(
       databaseDirPath(objectDatabase),
-      databaseEntryFilePath(objectEntry1),
+      entryFilePath(objectEntry1),
     );
 
     expect(metadata).toEqual({});
@@ -47,7 +47,7 @@ describe('readEntryMetadata', () => {
 
     const metadata = await readEntryMetadata(
       databaseDirPath(objectDatabase),
-      databaseEntryFilePath(objectEntry1),
+      entryFilePath(objectEntry1),
     );
 
     expect(metadata).toEqual({
@@ -66,7 +66,7 @@ describe('readEntryMetadata', () => {
 
     const metadata = await readEntryMetadata(
       databaseDirPath(objectDatabase),
-      databaseEntryFilePath(objectEntry1),
+      entryFilePath(objectEntry1),
     );
 
     expect(metadata.created).toEqual(createdDate);
@@ -78,7 +78,7 @@ describe('readEntryMetadata', () => {
 
     const metadata = await readEntryMetadata(
       databaseDirPath(objectDatabase),
-      databaseEntryFilePath(objectEntry1),
+      entryFilePath(objectEntry1),
     );
 
     expect(metadata).toEqual({});

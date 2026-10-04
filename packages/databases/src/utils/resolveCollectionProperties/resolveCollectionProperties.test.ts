@@ -10,22 +10,22 @@ import {
   rootStorageDatabase,
   setup,
 } from '../../test-utils';
-import { databaseEntryAddress } from '../databaseEntryAddress';
+import { entryAddress } from '../entryAddress';
 import { resolveCollectionProperties } from './resolveCollectionProperties';
 
 // Address index containing the referenced fixture entries, keyed
 // lowercased as the resolve path expects.
 const entryIdByAddress = new Map([
   [
-    databaseEntryAddress(relatedEntry1, collectionDatabase).toLowerCase(),
+    entryAddress(relatedEntry1, collectionDatabase).toLowerCase(),
     relatedEntry1.id,
   ],
   [
-    databaseEntryAddress(relatedEntry2, collectionDatabase).toLowerCase(),
+    entryAddress(relatedEntry2, collectionDatabase).toLowerCase(),
     relatedEntry2.id,
   ],
   [
-    databaseEntryAddress(referenceEntry1, rootStorageDatabase).toLowerCase(),
+    entryAddress(referenceEntry1, rootStorageDatabase).toLowerCase(),
     referenceEntry1.id,
   ],
 ]);
@@ -87,9 +87,9 @@ function serializedProperties(): PropertyMap {
   return {
     ...collectionEntry1.properties,
     Related: [
-      databaseEntryAddress(relatedEntry1, collectionDatabase),
-      databaseEntryAddress(relatedEntry2, collectionDatabase),
+      entryAddress(relatedEntry1, collectionDatabase),
+      entryAddress(relatedEntry2, collectionDatabase),
     ],
-    References: [databaseEntryAddress(referenceEntry1, rootStorageDatabase)],
+    References: [entryAddress(referenceEntry1, rootStorageDatabase)],
   };
 }

@@ -1,4 +1,4 @@
-import { DatabaseEntry } from '@minddrop/databases';
+import { Entry } from '@minddrop/databases';
 import { TransferData } from '@minddrop/utils';
 import { DatabaseEntriesDataKey } from '../../constants';
 
@@ -11,7 +11,7 @@ import { DatabaseEntriesDataKey } from '../../constants';
  */
 export function resolveTransferredEntryIds(
   data: TransferData<{ [DatabaseEntriesDataKey]?: unknown }>,
-): DatabaseEntry['id'][] {
+): Entry['id'][] {
   // Get the transferred entries
   const entries = data[DatabaseEntriesDataKey];
 
@@ -22,6 +22,6 @@ export function resolveTransferredEntryIds(
 
   // Get the ID of each well-formed serialized entry
   return entries
-    .map((entry: Partial<DatabaseEntry>) => entry?.id)
+    .map((entry: Partial<Entry>) => entry?.id)
     .filter((id) => typeof id === 'string');
 }

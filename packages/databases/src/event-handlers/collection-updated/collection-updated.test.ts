@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { CollectionFixtures } from '@minddrop/collections/test-utils';
 import { storeItem } from '@minddrop/stores/test-utils';
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
+import { EntriesStore } from '../../EntriesStore';
 import { sqlGetAllEntriesFull, sqlUpsertDatabase } from '../../sql';
 import {
   cleanup,
@@ -62,7 +62,7 @@ describe('onUpdateCollection', () => {
     });
 
     // Entry should be unchanged
-    const entry = storeItem(DatabaseEntriesStore, collectionEntry1.id);
+    const entry = storeItem(EntriesStore, collectionEntry1.id);
     expect(entry.properties.Related).toEqual(
       collectionEntry1.properties.Related,
     );
@@ -82,7 +82,7 @@ describe('onUpdateCollection', () => {
     });
 
     // Entry property should be updated with the new entries
-    const entry = storeItem(DatabaseEntriesStore, collectionEntry1.id);
+    const entry = storeItem(EntriesStore, collectionEntry1.id);
     expect(entry.properties.Related).toEqual(updatedEntries);
   });
 

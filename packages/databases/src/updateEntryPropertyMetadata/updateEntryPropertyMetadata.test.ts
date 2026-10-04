@@ -1,12 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { storeItem } from '@minddrop/stores/test-utils';
-import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
-import { DatabaseEntryNotFoundError } from '../errors';
+import { EntriesStore } from '../EntriesStore';
+import { EntryNotFoundError } from '../errors';
 import {
   MockFs,
   cleanup,
   databaseDirPath,
-  databaseEntryFilePath,
+  entryFilePath,
   objectDatabase,
   objectEntry1,
   setup,
@@ -17,7 +17,7 @@ import { updateEntryPropertyMetadata } from './updateEntryPropertyMetadata';
 // The sidecar path the entry's metadata is written to
 const sidecarPath = resolveEntryMetadataFilePath(
   databaseDirPath(objectDatabase),
-  databaseEntryFilePath(objectEntry1),
+  entryFilePath(objectEntry1),
 );
 
 describe('updateEntryPropertyMetadata', () => {
@@ -25,7 +25,7 @@ describe('updateEntryPropertyMetadata', () => {
     setup();
 
     // Give two of the entry's properties metadata
-    DatabaseEntriesStore.update(objectEntry1.id, {
+    EntriesStore.update(objectEntry1.id, {
       metadata: {
         color: 'blue',
         properties: {
@@ -41,7 +41,7 @@ describe('updateEntryPropertyMetadata', () => {
   it("merges the data into the property's metadata", async () => {
     await updateEntryPropertyMetadata(objectEntry1.id, 'Paper', { page: 7 });
 
-    expect(storeItem(DatabaseEntriesStore, objectEntry1.id).metadata).toEqual({
+    expect(storeItem(EntriesStore, objectEntry1.id).metadata).toEqual({
       color: 'blue',
       properties: {
         Paper: { annotations: [], page: 7 },
@@ -54,8 +54,7 @@ describe('updateEntryPropertyMetadata', () => {
     await updateEntryPropertyMetadata(objectEntry1.id, 'Photo', { crop: 1 });
 
     expect(
-      storeItem(DatabaseEntriesStore, objectEntry1.id).metadata.properties
-        ?.Photo,
+      storeItem(EntriesStore, objectEntry1.id).metadata.properties?.Photo,
     ).toEqual({ crop: 1 });
   });
 
@@ -70,6 +69,6 @@ describe('updateEntryPropertyMetadata', () => {
   it('throws if the entry does not exist', async () => {
     await expect(
       updateEntryPropertyMetadata('missing', 'Paper', { page: 7 }),
-    ).rejects.toThrow(DatabaseEntryNotFoundError);
+    ).rejects.toThrow(EntryNotFoundError);
   });
 });

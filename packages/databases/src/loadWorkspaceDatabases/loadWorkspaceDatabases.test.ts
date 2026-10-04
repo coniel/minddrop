@@ -1,16 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
-import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
+import { EntriesStore } from '../EntriesStore';
 import { getAllDatabases } from '../getAllDatabases';
 import {
   MockBackendAdapter,
   cleanup,
   collectionEntry1,
   createMockBackendAdapter,
-  databaseEntrySqlRecords,
   databases,
+  entrySqlRecords,
   setup,
 } from '../test-utils';
 import { virtualCollectionId } from '../utils';
@@ -25,7 +25,7 @@ describe('loadWorkspaceDatabases', () => {
   beforeEach(() => {
     // Load fixture files only, the stores are hydrated by
     // loadWorkspaceDatabases itself.
-    setup({ loadDatabases: false, loadDatabaseEntries: false });
+    setup({ loadDatabases: false, loadEntries: false });
 
     // Register a fake backend adapter serving the fixture data
     backend = createMockBackendAdapter();
@@ -48,9 +48,9 @@ describe('loadWorkspaceDatabases', () => {
     await loadWorkspaceDatabases(workspace_1);
 
     // All backend entries should be loaded, converted from SQL records
-    const entries = DatabaseEntriesStore.getAllArray();
+    const entries = EntriesStore.getAllArray();
 
-    expect(entries.length).toBe(databaseEntrySqlRecords.length);
+    expect(entries.length).toBe(entrySqlRecords.length);
     expect(
       entries.find((entry) => entry.id === collectionEntry1.id),
     ).toMatchObject({
@@ -68,11 +68,11 @@ describe('loadWorkspaceDatabases', () => {
     expect(DatabasesStore.in(workspace_2.id).getAllArray().length).toBe(
       databases.length,
     );
-    expect(DatabaseEntriesStore.in(workspace_2.id).getAllArray().length).toBe(
-      databaseEntrySqlRecords.length,
+    expect(EntriesStore.in(workspace_2.id).getAllArray().length).toBe(
+      entrySqlRecords.length,
     );
     expect(DatabasesStore).toHaveItemCount(0);
-    expect(DatabaseEntriesStore).toHaveItemCount(0);
+    expect(EntriesStore).toHaveItemCount(0);
   });
 
   it('hydrates virtual collections from collection properties', async () => {

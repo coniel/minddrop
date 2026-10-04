@@ -161,7 +161,7 @@ the owning feature's handler performs the wiring:
 
 ```
 ui/databases: DatabaseEntryRenderer
-  → dispatches OpenDatabaseEntryViewEvent
+  → dispatches OpenEntryViewEvent
       → features/databases event handler
           → Tabs.open(...)
 ```

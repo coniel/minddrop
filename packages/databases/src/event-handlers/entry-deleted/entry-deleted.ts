@@ -6,15 +6,15 @@ import {
   clearContentCapture,
   contentCaptureKey,
 } from '../../contentCaptureRegistry';
-import { DatabaseEntryDeletedEventData } from '../../events';
+import { EntryDeletedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
-import { recordDatabaseEntryHistory } from '../../recordDatabaseEntryHistory';
-import { recordDatabaseEntryLedger } from '../../recordDatabaseEntryLedger';
+import { recordEntriesLedger } from '../../recordEntriesLedger';
+import { recordEntryHistory } from '../../recordEntryHistory';
 import { removeEntriesFromCollections } from '../../removeEntriesFromCollections';
 import { sqlDeleteEntries } from '../../sql';
 import {
-  resolveDatabaseEntryHistorySubject,
   resolveDatabasePath,
+  resolveEntryHistorySubject,
   virtualCollectionId,
 } from '../../utils';
 
@@ -23,7 +23,7 @@ import {
  *
  * @param data - The deleted entry's data.
  */
-export async function onDeleteEntry(data: DatabaseEntryDeletedEventData) {
+export async function onDeleteEntry(data: EntryDeletedEventData) {
   // Delete from SQL
   sqlDeleteEntries(data.database, [data.id]);
 
@@ -62,7 +62,7 @@ export async function onDeleteEntry(data: DatabaseEntryDeletedEventData) {
   clearContentCapture(contentCaptureKey(databasePath, data.title));
 
   // Record the deletion in the entries ledger
-  await recordDatabaseEntryLedger(database, {
+  await recordEntriesLedger(database, {
     kind: 'deleted',
     subject: { key: data.title },
   });
@@ -71,14 +71,14 @@ export async function onDeleteEntry(data: DatabaseEntryDeletedEventData) {
   // title the app hands out, so the next new entry would inherit its
   // history.
   if (isUntitledTitle(data.title)) {
-    await History.delete(resolveDatabaseEntryHistorySubject(database, data));
+    await History.delete(resolveEntryHistorySubject(database, data));
 
     return;
   }
 
   // Close the history of a named entry. It outlives the entry, so the
   // entry can be restored from it.
-  await recordDatabaseEntryHistory(database, data, {
+  await recordEntryHistory(database, data, {
     kind: 'deleted',
   });
 }

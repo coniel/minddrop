@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { objectEntry1 } from '../../test-utils';
-import { DatabaseEntryMetadata } from '../../types';
+import { EntryMetadata } from '../../types';
 import { omitEntryPropertyMetadata } from './omitEntryPropertyMetadata';
 
-const metadata: DatabaseEntryMetadata = {
+const metadata: EntryMetadata = {
   ...objectEntry1.metadata,
   color: 'blue',
   properties: {
@@ -29,7 +29,7 @@ describe('omitEntryPropertyMetadata', () => {
   });
 
   it('returns metadata without property metadata as is', () => {
-    const plain: DatabaseEntryMetadata = {
+    const plain: EntryMetadata = {
       ...objectEntry1.metadata,
       color: 'blue',
     };

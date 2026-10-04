@@ -1,4 +1,4 @@
-import { DatabaseEntry } from '@minddrop/databases';
+import { Entry } from '@minddrop/databases';
 import { SelectPropertySchema } from '@minddrop/properties';
 import { NO_VALUE_COLUMN } from '../../constants';
 
@@ -14,7 +14,7 @@ import { NO_VALUE_COLUMN } from '../../constants';
  * @returns The option value keying the entry's column, empty for the no-value column.
  */
 export function resolveEntryColumnValue(
-  entry: DatabaseEntry,
+  entry: Entry,
   property: SelectPropertySchema,
   valueAliases: Record<string, string> = {},
 ): string {

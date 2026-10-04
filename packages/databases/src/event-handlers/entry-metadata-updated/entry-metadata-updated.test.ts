@@ -16,11 +16,11 @@ import {
   urlEntry1,
   urlEntry1SqlRecord,
 } from '../../test-utils';
-import { DatabaseEntryMetadata } from '../../types';
+import { EntryMetadata } from '../../types';
 import { onUpdateEntryMetadata } from './entry-metadata-updated';
 
 // The updated metadata to sync
-const entryMetadata: DatabaseEntryMetadata = {
+const entryMetadata: EntryMetadata = {
   color: 'red',
 };
 

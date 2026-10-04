@@ -14,7 +14,7 @@ import {
   setup,
   setupTestSqlDatabase,
 } from '../../test-utils';
-import { resolveDatabaseEntryHistorySubject } from '../../utils';
+import { resolveEntryHistorySubject } from '../../utils';
 import { onUpdateEntry } from './entry-updated';
 
 // The entry with an updated title and property value
@@ -90,7 +90,7 @@ describe('onUpdateEntry', () => {
     await onUpdateEntry({ original: objectEntry1, updated: updatedEntry });
 
     const records = await History.read(
-      resolveDatabaseEntryHistorySubject(objectDatabase, objectEntry1),
+      resolveEntryHistorySubject(objectDatabase, objectEntry1),
     );
 
     expect(records).toEqual([
@@ -112,7 +112,7 @@ describe('onUpdateEntry', () => {
 
     expect(
       await History.read(
-        resolveDatabaseEntryHistorySubject(objectDatabase, objectEntry1),
+        resolveEntryHistorySubject(objectDatabase, objectEntry1),
       ),
     ).toEqual([]);
   });

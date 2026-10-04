@@ -1,8 +1,8 @@
 import { Markdown } from '@minddrop/markdown';
 import { PropertyMap } from '@minddrop/properties';
-import { DatabaseEntrySerializer } from '../../types';
+import { EntrySerializer } from '../../types';
 
-export const markdownEntrySerializer: DatabaseEntrySerializer = {
+export const markdownEntrySerializer: EntrySerializer = {
   id: 'markdown',
   name: 'databases.entrySerializers.markdown.name',
   description: 'databases.entrySerializers.markdown.description',

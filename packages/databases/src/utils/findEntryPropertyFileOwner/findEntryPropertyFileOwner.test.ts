@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
+import { EntriesStore } from '../../EntriesStore';
 import {
   cleanup,
   databaseDirPath,
@@ -53,7 +53,7 @@ describe('findEntryPropertyFileOwner', () => {
 
   it('returns the first of the entries sharing a file', () => {
     // A second entry in the root storage database holding the same file
-    DatabaseEntriesStore.set({
+    EntriesStore.set({
       ...rootStorageEntry1,
       id: 'database-entry_root-storage-entry-2',
       title: 'Root Storage Entry 2',

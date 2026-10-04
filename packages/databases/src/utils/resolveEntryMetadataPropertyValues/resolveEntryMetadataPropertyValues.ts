@@ -1,5 +1,5 @@
 import { PropertiesSchema, PropertyValue } from '@minddrop/properties';
-import { DatabaseEntry } from '../../types';
+import { Entry } from '../../types';
 import { resolveEntryMetadataValue } from '../resolveEntryMetadataValue';
 import { withImplicitMetadataProperties } from '../withImplicitMetadataProperties';
 
@@ -13,7 +13,7 @@ import { withImplicitMetadataProperties } from '../withImplicitMetadataPropertie
  * @returns A map of property names to metadata values.
  */
 export function resolveEntryMetadataPropertyValues(
-  entry: DatabaseEntry,
+  entry: Entry,
   properties: PropertiesSchema,
 ): Record<string, PropertyValue> {
   const values: Record<string, PropertyValue> = {};

@@ -43,7 +43,7 @@ export interface SqlEntryRecord {
   contentHash: string;
 
   /**
-   * JSON-serialized DatabaseEntryMetadata.
+   * JSON-serialized EntryMetadata.
    */
   metadata: string;
 

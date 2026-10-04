@@ -4,8 +4,8 @@ package: packages/databases
 summary: 'A feature claiming a visible workspace root directory must reserve that name in database create/rename validation'
 paths:
   - 'packages/databases/src/utils/matchDatabaseReference/**'
-  - 'packages/databases/src/utils/matchDatabaseEntryReference/**'
-  - 'packages/databases/src/utils/matchDatabaseEntryAddress/**'
+  - 'packages/databases/src/utils/matchEntryReference/**'
+  - 'packages/databases/src/utils/matchEntryAddress/**'
   - 'packages/databases/src/createDatabase/**'
   - 'packages/databases/src/renameDatabase/**'
 tags: [references, addresses, validation, reserved-names]

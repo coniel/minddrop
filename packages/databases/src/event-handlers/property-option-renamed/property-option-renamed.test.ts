@@ -3,10 +3,10 @@ import { Events } from '@minddrop/events';
 import { History } from '@minddrop/history';
 import { SelectPropertySchema } from '@minddrop/properties';
 import { storeItem } from '@minddrop/stores/test-utils';
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
+import { EntriesStore } from '../../EntriesStore';
 import { DatabaseHistoryCauses } from '../../constants';
-import { DatabaseEntryUpdatedEvent } from '../../events';
+import { EntryUpdatedEvent } from '../../events';
 import { sqlGetEntryPropertyValues, sqlUpsertDatabase } from '../../sql';
 import {
   MockFs,
@@ -20,10 +20,10 @@ import {
   setupRecordingTestSqlDatabase,
 } from '../../test-utils';
 import {
-  resolveDatabaseEntryHistorySubject,
-  resolveDatabaseEntryPath,
   resolveDatabaseHistorySubject,
   resolveDatabasePath,
+  resolveEntryHistorySubject,
+  resolveEntryPath,
 } from '../../utils';
 import { onRenamePropertyOption } from './property-option-renamed';
 
@@ -122,9 +122,9 @@ describe('onRenamePropertyOption', () => {
 
     // Add the select database and its entries to the stores
     DatabasesStore.set(selectDatabase);
-    DatabaseEntriesStore.set(selectEntry);
-    DatabaseEntriesStore.set(secondEntry);
-    DatabaseEntriesStore.set(otherEntry);
+    EntriesStore.set(selectEntry);
+    EntriesStore.set(secondEntry);
+    EntriesStore.set(otherEntry);
 
     // Add the database's SQL record so entry upserts satisfy the
     // foreign key. The statement is then dropped from the recording.
@@ -144,12 +144,12 @@ describe('onRenamePropertyOption', () => {
   it('rewrites the option value in entries holding it', async () => {
     await renameStatusOption();
 
-    expect(
-      storeItem(DatabaseEntriesStore, selectEntry.id).properties.Status,
-    ).toBe('Doing');
-    expect(
-      storeItem(DatabaseEntriesStore, otherEntry.id).properties.Status,
-    ).toBe('Done');
+    expect(storeItem(EntriesStore, selectEntry.id).properties.Status).toBe(
+      'Doing',
+    );
+    expect(storeItem(EntriesStore, otherEntry.id).properties.Status).toBe(
+      'Done',
+    );
   });
 
   it('rewrites multiselect values keeping the other options', async () => {
@@ -162,9 +162,10 @@ describe('onRenamePropertyOption', () => {
       action,
     });
 
-    expect(
-      storeItem(DatabaseEntriesStore, selectEntry.id).properties.Labels,
-    ).toEqual(['House', 'Work']);
+    expect(storeItem(EntriesStore, selectEntry.id).properties.Labels).toEqual([
+      'House',
+      'Work',
+    ]);
   });
 
   it('writes the rewritten entries to the file system', async () => {
@@ -172,7 +173,7 @@ describe('onRenamePropertyOption', () => {
 
     // The entry file should contain the new value and not the old
     const contents = MockFs.readTextFile(
-      resolveDatabaseEntryPath(selectEntry, selectDatabase),
+      resolveEntryPath(selectEntry, selectDatabase),
     );
     expect(contents).toContain('Doing');
     expect(contents).not.toContain('Todo');
@@ -207,7 +208,7 @@ describe('onRenamePropertyOption', () => {
     let updatedEntries = 0;
 
     // Count the entry updated events the rewrite dispatches
-    Events.addListener(DatabaseEntryUpdatedEvent, 'test', () => {
+    Events.addListener(EntryUpdatedEvent, 'test', () => {
       updatedEntries += 1;
     });
 
@@ -217,7 +218,7 @@ describe('onRenamePropertyOption', () => {
     await Promise.resolve();
 
     // Remove the listener
-    Events.removeListener(DatabaseEntryUpdatedEvent, 'test');
+    Events.removeListener(EntryUpdatedEvent, 'test');
 
     expect(updatedEntries).toBe(0);
   });
@@ -246,7 +247,7 @@ describe('onRenamePropertyOption', () => {
 
     expect(
       await History.read(
-        resolveDatabaseEntryHistorySubject(selectDatabase, selectEntry),
+        resolveEntryHistorySubject(selectDatabase, selectEntry),
       ),
     ).toContainEqual(
       expect.objectContaining({
@@ -264,7 +265,7 @@ describe('onRenamePropertyOption', () => {
 
     const records = await Promise.all(
       [selectEntry, secondEntry].map((entry) =>
-        History.read(resolveDatabaseEntryHistorySubject(selectDatabase, entry)),
+        History.read(resolveEntryHistorySubject(selectDatabase, entry)),
       ),
     );
 
@@ -280,7 +281,7 @@ describe('onRenamePropertyOption', () => {
 
     expect(
       await History.read(
-        resolveDatabaseEntryHistorySubject(selectDatabase, otherEntry),
+        resolveEntryHistorySubject(selectDatabase, otherEntry),
       ),
     ).toEqual([]);
   });

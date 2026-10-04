@@ -6,7 +6,7 @@ import {
   objectDatabase,
   setup,
 } from '../test-utils';
-import { DatabaseEntryMetadata } from '../types';
+import { EntryMetadata } from '../types';
 import { resolveEntryMetadataFilePath } from '../utils';
 import { writeEntryMetadata } from '../writeEntryMetadata';
 import { moveEntryMetadataFile } from './moveEntryMetadataFile';
@@ -14,7 +14,7 @@ import { moveEntryMetadataFile } from './moveEntryMetadataFile';
 const oldEntryPath = `${databaseDirPath(objectDatabase)}/Entry.md`;
 const newEntryPath = `${databaseDirPath(objectDatabase)}/Renamed.md`;
 
-const metadata: DatabaseEntryMetadata = {
+const metadata: EntryMetadata = {
   color: 'red',
 };
 

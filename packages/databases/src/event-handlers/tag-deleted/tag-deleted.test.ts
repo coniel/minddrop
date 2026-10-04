@@ -2,8 +2,8 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { History } from '@minddrop/history';
 import { storeItem } from '@minddrop/stores/test-utils';
 import { TagFixtures } from '@minddrop/tags/test-utils';
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
+import { EntriesStore } from '../../EntriesStore';
 import { sqlGetEntryPropertyValues, sqlUpsertDatabase } from '../../sql';
 import {
   MockFs,
@@ -17,9 +17,9 @@ import {
   setupRecordingTestSqlDatabase,
 } from '../../test-utils';
 import {
-  resolveDatabaseEntryHistorySubject,
-  resolveDatabaseEntryPath,
   resolveDatabasePath,
+  resolveEntryHistorySubject,
+  resolveEntryPath,
 } from '../../utils';
 import { onTagDeleted } from './tag-deleted';
 
@@ -66,7 +66,7 @@ describe('onTagDeleted', () => {
 
     // Add the tags database and its entry to the stores
     DatabasesStore.set(tagsDatabase);
-    DatabaseEntriesStore.set(taggedEntry);
+    EntriesStore.set(taggedEntry);
 
     // Add the database's SQL record so entry upserts satisfy the
     // foreign key. The statement is then dropped from the recording.
@@ -87,7 +87,7 @@ describe('onTagDeleted', () => {
     await onTagDeleted(deletedTag);
 
     // The entry's value should no longer contain the deleted name
-    const entry = storeItem(DatabaseEntriesStore, taggedEntry.id);
+    const entry = storeItem(EntriesStore, taggedEntry.id);
     expect(entry.properties.Tags).toEqual(['Home']);
   });
 
@@ -96,7 +96,7 @@ describe('onTagDeleted', () => {
 
     // The entry file should no longer contain the deleted name
     const contents = MockFs.readTextFile(
-      resolveDatabaseEntryPath(taggedEntry, tagsDatabase),
+      resolveEntryPath(taggedEntry, tagsDatabase),
     );
     expect(contents).toContain('Home');
     expect(contents).not.toContain('Urgent');
@@ -119,7 +119,7 @@ describe('onTagDeleted', () => {
     await onTagDeleted({ ...deletedTag, name: 'Unused' });
 
     // The entry should be unchanged
-    const entry = storeItem(DatabaseEntriesStore, taggedEntry.id);
+    const entry = storeItem(EntriesStore, taggedEntry.id);
     expect(entry.properties.Tags).toEqual(['Urgent', 'Home']);
 
     // No SQL statements should have been executed
@@ -130,7 +130,7 @@ describe('onTagDeleted', () => {
     await onTagDeleted(deletedTag);
 
     // The tagless database's entry should be unchanged
-    const entry = storeItem(DatabaseEntriesStore, objectEntry1.id);
+    const entry = storeItem(EntriesStore, objectEntry1.id);
     expect(entry).toEqual(objectEntry1);
   });
 
@@ -138,9 +138,7 @@ describe('onTagDeleted', () => {
     await onTagDeleted(deletedTag);
 
     expect(
-      await History.read(
-        resolveDatabaseEntryHistorySubject(tagsDatabase, taggedEntry),
-      ),
+      await History.read(resolveEntryHistorySubject(tagsDatabase, taggedEntry)),
     ).toContainEqual(
       expect.objectContaining({
         kind: 'property',
@@ -159,13 +157,13 @@ describe('onTagDeleted', () => {
       path: 'Second Tagged Entry.md',
     };
 
-    DatabaseEntriesStore.set(secondEntry);
+    EntriesStore.set(secondEntry);
 
     await onTagDeleted(deletedTag);
 
     const records = await Promise.all(
       [taggedEntry, secondEntry].map((entry) =>
-        History.read(resolveDatabaseEntryHistorySubject(tagsDatabase, entry)),
+        History.read(resolveEntryHistorySubject(tagsDatabase, entry)),
       ),
     );
     const actions = records.flat().map((record) => record.action);
@@ -187,14 +185,12 @@ describe('onTagDeleted', () => {
       properties: { ...taggedEntry.properties, Tags: ['Home'] },
     };
 
-    DatabaseEntriesStore.set(untagged);
+    EntriesStore.set(untagged);
 
     await onTagDeleted(deletedTag);
 
     expect(
-      await History.read(
-        resolveDatabaseEntryHistorySubject(tagsDatabase, untagged),
-      ),
+      await History.read(resolveEntryHistorySubject(tagsDatabase, untagged)),
     ).toEqual([]);
   });
 });
