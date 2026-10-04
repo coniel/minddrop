@@ -9,8 +9,12 @@ import {
   cleanupWorkspaceFixtures,
   setupWorkspaceFixtures,
 } from '@minddrop/workspaces/test-utils';
+import { initializeDatabasesUi } from './initializeDatabasesUi';
 
 initializeI18n();
+
+// Register the package's translations
+initializeDatabasesUi();
 
 export const MockFs = initializeMockFileSystem();
 

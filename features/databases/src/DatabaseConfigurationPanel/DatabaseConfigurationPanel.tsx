@@ -117,7 +117,7 @@ export const DatabaseConfigurationPanel: React.FC<
           <Spacer />
           <TabsList>
             <TabsTab value="properties" size="sm">
-              {i18n.t('labels.properties')}
+              {i18n.t('properties.labels.properties')}
             </TabsTab>
             <TabsTab value="templates" size="sm">
               {i18n.t('labels.templates')}

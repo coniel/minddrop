@@ -101,7 +101,7 @@ export const QuerySourceNodeCard: React.FC<QuerySourceNodeCardProps> = ({
     if (databaseOptions.length) {
       optionGroups.push({
         value: 'databases',
-        label: 'queries.sourcePicker.groups.databases',
+        label: 'databases.labels.databases',
         items: databaseOptions,
       });
     }
@@ -130,7 +130,7 @@ export const QuerySourceNodeCard: React.FC<QuerySourceNodeCardProps> = ({
     if (queryOptions.length) {
       optionGroups.push({
         value: 'queries',
-        label: 'queries.sourcePicker.groups.queries',
+        label: 'queries.labels.queries',
         items: queryOptions,
       });
     }

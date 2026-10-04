@@ -1,24 +1,30 @@
 import { Events } from '@minddrop/events';
 import { BaseDirectory, Fs } from '@minddrop/file-system';
+import { I18n } from '@minddrop/i18n';
 import { setActiveWorkspaceScope } from '@minddrop/stores';
 import { entityId, isEntityId } from '@minddrop/utils';
 import { ActiveWorkspaceStore } from '../ActiveWorkspaceStore';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { WorkspacesConfigFileName } from '../constants';
 import { WorkspacesLoadedEvent } from '../events';
+import { locales } from '../locales';
 import { readWorkspaceConfig } from '../readWorkspaceConfig';
 import { WorkspaceId, WorkspacesConfig } from '../types';
 import { resolveWorkspacesConfigFilePath } from '../utils';
 import { writeWorkspaceConfig } from '../writeWorkspaceConfig';
 
 /**
- * Initializes workspaces by reading the workspaces config file
+ * Initializes workspaces by registering the translations and
+ * reading the workspaces config file
  * and loading workspaces from the file system. Sets the active
  * workspace from them.
  *
  * @dispatches workspaces:loaded
  */
 export async function initializeWorkspaces(): Promise<void> {
+  // Register the translations
+  I18n.registerTranslations(locales);
+
   const configFilePath = resolveWorkspacesConfigFilePath();
 
   // Ensure the workspaces config file exists

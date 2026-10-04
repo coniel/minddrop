@@ -88,7 +88,7 @@ export const DatabasePropertyEditor: React.FC<DatabasePropertyEditorProps> = ({
   async function handleSaveUpdate(updatedProperty: PropertySchema) {
     return new Promise<boolean>((resolve) => {
       if (updatedProperty.name !== property.name) {
-        const i18nRoot = 'properties.actions.rename.confirmation';
+        const i18nRoot = 'databases.properties.actions.rename.confirmation';
         Events.dispatch(Events.events.OpenConfirmationDialog, {
           title: `${i18nRoot}.title`,
           message: `${i18nRoot}.message`,
@@ -130,7 +130,7 @@ export const DatabasePropertyEditor: React.FC<DatabasePropertyEditorProps> = ({
   }
 
   function handleDelete(propertyToDelete: PropertySchema) {
-    const i18nRoot = 'properties.actions.delete.confirmation';
+    const i18nRoot = 'databases.properties.actions.delete.confirmation';
 
     Events.dispatch(Events.events.OpenConfirmationDialog, {
       title: `${i18nRoot}.title`,

@@ -3,6 +3,98 @@
     "picker": {
       "search": "Search properties",
       "noMatching": "No matching properties"
+    },
+    "title": {
+      "name": "Title",
+      "description": "The title of the entry."
+    },
+    "text": {
+      "name": "Text",
+      "description": "A simple text field."
+    },
+    "number": {
+      "name": "Number",
+      "description": "A number with various formatting options."
+    },
+    "date": {
+      "name": "Date",
+      "description": "A date and time field with various formatting options."
+    },
+    "toggle": {
+      "name": "Toggle",
+      "description": "An on/off value which can be represented as a checkbox, switch, or icon."
+    },
+    "url": {
+      "name": "URL",
+      "description": "A field for web addresses."
+    },
+    "color": {
+      "name": "Colour",
+      "description": "A colour assigned to the entry."
+    },
+    "image": {
+      "name": "Image",
+      "description": "An image file or reference to an image item type."
+    },
+    "select": {
+      "name": "Select",
+      "description": "A dropdown list of options."
+    },
+    "tags": {
+      "name": "Tags",
+      "description": "A list of tags shared across all databases."
+    },
+    "icon": {
+      "name": "Icon",
+      "description": "An icon picker for selecting an icon."
+    },
+    "content": {
+      "name": "Content",
+      "description": "The entry's content document, edited using a text editor."
+    },
+    "created": {
+      "name": "Created",
+      "description": "Adds the date and time at which an entry was created to its properties."
+    },
+    "lastModified": {
+      "name": "Last modified",
+      "description": "Adds the date and time at which an entry was last modified in MindDrop to its properties. Edits made in other apps do not update it."
+    },
+    "file": {
+      "name": "File",
+      "description": "A file attachment."
+    },
+    "pdf": {
+      "name": "PDF",
+      "description": "A PDF document."
+    },
+    "audio": {
+      "name": "Audio",
+      "description": "An audio file."
+    },
+    "video": {
+      "name": "Video",
+      "description": "A video file."
+    },
+    "collection": {
+      "name": "Collection",
+      "description": "A collection of referenced entries."
+    },
+    "labels": {
+      "property": "Property",
+      "properties": "Properties"
+    },
+    "form": {
+      "name": {
+        "validation": {
+          "required": "Property name is required.",
+          "nameConflict": "A property with this name already exists.",
+          "invalidCharacters": "Property names may only contain letters, numbers, spaces, hyphens, and underscores."
+        }
+      },
+      "icon": {
+        "label": "Property icon"
+      }
     }
   }
 }

@@ -76,7 +76,7 @@ describe('<DatabaseView />', () => {
     const container = renderView(designsSubview);
 
     expect(container.querySelector('.database-design-mode')).not.toBeNull();
-    screen.getByText('databases.design.title');
+    screen.getByText('designs.labels.designs');
   });
 
   it('hides the design mode and new entry actions in design mode', () => {

@@ -1,8 +1,5 @@
 {
   "collections": {
-    "labels": {
-      "collections": "Collections"
-    },
     "actions": {
       "add": "Add collection",
       "new": "New collection",
@@ -26,7 +23,6 @@
       "icon": "Collection icon",
       "consumers": "Used by",
       "consumersEmpty": "Not used by any views",
-      "entries": "Entries",
       "entriesEmpty": "No entries",
       "selectEntry": "Select entry",
       "selectAllEntries": "Select all entries"

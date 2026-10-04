@@ -1,0 +1,14 @@
+{
+  "contentViews": {
+    "board": {
+      "name": "Board",
+      "description": "A board view with draggable columns of cards.",
+      "label": "Board",
+      "addColumn": "Add column",
+      "removeColumn": "Remove column",
+      "toolbarCards": "Toolbar cards",
+      "showToolbarCard": "Show card",
+      "toolbarCardTemplate": "Entry template"
+    }
+  }
+}

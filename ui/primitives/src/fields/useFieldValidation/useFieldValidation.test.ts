@@ -1,7 +1,21 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { i18n } from '@minddrop/i18n';
+import { I18n, i18n } from '@minddrop/i18n';
 import { act, cleanup, renderHook } from '@minddrop/test-utils';
 import { FieldValidate, useFieldValidation } from './useFieldValidation';
+
+// Register the interpolated key the tests reject values with, which
+// belongs to a package this one does not depend on.
+I18n.registerTranslations({
+  'en-GB': {
+    databases: {
+      settings: {
+        contentDefaults: {
+          custom: { matcherTaken: 'Already used by {{type}}' },
+        },
+      },
+    },
+  },
+});
 
 // Rejects every value containing a slash with the invalid name error
 const rejectSlashes: FieldValidate<string> = (value) =>

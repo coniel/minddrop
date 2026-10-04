@@ -1,4 +1,5 @@
 import { Events } from '@minddrop/events';
+import { I18n } from '@minddrop/i18n';
 import { ItemReferences } from '@minddrop/item-references';
 import { EntityGroupTypesRegistry } from '../EntityGroupTypesRegistry';
 import {
@@ -7,15 +8,20 @@ import {
   onItemDeleted,
 } from '../event-handlers';
 import { EntityGroupDeletedEvent } from '../events';
+import { locales } from '../locales';
 
 const EventListenerId = 'entity-groups';
 
 /**
- * Initializes entity groups by registering the event handlers which
+ * Initializes entity groups by registering the translations and the
+ * event handlers which
  * keep the groups of every registered type in step with the items
  * they hold.
  */
 export function initializeEntityGroups(): void {
+  // Register the translations
+  I18n.registerTranslations(locales);
+
   const configs = [...EntityGroupTypesRegistry.getAll()];
 
   // Drop a deleted item from the groups of the type it belongs to

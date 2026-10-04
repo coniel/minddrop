@@ -3,6 +3,7 @@ import { CanvasViewComponent } from '../CanvasView';
 import { CanvasViewOptionsMenu } from '../CanvasViewOptionsMenu';
 import { CanvasViewSkeleton } from '../CanvasViewSkeleton';
 import { defaultCanvasViewData } from '../constants';
+import { locales } from '../locales';
 import { CanvasViewData, CanvasViewOptions } from '../types';
 import { mapDataReferences } from '../utils';
 
@@ -14,6 +15,7 @@ export const CanvasViewType: ContentViewType<
   name: 'contentViews.canvas.name',
   description: 'contentViews.canvas.description',
   icon: 'layout-dashboard',
+  locales,
   supportedDataSources: ['collection'],
   defaultData: defaultCanvasViewData,
   component: CanvasViewComponent,

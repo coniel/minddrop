@@ -11,8 +11,9 @@ import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { Filters } from '@minddrop/filters';
-import { initializeI18n } from '@minddrop/i18n';
+import { I18n, initializeI18n } from '@minddrop/i18n';
 import { ItemReferences } from '@minddrop/item-references';
+import { Properties } from '@minddrop/properties';
 import {
   cleanupWorkspaceFixtures,
   setupWorkspaceFixtures,
@@ -23,6 +24,7 @@ import { DatabaseSettingsStore } from '../DatabaseSettingsStore';
 import { DatabasesStore } from '../DatabasesStore';
 import { clearEntryFocusRequest } from '../EntryFocusRequestStore';
 import { clearContentCaptureRegistry } from '../contentCaptureRegistry';
+import { locales } from '../locales';
 import { registerDatabaseEntryFilterAdapter } from '../registerDatabaseEntryFilterAdapter';
 import {
   matchDatabaseEntryReference,
@@ -38,6 +40,11 @@ import {
 } from './setup-fixtures';
 
 initializeI18n();
+
+// Register the package's translations and the property type names
+// the metadata properties are named with.
+I18n.registerTranslations(locales);
+Properties.initialize();
 
 export const MockFs = initializeMockFileSystem();
 

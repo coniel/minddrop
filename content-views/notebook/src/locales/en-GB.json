@@ -1,0 +1,8 @@
+{
+  "contentViews": {
+    "notebook": {
+      "name": "Notebook",
+      "description": "A notebook view with a list and page preview."
+    }
+  }
+}

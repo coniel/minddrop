@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { DatabaseEntry, DatabaseEntryId } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
-import { initializeI18n } from '@minddrop/i18n';
+import { I18n, initializeI18n } from '@minddrop/i18n';
+import { locales } from '../../locales';
 import { statusProperty } from '../../test-utils';
 import { resolveKanbanColumns } from './resolveKanbanColumns';
 
@@ -9,6 +10,9 @@ const { objectEntry1 } = DatabaseFixtures;
 
 // Initialize translations used for the no-value column's label
 initializeI18n();
+
+// Register the kanban translations
+I18n.registerTranslations(locales);
 
 // Entries with each of the fixture property's option values, and
 // one with no value at all.

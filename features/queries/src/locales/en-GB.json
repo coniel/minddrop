@@ -1,8 +1,5 @@
 {
   "queries": {
-    "labels": {
-      "queries": "Queries"
-    },
     "actions": {
       "add": "Add query",
       "new": "New query"
@@ -46,18 +43,11 @@
     "sourcePicker": {
       "select": "Select source",
       "searchPlaceholder": "Search databases and queries",
-      "empty": "No matching sources",
-      "groups": {
-        "databases": "Databases",
-        "queries": "Queries"
-      }
+      "empty": "No matching sources"
     },
     "collectionPicker": {
       "select": "Select collection",
       "anyCollection": "Any collection",
-      "groups": {
-        "collections": "Collections"
-      },
       "searchPlaceholder": "Search collections",
       "empty": "No matching collections"
     },

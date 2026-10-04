@@ -132,7 +132,7 @@ export const DataSourceCombobox: FC<DataSourceComboboxProps> = ({
       if (options.length) {
         optionGroups.push({
           value: 'collections',
-          label: 'contentViews.dataSource.groups.collections',
+          label: 'collections.labels.collections',
           items: sortOptions(options),
         });
       }
@@ -155,7 +155,7 @@ export const DataSourceCombobox: FC<DataSourceComboboxProps> = ({
       if (options.length) {
         optionGroups.push({
           value: 'queries',
-          label: 'contentViews.dataSource.groups.queries',
+          label: 'queries.labels.queries',
           items: sortOptions(options),
         });
       }
@@ -178,7 +178,7 @@ export const DataSourceCombobox: FC<DataSourceComboboxProps> = ({
       if (options.length) {
         optionGroups.push({
           value: 'databases',
-          label: 'contentViews.dataSource.groups.databases',
+          label: 'databases.labels.databases',
           items: sortOptions(options),
         });
       }

@@ -1,0 +1,318 @@
+{
+  "databases": {
+    "actions": {
+      "addProperty": "Add property",
+      "newEntry": "New entry",
+      "configuration": "Configuration"
+    },
+    "layoutContexts": {
+      "card": {
+        "name": "Card"
+      },
+      "preview-card": {
+        "name": "Preview card"
+      },
+      "list": {
+        "name": "List"
+      },
+      "navigation-list": {
+        "name": "Navigation list"
+      },
+      "page": {
+        "name": "Page"
+      },
+      "dialog": {
+        "name": "Dialog"
+      },
+      "panel": {
+        "name": "Panel"
+      },
+      "new-entry": {
+        "name": "New entry"
+      }
+    },
+    "entryTemplates": {
+      "empty": "No templates yet. Templates pre-fill a new entry's properties, making entries you create often quicker to add.",
+      "actions": {
+        "add": "Add template",
+        "delete": {
+          "confirmation": {
+            "title": "Delete template",
+            "message": "The template will be permanently deleted. Entries created from it are not affected.",
+            "messageWithFiles": "The template and its stored files will be permanently deleted. Entries created from it are not affected.",
+            "confirm": "Delete"
+          }
+        }
+      },
+      "form": {
+        "name": {
+          "label": "Template name",
+          "validation": {
+            "required": "Name is required"
+          }
+        },
+        "defaultTitle": {
+          "label": "Default entry title",
+          "placeholder": "Untitled"
+        },
+        "chooseFile": "Choose a file",
+        "chooseIcon": "Choose an icon",
+        "emptyValue": "Empty"
+      }
+    },
+    "entries": {
+      "actions": {
+        "previousEntry": "Previous entry",
+        "nextEntry": "Next entry",
+        "openInNewTab": "Open in new tab",
+        "openInSplitView": "Open in split view",
+        "entryOptions": "Entry options",
+        "goToDatabase": "Go to database",
+        "color": "Colour"
+      }
+    },
+    "form": {
+      "labels": {
+        "templates": "Templates"
+      },
+      "properties": {
+        "description": "You can customise properties after creating the database."
+      },
+      "actions": {
+        "create": "Create database"
+      },
+      "name": {
+        "label": "Database name",
+        "placeholder": "e.g. Books"
+      },
+      "icon": {
+        "label": "Database icon"
+      },
+      "entryName": {
+        "label": "Entry name",
+        "placeholder": "e.g. Book"
+      },
+      "errors": {
+        "nameConflict": "A database with this name already exists.",
+        "pathConflict": "A folder with this name already exists in the at the specified location."
+      }
+    },
+    "settings": {
+      "description": "Defaults applied to newly created databases and to content dropped or pasted into the app.",
+      "actions": {
+        "delete": "Delete database"
+      },
+      "sections": {
+        "general": "General",
+        "interface": "Interface",
+        "data": "Data",
+        "content": "Dropped and pasted content",
+        "danger": "Danger zone"
+      },
+      "contentDefaults": {
+        "description": "Content dropped or pasted into the app is added to the database picked for its type. Files of no listed type are added to the other files database.",
+        "text": {
+          "label": "Text"
+        },
+        "url": {
+          "label": "Links"
+        },
+        "image": {
+          "label": "Images"
+        },
+        "pdf": {
+          "label": "PDFs"
+        },
+        "audio": {
+          "label": "Audio"
+        },
+        "video": {
+          "label": "Video"
+        },
+        "file": {
+          "label": "Other files"
+        },
+        "custom": {
+          "add": "Add custom content type",
+          "edit": "Edit content type",
+          "kinds": {
+            "file": {
+              "label": "File type",
+              "description": "Match files by their extension."
+            },
+            "url": {
+              "label": "Link type",
+              "description": "Match links by their domain."
+            }
+          },
+          "name": {
+            "label": "Name",
+            "placeholder": {
+              "file": "e.g. Ebooks",
+              "url": "e.g. Wiki articles"
+            }
+          },
+          "matchers": {
+            "file": {
+              "label": "File extensions",
+              "placeholder": "e.g. epub"
+            },
+            "url": {
+              "label": "Domains",
+              "placeholder": "e.g. wikipedia.org"
+            }
+          },
+          "database": {
+            "label": "Database"
+          },
+          "matcherTaken": "Already used by {{type}}"
+        }
+      },
+      "name": {
+        "description": "The name used to identify this database."
+      },
+      "entryName": {
+        "description": "The label used when referring to a single entry."
+      },
+      "icon": {
+        "description": "The icon shown next to this database."
+      },
+      "entryOpenMode": {
+        "label": "Open entries as",
+        "description": "Choose the default action for opening entries.",
+        "options": {
+          "dialog": {
+            "label": "Dialog",
+            "description": "Open the entry as a dialog overlay."
+          },
+          "panel": {
+            "label": "Panel",
+            "description": "Open the entry in a slide out panel."
+          },
+          "inPlace": {
+            "label": "In place",
+            "description": "Replace the current view with the entry."
+          },
+          "newTab": {
+            "label": "New tab",
+            "description": "Open the entry in a new tab."
+          },
+          "split": {
+            "label": "Split view",
+            "description": "Open the entry next to the current main content."
+          }
+        }
+      },
+      "hideViewsToolbar": {
+        "label": "Hide views toolbar",
+        "description": "Hide the bar for switching and adding views. Useful when the database only has a single view."
+      },
+      "entrySerializer": {
+        "label": "Entry file format",
+        "description": "Choose the file format entries are saved in on disk."
+      },
+      "propertyFileStorage": {
+        "label": "Property file storage",
+        "description": "Choose how files added to properties are stored on disk.",
+        "options": {
+          "root": {
+            "label": "Database root",
+            "description": "Files are kept in the database's root folder."
+          },
+          "common": {
+            "label": "Common folder",
+            "description": "Files are kept together in a single shared folder."
+          },
+          "property": {
+            "label": "Folder per property",
+            "description": "Files are grouped into a folder for each property."
+          },
+          "entry": {
+            "label": "Folder per entry",
+            "description": "Files are grouped into a folder for each entry."
+          }
+        }
+      },
+      "propertyFilesDir": {
+        "label": "Property files folder",
+        "description": "The name of the common folder property files are stored in."
+      },
+      "delete": {
+        "description": "Deleting this database will move all of its content to the system trash.",
+        "button": "Delete",
+        "confirmation": {
+          "title": "Delete database",
+          "message": "Are you sure you want to delete this database? This action cannot be undone.",
+          "confirm": "Delete"
+        }
+      },
+      "clear": {
+        "title": "Clear database",
+        "description": "Delete all entries in this database. The database and its configuration are kept.",
+        "button": "Clear",
+        "confirmation": {
+          "title": "Clear database",
+          "message": "Are you sure you want to delete all entries in this database? This action cannot be undone.",
+          "confirm": "Clear database"
+        }
+      }
+    },
+    "empty": {
+      "title": "No entries yet",
+      "addViaButton": "Click the + button at the top right to add a new entry.",
+      "drop": "You can also drop text, files, and links."
+    },
+    "templates": {
+      "blank": {
+        "description": "Start from scratch with just a title, created date, and last modified date. You can add more properties after creating the database."
+      }
+    },
+    "design": {
+      "noDesigns": "No designs yet. Create one in design mode.",
+      "empty": "No designs yet. Add one with the + button.",
+      "actions": {
+        "designMode": "Design mode",
+        "add": "New design",
+        "useAsDefault": "Use as default",
+        "settings": "Design settings",
+        "duplicate": "Duplicate",
+        "delete": "Delete"
+      },
+      "delete": {
+        "confirmation": {
+          "title": "Delete design",
+          "message": "Are you sure you want to delete this design? This cannot be undone.",
+          "confirm": "Delete"
+        }
+      },
+      "defaultDesigns": {
+        "title": "Default designs",
+        "description": "The designs used to display the database's entries in each context. Individual views can override these defaults with a specific design.",
+        "noCompatible": "No compatible designs"
+      },
+      "entryColor": {
+        "title": "Entry colour",
+        "description": "The property entries take their colour from: the Colour property, or a select property's option colours.",
+        "label": "Colour entries by"
+      }
+    },
+    "properties": {
+      "actions": {
+        "delete": {
+          "confirmation": {
+            "title": "Delete property?",
+            "message": "This will remove it from all database items and can't be undone.",
+            "confirm": "Delete"
+          }
+        },
+        "rename": {
+          "confirmation": {
+            "title": "Rename property?",
+            "message": "This will update all database items containing this property.",
+            "confirm": "Rename"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,8 +1,5 @@
 {
   "spaces": {
-    "labels": {
-      "spaces": "Spaces"
-    },
     "actions": {
       "add": "Add space",
       "new": "New space"

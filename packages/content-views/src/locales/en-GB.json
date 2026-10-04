@@ -1,0 +1,22 @@
+{
+  "contentViews": {
+    "actions": {
+      "add": "Add view"
+    },
+    "labels": {
+      "view": "View",
+      "new": "New View",
+      "views": "Views"
+    },
+    "dataSource": {
+      "placeholder": "Select data source...",
+      "searchPlaceholder": "Search data sources...",
+      "empty": "No data sources found.",
+      "groups": {
+        "new": "New"
+      },
+      "newCollection": "New collection",
+      "newQuery": "New query"
+    }
+  }
+}

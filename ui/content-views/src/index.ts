@@ -1,3 +1,4 @@
+export * from './initializeContentViewsUi';
 export * from './AddContentViewMenu';
 export * from './ContentViewFilterMenu';
 export * from './ContentViewSettingsMenu';

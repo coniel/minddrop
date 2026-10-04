@@ -124,7 +124,7 @@ export const NumberInput = React.forwardRef<HTMLDivElement, NumberInputProps>(
             ref={incrementRef}
             type="button"
             className="number-input-increment"
-            aria-label={t('labels.increase')}
+            aria-label={t('actions.increase')}
             onClick={() => {
               onValueChange?.(min ?? step);
               bump(incrementRef.current);
@@ -157,7 +157,7 @@ export const NumberInput = React.forwardRef<HTMLDivElement, NumberInputProps>(
             ref={decrementRef}
             type="button"
             className="number-input-decrement"
-            aria-label={t('labels.decrease')}
+            aria-label={t('actions.decrease')}
             disabled
           >
             {decrementContent}
@@ -171,7 +171,7 @@ export const NumberInput = React.forwardRef<HTMLDivElement, NumberInputProps>(
             ref={decrementRef}
             type="button"
             className="number-input-decrement"
-            aria-label={t('labels.decrease')}
+            aria-label={t('actions.decrease')}
             onClick={() => {
               onValueChange?.(null);
               bump(decrementRef.current);

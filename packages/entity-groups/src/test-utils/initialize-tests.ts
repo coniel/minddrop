@@ -4,6 +4,7 @@ import { vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
+import { I18n, initializeI18n } from '@minddrop/i18n';
 import { ItemReferences } from '@minddrop/item-references';
 import {
   WorkspaceFixtures,
@@ -13,6 +14,7 @@ import {
 import { EntityGroupCollapsedStore } from '../EntityGroupCollapsedStore';
 import { EntityGroupTypesRegistry } from '../EntityGroupTypesRegistry';
 import { EntityGroupsStore } from '../EntityGroupsStore';
+import { locales } from '../locales';
 import { registerEntityGroupType } from '../registerEntityGroupType';
 import { EntityGroup } from '../types';
 import { resolveEntityGroupsDirPath } from '../utils';
@@ -22,6 +24,11 @@ import {
   groupsFilePath,
   itemReferenceAdapter,
 } from './entity-groups.fixtures';
+
+initializeI18n();
+
+// Register the package's translations
+I18n.registerTranslations(locales);
 
 const { workspace_1 } = WorkspaceFixtures;
 

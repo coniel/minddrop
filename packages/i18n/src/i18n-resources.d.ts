@@ -6,21 +6,123 @@ declare module 'i18next' {
     defaultNS: 'core';
     resources: {
       core: {
+        editor: {
+          blockActions: {
+            turnInto: string;
+            copy: string;
+            duplicate: string;
+            delete: string;
+          };
+          blockGutter: {
+            insert: string;
+            select: string;
+          };
+          blockMenu: {
+            hint: string;
+          };
+          linkMenu: {
+            link: string;
+            placeholder: string;
+            webpage: string;
+            noResults: string;
+            hint: string;
+          };
+          frames: {
+            taskItem: string;
+          };
+          table: {
+            addColumn: string;
+            rowOptions: string;
+            columnOptions: string;
+            insertRowAbove: string;
+            insertRowBelow: string;
+            deleteRow: string;
+            insertColumnLeft: string;
+            insertColumnRight: string;
+            deleteColumn: string;
+            alignNone: string;
+            alignLeft: string;
+            alignCenter: string;
+            alignRight: string;
+          };
+          marks: {
+            bold: string;
+            italic: string;
+            strikethrough: string;
+            code: string;
+          };
+          elements: {
+            paragraph: {
+              name: string;
+              keywords: string;
+            };
+            'heading-1': {
+              name: string;
+              keywords: string;
+            };
+            'heading-2': {
+              name: string;
+              keywords: string;
+            };
+            'heading-3': {
+              name: string;
+              keywords: string;
+            };
+            'heading-4': {
+              name: string;
+              keywords: string;
+            };
+            'heading-5': {
+              name: string;
+              keywords: string;
+            };
+            'heading-6': {
+              name: string;
+              keywords: string;
+            };
+            code: {
+              name: string;
+              language: string;
+              keywords: string;
+            };
+            math: {
+              name: string;
+              keywords: string;
+            };
+            'inline-math': {
+              name: string;
+              keywords: string;
+            };
+            'thematic-break': {
+              name: string;
+              keywords: string;
+            };
+            blockquote: {
+              name: string;
+              keywords: string;
+            };
+            'list-item': {
+              name: string;
+              keywords: string;
+            };
+            'ordered-list-item': {
+              name: string;
+              keywords: string;
+            };
+            'task-list-item': {
+              name: string;
+              keywords: string;
+            };
+            table: {
+              name: string;
+              keywords: string;
+            };
+          };
+        };
         collections: {
           labels: {
             collection: string;
             collections: string;
-          };
-          entries: {
-            actions: {
-              add: string;
-            };
-            groups: {
-              new: string;
-              recent: string;
-            };
-            searchPlaceholder: string;
-            empty: string;
           };
           selection: {
             addTo: string;
@@ -50,7 +152,6 @@ declare module 'i18next' {
             icon: string;
             consumers: string;
             consumersEmpty: string;
-            entries: string;
             entriesEmpty: string;
             selectEntry: string;
             selectAllEntries: string;
@@ -63,22 +164,6 @@ declare module 'i18next' {
         navigation: {
           back: string;
           forward: string;
-        };
-        canvas: {
-          fitView: string;
-          grid: {
-            label: string;
-            none: string;
-            dots: string;
-            lines: string;
-          };
-          resetView: string;
-          resetZoom: string;
-          settings: string;
-          snapToGrid: string;
-          snapToObjects: string;
-          zoomIn: string;
-          zoomOut: string;
         };
         actions: {
           back: string;
@@ -102,6 +187,11 @@ declare module 'i18next' {
           pickColor: string;
           swapSplitPosition: string;
           expand: string;
+          resetView: string;
+          zoomIn: string;
+          zoomOut: string;
+          increase: string;
+          decrease: string;
         };
         error: {
           unknown: string;
@@ -140,47 +230,602 @@ declare module 'i18next' {
         labels: {
           untitled: string;
           copy: string;
-          increase: string;
-          decrease: string;
           optional: string;
-          properties: string;
           design: string;
           settings: string;
           templates: string;
-          views: string;
         };
-        properties: {
-          actions: {
-            delete: {
+        items: {
+          labels: {
+            items: string;
+          };
+        };
+        designs: {
+          labels: {
+            design: string;
+            designs: string;
+          };
+          name: string;
+          new: string;
+          roles: {
+            heading: {
               label: string;
-              confirmation: {
+            };
+            'page-content': {
+              label: string;
+            };
+          };
+          roleVariants: {
+            sm: string;
+            md: string;
+            lg: string;
+            default: string;
+            regular: string;
+            muted: string;
+            accent: string;
+          };
+          roleVariantAxes: {
+            size: string;
+            colour: string;
+          };
+          propertyElements: {
+            variants: {
+              plain: string;
+              short: string;
+              long: string;
+              subtitle: string;
+              caption: string;
+              quote: string;
+              sm: string;
+              md: string;
+              lg: string;
+              'badges-sm': string;
+              badges: string;
+              'badges-lg': string;
+              text: string;
+              'url-text': string;
+              link: string;
+              webview: string;
+              image: string;
+              viewer: string;
+              field: string;
+              'multiline-field': string;
+              editor: string;
+              display: string;
+            };
+            descriptions: {
+              'url-text': string;
+              link: string;
+              webview: string;
+              image: string;
+              viewer: string;
+              field: string;
+              'multiline-field': string;
+              editor: string;
+              display: string;
+            };
+            samples: {
+              short: string;
+              long: string;
+              subtitle: string;
+              caption: string;
+              quote: string;
+              title: string;
+              select: string;
+              field: string;
+              'multiline-field': string;
+            };
+          };
+          layouts: {
+            empty: string;
+            labels: {
+              add: string;
+            };
+            actions: {
+              deleteConfirmation: {
                 title: string;
                 message: string;
                 confirm: string;
               };
             };
-            rename: {
-              confirmation: {
+            page: {
+              name: string;
+              label: string;
+              description: string;
+            };
+            card: {
+              name: string;
+              label: string;
+              description: string;
+            };
+            list: {
+              name: string;
+              label: string;
+              description: string;
+            };
+            space: {
+              name: string;
+              label: string;
+              description: string;
+            };
+          };
+          typography: {
+            label: string;
+            'container-hint': string;
+            italic: string;
+            underline: string;
+            'font-family': {
+              inherit: string;
+              sans: string;
+              serif: string;
+              mono: string;
+            };
+            'font-weight': {
+              '100': string;
+              '200': string;
+              '300': string;
+              '400': string;
+              '500': string;
+              '600': string;
+              '700': string;
+              '800': string;
+              '900': string;
+              label: string;
+              inherit: string;
+            };
+            'text-transform': {
+              label: string;
+              none: string;
+              uppercase: string;
+              lowercase: string;
+              capitalize: string;
+              'uppercase-short': string;
+              'lowercase-short': string;
+              'capitalize-short': string;
+            };
+            color: {
+              label: string;
+            };
+            'font-size': {
+              label: string;
+            };
+            'line-height': {
+              label: string;
+            };
+            'letter-spacing': {
+              label: string;
+            };
+            alignment: {
+              label: string;
+            };
+            'alignment-margin': {
+              label: string;
+            };
+            margin: {
+              label: string;
+              top: string;
+              right: string;
+              bottom: string;
+              left: string;
+              sync: string;
+            };
+            'margin-bottom': {
+              label: string;
+            };
+            'text-align': {
+              label: string;
+              left: string;
+              center: string;
+              right: string;
+              justify: string;
+            };
+          };
+          layout: {
+            label: string;
+          };
+          'page-panels': {
+            label: string;
+            content: {
+              label: string;
+            };
+            left: {
+              label: string;
+            };
+            right: {
+              label: string;
+            };
+          };
+          direction: {
+            label: string;
+            column: string;
+            row: string;
+          };
+          gap: {
+            label: string;
+          };
+          padding: {
+            label: string;
+            sync: string;
+          };
+          'min-height': {
+            label: string;
+          };
+          placeholder: {
+            label: string;
+            placeholder: string;
+            reroll: string;
+          };
+          'clear-custom-styling': string;
+          'max-width': {
+            label: string;
+            placeholder: string;
+          };
+          truncate: {
+            label: string;
+            placeholder: string;
+          };
+          opacity: {
+            label: string;
+          };
+          wrap: {
+            label: string;
+          };
+          stretch: {
+            label: string;
+          };
+          position: {
+            label: string;
+            cell: string;
+          };
+          'background-color': {
+            label: string;
+            color: string;
+            opacity: string;
+          };
+          'background-image': {
+            label: string;
+          };
+          'background-image-fit': {
+            label: string;
+            cover: string;
+            contain: string;
+            fill: string;
+          };
+          'backdrop-blur': {
+            label: string;
+          };
+          'backdrop-brightness': {
+            label: string;
+          };
+          'backdrop-blur-gradient': {
+            label: string;
+          };
+          'backdrop-blur-gradient-direction': {
+            label: string;
+            'to-top': string;
+            'to-bottom': string;
+            'to-left': string;
+            'to-right': string;
+          };
+          'backdrop-blur-gradient-extent': {
+            label: string;
+          };
+          'number-format': {
+            label: string;
+            decimals: {
+              label: string;
+              placeholder: string;
+            };
+            'thousands-separator': {
+              label: string;
+              none: string;
+              comma: string;
+              period: string;
+              space: string;
+            };
+            prefix: string;
+            'prefix-style': string;
+            suffix: string;
+            'suffix-style': string;
+            'sign-display': {
+              label: string;
+              auto: string;
+              always: string;
+              never: string;
+            };
+          };
+          'date-format': {
+            label: string;
+            mode: {
+              date: string;
+              relative: string;
+            };
+            'show-time': string;
+          };
+          image: {
+            label: string;
+            placeholder: {
+              select: string;
+              change: string;
+              remove: string;
+              hint: string;
+              browse: string;
+              dialog: {
                 title: string;
-                message: string;
-                confirm: string;
+                selectNew: string;
+                empty: string;
               };
             };
-            filter: string;
+            round: {
+              label: string;
+            };
+            sizing: {
+              label: string;
+              width: string;
+              height: string;
+              'width-placeholder': string;
+              'height-placeholder': string;
+              'max-width': string;
+              'max-height': string;
+              'max-width-placeholder': string;
+              'max-placeholder': string;
+              'toggle-unit': string;
+              sync: string;
+              'object-fit': {
+                label: string;
+                cover: string;
+                contain: string;
+                fill: string;
+              };
+            };
+          };
+          icon: {
+            label: string;
+            placeholder: {
+              hint: string;
+            };
+            select: string;
+            change: string;
+            appearance: {
+              label: string;
+            };
+            size: {
+              label: string;
+            };
+            color: {
+              label: string;
+            };
+            container: {
+              label: string;
+              size: string;
+              'size-placeholder': string;
+              radius: string;
+              'radius-placeholder': string;
+              'background-color': string;
+              round: string;
+            };
+          };
+          webview: {
+            placeholder: string;
+            'embed-blocked': string;
+          };
+          view: {
+            placeholder: string;
+            viewType: {
+              label: string;
+            };
+          };
+          'url-display': {
+            label: string;
+          };
+          'url-show-protocol': string;
+          'url-show-subdomain': string;
+          'url-show-domain': string;
+          'url-show-tld': string;
+          'url-show-path': string;
+          border: {
+            label: string;
+            style: {
+              label: string;
+              none: string;
+              solid: string;
+              dashed: string;
+              dotted: string;
+            };
+            width: {
+              label: string;
+              sync: string;
+            };
+            radius: {
+              label: string;
+              'top-left': string;
+              'top-right': string;
+              'bottom-right': string;
+              'bottom-left': string;
+              sync: string;
+            };
+            color: {
+              label: string;
+            };
+          };
+          property: {
+            label: string;
+            none: string;
+            noCompatible: string;
+          };
+          title: {
+            label: string;
+          };
+          properties: {
+            empty: string;
+            actions: {
+              add: string;
+              delete: {
+                confirmation: {
+                  title: string;
+                  message: string;
+                  confirm: string;
+                };
+              };
+            };
+          };
+          content: {
+            label: string;
+            placeholder: string;
+            mode: {
+              none: string;
+              property: string;
+              static: string;
+            };
+            emptyBehavior: {
+              label: string;
+              hide: string;
+              placeholder: string;
+            };
+          };
+          select: {
+            placeholder: {
+              label: string;
+              description: string;
+            };
+          };
+        };
+        automations: {
+          labels: {
+            automation: string;
+            automations: string;
+          };
+        };
+        calendar: {
+          months: {
+            january: string;
+            february: string;
+            march: string;
+            april: string;
+            may: string;
+            june: string;
+            july: string;
+            august: string;
+            september: string;
+            october: string;
+            november: string;
+            december: string;
+          };
+          weekdays: {
+            sunday: string;
+            monday: string;
+            tuesday: string;
+            wednesday: string;
+            thursday: string;
+            friday: string;
+            saturday: string;
+          };
+          monthsShort: {
+            january: string;
+            february: string;
+            march: string;
+            april: string;
+            may: string;
+            june: string;
+            july: string;
+            august: string;
+            september: string;
+            october: string;
+            november: string;
+            december: string;
+          };
+          weekdaysShort: {
+            sunday: string;
+            monday: string;
+            tuesday: string;
+            wednesday: string;
+            thursday: string;
+            friday: string;
+            saturday: string;
+          };
+          previousMonth: string;
+          nextMonth: string;
+        };
+        'design-studio': {
+          labels: {
+            designs: string;
+            elements: string;
+            layout: string;
+            layouts: string;
+            properties: string;
+            views: string;
+          };
+          dashboard: {
+            empty: string;
+            noLayouts: string;
+            layoutCount_one: string;
+            layoutCount_other: string;
+            cardDetails: string;
+          };
+          elements: {
+            root: string;
+            container: string;
+            'page-panel': string;
+            text: string;
+            title: string;
+            number: string;
+            date: string;
+            url: string;
+            image: string;
+            'image-viewer': string;
+            icon: string;
+            badges: string;
+            webview: string;
+            editor: string;
+            property: string;
+            view: string;
+            'container-empty-hint': string;
+            group: {
+              properties: string;
+              elements: string;
+              content: string;
+              media: string;
+              layout: string;
+              views: string;
+            };
+          };
+          mappable: {
+            tooltip: string;
+          };
+          views: {
+            new: string;
+            existing: string;
+            search: {
+              placeholder: string;
+            };
+            empty: string;
+            noMatches: string;
+          };
+        };
+        toast: {
+          close: string;
+        };
+        addContent: {
+          searchPlaceholder: string;
+          empty: string;
+          actions: {
             add: string;
           };
-          form: {
-            name: {
-              label: string;
-              validation: {
-                required: string;
-                invalidCharacters: string;
-                nameConflict: string;
-              };
-            };
-            icon: {
-              label: string;
-            };
+          groups: {
+            suggested: string;
+            new: string;
+            recent: string;
+            existing: string;
+          };
+          hints: {
+            add: string;
+            addMore: string;
+          };
+        };
+        properties: {
+          picker: {
+            search: string;
+            noMatching: string;
           };
           title: {
             name: string;
@@ -201,11 +846,6 @@ declare module 'i18next' {
           toggle: {
             name: string;
             description: string;
-            defaultValue: {
-              label: string;
-              checked: string;
-              unchecked: string;
-            };
           };
           url: {
             name: string;
@@ -231,10 +871,6 @@ declare module 'i18next' {
             multiselect: {
               label: string;
             };
-          };
-          multiselect: {
-            name: string;
-            description: string;
           };
           tags: {
             name: string;
@@ -281,91 +917,682 @@ declare module 'i18next' {
             name: string;
             description: string;
           };
-          query: {
+          labels: {
+            property: string;
+            properties: string;
+          };
+          form: {
+            name: {
+              validation: {
+                required: string;
+                nameConflict: string;
+                invalidCharacters: string;
+              };
+            };
+            icon: {
+              label: string;
+            };
+          };
+        };
+        tags: {
+          field: {
+            placeholder: string;
+            create: string;
+            searchPlaceholder: string;
+            noResults: string;
+          };
+          labels: {
+            tag: string;
+            tags: string;
+            tagGroup: string;
+            tagGroups: string;
+          };
+          form: {
+            create: string;
+            nameTaken: string;
+          };
+          actions: {
+            add: string;
+            new: string;
+            newGroup: string;
+            newInGroup: string;
+            options: string;
+            rename: string;
+            color: string;
+            group: string;
+            delete: {
+              label: string;
+              confirmation: {
+                title: string;
+                message_one: string;
+                message_other: string;
+                confirm: string;
+              };
+            };
+          };
+          list: {
+            searchPlaceholder: string;
+            empty: string;
+            noResults: string;
+          };
+          details: {
+            noSelection: string;
+            icon: string;
+            namePlaceholder: string;
+            groupNone: string;
+            entries: string;
+            entriesEmpty: string;
+          };
+        };
+        workspaces: {
+          labels: {
+            workspace: string;
+            workspaces: string;
+          };
+          switcher: {
+            actions: {
+              add: string;
+              create: string;
+              open: string;
+            };
+          };
+          actions: {
+            remove: {
+              label: string;
+              description: string;
+              confirmation: {
+                title: string;
+                message: string;
+                confirm: string;
+              };
+            };
+            delete: {
+              label: string;
+              description: string;
+              confirmation: {
+                title: string;
+                message: string;
+                confirm: string;
+              };
+            };
+          };
+          form: {
+            title: string;
+            name: {
+              label: string;
+              placeholder: string;
+              default: string;
+            };
+            icon: {
+              label: string;
+            };
+            location: {
+              label: string;
+              description: string;
+              action: string;
+            };
+            actions: {
+              create: string;
+            };
+            errors: {
+              locationMissing: string;
+              pathConflict: string;
+            };
+          };
+          errors: {
+            notAWorkspace: string;
+            unknown: string;
+          };
+        };
+        queries: {
+          labels: {
+            query: string;
+            queries: string;
+          };
+          actions: {
+            add: string;
+            new: string;
+          };
+          list: {
+            searchPlaceholder: string;
+            empty: string;
+            noResults: string;
+          };
+          details: {
+            noSelection: string;
+          };
+          editor: {
+            namePlaceholder: string;
+            selectProperty: string;
+            ascending: string;
+            descending: string;
+            outputEntries: string;
+            searchEntries: string;
+            removeNode: string;
+            removeConnection: string;
+            breakConnections: string;
+            connectNearest: string;
+            noProperties: string;
+            connectNodes: string;
+          };
+          nodes: {
+            source: string;
+            filter: string;
+            collectionFilter: string;
+            sort: string;
+            limit: string;
+            results: string;
+          };
+          toolbar: {
+            filter: string;
+            collectionFilter: string;
+            sort: string;
+            limit: string;
+          };
+          sourcePicker: {
+            select: string;
+            searchPlaceholder: string;
+            empty: string;
+          };
+          collectionPicker: {
+            select: string;
+            anyCollection: string;
+            searchPlaceholder: string;
+            empty: string;
+          };
+          collectionOperators: {
+            'is-in': string;
+            'is-not-in': string;
+          };
+          results: {
+            empty: string;
+          };
+        };
+        designsNext: {
+          copyName: string;
+          types: {
+            card: string;
+            list: string;
+            page: string;
+            space: string;
+          };
+          widthMode: {
+            label: string;
+            fluid: string;
+            fluidDescription: string;
+            proportional: string;
+            proportionalDescription: string;
+          };
+          contentFit: {
+            label: string;
+            fixed: string;
+            fixedDescription: string;
+            grow: string;
+            growDescription: string;
+            shrink: string;
+            shrinkDescription: string;
+            natural: string;
+            naturalDescription: string;
+          };
+          editor: {
+            snapTo: string;
+            autoHeight: string;
+            square: string;
+            portrait: string;
+            landscape: string;
+            previewWidth: string;
+            layout: {
+              fill: string;
+              canvas: string;
+            };
+            theme: {
+              light: string;
+              dark: string;
+            };
+            insertElement: string;
+            noMatchingElements: string;
+            widths: {
+              narrow: string;
+              narrowShort: string;
+              regular: string;
+              regularShort: string;
+              wide: string;
+              wideShort: string;
+              extraWide: string;
+              extraWideShort: string;
+            };
+          };
+          settings: {
+            fontWeight: {
+              label: string;
+              default: string;
+              thin: string;
+              extraLight: string;
+              light: string;
+              regular: string;
+              medium: string;
+              semibold: string;
+              bold: string;
+              extraBold: string;
+              black: string;
+            };
+            fontFamily: {
+              label: string;
+              sans: string;
+              serif: string;
+              mono: string;
+            };
+            textStyle: string;
+            underline: string;
+            strikethrough: string;
+            fontSize: {
+              label: string;
+            };
+            lineHeight: {
+              label: string;
+            };
+            custom: string;
+            verticalAlign: {
+              label: string;
+              top: string;
+              middle: string;
+              bottom: string;
+            };
+            italic: string;
+            textColor: {
+              label: string;
+            };
+            color: {
+              hue: string;
+              shade: string;
+              shadeLevel: string;
+            };
+            textAlign: {
+              label: string;
+              left: string;
+              center: string;
+              right: string;
+              justify: string;
+            };
+            background: {
+              label: string;
+              subtle: string;
+              accent: string;
+              solidAccent: string;
+            };
+            cornerRadius: {
+              label: string;
+              none: string;
+              sm: string;
+              md: string;
+              lg: string;
+              full: string;
+            };
+          };
+          heightMode: {
+            label: string;
+            fluid: string;
+            fluidDescription: string;
+            proportional: string;
+            proportionalDescription: string;
+          };
+          padding: {
+            label: string;
+            top: string;
+            right: string;
+            bottom: string;
+            left: string;
+            link: string;
+            unlink: string;
+            none: string;
+            sizes: {
+              xs: string;
+              s: string;
+              m: string;
+              l: string;
+              xl: string;
+              '2xl': string;
+              '3xl': string;
+              '4xl': string;
+              '5xl': string;
+            };
+          };
+          contentWidth: {
+            label: string;
+            narrow: string;
+            regular: string;
+            wide: string;
+            full: string;
+            capDescription: string;
+            fullDescription: string;
+          };
+          sidePadding: {
+            label: string;
+          };
+          pin: {
+            label: {
+              left: string;
+              right: string;
+              top: string;
+              bottom: string;
+            };
+            edge: {
+              left: string;
+              right: string;
+              top: string;
+              bottom: string;
+            };
+            element: {
+              left: string;
+              right: string;
+              top: string;
+              bottom: string;
+            };
+          };
+          elements: {
+            groups: {
+              content: string;
+              layout: string;
+            };
+            box: {
+              label: string;
+            };
+            editor: {
+              label: string;
+            };
+            editorTitle: {
+              label: string;
+            };
+            heading: {
+              label: string;
+              placeholder: string;
+            };
+            icon: {
+              label: string;
+            };
+            label: {
+              label: string;
+              placeholder: string;
+            };
+            text: {
+              label: string;
+              placeholder: string;
+            };
+          };
+          property: {
+            label: string;
+            none: string;
+            search: string;
+            noMatching: string;
+            suggested: string;
+            other: string;
+            description: string;
+          };
+          content: {
+            label: string;
+            description: string;
+            textPlaceholder: string;
+            iconLabel: string;
+          };
+        };
+        spaces: {
+          labels: {
+            space: string;
+            spaces: string;
+          };
+          actions: {
+            add: string;
+            new: string;
+          };
+          list: {
+            searchPlaceholder: string;
+            empty: string;
+            noResults: string;
+          };
+          details: {
+            noSelection: string;
+          };
+          view: {
+            notFound: string;
+            actions: {
+              edit: string;
+              exitEditMode: string;
+            };
+          };
+          templates: {
+            blank: {
+              name: string;
+              description: string;
+            };
+          };
+          form: {
+            labels: {
+              templates: string;
+            };
+            name: {
+              label: string;
+              placeholder: string;
+            };
+            icon: {
+              label: string;
+            };
+            actions: {
+              create: string;
+            };
+          };
+        };
+        contentViews: {
+          actions: {
+            add: string;
+            settings: string;
+            delete: string;
+          };
+          labels: {
+            view: string;
+            new: string;
+            views: string;
+          };
+          dataSource: {
+            placeholder: string;
+            searchPlaceholder: string;
+            empty: string;
+            groups: {
+              new: string;
+            };
+            newCollection: string;
+            newQuery: string;
+          };
+          list: {
+            searchPlaceholder: string;
+            empty: string;
+            noResults: string;
+          };
+          details: {
+            noSelection: string;
+          };
+          missing: {
+            message: string;
+          };
+          form: {
+            name: {
+              label: string;
+              placeholder: string;
+            };
+            source: {
+              label: string;
+              collectionName: {
+                label: string;
+              };
+              queryName: {
+                label: string;
+              };
+            };
+            actions: {
+              create: string;
+            };
+          };
+          notebook: {
             name: string;
             description: string;
           };
-          picker: {
-            search: string;
-            noMatching: string;
+          kanban: {
+            name: string;
+            description: string;
+            groupBy: string;
+            noValue: string;
+            noSelectProperty: {
+              title: string;
+              description: string;
+            };
+            options: {
+              columns: string;
+              width: string;
+              fill: string;
+              narrow: string;
+              regular: string;
+              wide: string;
+              background: string;
+              none: string;
+              neutral: string;
+              accent: string;
+              scroll: string;
+              hideEmpty: string;
+            };
+            columns: {
+              add: string;
+              newColumn: string;
+              namePlaceholder: string;
+              nameTaken: string;
+              newEntry: string;
+              rename: string;
+              color: string;
+              hide: string;
+              visible: string;
+              delete: string;
+              deleteConfirmation: {
+                title: string;
+                message: string;
+                confirm: string;
+              };
+            };
+          };
+          table: {
+            name: string;
+            description: string;
+            of: string;
+            rowsPerPage: string;
+            previousPage: string;
+            nextPage: string;
+            openEntry: string;
+            resizeHandle: string;
+            resizeHandleShiftHint: string;
+            options: {
+              title: string;
+              columns: string;
+              overflow: string;
+              rowNumbers: string;
+              rowSeparator: string;
+              columnSeparator: string;
+              highlightOnHover: string;
+              zebraStripes: string;
+              padding: string;
+              compact: string;
+              comfortable: string;
+              spacious: string;
+              showChips: string;
+            };
+            columnMenu: string;
+            showChips: string;
+            showChipIcons: string;
+            hideColumn: string;
+          };
+          canvas: {
+            name: string;
+            description: string;
+            toolbarCards: string;
+            showToolbarCard: string;
+            toolbarCardTemplate: string;
+            connectionArrows: string;
+            connectionArrowsNone: string;
+            connectionArrowsEnd: string;
+            connectionArrowsBoth: string;
+            connectionShape: string;
+            connectionShapeCurved: string;
+            connectionShapeStraight: string;
+            connectionShapeDirect: string;
+            connectionStyle: string;
+            connectionStyleSolid: string;
+            connectionStyleDashed: string;
+            connectionStyleDotted: string;
+            connectionThickness: string;
+            connectionThicknessThin: string;
+            connectionThicknessMedium: string;
+            connectionThicknessThick: string;
+            connectionDelete: string;
+            alignLeft: string;
+            alignCenter: string;
+            alignRight: string;
+            alignTop: string;
+            alignMiddle: string;
+            alignBottom: string;
+            removeNodes: string;
+            removeNodesHint: string;
+            deleteEntries: {
+              titleOne: string;
+              title: string;
+              messageOne: string;
+              message: string;
+              confirm: string;
+            };
+          };
+          gallery: {
+            name: string;
+            description: string;
+            options: {
+              cardWidth: string;
+              gap: string;
+              none: string;
+              compact: string;
+              comfortable: string;
+              spacious: string;
+            };
+          };
+          board: {
+            name: string;
+            description: string;
+            label: string;
+            addColumn: string;
+            removeColumn: string;
+            toolbarCards: string;
+            showToolbarCard: string;
+            toolbarCardTemplate: string;
+          };
+          delete: {
+            confirmation: {
+              title: string;
+              message: string;
+              confirm: string;
+            };
+          };
+          sort: {
+            label: string;
+            property: string;
+            direction: string;
+            ascending: string;
+            descending: string;
           };
         };
         databases: {
           propertyFilesDirName: string;
-          actions: {
-            new: string;
-            addProperty: string;
-            viewSettings: string;
-            newEntry: string;
-            configuration: string;
-          };
-          layoutContexts: {
-            card: {
-              name: string;
-            };
-            'preview-card': {
-              name: string;
-            };
-            list: {
-              name: string;
-            };
-            'navigation-list': {
-              name: string;
-            };
-            page: {
-              name: string;
-            };
-            dialog: {
-              name: string;
-            };
-            panel: {
-              name: string;
-            };
-            'new-entry': {
-              name: string;
-            };
-          };
-          entryTemplates: {
-            empty: string;
-            actions: {
-              add: string;
-              delete: {
-                confirmation: {
-                  title: string;
-                  message: string;
-                  messageWithFiles: string;
-                  confirm: string;
-                };
-              };
-            };
-            form: {
-              name: {
-                label: string;
-                validation: {
-                  required: string;
-                };
-              };
-              defaultTitle: {
-                label: string;
-                placeholder: string;
-              };
-              chooseFile: string;
-              chooseIcon: string;
-              emptyValue: string;
-            };
-            menus: {
-              blankEntry: string;
-            };
-          };
           entries: {
             actions: {
+              removeFromCollection: string;
               previousEntry: string;
               nextEntry: string;
               openInNewTab: string;
               openInSplitView: string;
               entryOptions: string;
               goToDatabase: string;
-              removeFromCollection: string;
               color: string;
               create: string;
             };
@@ -389,58 +1616,18 @@ declare module 'i18next' {
             };
             pickers: {
               searchEntriesPlaceholder: string;
-              searchDatabasesPlaceholder: string;
               entrySearchEmpty: string;
-              databaseSearchEmpty: string;
-              entryAddHint: string;
-              entryAddMoreHint: string;
-              newEntryCreateHint: string;
-              newEntryCreateMoreHint: string;
             };
-          };
-          labels: {
-            database: string;
-            databases: string;
-            entries: string;
-          };
-          form: {
-            labels: {
-              fileType: string;
-              anyFileType: string;
-              customFileType: string;
-              templates: string;
-            };
-            properties: {
-              title: string;
-              description: string;
-            };
-            actions: {
-              create: string;
-            };
-            name: {
-              label: string;
-              placeholder: string;
-            };
-            icon: {
-              label: string;
-            };
-            entryName: {
-              label: string;
-              placeholder: string;
-            };
-            errors: {
-              nameConflict: string;
-              pathConflict: string;
-            };
-          };
-          combobox: {
-            placeholder: string;
-            searchPlaceholder: string;
-            empty: string;
-            none: string;
           };
           settings: {
-            label: string;
+            entrySerializer: {
+              error: {
+                title: string;
+                message: string;
+              };
+              label: string;
+              description: string;
+            };
             description: string;
             actions: {
               delete: string;
@@ -550,14 +1737,6 @@ declare module 'i18next' {
               label: string;
               description: string;
             };
-            entrySerializer: {
-              label: string;
-              description: string;
-              error: {
-                title: string;
-                message: string;
-              };
-            };
             propertyFileStorage: {
               label: string;
               description: string;
@@ -603,11 +1782,6 @@ declare module 'i18next' {
                 confirm: string;
               };
             };
-          };
-          empty: {
-            title: string;
-            addViaButton: string;
-            drop: string;
           };
           entrySerializers: {
             markdown: {
@@ -1125,19 +2299,116 @@ declare module 'i18next' {
               };
             };
           };
-          design: {
-            noDesigns: string;
-            title: string;
+          labels: {
+            database: string;
+            databases: string;
+            entries: string;
+            entry: string;
+          };
+          entryTemplates: {
+            menus: {
+              blankEntry: string;
+            };
             empty: string;
-            preview: {
-              color: {
-                label: string;
-                description: string;
-                matchEntry: string;
+            actions: {
+              add: string;
+              delete: {
+                confirmation: {
+                  title: string;
+                  message: string;
+                  messageWithFiles: string;
+                  confirm: string;
+                };
               };
             };
+            form: {
+              name: {
+                label: string;
+                validation: {
+                  required: string;
+                };
+              };
+              defaultTitle: {
+                label: string;
+                placeholder: string;
+              };
+              chooseFile: string;
+              chooseIcon: string;
+              emptyValue: string;
+            };
+          };
+          combobox: {
+            placeholder: string;
+            searchPlaceholder: string;
+            empty: string;
+            none: string;
+          };
+          actions: {
+            addProperty: string;
+            newEntry: string;
+            configuration: string;
+          };
+          layoutContexts: {
+            card: {
+              name: string;
+            };
+            'preview-card': {
+              name: string;
+            };
+            list: {
+              name: string;
+            };
+            'navigation-list': {
+              name: string;
+            };
+            page: {
+              name: string;
+            };
+            dialog: {
+              name: string;
+            };
+            panel: {
+              name: string;
+            };
+            'new-entry': {
+              name: string;
+            };
+          };
+          form: {
+            labels: {
+              templates: string;
+            };
+            properties: {
+              description: string;
+            };
             actions: {
-              back: string;
+              create: string;
+            };
+            name: {
+              label: string;
+              placeholder: string;
+            };
+            icon: {
+              label: string;
+            };
+            entryName: {
+              label: string;
+              placeholder: string;
+            };
+            errors: {
+              nameConflict: string;
+              pathConflict: string;
+            };
+          };
+          empty: {
+            title: string;
+            addViaButton: string;
+            drop: string;
+          };
+          design: {
+            noDesigns: string;
+            empty: string;
+            actions: {
               designMode: string;
               add: string;
               useAsDefault: string;
@@ -1162,6 +2433,13 @@ declare module 'i18next' {
               description: string;
               label: string;
             };
+            preview: {
+              color: {
+                label: string;
+                description: string;
+                matchEntry: string;
+              };
+            };
             databaseDefault: string;
             types: {
               card: {
@@ -1178,542 +2456,16 @@ declare module 'i18next' {
               };
             };
           };
-        };
-        items: {
-          labels: {
-            items: string;
-          };
-        };
-        editor: {
-          blockActions: {
-            turnInto: string;
-            copy: string;
-            duplicate: string;
-            delete: string;
-          };
-          blockGutter: {
-            insert: string;
-            select: string;
-          };
-          blockMenu: {
-            hint: string;
-          };
-          linkMenu: {
-            link: string;
-            placeholder: string;
-            webpage: string;
-            noResults: string;
-            hint: string;
-          };
-          frames: {
-            taskItem: string;
-          };
-          table: {
-            addColumn: string;
-            rowOptions: string;
-            columnOptions: string;
-            insertRowAbove: string;
-            insertRowBelow: string;
-            deleteRow: string;
-            insertColumnLeft: string;
-            insertColumnRight: string;
-            deleteColumn: string;
-            alignNone: string;
-            alignLeft: string;
-            alignCenter: string;
-            alignRight: string;
-          };
-          marks: {
-            bold: string;
-            italic: string;
-            strikethrough: string;
-            code: string;
-          };
-          elements: {
-            paragraph: {
-              name: string;
-              keywords: string;
-            };
-            'heading-1': {
-              name: string;
-              keywords: string;
-            };
-            'heading-2': {
-              name: string;
-              keywords: string;
-            };
-            'heading-3': {
-              name: string;
-              keywords: string;
-            };
-            'heading-4': {
-              name: string;
-              keywords: string;
-            };
-            'heading-5': {
-              name: string;
-              keywords: string;
-            };
-            'heading-6': {
-              name: string;
-              keywords: string;
-            };
-            code: {
-              name: string;
-              language: string;
-              keywords: string;
-            };
-            math: {
-              name: string;
-              keywords: string;
-            };
-            'inline-math': {
-              name: string;
-              keywords: string;
-            };
-            'thematic-break': {
-              name: string;
-              keywords: string;
-            };
-            blockquote: {
-              name: string;
-              keywords: string;
-            };
-            'list-item': {
-              name: string;
-              keywords: string;
-            };
-            'ordered-list-item': {
-              name: string;
-              keywords: string;
-            };
-            'task-list-item': {
-              name: string;
-              keywords: string;
-            };
-            table: {
-              name: string;
-              keywords: string;
-            };
-          };
-        };
-        designs: {
-          name: string;
-          new: string;
-          roles: {
-            heading: {
-              label: string;
-            };
-            'page-content': {
-              label: string;
-            };
-          };
-          roleVariants: {
-            sm: string;
-            md: string;
-            lg: string;
-            default: string;
-            regular: string;
-            muted: string;
-            accent: string;
-          };
-          roleVariantAxes: {
-            size: string;
-            colour: string;
-          };
-          propertyElements: {
-            variants: {
-              plain: string;
-              short: string;
-              long: string;
-              subtitle: string;
-              caption: string;
-              quote: string;
-              sm: string;
-              md: string;
-              lg: string;
-              'badges-sm': string;
-              badges: string;
-              'badges-lg': string;
-              text: string;
-              'url-text': string;
-              link: string;
-              webview: string;
-              image: string;
-              viewer: string;
-              field: string;
-              'multiline-field': string;
-              editor: string;
-              display: string;
-            };
-            descriptions: {
-              'url-text': string;
-              link: string;
-              webview: string;
-              image: string;
-              viewer: string;
-              field: string;
-              'multiline-field': string;
-              editor: string;
-              display: string;
-            };
-            samples: {
-              short: string;
-              long: string;
-              subtitle: string;
-              caption: string;
-              quote: string;
-              title: string;
-              select: string;
-              field: string;
-              'multiline-field': string;
-            };
-          };
-          layouts: {
-            empty: string;
-            labels: {
-              add: string;
-            };
-            actions: {
-              deleteConfirmation: {
-                title: string;
-                message: string;
-                confirm: string;
-              };
-            };
-            page: {
-              name: string;
-              label: string;
-              description: string;
-            };
-            card: {
-              name: string;
-              label: string;
-              description: string;
-            };
-            list: {
-              name: string;
-              label: string;
-              description: string;
-            };
-            space: {
-              name: string;
-              label: string;
-              description: string;
-            };
-          };
-          typography: {
-            label: string;
-            'container-hint': string;
-            italic: string;
-            underline: string;
-            'font-family': {
-              inherit: string;
-              sans: string;
-              serif: string;
-              mono: string;
-            };
-            'font-weight': {
-              '100': string;
-              '200': string;
-              '300': string;
-              '400': string;
-              '500': string;
-              '600': string;
-              '700': string;
-              '800': string;
-              '900': string;
-              label: string;
-              inherit: string;
-            };
-            'text-transform': {
-              label: string;
-              none: string;
-              uppercase: string;
-              lowercase: string;
-              capitalize: string;
-              'uppercase-short': string;
-              'lowercase-short': string;
-              'capitalize-short': string;
-            };
-            color: {
-              label: string;
-            };
-            'font-size': {
-              label: string;
-            };
-            'line-height': {
-              label: string;
-            };
-            'letter-spacing': {
-              label: string;
-            };
-            alignment: {
-              label: string;
-            };
-            'alignment-margin': {
-              label: string;
-            };
-            margin: {
-              label: string;
-              top: string;
-              right: string;
-              bottom: string;
-              left: string;
-              sync: string;
-            };
-            'margin-bottom': {
-              label: string;
-            };
-            'text-align': {
-              label: string;
-              left: string;
-              center: string;
-              right: string;
-              justify: string;
-            };
-          };
-          layout: {
-            label: string;
-          };
-          'page-panels': {
-            label: string;
-            content: {
-              label: string;
-            };
-            left: {
-              label: string;
-            };
-            right: {
-              label: string;
-            };
-          };
-          direction: {
-            label: string;
-            column: string;
-            row: string;
-          };
-          gap: {
-            label: string;
-          };
-          padding: {
-            label: string;
-            sync: string;
-          };
-          'min-height': {
-            label: string;
-          };
-          placeholder: {
-            label: string;
-            placeholder: string;
-            reroll: string;
-          };
-          'clear-custom-styling': string;
-          'max-width': {
-            label: string;
-            placeholder: string;
-          };
-          truncate: {
-            label: string;
-            placeholder: string;
-          };
-          opacity: {
-            label: string;
-          };
-          wrap: {
-            label: string;
-          };
-          stretch: {
-            label: string;
-          };
-          position: {
-            label: string;
-            cell: string;
-          };
-          'background-color': {
-            label: string;
-            color: string;
-            opacity: string;
-          };
-          'background-image': {
-            label: string;
-          };
-          'background-image-fit': {
-            label: string;
-            cover: string;
-            contain: string;
-            fill: string;
-          };
-          'backdrop-blur': {
-            label: string;
-          };
-          'backdrop-brightness': {
-            label: string;
-          };
-          'backdrop-blur-gradient': {
-            label: string;
-          };
-          'backdrop-blur-gradient-direction': {
-            label: string;
-            'to-top': string;
-            'to-bottom': string;
-            'to-left': string;
-            'to-right': string;
-          };
-          'backdrop-blur-gradient-extent': {
-            label: string;
-          };
-          'number-format': {
-            label: string;
-            decimals: {
-              label: string;
-              placeholder: string;
-            };
-            'thousands-separator': {
-              label: string;
-              none: string;
-              comma: string;
-              period: string;
-              space: string;
-            };
-            prefix: string;
-            'prefix-style': string;
-            suffix: string;
-            'suffix-style': string;
-            'sign-display': {
-              label: string;
-              auto: string;
-              always: string;
-              never: string;
-            };
-          };
-          'date-format': {
-            label: string;
-            mode: {
-              date: string;
-              relative: string;
-            };
-            'show-time': string;
-          };
-          image: {
-            label: string;
-            placeholder: {
-              select: string;
-              change: string;
-              remove: string;
-              hint: string;
-              browse: string;
-              dialog: {
-                title: string;
-                selectNew: string;
-                empty: string;
-              };
-            };
-            round: {
-              label: string;
-            };
-            sizing: {
-              label: string;
-              width: string;
-              height: string;
-              'width-placeholder': string;
-              'height-placeholder': string;
-              'max-width': string;
-              'max-height': string;
-              'max-width-placeholder': string;
-              'max-placeholder': string;
-              'toggle-unit': string;
-              sync: string;
-              'object-fit': {
-                label: string;
-                cover: string;
-                contain: string;
-                fill: string;
-              };
-            };
-          };
-          icon: {
-            label: string;
-            placeholder: {
-              hint: string;
-            };
-            select: string;
-            change: string;
-            appearance: {
-              label: string;
-            };
-            size: {
-              label: string;
-            };
-            color: {
-              label: string;
-            };
-            container: {
-              label: string;
-              size: string;
-              'size-placeholder': string;
-              radius: string;
-              'radius-placeholder': string;
-              'background-color': string;
-              round: string;
-            };
-          };
-          webview: {
-            placeholder: string;
-            'embed-blocked': string;
-          };
-          view: {
-            placeholder: string;
-            viewType: {
-              label: string;
-            };
-          };
-          'url-display': {
-            label: string;
-          };
-          'url-show-protocol': string;
-          'url-show-subdomain': string;
-          'url-show-domain': string;
-          'url-show-tld': string;
-          'url-show-path': string;
-          border: {
-            label: string;
-            style: {
-              label: string;
-              none: string;
-              solid: string;
-              dashed: string;
-              dotted: string;
-            };
-            width: {
-              label: string;
-              sync: string;
-            };
-            radius: {
-              label: string;
-              'top-left': string;
-              'top-right': string;
-              'bottom-right': string;
-              'bottom-left': string;
-              sync: string;
-            };
-            color: {
-              label: string;
-            };
-          };
-          property: {
-            label: string;
-            none: string;
-            noCompatible: string;
-          };
-          title: {
-            label: string;
-          };
           properties: {
-            empty: string;
             actions: {
-              add: string;
               delete: {
+                confirmation: {
+                  title: string;
+                  message: string;
+                  confirm: string;
+                };
+              };
+              rename: {
                 confirmation: {
                   title: string;
                   message: string;
@@ -1722,753 +2474,31 @@ declare module 'i18next' {
               };
             };
           };
-          content: {
-            label: string;
-            placeholder: string;
-            mode: {
-              none: string;
-              property: string;
-              static: string;
-            };
-            emptyBehavior: {
-              label: string;
-              hide: string;
-              placeholder: string;
-            };
-          };
-          select: {
-            placeholder: {
-              label: string;
-              description: string;
-            };
-          };
         };
-        queries: {
+        entityGroups: {
           labels: {
-            query: string;
-            queries: string;
+            group: string;
+            groups: string;
+            newGroup: string;
+            none: string;
+            ungrouped: string;
+            empty: string;
           };
           actions: {
-            add: string;
-            new: string;
-          };
-          list: {
-            searchPlaceholder: string;
-            empty: string;
-            noResults: string;
-          };
-          details: {
-            noSelection: string;
-          };
-          editor: {
-            namePlaceholder: string;
-            selectProperty: string;
-            ascending: string;
-            descending: string;
-            outputEntries: string;
-            searchEntries: string;
-            removeNode: string;
-            removeConnection: string;
-            breakConnections: string;
-            connectNearest: string;
-            noProperties: string;
-            connectNodes: string;
-          };
-          nodes: {
-            source: string;
-            filter: string;
-            collectionFilter: string;
-            sort: string;
-            limit: string;
-            results: string;
-          };
-          toolbar: {
-            filter: string;
-            collectionFilter: string;
-            sort: string;
-            limit: string;
-          };
-          sourcePicker: {
-            select: string;
-            searchPlaceholder: string;
-            empty: string;
-            groups: {
-              databases: string;
-              queries: string;
-            };
-          };
-          collectionPicker: {
-            select: string;
-            anyCollection: string;
-            groups: {
-              collections: string;
-            };
-            searchPlaceholder: string;
-            empty: string;
-          };
-          collectionOperators: {
-            'is-in': string;
-            'is-not-in': string;
-          };
-          results: {
-            empty: string;
-          };
-        };
-        automations: {
-          labels: {
-            automation: string;
-          };
-        };
-        calendar: {
-          months: {
-            january: string;
-            february: string;
-            march: string;
-            april: string;
-            may: string;
-            june: string;
-            july: string;
-            august: string;
-            september: string;
-            october: string;
-            november: string;
-            december: string;
-          };
-          weekdays: {
-            sunday: string;
-            monday: string;
-            tuesday: string;
-            wednesday: string;
-            thursday: string;
-            friday: string;
-            saturday: string;
-          };
-          monthsShort: {
-            january: string;
-            february: string;
-            march: string;
-            april: string;
-            may: string;
-            june: string;
-            july: string;
-            august: string;
-            september: string;
-            october: string;
-            november: string;
-            december: string;
-          };
-          weekdaysShort: {
-            sunday: string;
-            monday: string;
-            tuesday: string;
-            wednesday: string;
-            thursday: string;
-            friday: string;
-            saturday: string;
-          };
-          previousMonth: string;
-          nextMonth: string;
-        };
-        'design-studio': {
-          labels: {
-            designs: string;
-            elements: string;
-            layout: string;
-            layouts: string;
-            properties: string;
-            views: string;
-          };
-          dashboard: {
-            empty: string;
-            noLayouts: string;
-            layoutCount_one: string;
-            layoutCount_other: string;
-            cardDetails: string;
-          };
-          elements: {
-            root: string;
-            container: string;
-            'page-panel': string;
-            text: string;
-            title: string;
-            number: string;
-            date: string;
-            url: string;
-            image: string;
-            'image-viewer': string;
-            icon: string;
-            badges: string;
-            webview: string;
-            editor: string;
-            property: string;
-            view: string;
-            'container-empty-hint': string;
-            group: {
-              properties: string;
-              elements: string;
-              content: string;
-              media: string;
-              layout: string;
-              views: string;
-            };
-          };
-          mappable: {
-            tooltip: string;
-          };
-          views: {
-            new: string;
-            existing: string;
-            search: {
-              placeholder: string;
-            };
-            empty: string;
-            noMatches: string;
-          };
-        };
-        toast: {
-          close: string;
-        };
-        contentViews: {
-          actions: {
-            add: string;
-            settings: string;
+            rename: string;
             delete: string;
           };
-          delete: {
-            confirmation: {
-              title: string;
-              message: string;
-              confirm: string;
-            };
+          item: {
+            remove: string;
+            move: string;
+            add: string;
           };
-          labels: {
-            view: string;
-            new: string;
-            views: string;
+          gap: {
+            drop: string;
           };
-          dataSource: {
+          name: {
             placeholder: string;
-            searchPlaceholder: string;
-            empty: string;
-            groups: {
-              new: string;
-              collections: string;
-              queries: string;
-              databases: string;
-            };
-            newCollection: string;
-            newQuery: string;
-          };
-          canvas: {
-            name: string;
-            description: string;
-            toolbarCards: string;
-            showToolbarCard: string;
-            toolbarCardTemplate: string;
-            connectionArrows: string;
-            connectionArrowsNone: string;
-            connectionArrowsEnd: string;
-            connectionArrowsBoth: string;
-            connectionColor: string;
-            connectionShape: string;
-            connectionShapeCurved: string;
-            connectionShapeStraight: string;
-            connectionShapeDirect: string;
-            connectionStyle: string;
-            connectionStyleSolid: string;
-            connectionStyleDashed: string;
-            connectionStyleDotted: string;
-            connectionThickness: string;
-            connectionThicknessThin: string;
-            connectionThicknessMedium: string;
-            connectionThicknessThick: string;
-            connectionDelete: string;
-            alignLeft: string;
-            alignCenter: string;
-            alignRight: string;
-            alignTop: string;
-            alignMiddle: string;
-            alignBottom: string;
-            removeNodes: string;
-            removeNodesHint: string;
-            deleteEntries: {
-              titleOne: string;
-              title: string;
-              messageOne: string;
-              message: string;
-              confirm: string;
-            };
-          };
-          board: {
-            name: string;
-            description: string;
-            label: string;
-            addColumn: string;
-            removeColumn: string;
-            toolbarCards: string;
-            showToolbarCard: string;
-            toolbarCardTemplate: string;
-          };
-          kanban: {
-            name: string;
-            description: string;
-            groupBy: string;
-            noValue: string;
-            noSelectProperty: {
-              title: string;
-              description: string;
-            };
-            options: {
-              columns: string;
-              width: string;
-              fill: string;
-              narrow: string;
-              regular: string;
-              wide: string;
-              background: string;
-              none: string;
-              neutral: string;
-              accent: string;
-              scroll: string;
-              hideEmpty: string;
-            };
-            columns: {
-              add: string;
-              newColumn: string;
-              namePlaceholder: string;
-              nameTaken: string;
-              newEntry: string;
-              rename: string;
-              color: string;
-              hide: string;
-              visible: string;
-              delete: string;
-              deleteConfirmation: {
-                title: string;
-                message: string;
-                confirm: string;
-              };
-            };
-          };
-          gallery: {
-            name: string;
-            description: string;
-            options: {
-              cardWidth: string;
-              gap: string;
-              none: string;
-              compact: string;
-              comfortable: string;
-              spacious: string;
-            };
-          };
-          notebook: {
-            name: string;
-            description: string;
-          };
-          table: {
-            name: string;
-            description: string;
-            of: string;
-            rowsPerPage: string;
-            previousPage: string;
-            nextPage: string;
-            openEntry: string;
-            resizeHandle: string;
-            resizeHandleShiftHint: string;
-            options: {
-              title: string;
-              columns: string;
-              overflow: string;
-              rowNumbers: string;
-              rowSeparator: string;
-              columnSeparator: string;
-              highlightOnHover: string;
-              zebraStripes: string;
-              padding: string;
-              compact: string;
-              comfortable: string;
-              spacious: string;
-              showChips: string;
-            };
-            columnMenu: string;
-            showChips: string;
-            showChipIcons: string;
-            hideColumn: string;
-          };
-          sort: {
-            label: string;
-            property: string;
-            direction: string;
-            ascending: string;
-            descending: string;
-          };
-          list: {
-            searchPlaceholder: string;
-            empty: string;
-            noResults: string;
-          };
-          details: {
-            noSelection: string;
-          };
-          missing: {
-            message: string;
-          };
-          form: {
-            name: {
-              label: string;
-              placeholder: string;
-            };
-            source: {
-              label: string;
-              collectionName: {
-                label: string;
-              };
-              queryName: {
-                label: string;
-              };
-            };
-            actions: {
-              create: string;
-            };
-          };
-        };
-        spaces: {
-          labels: {
-            space: string;
-            spaces: string;
-          };
-          actions: {
-            add: string;
-            new: string;
-          };
-          list: {
-            searchPlaceholder: string;
-            empty: string;
-            noResults: string;
-          };
-          details: {
-            noSelection: string;
-          };
-          view: {
-            notFound: string;
-            actions: {
-              edit: string;
-              exitEditMode: string;
-            };
-          };
-          templates: {
-            blank: {
-              name: string;
-              description: string;
-            };
-          };
-          form: {
-            labels: {
-              templates: string;
-            };
-            name: {
-              label: string;
-              placeholder: string;
-            };
-            icon: {
-              label: string;
-            };
-            actions: {
-              create: string;
-            };
-          };
-        };
-        addContent: {
-          searchPlaceholder: string;
-          empty: string;
-          actions: {
-            add: string;
-          };
-          groups: {
-            suggested: string;
-            new: string;
-            recent: string;
-            existing: string;
-          };
-          hints: {
-            add: string;
-            addMore: string;
-          };
-        };
-        tags: {
-          labels: {
-            tag: string;
-            tags: string;
-          };
-          field: {
-            placeholder: string;
-            create: string;
-            searchPlaceholder: string;
-            noResults: string;
-          };
-          form: {
-            create: string;
-            nameTaken: string;
-          };
-          actions: {
-            add: string;
-            new: string;
-            newGroup: string;
-            newInGroup: string;
-            options: string;
-            rename: string;
-            color: string;
-            group: string;
-            delete: {
-              label: string;
-              confirmation: {
-                title: string;
-                message_one: string;
-                message_other: string;
-                confirm: string;
-              };
-            };
-          };
-          list: {
-            searchPlaceholder: string;
-            empty: string;
-            noResults: string;
-          };
-          details: {
-            noSelection: string;
-            icon: string;
-            namePlaceholder: string;
-            groupNone: string;
-            entries: string;
-            entriesEmpty: string;
-          };
-        };
-        designsNext: {
-          copyName: string;
-          types: {
-            card: string;
-            list: string;
-            page: string;
-            space: string;
-          };
-          widthMode: {
-            label: string;
-            fluid: string;
-            fluidDescription: string;
-            proportional: string;
-            proportionalDescription: string;
-          };
-          contentFit: {
-            label: string;
-            fixed: string;
-            fixedDescription: string;
-            grow: string;
-            growDescription: string;
-            shrink: string;
-            shrinkDescription: string;
-            natural: string;
-            naturalDescription: string;
-          };
-          editor: {
-            snapTo: string;
-            autoHeight: string;
-            square: string;
-            portrait: string;
-            landscape: string;
-            previewWidth: string;
-            layout: {
-              fill: string;
-              canvas: string;
-            };
-            theme: {
-              light: string;
-              dark: string;
-            };
-            insertElement: string;
-            noMatchingElements: string;
-            widths: {
-              narrow: string;
-              narrowShort: string;
-              regular: string;
-              regularShort: string;
-              wide: string;
-              wideShort: string;
-              extraWide: string;
-              extraWideShort: string;
-            };
-          };
-          settings: {
-            fontWeight: {
-              label: string;
-              default: string;
-              thin: string;
-              extraLight: string;
-              light: string;
-              regular: string;
-              medium: string;
-              semibold: string;
-              bold: string;
-              extraBold: string;
-              black: string;
-            };
-            fontFamily: {
-              label: string;
-              sans: string;
-              serif: string;
-              mono: string;
-            };
-            textStyle: string;
-            underline: string;
-            strikethrough: string;
-            fontSize: {
-              label: string;
-            };
-            lineHeight: {
-              label: string;
-            };
-            custom: string;
-            verticalAlign: {
-              label: string;
-              top: string;
-              middle: string;
-              bottom: string;
-            };
-            italic: string;
-            textColor: {
-              label: string;
-            };
-            color: {
-              hue: string;
-              shade: string;
-              shadeLevel: string;
-            };
-            textAlign: {
-              label: string;
-              left: string;
-              center: string;
-              right: string;
-              justify: string;
-            };
-            background: {
-              label: string;
-              subtle: string;
-              accent: string;
-              solidAccent: string;
-            };
-            cornerRadius: {
-              label: string;
-              none: string;
-              sm: string;
-              md: string;
-              lg: string;
-              full: string;
-            };
-          };
-          heightMode: {
-            label: string;
-            fluid: string;
-            fluidDescription: string;
-            proportional: string;
-            proportionalDescription: string;
-          };
-          padding: {
-            label: string;
-            top: string;
-            right: string;
-            bottom: string;
-            left: string;
-            link: string;
-            unlink: string;
-            none: string;
-            sizes: {
-              xs: string;
-              s: string;
-              m: string;
-              l: string;
-              xl: string;
-              '2xl': string;
-              '3xl': string;
-              '4xl': string;
-              '5xl': string;
-            };
-          };
-          contentWidth: {
-            label: string;
-            narrow: string;
-            regular: string;
-            wide: string;
-            full: string;
-            capDescription: string;
-            fullDescription: string;
-          };
-          sidePadding: {
-            label: string;
-          };
-          pin: {
-            label: {
-              left: string;
-              right: string;
-              top: string;
-              bottom: string;
-            };
-            edge: {
-              left: string;
-              right: string;
-              top: string;
-              bottom: string;
-            };
-            element: {
-              left: string;
-              right: string;
-              top: string;
-              bottom: string;
-            };
-          };
-          elements: {
-            groups: {
-              content: string;
-              layout: string;
-            };
-            box: {
-              label: string;
-            };
-            editor: {
-              label: string;
-            };
-            editorTitle: {
-              label: string;
-            };
-            heading: {
-              label: string;
-              placeholder: string;
-            };
-            icon: {
-              label: string;
-            };
-            label: {
-              label: string;
-              placeholder: string;
-            };
-            text: {
-              label: string;
-              placeholder: string;
-            };
-          };
-          property: {
-            label: string;
-            none: string;
-            search: string;
-            noMatching: string;
-            suggested: string;
-            other: string;
-            description: string;
-          };
-          content: {
-            label: string;
-            description: string;
-            textPlaceholder: string;
-            iconLabel: string;
+            taken: string;
           };
         };
         filters: {
@@ -2642,6 +2672,7 @@ declare module 'i18next' {
               searchPlaceholder: string;
               entryTemplate: string;
             };
+            newDatabase: string;
           };
           sidebarGroups: {
             actions: {
@@ -2658,62 +2689,6 @@ declare module 'i18next' {
           placeholder: string;
           recent: string;
           noResults: string;
-        };
-        workspaces: {
-          switcher: {
-            actions: {
-              add: string;
-              create: string;
-              open: string;
-            };
-          };
-          actions: {
-            remove: {
-              label: string;
-              description: string;
-              confirmation: {
-                title: string;
-                message: string;
-                confirm: string;
-              };
-            };
-            delete: {
-              label: string;
-              description: string;
-              confirmation: {
-                title: string;
-                message: string;
-                confirm: string;
-              };
-            };
-          };
-          form: {
-            title: string;
-            name: {
-              label: string;
-              placeholder: string;
-              default: string;
-            };
-            icon: {
-              label: string;
-            };
-            location: {
-              label: string;
-              description: string;
-              action: string;
-            };
-            actions: {
-              create: string;
-            };
-            errors: {
-              locationMissing: string;
-              pathConflict: string;
-            };
-          };
-          errors: {
-            notAWorkspace: string;
-            unknown: string;
-          };
         };
         pdf: {
           toolbar: {
@@ -3483,30 +3458,20 @@ declare module 'i18next' {
             label: string;
           };
         };
-        entityGroups: {
-          labels: {
-            group: string;
-            newGroup: string;
+        canvas: {
+          fitView: string;
+          grid: {
+            label: string;
             none: string;
-            ungrouped: string;
-            empty: string;
+            dots: string;
+            lines: string;
           };
-          actions: {
-            rename: string;
-            delete: string;
-          };
-          item: {
-            remove: string;
-            move: string;
-            add: string;
-          };
-          gap: {
-            drop: string;
-          };
-          name: {
-            placeholder: string;
-            taken: string;
-          };
+          resetZoom: string;
+          settings: string;
+          snapToGrid: string;
+          snapToObjects: string;
+          zoomIn: string;
+          zoomOut: string;
         };
       };
     };

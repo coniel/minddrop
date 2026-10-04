@@ -235,7 +235,7 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
             </div>
             {properties.length > 0 && (
               <MenuGroup className="properties">
-                <Subheading text="databases.form.properties.title" />
+                <Subheading text="properties.labels.properties" />
                 <Text
                   paragraph
                   size="sm"

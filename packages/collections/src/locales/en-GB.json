@@ -1,7 +1,13 @@
 {
   "collections": {
     "labels": {
-      "collection": "Collection"
+      "collection": "Collection",
+      "collections": "Collections"
+    },
+    "selection": {
+      "addTo": "Add to collection",
+      "searchPlaceholder": "Search collections...",
+      "empty": "No collections"
     }
   }
 }

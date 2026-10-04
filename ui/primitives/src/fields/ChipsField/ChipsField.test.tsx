@@ -1,9 +1,23 @@
 import { useState } from 'react';
 import { afterEach, describe, expect, it } from 'vitest';
-import { i18n } from '@minddrop/i18n';
+import { I18n, i18n } from '@minddrop/i18n';
 import { cleanup, render, screen, userEvent } from '@minddrop/test-utils';
 import { FieldValidationError } from '../useFieldValidation';
 import { ChipsField, ChipsFieldProps } from './ChipsField';
+
+// Register the interpolated key the tests reject values with, which
+// belongs to a package this one does not depend on.
+I18n.registerTranslations({
+  'en-GB': {
+    databases: {
+      settings: {
+        contentDefaults: {
+          custom: { matcherTaken: 'Already used by {{type}}' },
+        },
+      },
+    },
+  },
+});
 
 // The error text of an invalid name
 const invalidNameError = i18n.t('error.invalidDirName');

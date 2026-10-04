@@ -8,7 +8,8 @@
         "label": "Create",
         "searchPlaceholder": "Create...",
         "entryTemplate": "{{name}} · {{template}}"
-      }
+      },
+      "newDatabase": "New"
     },
     "sidebarGroups": {
       "actions": {

@@ -2,17 +2,22 @@ import { Designs } from '@minddrop/designs';
 import { EntityGroups } from '@minddrop/entity-groups';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
+import { I18n } from '@minddrop/i18n';
 import { SpaceGroupsTypeConfig } from '../SpaceGroupsTypeConfig';
 import { onFileSystemChanged, onUpdateVirtualDesign } from '../event-handlers';
+import { locales } from '../locales';
 
 /**
- * Initializes spaces by registering the space groups entity group
- * type and the listeners which keep loaded workspaces' spaces in
+ * Initializes spaces by registering the translations, the space
+ * groups entity group type and the listeners which keep loaded workspaces' spaces in
  * step with their bundles and their owned designs.
  *
  * Must be called before the entity groups are loaded.
  */
 export function initializeSpaces(): void {
+  // Register the translations
+  I18n.registerTranslations(locales);
+
   // Apply changes made to space bundles outside of the app
   Events.on(Fs.events.Changed, 'spaces', (data) => onFileSystemChanged(data));
 

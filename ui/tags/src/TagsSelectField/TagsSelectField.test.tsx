@@ -91,7 +91,7 @@ describe('<TagsSelectField />', () => {
     );
 
     // Pick the create option
-    await user.click(await screen.findByText('tags.field.create'));
+    await user.click(await screen.findByText('Create "Urgent"'));
 
     // The tag should land in the tags store
     await waitFor(() => {
@@ -117,7 +117,7 @@ describe('<TagsSelectField />', () => {
 
     // The tag should be listed without a create option
     expect(await screen.findByText(tag_1.name)).toBeInTheDocument();
-    expect(screen.queryByText('tags.field.create')).toBeNull();
+    expect(screen.queryByText(`Create "${tag_1.name}"`)).toBeNull();
   });
 
   it('limits options to the group when one is set', async () => {
@@ -152,7 +152,7 @@ describe('<TagsSelectField />', () => {
     );
 
     // Pick the create option
-    await user.click(await screen.findByText('tags.field.create'));
+    await user.click(await screen.findByText('Create "Urgent"'));
 
     // The tag should be created in the group
     await waitFor(() => {

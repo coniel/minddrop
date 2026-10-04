@@ -113,7 +113,7 @@ export const QueryCollectionFilterNodeCard: React.FC<
   const collectionGroup = useMemo<ComboboxOptionGroup>(
     () => ({
       value: 'collections',
-      label: 'queries.collectionPicker.groups.collections',
+      label: 'collections.labels.collections',
       items: allCollections
         .filter((collection) => !collection.virtual)
         .map((collection) => ({

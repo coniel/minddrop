@@ -138,7 +138,7 @@ function resolveGroupAddAction(
   // The databases group makes a database
   if (group.id === SidebarGroups.constants.DatabasesId) {
     return {
-      label: 'databases.actions.new',
+      label: 'desktopApp.sidebar.newDatabase',
       onClick: () => Events.dispatch(OpenNewDatabaseDialogEvent),
     };
   }

@@ -3,6 +3,7 @@ import { KanbanViewComponent } from './KanbanView';
 import { KanbanViewOptionsMenu } from './KanbanViewOptionsMenu';
 import { KanbanViewSkeleton } from './KanbanViewSkeleton';
 import { defaultKanbanViewData, defaultKanbanViewOptions } from './constants';
+import { locales } from './locales';
 import { KanbanViewData, KanbanViewOptions } from './types';
 import { mapOrderReferences } from './utils';
 
@@ -14,6 +15,7 @@ export const KanbanViewType: ContentViewType<
   name: 'contentViews.kanban.name',
   description: 'contentViews.kanban.description',
   icon: 'square-kanban',
+  locales,
   supportedDataSources: ['database'],
   filterable: true,
   defaultOptions: defaultKanbanViewOptions,

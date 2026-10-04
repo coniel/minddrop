@@ -1,4 +1,4 @@
-import { TranslationKey } from '@minddrop/i18n';
+import { Locales, TranslationKey } from '@minddrop/i18n';
 import { ContentIconName } from '@minddrop/ui-icons';
 import { ContentView, ContentViewConfig } from './ContentView.types';
 import { ViewDataSourceType } from './ViewDataSource.types';
@@ -22,6 +22,12 @@ export interface ContentViewType<
    * The description of the content view type.
    */
   description: TranslationKey;
+
+  /**
+   * The translations the content view type renders, registered
+   * along with the view type.
+   */
+  locales?: Locales;
 
   /**
    * The name of the content icon representing the content view type,

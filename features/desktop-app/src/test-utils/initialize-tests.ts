@@ -27,9 +27,7 @@ import { locales } from '../locales';
 
 initializeI18n();
 
-// Register the desktop app and entity group translations. Runs
-// after the i18n initialization above, which resets the resource
-// bundles.
+// Register the desktop app and entity group translations
 I18n.registerTranslations(locales);
 initializeEntityGroupsUi();
 

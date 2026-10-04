@@ -14,17 +14,22 @@ import {
   clearEntryFocusRequest,
 } from '@minddrop/databases/test-utils';
 import { Designs as DesignsNext } from '@minddrop/designs-next';
+import { initializeEditor } from '@minddrop/editor';
 import { Events } from '@minddrop/events';
+import { initializePropertiesFeature } from '@minddrop/feature-properties';
 import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { initializeI18n } from '@minddrop/i18n';
 import { resetPdfStores } from '@minddrop/pdf/test-utils';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
+import { initializeContentViewsUi } from '@minddrop/ui-content-views';
+import { initializeDatabasesUi } from '@minddrop/ui-databases';
 import {
   WorkspaceFixtures,
   cleanupWorkspaceFixtures,
   setupWorkspaceFixtures,
 } from '@minddrop/workspaces/test-utils';
+import { initializeDatabasesFeature } from '../initializeDatabasesFeature';
 
 const { workspace_1 } = WorkspaceFixtures;
 
@@ -38,6 +43,13 @@ interface SetupOptions {
 }
 
 initializeI18n();
+
+// Register the translations of the feature and the packages it renders
+initializeDatabasesFeature();
+initializeDatabasesUi();
+initializePropertiesFeature();
+initializeContentViewsUi();
+initializeEditor();
 
 export const MockFs = initializeMockFileSystem([
   workspace_1.path,

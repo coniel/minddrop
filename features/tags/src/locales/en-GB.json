@@ -1,8 +1,5 @@
 {
   "tags": {
-    "labels": {
-      "tags": "Tags"
-    },
     "form": {
       "create": "Create",
       "nameTaken": "A tag with this name already exists"

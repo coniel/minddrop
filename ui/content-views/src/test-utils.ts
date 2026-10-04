@@ -15,8 +15,12 @@ import {
   cleanupWorkspaceFixtures,
   setupWorkspaceFixtures,
 } from '@minddrop/workspaces/test-utils';
+import { initializeContentViewsUi } from './initializeContentViewsUi';
 
 initializeI18n();
+
+// Register the package's translations
+initializeContentViewsUi();
 
 // Register the property and filter translations the labels use
 Properties.initialize();

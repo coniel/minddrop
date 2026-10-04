@@ -1,0 +1,22 @@
+{
+  "properties": {
+    "select": {
+      "options": {
+        "add": "Add an option",
+        "placeholder": "Option name",
+        "addHint": "to add",
+        "nameEnterHint": "to add option"
+      },
+      "multiselect": {
+        "label": "Allow multiple selections"
+      }
+    },
+    "tags": {
+      "group": {
+        "label": "Limit to group",
+        "all": "All tags"
+      },
+      "manage": "Manage tags"
+    }
+  }
+}

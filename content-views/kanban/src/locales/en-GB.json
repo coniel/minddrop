@@ -1,0 +1,45 @@
+{
+  "contentViews": {
+    "kanban": {
+      "name": "Kanban",
+      "description": "A board whose columns are the options of a select property.",
+      "groupBy": "Group by",
+      "noValue": "No value",
+      "noSelectProperty": {
+        "title": "Nothing to group by",
+        "description": "Add a select property to the database to generate the board's columns."
+      },
+      "options": {
+        "columns": "Columns",
+        "width": "Width",
+        "fill": "Fill space",
+        "narrow": "Narrow",
+        "regular": "Regular",
+        "wide": "Wide",
+        "background": "Background",
+        "none": "None",
+        "neutral": "Neutral",
+        "accent": "Accent",
+        "scroll": "Scroll columns",
+        "hideEmpty": "Hide empty columns"
+      },
+      "columns": {
+        "add": "Add column",
+        "newColumn": "New column",
+        "namePlaceholder": "Column name...",
+        "nameTaken": "A column with this name already exists",
+        "newEntry": "New entry",
+        "rename": "Rename",
+        "color": "Colour",
+        "hide": "Hide column",
+        "visible": "Visible columns",
+        "delete": "Delete column",
+        "deleteConfirmation": {
+          "title": "Delete column",
+          "message": "The option will be removed from the select property. Entries holding it will move to the No value column.",
+          "confirm": "Delete"
+        }
+      }
+    }
+  }
+}

@@ -18,6 +18,8 @@ import {
 } from './setup-fixtures';
 
 initializeI18n();
+
+// Register the package's translations
 I18n.registerTranslations(locales);
 
 export const MockFs = initializeMockFileSystem([...getCollectionFiles()]);

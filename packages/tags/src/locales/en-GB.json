@@ -1,13 +1,16 @@
 {
   "tags": {
-    "labels": {
-      "tag": "Tag"
-    },
     "field": {
       "placeholder": "Add tags...",
       "create": "Create \"{{name}}\"",
       "searchPlaceholder": "Search tags...",
       "noResults": "No matching tags"
+    },
+    "labels": {
+      "tag": "Tag",
+      "tags": "Tags",
+      "tagGroup": "Tag group",
+      "tagGroups": "Tag groups"
     }
   }
 }

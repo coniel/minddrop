@@ -4,16 +4,23 @@ import { ContentViews } from '@minddrop/content-views';
 import { Databases } from '@minddrop/databases';
 import { Designs } from '@minddrop/designs';
 import { Designs as DesignsNext } from '@minddrop/designs-next';
-import { registerBlockSelectionSerializer } from '@minddrop/editor';
+import {
+  initializeEditor,
+  registerBlockSelectionSerializer,
+} from '@minddrop/editor';
 import { EntityGroups } from '@minddrop/entity-groups';
 import { initializeCollectionsFeature } from '@minddrop/feature-collections';
 import { initializeContentViewsFeature } from '@minddrop/feature-content-views';
-import { initializeEntryPdfs } from '@minddrop/feature-databases';
+import {
+  initializeDatabasesFeature,
+  initializeEntryPdfs,
+} from '@minddrop/feature-databases';
 import { initializeDesignsFeature } from '@minddrop/feature-designs';
 import { initializeDesignsNextFeature } from '@minddrop/feature-designs-next';
 import { initializeDevToolsFeature } from '@minddrop/feature-dev-tools';
 import { initializeMarkdownEditorFeature } from '@minddrop/feature-markdown-editor';
 import { initializePdfFeature } from '@minddrop/feature-pdf';
+import { initializePropertiesFeature } from '@minddrop/feature-properties';
 import { initializeQueriesFeature } from '@minddrop/feature-queries';
 import { initializeSearch } from '@minddrop/feature-search';
 import { initializeSettingsFeature } from '@minddrop/feature-settings';
@@ -29,6 +36,9 @@ import { Queries } from '@minddrop/queries';
 import { Search } from '@minddrop/search';
 import { Spaces } from '@minddrop/spaces';
 import { Tags } from '@minddrop/tags';
+import { initializeCanvasUi } from '@minddrop/ui-canvas';
+import { initializeContentViewsUi } from '@minddrop/ui-content-views';
+import { initializeDatabasesUi } from '@minddrop/ui-databases';
 import { initializeDragLayer } from '@minddrop/ui-drag-and-drop';
 import { initializeEntityGroupsUi } from '@minddrop/ui-entity-groups';
 import { Icons } from '@minddrop/ui-icons';
@@ -129,6 +139,12 @@ async function runInitialization(): Promise<void> {
   initializeSettingsFeature();
   initializeTagsFeature();
   initializeWorkspacesFeature();
+  initializeDatabasesFeature();
+  initializePropertiesFeature();
+  initializeEditor();
+  initializeCanvasUi();
+  initializeContentViewsUi();
+  initializeDatabasesUi();
   initializeEntityGroupsUi();
 
   // Register the sidebar's entity group type, before the entity

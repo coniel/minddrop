@@ -5,6 +5,7 @@ import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { initializeI18n } from '@minddrop/i18n';
+import { Properties } from '@minddrop/properties';
 import {
   cleanupWorkspaceFixtures,
   setupWorkspaceFixtures,
@@ -16,6 +17,9 @@ import {
 } from './setup-fixtures';
 
 initializeI18n();
+
+// Register the property type names the metadata properties are named with
+Properties.initialize();
 
 export const MockFs = initializeMockFileSystem();
 export const mockDate = new Date('2026-01-01T00:00:00.000Z');

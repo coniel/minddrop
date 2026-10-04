@@ -1,0 +1,34 @@
+{
+  "contentViews": {
+    "table": {
+      "name": "Table",
+      "description": "A table view.",
+      "of": "of",
+      "rowsPerPage": "Rows per page",
+      "previousPage": "Previous page",
+      "nextPage": "Next page",
+      "openEntry": "Open",
+      "resizeHandle": "Drag to resize",
+      "resizeHandleShiftHint": "Hold Shift to distribute evenly",
+      "options": {
+        "title": "Table options",
+        "columns": "Columns",
+        "overflow": "Overflow columns",
+        "rowNumbers": "Row numbers",
+        "rowSeparator": "Row separator",
+        "columnSeparator": "Column separator",
+        "highlightOnHover": "Highlight on hover",
+        "zebraStripes": "Zebra stripes",
+        "padding": "Padding",
+        "compact": "Compact",
+        "comfortable": "Comfortable",
+        "spacious": "Spacious",
+        "showChips": "Show chips"
+      },
+      "columnMenu": "Column options",
+      "showChips": "Show chips",
+      "showChipIcons": "Show icons",
+      "hideColumn": "Hide column"
+    }
+  }
+}

@@ -5,6 +5,7 @@ export * from './EditorShortcuts';
 export * from './FrameMenuItems';
 export * from './FrameShortcuts';
 export * from './focusEditor';
+export * from './initializeEditor';
 export * from './MarkConfigs';
 export * from './indentBlocks';
 export * from './insertInlineElement';

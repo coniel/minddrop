@@ -95,7 +95,7 @@ export const DatabaseDesignPanel: React.FC<DatabaseDesignPanelProps> = ({
     <Stack gap={4} className="database-design-panel">
       {/* Design mode link */}
       <Group gap={1} className="database-design-panel-header">
-        <Text size="sm" weight="medium" text="databases.design.title" />
+        <Text size="sm" weight="medium" text="designs.labels.designs" />
         <Spacer />
         <IconButton
           size="sm"

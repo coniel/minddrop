@@ -223,7 +223,7 @@ export const CollectionDetails: React.FC<CollectionDetailsProps> = ({
                 <Subheading
                   noMargin
                   size="sm"
-                  text="collections.details.entries"
+                  text="databases.labels.entries"
                 />
               </Group>
               {collection.items.length > 0 ? (

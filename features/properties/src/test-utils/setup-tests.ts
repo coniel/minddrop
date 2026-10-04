@@ -3,13 +3,21 @@ import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { initializeI18n } from '@minddrop/i18n';
+import { Properties } from '@minddrop/properties';
 import {
   cleanupTagFixtures,
   setupTagFixtures,
 } from '@minddrop/tags/test-utils';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
+import { initializePropertiesFeature } from '../initializePropertiesFeature';
 
 initializeI18n();
+
+// Register the property type names, which name new properties
+Properties.initialize();
+
+// Register the feature's translations
+initializePropertiesFeature();
 
 export const MockFs = initializeMockFileSystem();
 

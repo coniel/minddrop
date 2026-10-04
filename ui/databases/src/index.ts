@@ -1,3 +1,4 @@
+export * from './initializeDatabasesUi';
 export * from './constants';
 export * from './DatabaseEntryContext';
 export * from './CreateDatabaseEntryButton';

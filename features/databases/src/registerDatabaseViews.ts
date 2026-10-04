@@ -26,7 +26,7 @@ export function registerDatabaseViews(): void {
   // Register the global database preferences settings view
   SettingsViews.register({
     id: 'databases',
-    label: 'databases.settings.label',
+    label: 'databases.labels.databases',
     description: 'databases.settings.description',
     icon: Databases.constants.Icon,
     component: DatabaseDefaultsSettings,

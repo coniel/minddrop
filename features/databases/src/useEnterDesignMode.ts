@@ -18,7 +18,7 @@ export function useEnterDesignMode(): () => void {
   return useCallback(() => {
     setSubview({
       id: DesignsSubviewId,
-      title: t('databases.design.title'),
+      title: t('designs.labels.designs'),
       icon: Designs.constants.Icon,
     });
   }, [setSubview, t]);

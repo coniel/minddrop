@@ -3,6 +3,7 @@ import { GalleryViewComponent } from './GalleryView';
 import { GalleryViewOptionsMenu } from './GalleryViewOptionsMenu/GalleryViewOptionsMenu';
 import { GalleryViewSkeleton } from './GalleryViewSkeleton';
 import { defaultGalleryViewOptions } from './constants';
+import { locales } from './locales';
 import { GalleryViewOptions } from './types';
 
 export const GalleryViewType: ContentViewType<GalleryViewOptions> = {
@@ -10,6 +11,7 @@ export const GalleryViewType: ContentViewType<GalleryViewOptions> = {
   name: 'contentViews.gallery.name',
   description: 'contentViews.gallery.description',
   icon: 'layout-grid',
+  locales,
   supportedDataSources: ['database', 'query', 'collection'],
   sortable: true,
   filterable: true,

@@ -15,4 +15,16 @@ describe('initializeI18n', () => {
     // Keys should resolve to their bundled translations
     expect(i18n.t('actions.cancel')).toBe('Cancel');
   });
+
+  it('keeps translations registered before a repeat call', () => {
+    i18n.addResourceBundle('en-GB', 'core', {
+      initializeTest: { kept: 'Kept' },
+    });
+
+    initializeI18n();
+
+    expect(i18n.getResource('en-GB', 'core', 'initializeTest.kept')).toBe(
+      'Kept',
+    );
+  });
 });

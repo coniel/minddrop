@@ -3,7 +3,11 @@ import { vi } from 'vitest';
 import { Selection } from '@minddrop/selection';
 import { act, cleanup as cleanupRender } from '@minddrop/test-utils';
 import { EditorElementConfigs } from '../EditorElementConfigs';
+import { initializeEditor } from '../initializeEditor';
 import { EditorBlockElementConfig } from '../types';
+
+// Register the editor's translations so its labels resolve
+initializeEditor();
 
 // The element configs the editor ships with, restored after each test
 const defaultElementConfigs = [...EditorElementConfigs];

@@ -4,8 +4,12 @@ import {
   ContentViewTypes,
   ContentViews,
 } from '@minddrop/content-views';
+import { initializeI18n } from '@minddrop/i18n';
 import { CanvasViewConnection, CanvasViewData, CanvasViewNode } from '../types';
 import { CanvasViewType } from './CanvasViewType';
+
+// Initialize i18n, which the view type registers its translations with
+initializeI18n();
 
 const nodeA: CanvasViewNode = {
   type: 'entry',

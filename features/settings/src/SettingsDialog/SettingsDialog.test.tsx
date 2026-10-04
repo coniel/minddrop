@@ -15,14 +15,14 @@ describe('<SettingsDialog />', () => {
     SettingsViews.register({
       id: 'design',
       label: 'labels.design',
-      description: 'labels.properties',
+      description: 'properties.labels.properties',
       icon: 'settings',
       component: () => <div>{designContent}</div>,
     });
     SettingsViews.register({
       id: 'templates',
       label: 'labels.templates',
-      description: 'labels.views',
+      description: 'contentViews.labels.views',
       icon: 'settings',
       component: () => <div>{templatesContent}</div>,
     });

@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { EntityGroups } from '@minddrop/entity-groups';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
+import { i18n } from '@minddrop/i18n';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { ContentViewsStore } from '../ContentViewsStore';
 import { ContentViewEntityType, ContentViewGroupsType } from '../constants';
@@ -29,6 +30,12 @@ describe('initializeContentViews', () => {
     await vi.advanceTimersByTimeAsync(0);
 
     expect(ContentViewsStore).not.toHaveItem(contentView_gallery_1.id);
+  });
+
+  it('registers the translations', () => {
+    initializeContentViews();
+
+    expect(i18n.t('contentViews.actions.add')).toBe('Add view');
   });
 
   it('registers the content view groups type', () => {

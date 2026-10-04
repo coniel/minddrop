@@ -49,4 +49,12 @@ describe('initializeDatabases', () => {
       DatabaseAutomationActionConfigsStore.getAllArray().length,
     ).toBeGreaterThan(0);
   });
+
+  it('names the core database templates with their translations', () => {
+    initializeDatabases();
+
+    expect(
+      DatabaseTemplatesStore.getAllArray().map((template) => template.name),
+    ).toContain('Notes');
+  });
 });

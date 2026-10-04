@@ -1,0 +1,554 @@
+{
+  "databases": {
+    "propertyFilesDirName": "Media",
+    "entries": {
+      "actions": {
+        "removeFromCollection": "Remove from collection"
+      },
+      "errors": {
+        "titleInvalidCharacters": "Title cannot contain / or \\.",
+        "titleConflict": "An entry with this title already exists."
+      }
+    },
+    "settings": {
+      "entrySerializer": {
+        "error": {
+          "title": "Entry format change failed",
+          "message": "Something went wrong while converting entries to the new format. They have been restored to their previous format."
+        }
+      }
+    },
+    "entrySerializers": {
+      "markdown": {
+        "name": "Markdown",
+        "description": "Saves database entries as Markdown files."
+      },
+      "json": {
+        "name": "JSON",
+        "description": "Saves database entries as JSON files."
+      },
+      "yaml": {
+        "name": "YAML",
+        "description": "Saves database entries as YAML files."
+      }
+    },
+    "templates": {
+      "blank": {
+        "name": "Blank database",
+        "entryName": "Entry"
+      },
+      "notes": {
+        "name": "Notes",
+        "entryName": "Note",
+        "description": "A simple database for taking and organising notes with properties for created date and last modified date.",
+        "properties": {
+          "content": {
+            "name": "Content"
+          },
+          "created": {
+            "name": "Created"
+          },
+          "lastModified": {
+            "name": "Last modified"
+          }
+        }
+      },
+      "books": {
+        "name": "Books",
+        "entryName": "Book",
+        "description": "A database for cataloguing books with properties for author, genre, reading status, rating, publication date, and cover image.",
+        "properties": {
+          "author": {
+            "name": "Author"
+          },
+          "genre": {
+            "name": "Genre"
+          },
+          "status": {
+            "name": "Status"
+          },
+          "rating": {
+            "name": "Rating"
+          },
+          "publicationDate": {
+            "name": "Publication date"
+          },
+          "coverImage": {
+            "name": "Cover image"
+          }
+        },
+        "options": {
+          "genre": {
+            "fiction": "Fiction",
+            "nonFiction": "Non-fiction",
+            "scienceFiction": "Science fiction",
+            "fantasy": "Fantasy",
+            "mystery": "Mystery",
+            "romance": "Romance",
+            "thriller": "Thriller",
+            "horror": "Horror",
+            "biography": "Biography",
+            "selfHelp": "Self-help"
+          },
+          "status": {
+            "toRead": "To read",
+            "reading": "Reading",
+            "finished": "Finished",
+            "abandoned": "Abandoned"
+          }
+        }
+      },
+      "weblinks": {
+        "name": "Weblinks",
+        "entryName": "Weblink",
+        "description": "A collection of weblinks with automatic metadata fetching.",
+        "properties": {
+          "title": {
+            "name": "Title"
+          },
+          "url": {
+            "name": "URL"
+          },
+          "description": {
+            "name": "Description"
+          },
+          "image": {
+            "name": "Image"
+          },
+          "icon": {
+            "name": "Icon"
+          },
+          "created": {
+            "name": "Created"
+          },
+          "lastModified": {
+            "name": "Last modified"
+          }
+        },
+        "automations": {
+          "fetchWebpageMetadata": {
+            "name": "Fetch webpage metadata",
+            "description": "Fetches the title, description, icon, and image of a webpage."
+          }
+        }
+      },
+      "tasks": {
+        "name": "Tasks",
+        "entryName": "Task",
+        "description": "A task tracker with status, priority, and due date.",
+        "properties": {
+          "status": {
+            "name": "Status"
+          },
+          "priority": {
+            "name": "Priority"
+          },
+          "dueDate": {
+            "name": "Due date"
+          },
+          "created": {
+            "name": "Created"
+          },
+          "lastModified": {
+            "name": "Last modified"
+          }
+        },
+        "options": {
+          "status": {
+            "toDo": "To do",
+            "inProgress": "In progress",
+            "done": "Done"
+          },
+          "priority": {
+            "low": "Low",
+            "medium": "Medium",
+            "high": "High",
+            "urgent": "Urgent"
+          }
+        }
+      },
+      "contacts": {
+        "name": "Contacts",
+        "entryName": "Contact",
+        "description": "A personal address book for managing contacts.",
+        "properties": {
+          "email": {
+            "name": "Email"
+          },
+          "phone": {
+            "name": "Phone"
+          },
+          "company": {
+            "name": "Company"
+          },
+          "role": {
+            "name": "Role"
+          },
+          "photo": {
+            "name": "Photo"
+          },
+          "notes": {
+            "name": "Notes"
+          }
+        }
+      },
+      "recipes": {
+        "name": "Recipes",
+        "entryName": "Recipe",
+        "description": "A recipe collection with cooking times, servings, cuisine, and dietary info.",
+        "properties": {
+          "image": {
+            "name": "Image"
+          },
+          "prepTime": {
+            "name": "Prep time"
+          },
+          "cookTime": {
+            "name": "Cook time"
+          },
+          "servings": {
+            "name": "Servings"
+          },
+          "cuisine": {
+            "name": "Cuisine"
+          },
+          "diet": {
+            "name": "Diet"
+          },
+          "recipe": {
+            "name": "Recipe"
+          }
+        },
+        "options": {
+          "cuisine": {
+            "italian": "Italian",
+            "mexican": "Mexican",
+            "chinese": "Chinese",
+            "indian": "Indian",
+            "japanese": "Japanese",
+            "french": "French",
+            "thai": "Thai",
+            "mediterranean": "Mediterranean",
+            "american": "American"
+          },
+          "diet": {
+            "vegetarian": "Vegetarian",
+            "vegan": "Vegan",
+            "glutenFree": "Gluten-free",
+            "dairyFree": "Dairy-free"
+          }
+        }
+      },
+      "movies": {
+        "name": "Movies",
+        "entryName": "Movie",
+        "description": "A movie catalogue with genre, rating, and watch status.",
+        "properties": {
+          "director": {
+            "name": "Director"
+          },
+          "genre": {
+            "name": "Genre"
+          },
+          "status": {
+            "name": "Status"
+          },
+          "rating": {
+            "name": "Rating"
+          },
+          "releaseDate": {
+            "name": "Release date"
+          },
+          "poster": {
+            "name": "Poster"
+          }
+        },
+        "options": {
+          "genre": {
+            "action": "Action",
+            "comedy": "Comedy",
+            "drama": "Drama",
+            "horror": "Horror",
+            "scienceFiction": "Science fiction",
+            "romance": "Romance",
+            "thriller": "Thriller",
+            "documentary": "Documentary",
+            "animation": "Animation",
+            "fantasy": "Fantasy"
+          },
+          "status": {
+            "toWatch": "To watch",
+            "watching": "Watching",
+            "watched": "Watched"
+          }
+        }
+      },
+      "journal": {
+        "name": "Journal",
+        "entryName": "Entry",
+        "description": "A personal journal for daily reflections.",
+        "properties": {
+          "date": {
+            "name": "Date"
+          },
+          "mood": {
+            "name": "Mood"
+          },
+          "content": {
+            "name": "Content"
+          },
+          "created": {
+            "name": "Created"
+          }
+        },
+        "options": {
+          "mood": {
+            "great": "Great",
+            "good": "Good",
+            "okay": "Okay",
+            "bad": "Bad"
+          }
+        }
+      },
+      "projects": {
+        "name": "Projects",
+        "entryName": "Project",
+        "description": "A project tracker with status, priority, and timeline.",
+        "properties": {
+          "status": {
+            "name": "Status"
+          },
+          "priority": {
+            "name": "Priority"
+          },
+          "startDate": {
+            "name": "Start date"
+          },
+          "endDate": {
+            "name": "End date"
+          },
+          "description": {
+            "name": "Description"
+          },
+          "created": {
+            "name": "Created"
+          },
+          "lastModified": {
+            "name": "Last modified"
+          }
+        },
+        "options": {
+          "status": {
+            "planning": "Planning",
+            "active": "Active",
+            "onHold": "On hold",
+            "completed": "Completed",
+            "archived": "Archived"
+          },
+          "priority": {
+            "low": "Low",
+            "medium": "Medium",
+            "high": "High"
+          }
+        }
+      },
+      "vocabulary": {
+        "name": "Vocabulary",
+        "entryName": "Word",
+        "description": "A vocabulary builder for learning new words and phrases.",
+        "properties": {
+          "definition": {
+            "name": "Definition"
+          },
+          "exampleSentence": {
+            "name": "Example sentence"
+          },
+          "language": {
+            "name": "Language"
+          },
+          "partOfSpeech": {
+            "name": "Part of speech"
+          }
+        },
+        "options": {
+          "partOfSpeech": {
+            "noun": "Noun",
+            "verb": "Verb",
+            "adjective": "Adjective",
+            "adverb": "Adverb",
+            "pronoun": "Pronoun",
+            "preposition": "Preposition",
+            "conjunction": "Conjunction",
+            "interjection": "Interjection"
+          }
+        }
+      },
+      "expenses": {
+        "name": "Expenses",
+        "entryName": "Expense",
+        "description": "An expense tracker with categories and payment methods.",
+        "properties": {
+          "amount": {
+            "name": "Amount"
+          },
+          "category": {
+            "name": "Category"
+          },
+          "date": {
+            "name": "Date"
+          },
+          "paymentMethod": {
+            "name": "Payment method"
+          }
+        },
+        "options": {
+          "category": {
+            "food": "Food",
+            "transport": "Transport",
+            "housing": "Housing",
+            "entertainment": "Entertainment",
+            "shopping": "Shopping",
+            "health": "Health",
+            "utilities": "Utilities",
+            "education": "Education",
+            "other": "Other"
+          },
+          "paymentMethod": {
+            "cash": "Cash",
+            "card": "Card",
+            "bankTransfer": "Bank transfer"
+          }
+        }
+      },
+      "images": {
+        "name": "Images",
+        "entryName": "Image",
+        "description": "A collection for organising images, photos, and screenshots.",
+        "properties": {
+          "image": {
+            "name": "Image"
+          },
+          "caption": {
+            "name": "Caption"
+          },
+          "dateTaken": {
+            "name": "Date taken"
+          },
+          "location": {
+            "name": "Location"
+          },
+          "created": {
+            "name": "Created"
+          }
+        }
+      },
+      "documents": {
+        "name": "Documents",
+        "entryName": "Document",
+        "description": "A document library for organising PDFs and other files.",
+        "properties": {
+          "file": {
+            "name": "File"
+          },
+          "description": {
+            "name": "Description"
+          },
+          "category": {
+            "name": "Category"
+          },
+          "created": {
+            "name": "Created"
+          },
+          "lastModified": {
+            "name": "Last modified"
+          }
+        },
+        "options": {
+          "category": {
+            "work": "Work",
+            "personal": "Personal",
+            "financial": "Financial",
+            "legal": "Legal",
+            "medical": "Medical",
+            "education": "Education"
+          }
+        }
+      },
+      "videos": {
+        "name": "Videos",
+        "entryName": "Video",
+        "description": "A collection for organising video files.",
+        "properties": {
+          "file": {
+            "name": "File"
+          },
+          "thumbnail": {
+            "name": "Thumbnail"
+          },
+          "description": {
+            "name": "Description"
+          },
+          "duration": {
+            "name": "Duration"
+          },
+          "created": {
+            "name": "Created"
+          }
+        }
+      },
+      "music": {
+        "name": "Music",
+        "entryName": "Track",
+        "description": "A music library for organising audio files.",
+        "properties": {
+          "file": {
+            "name": "File"
+          },
+          "artist": {
+            "name": "Artist"
+          },
+          "album": {
+            "name": "Album"
+          },
+          "genre": {
+            "name": "Genre"
+          },
+          "created": {
+            "name": "Created"
+          }
+        },
+        "options": {
+          "genre": {
+            "pop": "Pop",
+            "rock": "Rock",
+            "hiphop": "Hip-hop",
+            "electronic": "Electronic",
+            "jazz": "Jazz",
+            "classical": "Classical",
+            "rnb": "R&B",
+            "country": "Country",
+            "metal": "Metal",
+            "folk": "Folk"
+          }
+        }
+      }
+    },
+    "labels": {
+      "database": "Database",
+      "databases": "Databases",
+      "entries": "Entries",
+      "entry": "Entry"
+    },
+    "entryTemplates": {
+      "menus": {
+        "blankEntry": "New entry"
+      }
+    },
+    "combobox": {
+      "placeholder": "Select a database",
+      "searchPlaceholder": "Search databases...",
+      "empty": "No databases found",
+      "none": "None"
+    }
+  }
+}

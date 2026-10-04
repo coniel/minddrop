@@ -205,5 +205,5 @@ function resolveHeaderProps(
     return { stringTitle: database.name, contentIcon: database.icon };
   }
 
-  return { title: 'databases.design.title', icon: Designs.constants.Icon };
+  return { title: 'designs.labels.designs', icon: Designs.constants.Icon };
 }

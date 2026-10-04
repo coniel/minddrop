@@ -1,7 +1,6 @@
 {
   "entityGroups": {
     "labels": {
-      "group": "Group",
       "newGroup": "New group",
       "none": "No group",
       "ungrouped": "Ungrouped",

@@ -1,0 +1,16 @@
+{
+  "contentViews": {
+    "gallery": {
+      "name": "Gallery",
+      "description": "A gallery view.",
+      "options": {
+        "cardWidth": "Card min width",
+        "gap": "Gap",
+        "none": "None",
+        "compact": "Compact",
+        "comfortable": "Comfortable",
+        "spacious": "Spacious"
+      }
+    }
+  }
+}

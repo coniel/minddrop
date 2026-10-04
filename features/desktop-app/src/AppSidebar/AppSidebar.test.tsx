@@ -70,7 +70,7 @@ describe('<AppSidebar />', () => {
 
       render(<AppSidebar />);
 
-      userEvent.click(screen.getByLabelText('databases.actions.new'));
+      userEvent.click(screen.getByLabelText('desktopApp.sidebar.newDatabase'));
     }));
 
   it('names a new group in place, creating it once it is named', async () => {
