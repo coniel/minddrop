@@ -1,14 +1,6 @@
+import { WikilinkPattern } from '../../constants';
 import { Fragment, TextElement } from '../../types';
-import { generateWikilinkElement } from '../../utils';
-
-/**
- * The wikilink spelling: a reference, optionally followed by a `#` fragment
- * and by the label to show it as. None of the parts may contain the
- * characters which close the link, so an unclosed `[[` is left as the text
- * it is. `#` is reserved as the fragment separator, so a reference cannot
- * contain one.
- */
-const WikilinkPattern = /\[\[([^[\]|#]+)(?:#([^[\]|]+))?(?:\|([^[\]]*))?\]\]/g;
+import { generateWikilinkElement, parseWikilinkMatch } from '../../utils';
 
 /**
  * Splits the wikilinks out of a run of text.
@@ -35,7 +27,11 @@ export function parseWikilinks(text: TextElement): Fragment {
     match = WikilinkPattern.exec(value)
   ) {
     // Split the match into the link's parts
-    const [source, reference, linkFragment, label] = match;
+    const {
+      reference,
+      fragment: linkFragment,
+      label,
+    } = parseWikilinkMatch(match);
 
     // The text between the previous link and this one
     if (match.index > index) {
@@ -44,13 +40,10 @@ export function parseWikilinks(text: TextElement): Fragment {
 
     // Add the link. One written without a label shows its target.
     fragment.push(
-      generateWikilinkElement(reference, {
-        label: label || undefined,
-        fragment: linkFragment,
-      }),
+      generateWikilinkElement(reference, { label, fragment: linkFragment }),
     );
 
-    index = match.index + source.length;
+    index = match.index + match[0].length;
   }
 
   // Text which held no links at all is returned as it was
