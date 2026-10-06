@@ -49,6 +49,7 @@ export * from './reorderArray';
 export * from './resolveAutoScroll';
 export * from './resolveClosestElement';
 export * from './resolveEdgeVelocity';
+export * from './resolveIndentationWidth';
 export * from './resolveLazyValue';
 export * from './resolveRectsBounds';
 export * from './resolveRelativeRect';
