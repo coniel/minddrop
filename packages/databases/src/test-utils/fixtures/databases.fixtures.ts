@@ -18,6 +18,9 @@ export const genericFilePropertyName = 'File';
 export const imagePropertyName = 'Image';
 export const notesPropertyName = 'Notes';
 export const countPropertyName = 'Count';
+// The collection database's collection properties
+export const relatedPropertyName = 'Related';
+export const referencesPropertyName = 'References';
 // The entry templates database's select property
 export const statusProperty: SelectPropertySchema = {
   type: 'select',
@@ -235,11 +238,11 @@ export const collectionDatabase = generateDatabase({
     },
     {
       type: 'collection',
-      name: 'Related',
+      name: relatedPropertyName,
     },
     {
       type: 'collection',
-      name: 'References',
+      name: referencesPropertyName,
     },
   ],
 });

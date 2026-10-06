@@ -1,7 +1,7 @@
 // Increment this when the schema or indexing logic changes.
 // On startup, if the stored schema version does not match,
 // the SQL database is dropped and rebuilt from scratch.
-export const SCHEMA_VERSION = 12;
+export const SCHEMA_VERSION = 13;
 
 // SQL schema for creating tables
 export const SCHEMA_SQL = `
@@ -56,6 +56,27 @@ export const SCHEMA_SQL = `
   );
 
   CREATE INDEX IF NOT EXISTS idx_prop_values ON entry_property_values(entry_id, property_name);
+
+  -- The references each entry has to other entries. Property
+  -- references store the referenced entry's ID. Wikilinks store the
+  -- reference as written. They are matched against entries' titles
+  -- and addresses when read, so creating, renaming or deleting an
+  -- entry never leaves a row resolved to the wrong one.
+  CREATE TABLE IF NOT EXISTS entry_references (
+    entry_id         TEXT NOT NULL,
+    kind             TEXT NOT NULL,
+    property_name    TEXT,
+    target_entry_id  TEXT,
+    target_reference TEXT,
+    -- The reference's key, for matching regardless of case
+    target_key       TEXT,
+    fragment         TEXT,
+    FOREIGN KEY (entry_id) REFERENCES entries(id) ON DELETE CASCADE
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_references_entry ON entry_references(entry_id);
+  CREATE INDEX IF NOT EXISTS idx_references_target_entry ON entry_references(target_entry_id);
+  CREATE INDEX IF NOT EXISTS idx_references_target_key ON entry_references(target_key);
 
   CREATE TABLE IF NOT EXISTS meta (
     key   TEXT PRIMARY KEY,

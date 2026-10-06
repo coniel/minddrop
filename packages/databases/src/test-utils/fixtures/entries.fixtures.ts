@@ -1,5 +1,5 @@
 import { MockFileDescriptor } from '@minddrop/file-system';
-import { Entry, SqlEntryRecord } from '../../types';
+import { Entry, SqlEntryPropertyRecord, SqlEntryRecord } from '../../types';
 import { resolvePropertyFilePath } from '../../utils';
 import {
   collectionDatabase,
@@ -11,6 +11,8 @@ import {
   objectDatabase,
   pdfPropertyName,
   propertyStorageDatabase,
+  referencesPropertyName,
+  relatedPropertyName,
   rootStorageDatabase,
   timestampDatabase,
   urlDatabase,
@@ -42,6 +44,12 @@ Icon: ${objectEntry1.properties.Icon}
 
 ${objectEntry1.properties.Content}`;
 
+export const objectEntry1ContentPropertyRecord: SqlEntryPropertyRecord = {
+  name: 'Content',
+  type: 'content',
+  value: 'Test content',
+};
+
 export const objectEntry1SqlRecord: SqlEntryRecord = {
   id: objectEntry1.id,
   databaseId: objectDatabase.id,
@@ -52,7 +60,7 @@ export const objectEntry1SqlRecord: SqlEntryRecord = {
   contentHash: '',
   metadata: '{}',
   properties: [
-    { name: 'Content', type: 'content', value: 'Test content' },
+    objectEntry1ContentPropertyRecord,
     { name: 'Icon', type: 'icon', value: 'lucide:shapes:blue' },
   ],
 };
@@ -475,11 +483,15 @@ export const collectionEntry1SqlRecord: SqlEntryRecord = {
   properties: [
     { name: 'Title', type: 'text', value: 'Collection Entry 1' },
     {
-      name: 'Related',
+      name: relatedPropertyName,
       type: 'collection',
       value: [relatedEntry1.id, relatedEntry2.id],
     },
-    { name: 'References', type: 'collection', value: [referenceEntry1.id] },
+    {
+      name: referencesPropertyName,
+      type: 'collection',
+      value: [referenceEntry1.id],
+    },
   ],
 };
 

@@ -24,6 +24,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@minddrop/ast": "workspace:*",
     "@minddrop/automations": "workspace:*",
     "@minddrop/collections": "workspace:*",
     "@minddrop/content-views": "workspace:*",

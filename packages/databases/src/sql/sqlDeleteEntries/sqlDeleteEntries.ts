@@ -1,7 +1,7 @@
 import { Events } from '@minddrop/events';
 import { Sql } from '@minddrop/sql';
 import { Workspaces } from '@minddrop/workspaces';
-import { EntriesSqlSyncedEvent } from '../events';
+import { EntriesSqlSyncedEvent } from '../../events';
 
 /**
  * Deletes one or more entries from the SQL database.

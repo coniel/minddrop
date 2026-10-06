@@ -1,15 +1,17 @@
 import { Events } from '@minddrop/events';
 import { Sql } from '@minddrop/sql';
 import { Workspaces } from '@minddrop/workspaces';
-import { DatabasePropertySqlSyncedEvent } from '../events';
+import { DatabasePropertySqlSyncedEvent } from '../../events';
 
 /**
  * Renames a property across all entries in a database.
- * Updates both the entry_properties and entry_property_values
- * tables in a single transaction, then dispatches a
- * DatabasePropertySqlSyncedEvent.
  *
+ * @param databaseId - The ID of the database whose entries to update.
+ * @param oldName - The property's current name.
+ * @param newName - The property's new name.
  * @param workspaceId - The ID of the workspace whose database to target. Defaults to the active workspace.
+ *
+ * @dispatches databases:property:sql-synced
  */
 export function sqlRenameProperty(
   databaseId: string,
@@ -28,6 +30,13 @@ export function sqlRenameProperty(
     // Rename in the multi-value properties table
     {
       sql: `UPDATE entry_property_values SET property_name = ?
+         WHERE property_name = ?
+         AND entry_id IN (SELECT id FROM entries WHERE database_id = ?)`,
+      params: [newName, oldName, databaseId],
+    },
+    // Rename in the references table
+    {
+      sql: `UPDATE entry_references SET property_name = ?
          WHERE property_name = ?
          AND entry_id IN (SELECT id FROM entries WHERE database_id = ?)`,
       params: [newName, oldName, databaseId],

@@ -6,9 +6,17 @@ import {
   INTEGER_PROPERTY_TYPES,
   MULTI_VALUE_PROPERTY_TYPES,
   TEXT_PROPERTY_TYPES,
-} from '../constants';
-import { EntriesSqlSyncedEvent } from '../events';
-import type { SqlEntryPropertyRecord, SqlEntryRecord } from '../types';
+} from '../../constants';
+import { EntriesSqlSyncedEvent } from '../../events';
+import type {
+  EntryReference,
+  SqlEntryPropertyRecord,
+  SqlEntryRecord,
+} from '../../types';
+import {
+  resolveEntryPropertyReferences,
+  resolveWikilinkReferenceKey,
+} from '../../utils';
 
 /**
  * Upserts one or more entries into the SQL database in a single
@@ -57,6 +65,15 @@ export function sqlUpsertEntries(
     // Insert new properties
     for (const property of entry.properties) {
       operations.push(...buildPropertyInsertOps(entry.id, property));
+    }
+
+    // Insert the entry's references. Its existing references were
+    // removed with the entry row it replaced.
+    for (const reference of resolveEntryPropertyReferences(
+      entry.id,
+      entry.properties,
+    )) {
+      operations.push(buildReferenceInsertOperation(reference));
     }
   }
 
@@ -137,4 +154,48 @@ function buildPropertyInsertOps(
       ],
     },
   ];
+}
+
+/**
+ * Builds the SQL insert operation for an entry reference.
+ *
+ * @param reference - The reference to insert.
+ * @returns The insert operation.
+ */
+function buildReferenceInsertOperation(
+  reference: EntryReference,
+): SqlOperation {
+  // The insert statement shared by both kinds of reference
+  const sql = `INSERT INTO entry_references (entry_id, kind, property_name, target_entry_id, target_reference, target_key, fragment)
+     VALUES (?, ?, ?, ?, ?, ?, ?)`;
+
+  // Insert a property reference with its target entry ID
+  if (reference.kind === 'property') {
+    return {
+      sql,
+      params: [
+        reference.entryId,
+        reference.kind,
+        reference.propertyName,
+        reference.targetEntryId,
+        null,
+        null,
+        null,
+      ],
+    };
+  }
+
+  // Insert a wikilink with its reference key as its target key
+  return {
+    sql,
+    params: [
+      reference.entryId,
+      reference.kind,
+      null,
+      null,
+      reference.reference,
+      resolveWikilinkReferenceKey(reference.reference),
+      reference.fragment ?? null,
+    ],
+  };
 }
