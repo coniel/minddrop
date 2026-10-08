@@ -1308,6 +1308,16 @@ declare module 'i18next' {
                 lg: string;
               };
             };
+            date: {
+              label: string;
+              mode: {
+                label: string;
+                date: string;
+                relative: string;
+              };
+              style: string;
+              showTime: string;
+            };
             editor: {
               label: string;
             };

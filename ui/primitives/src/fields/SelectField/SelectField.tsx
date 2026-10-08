@@ -82,99 +82,93 @@ export interface SelectFieldProps<TValue extends string | number>
    * `stringError` while shown.
    */
   validate?: FieldValidate<TValue>;
+
+  /**
+   * Ref to the root element.
+   */
+  ref?: React.Ref<HTMLDivElement>;
 }
 
 /**
  * Renders a select input with an optional label, description,
  * and error message.
  */
-export const SelectField = React.forwardRef<
-  HTMLDivElement,
-  SelectFieldProps<string | number>
->(
-  (
-    {
-      className,
-      children,
-      description,
-      stringDescription,
-      disabled,
-      error,
-      stringError,
-      label,
-      stringLabel,
-      labelSize,
-      onValueChange,
-      options,
-      placeholder,
-      stringPlaceholder,
-      size = 'lg',
-      trigger,
-      value,
-      validate,
-      valueColor,
-      variant = 'outline',
-      ...other
-    },
-    ref,
-  ) => {
-    // Keep the error the value is rejected with
-    const validation = useFieldValidation(validate);
+export function SelectField<TValue extends string | number = string>({
+  ref,
+  className,
+  children,
+  description,
+  stringDescription,
+  disabled,
+  error,
+  stringError,
+  label,
+  stringLabel,
+  labelSize,
+  onValueChange,
+  options,
+  placeholder,
+  stringPlaceholder,
+  size = 'lg',
+  trigger,
+  value,
+  validate,
+  valueColor,
+  variant = 'outline',
+  ...other
+}: SelectFieldProps<TValue>) {
+  // Keep the error the value is rejected with
+  const validation = useFieldValidation(validate);
 
-    // Check whether an error is shown
-    const hasError = !!validation.errorText || !!error || !!stringError;
+  // Check whether an error is shown
+  const hasError = !!validation.errorText || !!error || !!stringError;
 
-    // Validate each selected value
-    function handleValueChange(newValue: string | number) {
-      validation.validate(newValue);
-      onValueChange?.(newValue);
-    }
+  // Validate each selected value
+  function handleValueChange(newValue: TValue) {
+    validation.validate(newValue);
+    onValueChange?.(newValue);
+  }
 
-    return (
-      <FieldRoot
-        ref={ref}
-        className={className}
-        disabled={disabled}
-        invalid={hasError}
-        {...other}
+  return (
+    <FieldRoot
+      ref={ref}
+      className={className}
+      disabled={disabled}
+      invalid={hasError}
+      {...other}
+    >
+      {(label || stringLabel) && (
+        <FieldLabel size={labelSize} label={label} stringLabel={stringLabel} />
+      )}
+
+      <Select<TValue>
+        variant={variant}
+        size={size}
+        placeholder={placeholder}
+        stringPlaceholder={stringPlaceholder}
+        options={options}
+        value={value}
+        onValueChange={handleValueChange}
+        trigger={trigger}
+        valueColor={valueColor}
       >
-        {(label || stringLabel) && (
-          <FieldLabel
-            size={labelSize}
-            label={label}
-            stringLabel={stringLabel}
-          />
-        )}
+        {children}
+      </Select>
 
-        <Select
-          variant={variant}
-          size={size}
-          placeholder={placeholder}
-          stringPlaceholder={stringPlaceholder}
-          options={options}
-          value={value}
-          onValueChange={handleValueChange}
-          trigger={trigger}
-          valueColor={valueColor}
-        >
-          {children}
-        </Select>
-
-        {(description || stringDescription) && !hasError && (
-          <FieldDescription
-            description={description}
-            stringDescription={stringDescription}
-          />
-        )}
-        {hasError && (
-          <FieldError
-            error={error}
-            stringError={validation.errorText ?? stringError}
-          />
-        )}
-      </FieldRoot>
-    );
-  },
-);
+      {(description || stringDescription) && !hasError && (
+        <FieldDescription
+          description={description}
+          stringDescription={stringDescription}
+        />
+      )}
+      {hasError && (
+        <FieldError
+          error={error}
+          stringError={validation.errorText ?? stringError}
+        />
+      )}
+    </FieldRoot>
+  );
+}
 
 SelectField.displayName = 'SelectField';

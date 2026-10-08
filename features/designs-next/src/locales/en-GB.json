@@ -11,6 +11,16 @@
           "lg": "Large"
         }
       },
+      "date": {
+        "label": "Date",
+        "mode": {
+          "label": "Display",
+          "date": "Date",
+          "relative": "Relative"
+        },
+        "style": "Format",
+        "showTime": "Show time"
+      },
       "editor": {
         "label": "Editor"
       },
