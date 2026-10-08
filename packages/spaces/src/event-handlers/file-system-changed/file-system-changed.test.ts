@@ -1,13 +1,22 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { FileSystemChange } from '@minddrop/file-system';
+import { Designs } from '@minddrop/designs';
+import { createFileSystemChange } from '@minddrop/file-system/test-utils';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { SpacesStore } from '../../SpacesStore';
-import { MockFs, cleanup, setup, space_1 } from '../../test-utils';
+import {
+  MockFs,
+  cleanup,
+  setup,
+  spaceLayout_2,
+  space_1,
+} from '../../test-utils';
+import { Space } from '../../types';
 import {
   resolveSpaceBundleDirPath,
   resolveSpaceFilePath,
   resolveSpacesDirPath,
 } from '../../utils';
+import { onUpdateVirtualDesign } from '../virtual-design-updated';
 import { onFileSystemChanged } from './file-system-changed';
 
 const { workspace_1, workspace_2 } = WorkspaceFixtures;
@@ -25,7 +34,9 @@ describe('onFileSystemChanged', () => {
     const modified = { ...space_1, name: 'Renamed space' };
     MockFs.writeTextFile(spaceFilePath, JSON.stringify(modified));
 
-    await onFileSystemChanged(change(spaceFilePath, 'modified'));
+    await onFileSystemChanged(
+      createFileSystemChange(spaceFilePath, 'modified', workspace_1.id),
+    );
 
     expect(SpacesStore).toHaveItem(space_1.id, modified);
   });
@@ -40,20 +51,28 @@ describe('onFileSystemChanged', () => {
     );
 
     await onFileSystemChanged(
-      change(resolveSpaceFilePath(created.id), 'created'),
+      createFileSystemChange(
+        resolveSpaceFilePath(created.id),
+        'created',
+        workspace_1.id,
+      ),
     );
 
     expect(SpacesStore).toHaveItem(created.id, created);
   });
 
   it('removes a space whose space file was deleted', async () => {
-    await onFileSystemChanged(change(spaceFilePath, 'deleted'));
+    await onFileSystemChanged(
+      createFileSystemChange(spaceFilePath, 'deleted', workspace_1.id),
+    );
 
     expect(SpacesStore).not.toHaveItem(space_1.id);
   });
 
   it('removes a space whose bundle directory was deleted', async () => {
-    await onFileSystemChanged(change(bundleDirPath, 'deleted'));
+    await onFileSystemChanged(
+      createFileSystemChange(bundleDirPath, 'deleted', workspace_1.id),
+    );
 
     expect(SpacesStore).not.toHaveItem(space_1.id);
   });
@@ -65,7 +84,9 @@ describe('onFileSystemChanged', () => {
       { path: otherFilePath, textContent: JSON.stringify(space_1) },
     ]);
 
-    await onFileSystemChanged(change(otherFilePath, 'created', workspace_2.id));
+    await onFileSystemChanged(
+      createFileSystemChange(otherFilePath, 'created', workspace_2.id),
+    );
 
     // Should add the space to the second workspace's record only
     expect(SpacesStore.in(workspace_2.id).get(space_1.id)).toEqual(space_1);
@@ -73,14 +94,24 @@ describe('onFileSystemChanged', () => {
 
   it('ignores changes to a space bundle media files', async () => {
     await onFileSystemChanged(
-      change(`${bundleDirPath}/media/image.png`, 'deleted'),
+      createFileSystemChange(
+        `${bundleDirPath}/media/image.png`,
+        'deleted',
+        workspace_1.id,
+      ),
     );
 
     expect(SpacesStore).toHaveItem(space_1.id);
   });
 
   it('ignores files outside the spaces directory', async () => {
-    await onFileSystemChanged(change(`workspace/${space_1.id}`, 'deleted'));
+    await onFileSystemChanged(
+      createFileSystemChange(
+        `workspace/${space_1.id}`,
+        'deleted',
+        workspace_1.id,
+      ),
+    );
 
     expect(SpacesStore).toHaveItem(space_1.id);
   });
@@ -89,25 +120,55 @@ describe('onFileSystemChanged', () => {
     // Make the space file invalid outside of the app
     MockFs.writeTextFile(spaceFilePath, 'not json');
 
-    await onFileSystemChanged(change(spaceFilePath, 'modified'));
+    await onFileSystemChanged(
+      createFileSystemChange(spaceFilePath, 'modified', workspace_1.id),
+    );
 
     expect(SpacesStore).toHaveItem(space_1.id, space_1);
   });
 
+  // Pins Issue 39: An external change to space.json leaves its owned
+  // design stale. The next design edit writes it back. Remove .fails
+  // once fixed.
+  it.fails(
+    'keeps an externally changed space layout when the space design is next edited in the app',
+    async () => {
+      // Change the space's layout outside of the app
+      const modified = {
+        ...space_1,
+        design: { ...space_1.design, layouts: [spaceLayout_2] },
+      };
+      MockFs.writeTextFile(spaceFilePath, JSON.stringify(modified));
+
+      await onFileSystemChanged(
+        createFileSystemChange(spaceFilePath, 'modified', workspace_1.id),
+      );
+
+      // Edit the space's design in the app. Persist the edit into the
+      // space file, as the designs updated listener does.
+      const original = Designs.get(space_1.design.id);
+      const updated = await Designs.update(space_1.design.id, {
+        name: 'Renamed design',
+      });
+      await onUpdateVirtualDesign({ original, updated });
+
+      const written = MockFs.readJsonFile<Space>(spaceFilePath);
+
+      expect(written.design.layouts.map(({ id }) => id)).toEqual([
+        spaceLayout_2.id,
+      ]);
+    },
+  );
+
   it('ignores non deletion changes to the spaces directory itself', async () => {
-    await onFileSystemChanged(change(`${resolveSpacesDirPath()}/`, 'modified'));
+    await onFileSystemChanged(
+      createFileSystemChange(
+        `${resolveSpacesDirPath()}/`,
+        'modified',
+        workspace_1.id,
+      ),
+    );
 
     expect(SpacesStore).toHaveItemCount(3);
   });
 });
-
-/**
- * Creates a file system change for the given path.
- */
-function change(
-  path: string,
-  kind: FileSystemChange['kind'],
-  workspaceId: string = workspace_1.id,
-): FileSystemChange {
-  return { workspaceId, path, kind };
-}

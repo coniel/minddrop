@@ -15,7 +15,7 @@ export function isEntryFilePath(
 ): boolean {
   // Split the path into its segments
   const segments = relativePath.split('/');
-  // Allow entry files one directory down in a database storing each
+  // Allow entry files one directory down when the database stores each
   // entry in its own directory.
   const maxDepth = database.propertyFileStorage === 'entry' ? 2 : 1;
   // Get the extension of the database serializer's files

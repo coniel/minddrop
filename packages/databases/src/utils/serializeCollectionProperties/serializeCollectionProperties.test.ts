@@ -9,7 +9,7 @@ import {
   relatedEntry2,
   setup,
 } from '../../test-utils';
-import { entryAddress } from '../entryAddress';
+import { resolveEntryAddress } from '../resolveEntryAddress';
 import { serializeCollectionProperties } from './serializeCollectionProperties';
 
 const { workspace_2 } = WorkspaceFixtures;
@@ -26,10 +26,12 @@ describe('serializeCollectionProperties', () => {
     );
 
     expect(serialized.Related).toEqual([
-      entryAddress(relatedEntry1),
-      entryAddress(relatedEntry2),
+      resolveEntryAddress(relatedEntry1),
+      resolveEntryAddress(relatedEntry2),
     ]);
-    expect(serialized.References).toEqual([entryAddress(referenceEntry1)]);
+    expect(serialized.References).toEqual([
+      resolveEntryAddress(referenceEntry1),
+    ]);
   });
 
   it('leaves non-collection properties untouched', () => {

@@ -3,6 +3,7 @@ import { Collections } from '@minddrop/collections';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { EntriesStore } from '../EntriesStore';
+import { onFileSystemChanged } from '../event-handlers';
 import { getAllDatabases } from '../getAllDatabases';
 import {
   MockBackendAdapter,
@@ -10,7 +11,10 @@ import {
   collectionEntry1,
   createMockBackendAdapter,
   databases,
+  entryFilePath,
   entrySqlRecords,
+  flushFileSystemChangeDebounces,
+  objectEntry1,
   setup,
 } from '../test-utils';
 import { virtualCollectionId } from '../utils';
@@ -105,11 +109,61 @@ describe('loadWorkspaceDatabases', () => {
 
   it('skips the background sync when the schema changed', async () => {
     // The backend already scanned the filesystem for the rebuild
-    backend = createMockBackendAdapter({ schemaChanged: true });
+    backend = createMockBackendAdapter({ result: { schemaChanged: true } });
 
     const result = await loadWorkspaceDatabases(workspace_1);
 
     expect(result).toEqual({ schemaChanged: true });
     expect(backend.backgroundSyncCalls).toEqual([]);
   });
+
+  it('leaves the background sync running once the databases are loaded', async () => {
+    backend = await startDeferredBackgroundSync();
+
+    // Finishing a sync throws if none is unfinished
+    expect(() => backend.finishNextSync()).not.toThrow();
+  });
+
+  // Pins Issue 52: Startup background sync bypasses the per-workspace sync
+  // lock. Remove .fails once fixed.
+  it.fails(
+    'holds back a watcher sync until the background sync finishes',
+    async () => {
+      backend = await startDeferredBackgroundSync();
+
+      // Report an entry file changed by a sync client while the background
+      // sync runs.
+      await onFileSystemChanged({
+        workspaceId: workspace_1.id,
+        path: entryFilePath(objectEntry1),
+        kind: 'modified',
+      });
+      await flushFileSystemChangeDebounces();
+
+      try {
+        // Expect no entry sync alongside the background sync. Interleaved
+        // syncs mint two IDs for a file new to both.
+        expect(backend.syncEntryFilesCalls).toEqual([]);
+      } finally {
+        // Finish the background sync and any sync queued behind it
+        await backend.finishAllSyncs();
+      }
+    },
+  );
 });
+
+/**
+ * Loads the workspace's databases onto a backend whose syncs finish when
+ * told to, starting the background sync.
+ *
+ * @returns The registered mock backend's recorded call state.
+ */
+async function startDeferredBackgroundSync(): Promise<MockBackendAdapter> {
+  // Stand in for a backend whose syncs finish when told to
+  const backend = createMockBackendAdapter({ deferSyncs: true });
+
+  // Load the workspace's databases, starting the background sync
+  await loadWorkspaceDatabases(workspace_1);
+
+  return backend;
+}

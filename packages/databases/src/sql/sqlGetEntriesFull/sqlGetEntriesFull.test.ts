@@ -19,7 +19,7 @@ describe('sqlGetEntriesFull', () => {
 
     // Index the fixture databases and entries
     seedSqlDatabases();
-    seedSqlEntries((record) => record);
+    seedSqlEntries();
   });
 
   afterEach(async () => {
@@ -36,7 +36,7 @@ describe('sqlGetEntriesFull', () => {
   });
 
   it('returns only the entries with the given IDs, with their properties', () => {
-    const records = sqlGetEntriesFull([objectEntry1SqlRecord.id]);
+    const records = sqlGetEntriesFull({ entryIds: [objectEntry1SqlRecord.id] });
 
     expect(records).toEqual([
       {
@@ -47,18 +47,16 @@ describe('sqlGetEntriesFull', () => {
   });
 
   it('returns no entries for an empty list of IDs', () => {
-    expect(sqlGetEntriesFull([])).toEqual([]);
+    expect(sqlGetEntriesFull({ entryIds: [] })).toEqual([]);
   });
 
   it('returns entries from every chunk of a split ID list', () => {
-    // Pad the list so that the two real IDs fall in different queries
+    // Pad the list to put the two real IDs in different queries
     const padding = Array.from({ length: 10000 }, (_, index) => `${index}`);
 
-    const records = sqlGetEntriesFull([
-      objectEntry1SqlRecord.id,
-      ...padding,
-      urlEntry1SqlRecord.id,
-    ]);
+    const records = sqlGetEntriesFull({
+      entryIds: [objectEntry1SqlRecord.id, ...padding, urlEntry1SqlRecord.id],
+    });
 
     expect(records.map((record) => record.id).sort()).toEqual(
       [objectEntry1SqlRecord.id, urlEntry1SqlRecord.id].sort(),

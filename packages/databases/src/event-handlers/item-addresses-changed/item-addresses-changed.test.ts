@@ -20,7 +20,7 @@ import {
   setupRecordingTestSqlDatabase,
 } from '../../test-utils';
 import {
-  entryAddress,
+  resolveEntryAddress,
   resolveEntryHistorySubject,
   resolveEntryPath,
 } from '../../utils';
@@ -75,8 +75,8 @@ describe('onItemAddressesChanged', () => {
       changes: [
         {
           id: relatedEntry1.id,
-          oldReference: entryAddress(relatedEntry1, collectionDatabase),
-          newReference: entryAddress(renamedRelated, collectionDatabase),
+          oldReference: resolveEntryAddress(relatedEntry1, collectionDatabase),
+          newReference: resolveEntryAddress(renamedRelated, collectionDatabase),
         },
       ],
     });
@@ -103,8 +103,8 @@ describe('onItemAddressesChanged', () => {
       changes: [
         {
           id: relatedEntry1.id,
-          oldReference: entryAddress(relatedEntry1, collectionDatabase),
-          newReference: entryAddress(renamedRelated, collectionDatabase),
+          oldReference: resolveEntryAddress(relatedEntry1, collectionDatabase),
+          newReference: resolveEntryAddress(renamedRelated, collectionDatabase),
         },
       ],
     });
@@ -161,8 +161,8 @@ describe('onItemAddressesChanged', () => {
       changes: [
         {
           id: relatedEntry1.id,
-          oldReference: entryAddress(relatedEntry1, collectionDatabase),
-          newReference: entryAddress(renamedRelated, collectionDatabase),
+          oldReference: resolveEntryAddress(relatedEntry1, collectionDatabase),
+          newReference: resolveEntryAddress(renamedRelated, collectionDatabase),
         },
       ],
     });
@@ -177,8 +177,8 @@ describe('onItemAddressesChanged', () => {
       expect.objectContaining({
         kind: 'rename',
         target: 'reference',
-        from: entryAddress(relatedEntry1, collectionDatabase),
-        to: entryAddress(renamedRelated, collectionDatabase),
+        from: resolveEntryAddress(relatedEntry1, collectionDatabase),
+        to: resolveEntryAddress(renamedRelated, collectionDatabase),
       }),
     );
   });
@@ -195,8 +195,8 @@ describe('onItemAddressesChanged', () => {
       changes: [
         {
           id: relatedEntry1.id,
-          oldReference: entryAddress(relatedEntry1, collectionDatabase),
-          newReference: entryAddress(renamedRelated, collectionDatabase),
+          oldReference: resolveEntryAddress(relatedEntry1, collectionDatabase),
+          newReference: resolveEntryAddress(renamedRelated, collectionDatabase),
         },
       ],
       action: historyAction_databaseRenamed,

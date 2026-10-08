@@ -1,4 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
+import { EntriesStore } from '../../EntriesStore';
 import {
   cleanup,
   objectDatabase,
@@ -7,8 +9,10 @@ import {
   timestampEntry1,
   urlDatabase,
 } from '../../test-utils';
-import { entryMetadataKey } from '../entryMetadataKey';
+import { resolveEntryMetadataKey } from '../resolveEntryMetadataKey';
 import { findEntryByMetadataKey } from './findEntryByMetadataKey';
+
+const { workspace_2 } = WorkspaceFixtures;
 
 describe('findEntryByMetadataKey', () => {
   beforeEach(setup);
@@ -19,7 +23,7 @@ describe('findEntryByMetadataKey', () => {
     expect(
       findEntryByMetadataKey(
         objectDatabase.id,
-        entryMetadataKey(objectEntry1.path),
+        resolveEntryMetadataKey(objectEntry1.path),
       ),
     ).toEqual(objectEntry1);
   });
@@ -28,9 +32,24 @@ describe('findEntryByMetadataKey', () => {
     expect(
       findEntryByMetadataKey(
         urlDatabase.id,
-        entryMetadataKey(timestampEntry1.path),
+        resolveEntryMetadataKey(timestampEntry1.path),
       ),
     ).toBeNull();
+  });
+
+  it("searches the given workspace's entries", () => {
+    const metadataKey = resolveEntryMetadataKey(objectEntry1.path);
+
+    // Should not find the active workspace's entry in another one
+    expect(
+      findEntryByMetadataKey(objectDatabase.id, metadataKey, workspace_2.id),
+    ).toBeNull();
+
+    EntriesStore.in(workspace_2.id).set(objectEntry1);
+
+    expect(
+      findEntryByMetadataKey(objectDatabase.id, metadataKey, workspace_2.id),
+    ).toEqual(objectEntry1);
   });
 
   it('returns null for a key no entry owns', () => {

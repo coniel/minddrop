@@ -18,6 +18,7 @@ export * from './resolveChildElements';
 export * from './resolveContextElements';
 export * from './resolveCutLines';
 export * from './resolveDesignFilePath';
+export * from './resolveDesignId';
 export * from './resolveDesignsDirPath';
 export * from './resolveElementColumnUnits';
 export * from './resolveElementRowUnits';

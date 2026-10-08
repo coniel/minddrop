@@ -152,14 +152,19 @@ describe('initializeWorkspaceWatchers', () => {
 /**
  * Modifies a file outside the app and lets the watchers' debounce
  * window elapse.
+ *
+ * @param path - The path of the file to modify.
  */
 async function modify(path: string): Promise<void> {
+  // Let the queued listeners and watcher starts run
   await flushEvents();
 
+  // Write the file and report the change to the watchers
   MockFs.writeTextFile(path, `Edited outside the app ${changes.length}`);
   MockFs.dispatchWatchEvent('modify', [path]);
 
-  await vi.advanceTimersByTimeAsync(300);
+  // Let the debounce window elapse
+  await vi.advanceTimersByTimeAsync(Fs.constants.WatcherDebounceMs);
 }
 
 /**

@@ -1,6 +1,6 @@
 import { Sql } from '@minddrop/sql';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
-import { SCHEMA_SQL } from '../sql/schema';
+import { connectTestSqlWorkspace } from './connectTestSqlWorkspace';
 import {
   clearRecordedSqlStatements,
   createRecordingSqlAdapter,
@@ -29,7 +29,7 @@ export function setupTestSqlDatabase(workspaceId?: string): void {
   adapter = createTestSqlAdapter();
   Sql.registerAdapter(adapter);
 
-  createSchema(workspaceId ?? workspace_1.id);
+  connectTestSqlWorkspace(workspaceId ?? workspace_1.id);
 }
 
 /**
@@ -53,7 +53,7 @@ export function setupRecordingTestSqlDatabase(workspaceId?: string): void {
   adapter = createRecordingSqlAdapter();
   Sql.registerAdapter(adapter);
 
-  createSchema(workspaceId ?? workspace_1.id);
+  connectTestSqlWorkspace(workspaceId ?? workspace_1.id);
 
   // Drop the schema statement so tests only see their own SQL
   clearRecordedSqlStatements();
@@ -67,15 +67,6 @@ export function cleanupRecordingTestSqlDatabase(): void {
   Sql.closeAll();
   disposeAdapter();
   clearRecordedSqlStatements();
-}
-
-/**
- * Opens a workspace's connection and creates the tables SQL
- * reads and writes go through.
- */
-function createSchema(workspaceId: string): void {
-  Sql.connect(workspaceId);
-  Sql.exec(workspaceId, SCHEMA_SQL);
 }
 
 /**

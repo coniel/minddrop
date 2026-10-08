@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Designs } from '@minddrop/designs-next';
 import { DesignFixtures } from '@minddrop/designs-next/test-utils';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabasesStore } from '../DatabasesStore';
 import {
@@ -45,6 +46,30 @@ describe('loadDatabaseDesigns', () => {
       ...storedCardDesign,
       owner: objectDatabase.id,
     });
+  });
+
+  it("keeps the ID of a design whose file cannot be read in the config's design ID list", async () => {
+    // List the design in the config
+    DatabasesStore.update(objectDatabase.id, {
+      designs: [storedCardDesign.id],
+    });
+
+    // Add a design file which is not a valid design
+    MockFs.addFiles([
+      {
+        path: resolveDatabaseDesignFilePath(
+          databaseDirPath(objectDatabase),
+          storedCardDesign.id,
+        ),
+        textContent: '{}',
+      },
+    ]);
+
+    await loadDatabaseDesigns([objectDatabase], workspace_1);
+
+    expect(storeItem(DatabasesStore, objectDatabase.id).designs).toEqual([
+      storedCardDesign.id,
+    ]);
   });
 
   it('does nothing when databases have no designs', async () => {

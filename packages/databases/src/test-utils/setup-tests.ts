@@ -34,6 +34,7 @@ import {
   serializeEntryReference,
 } from '../utils';
 import { customContentTypes } from './fixtures';
+import { resetFileSystemChangedSyncs } from './resetFileSystemChangedSyncs';
 import {
   SetupDatabaseFixturesOptions,
   cleanupDatabaseFixtures,
@@ -122,6 +123,9 @@ export async function cleanup(): Promise<void> {
 
   // Clear any pending entry focus request
   clearEntryFocusRequest();
+
+  // Clear the file system changed handler's pending and running syncs
+  resetFileSystemChangedSyncs();
 
   // Vi reset
   vi.useRealTimers();

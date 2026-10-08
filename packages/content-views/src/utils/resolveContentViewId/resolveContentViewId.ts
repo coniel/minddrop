@@ -15,19 +15,9 @@ export function resolveContentViewId(
   path: string,
   workspacePath?: string,
 ): string | null {
-  const parentDirPath = Fs.parentDirPath(path);
-
-  // View files sit directly in the workspace's content views directory
-  if (parentDirPath !== resolveContentViewsDirPath(workspacePath)) {
-    return null;
-  }
-
-  const fileName = Fs.fileNameFromPath(path);
-
-  // Ignore other files that may end up in the directory
-  if (Fs.getExtension(fileName) !== ContentViewFileExtension) {
-    return null;
-  }
-
-  return Fs.removeExtension(fileName);
+  return Fs.resolveFileIdInDir(
+    path,
+    resolveContentViewsDirPath(workspacePath),
+    ContentViewFileExtension,
+  );
 }

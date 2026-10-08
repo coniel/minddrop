@@ -222,6 +222,15 @@ export type WebviewRPC = {
         };
         response: void;
       };
+      databasesSyncDatabaseConfigs: {
+        params: {
+          workspaceId: string;
+          workspacePath: string;
+          databases: Database[];
+          databaseIds: string[];
+        };
+        response: void;
+      };
       // Search RPC
       searchInitialize: {
         params: {

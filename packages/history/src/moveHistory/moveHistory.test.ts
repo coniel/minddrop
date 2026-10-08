@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { registerMockAdapterOverrides } from '@minddrop/file-system/test-utils';
 import { readHistory } from '../readHistory';
 import { MockFs, cleanup, setup } from '../test-utils';
 import { HistoryRecord } from '../types';
@@ -48,8 +49,8 @@ describe('moveHistory', () => {
     expect(MockFs.exists(fromPath)).toBe(false);
   });
 
-  it('merges into history already held under the new key', async () => {
-    // History left behind by an earlier subject of the same name
+  it('merges into the history the new key already has', async () => {
+    // Add history left behind by an earlier subject of the same name
     MockFs.addFiles([`${toPath}/history-20260101T000000000Z.json`]);
 
     await moveHistory({ ownerPath, subjectType, fromKey, toKey });
@@ -121,4 +122,70 @@ describe('moveHistory', () => {
 
     expect(MockFs.exists(toPath)).toBe(false);
   });
+
+  describe('against a file system refusing non-recursive directory removal', () => {
+    // Registers the plain mock adapter again
+    let restoreMockAdapter: VoidFunction;
+
+    beforeEach(() => {
+      restoreMockAdapter = registerStrictRemoveDirAdapter();
+    });
+
+    afterEach(() => restoreMockAdapter());
+
+    // Kept apart from the pin below, which passes on any failure. A
+    // file system failing the merge before the removal fails this test
+    // instead of passing as the pinned bug.
+    it('merges the history into the history the new key already has', async () => {
+      // Add history left behind by an earlier subject of the same name
+      MockFs.addFiles([`${toPath}/history-20260101T000000000Z.json`]);
+
+      // Move the history, ignoring the removal's rejection. Only the
+      // merged files are checked here.
+      await moveHistory({ ownerPath, subjectType, fromKey, toKey }).catch(
+        () => undefined,
+      );
+
+      expect(MockFs.exists(`${toPath}/history.json`)).toBe(true);
+      expect(MockFs.exists(`${toPath}/content`)).toBe(true);
+    });
+
+    // Pins Issue 56: moveHistory's merge path throws at the final
+    // non-recursive removeDir. Remove .fails once fixed.
+    it.fails(
+      'removes the old key directory after merging into the history the new key already has',
+      async () => {
+        // Add history left behind by an earlier subject of the same name
+        MockFs.addFiles([`${toPath}/history-20260101T000000000Z.json`]);
+
+        await moveHistory({ ownerPath, subjectType, fromKey, toKey });
+
+        expect(MockFs.exists(fromPath)).toBe(false);
+      },
+    );
+  });
 });
+
+/**
+ * Registers the mock file system adapter with a directory removal which
+ * rejects unless the removal is recursive.
+ *
+ * @returns A function which registers the plain mock adapter again.
+ */
+function registerStrictRemoveDirAdapter(): VoidFunction {
+  // The plain mock adapter
+  const adapter = MockFs.MockFs;
+
+  // Override the directory removal
+  return registerMockAdapterOverrides(MockFs, {
+    removeDir: async (path, options) => {
+      // Reject a non-recursive removal
+      if (!options?.recursive) {
+        throw new Error(`EFAULT: cannot remove directory '${path}'`);
+      }
+
+      // Remove the directory with the plain adapter
+      return adapter.removeDir(path, options);
+    },
+  });
+}

@@ -3,12 +3,11 @@ import { Properties, SelectPropertySchema } from '@minddrop/properties';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { Database, DatabaseEntryTemplate } from '../../types';
 import {
-  resolveDatabaseConfigFilePath,
   resolveEntryTemplateConfigFilePath,
   resolveEntryTemplateFilePath,
-  serializeDatabase,
   serializeDatabaseEntryTemplate,
 } from '../../utils';
+import { databaseConfigFile } from '../databaseConfigFile';
 import { fetchWebpageMetadataAutomation } from './database-automations.fixtures';
 
 const { workspace_1 } = WorkspaceFixtures;
@@ -354,10 +353,7 @@ export const databaseEntryTemplateFiles: (MockFileDescriptor | string)[] = [
 export const databaseFiles: (MockFileDescriptor | string)[] = [
   parentDir,
   // Individual database config files
-  ...databases.map((database) => ({
-    path: resolveDatabaseConfigFilePath(databaseDirPath(database)),
-    textContent: JSON.stringify(serializeDatabase(database), null, 2),
-  })),
+  ...databases.map(databaseConfigFile),
   // Property file directories
   Fs.concatPath(
     databaseDirPath(commonStorageDatabase),
@@ -368,8 +364,5 @@ export const databaseFiles: (MockFileDescriptor | string)[] = [
 
 // The pdf database's files, loaded by the tests which need them
 export const databaseFiles_pdf: (MockFileDescriptor | string)[] = [
-  {
-    path: resolveDatabaseConfigFilePath(databaseDirPath(database_pdf)),
-    textContent: JSON.stringify(serializeDatabase(database_pdf), null, 2),
-  },
+  databaseConfigFile(database_pdf),
 ];

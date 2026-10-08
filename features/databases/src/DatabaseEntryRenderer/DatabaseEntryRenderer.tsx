@@ -138,7 +138,7 @@ const EntryWithDesign: React.FC<EntryWithDesignProps> = ({
   const designValues = useMemo(
     () =>
       design
-        ? DatabaseEntries.propertyValues(entry, rendererProperties)
+        ? DatabaseEntries.resolvePropertyValues(entry, rendererProperties)
         : undefined,
     [design, entry, rendererProperties],
   );

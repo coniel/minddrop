@@ -4,6 +4,7 @@ import {
   cleanup,
   contentView_board_1,
   contentView_gallery_1,
+  contentView_table_1,
   setup,
 } from '../test-utils';
 import { getDataSourceContentViews } from './getDataSourceContentViews';
@@ -21,6 +22,7 @@ describe('getDataSourceContentViews', () => {
     expect(views.map((view) => view.id)).toEqual([
       contentView_gallery_1.id,
       contentView_board_1.id,
+      contentView_table_1.id,
     ]);
   });
 

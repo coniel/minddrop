@@ -5,7 +5,7 @@ import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { EntriesStore } from '../EntriesStore';
 import { DatabaseFixtures, cleanup, setup } from '../test-utils';
-import { entryAddress, resolveEntryHistorySubject } from '../utils';
+import { resolveEntryAddress, resolveEntryHistorySubject } from '../utils';
 import { recordEntriesReferenceRename } from './recordEntriesReferenceRename';
 
 const {
@@ -24,8 +24,8 @@ const renamedRelated = { ...relatedEntry1, title: 'Renamed Related' };
 // The change of relatedEntry1's address to its renamed one
 const change: ItemAddressChange = {
   id: relatedEntry1.id,
-  oldReference: entryAddress(relatedEntry1, collectionDatabase),
-  newReference: entryAddress(renamedRelated, collectionDatabase),
+  oldReference: resolveEntryAddress(relatedEntry1, collectionDatabase),
+  newReference: resolveEntryAddress(renamedRelated, collectionDatabase),
 };
 
 describe('recordEntriesReferenceRename', () => {

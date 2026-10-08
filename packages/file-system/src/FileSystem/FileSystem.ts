@@ -2,6 +2,7 @@ import { YAML, restoreDates } from '@minddrop/utils';
 import * as Api from '../FsApi';
 import { awaitPendingOperations } from '../PendingOperationsStore';
 import { addFileExtension } from '../addFileExtension';
+import { FileSystemWatcherDebounceMs } from '../constants';
 import {
   FileNotFoundError,
   InvalidPathError,
@@ -14,6 +15,7 @@ import {
   setPathIncrement,
 } from '../incrementalPath';
 import { IoQueue } from '../ioQueue';
+import { resolveAbsolutePath } from '../resolveAbsolutePath';
 import { startFileSystemWatcher } from '../startFileSystemWatcher';
 import { trackAdapterOperations } from '../trackAdapterOperations';
 import {
@@ -36,6 +38,12 @@ export type { IncrementedPath } from '../incrementalPath';
 const events = {
   Changed: FileSystemChangedEvent,
 } as const;
+
+// Values consumers of the file system read, such as tests timing the
+// watcher.
+const constants = {
+  WatcherDebounceMs: FileSystemWatcherDebounceMs,
+};
 
 const errors = {
   FileNotFound: FileNotFoundError,
@@ -76,11 +84,13 @@ export const Fs: Omit<FileSystem, 'openFilePicker'> &
     recordWrittenContents: typeof recordWrittenContents;
     registerAdapter: typeof registerFileSystemAdapter;
     startWatcher: typeof startFileSystemWatcher;
+    constants: typeof constants;
     events: typeof events;
     errors: typeof errors;
     tests: typeof tests;
   } = {
   ...Api,
+  constants,
   events,
   errors,
   tests,
@@ -298,9 +308,8 @@ async function downloadFile(
 }
 
 /**
- * Records a written file's stats in the write registry, skipping
- * writes into a base directory. Those target the app's own config
- * directories. These are never watched.
+ * Records a written file's stats in the write registry, under the
+ * file's absolute path.
  *
  * @param path - The path written to.
  * @param baseDir - The base directory written into, if any.
@@ -309,19 +318,22 @@ async function recordStatsWrite(
   path: string,
   baseDir?: BaseDirectory,
 ): Promise<void> {
-  // Skip writes into a base directory
-  if (baseDir) {
+  // Resolve the absolute path to record the write under
+  const recordedPath = resolveAbsolutePath(path, baseDir);
+
+  // Check the path could be resolved. If not, the write cannot be
+  // recorded.
+  if (!recordedPath) {
     return;
   }
 
   // Record the file's stats
-  recordWrittenStats(path, await FsAdapter.stat(path));
+  recordWrittenStats(recordedPath, await FsAdapter.stat(recordedPath));
 }
 
 /**
- * Records written contents in the write registry, skipping writes
- * into a base directory. Those target the app's own config
- * directories. These are never watched.
+ * Records written contents in the write registry, under the file's
+ * absolute path.
  *
  * @param path - The path written to.
  * @param contents - The contents written.
@@ -332,13 +344,17 @@ function recordContentsWrite(
   contents: string,
   baseDir?: BaseDirectory,
 ): void {
-  // Skip writes into a base directory
-  if (baseDir) {
+  // Resolve the absolute path to record the write under
+  const recordedPath = resolveAbsolutePath(path, baseDir);
+
+  // Check the path could be resolved. If not, the write cannot be
+  // recorded.
+  if (!recordedPath) {
     return;
   }
 
   // Record the contents
-  recordWrittenContents(path, contents);
+  recordWrittenContents(recordedPath, contents);
 }
 
 /**

@@ -1,6 +1,6 @@
 import { getDatabase } from '../../getDatabase';
 import { getEntry } from '../../getEntry';
-import { entryAddress } from '../entryAddress';
+import { resolveEntryAddress } from '../resolveEntryAddress';
 
 /**
  * Serializes an entry ID into the entry's durable address.
@@ -29,5 +29,5 @@ export function serializeEntryReference(
     return null;
   }
 
-  return entryAddress(entry, database);
+  return resolveEntryAddress(entry, database);
 }

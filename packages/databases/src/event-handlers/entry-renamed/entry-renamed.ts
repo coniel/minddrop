@@ -16,8 +16,8 @@ import { recordEntryHistory } from '../../recordEntryHistory';
 import { sqlUpsertEntries } from '../../sql';
 import {
   convertEntryToSqlRecord,
-  entryAddress,
   resolveDatabasePath,
+  resolveEntryAddress,
   resolveEntryHistorySubject,
   virtualCollectionId,
   virtualCollectionName,
@@ -118,8 +118,8 @@ export async function onRenameEntry(data: EntryRenamedEventData) {
     changes: [
       {
         id: updated.id,
-        oldReference: entryAddress(original, database),
-        newReference: entryAddress(updated, database),
+        oldReference: resolveEntryAddress(original, database),
+        newReference: resolveEntryAddress(updated, database),
       },
     ],
     action,

@@ -1,8 +1,7 @@
-import { Fs } from '@minddrop/file-system';
 import { EntrySerializersRegistry } from '../EntrySerializersRegistry';
+import { readEntryFilePaths } from '../readEntryFilePaths';
 import { readEntryIfChanged } from '../readEntryIfChanged';
 import { Database, Entry } from '../types';
-import { isEntryFilePath, resolveDatabasePath } from '../utils';
 
 export interface ReadEntriesResult {
   /**
@@ -51,37 +50,12 @@ export async function readEntries(
   options?: ReadEntriesOptions,
 ): Promise<ReadEntriesResult> {
   const workspacePath = options?.workspacePath;
-  const hasEntrySubdirs = database.propertyFileStorage === 'entry';
-  const databasePath = resolveDatabasePath(database, workspacePath);
-
-  // Read the database's entry files
-  let files = await Fs.readDir(databasePath, {
-    recursive: hasEntrySubdirs,
-  });
-
-  // If the database uses entry-based storage, read the files
-  // from the entry subdirectories.
-  if (hasEntrySubdirs) {
-    const entrySubdirectories = files.filter(
-      (file) =>
-        'children' in file &&
-        file.children?.length &&
-        !file.name?.startsWith('.'),
-    );
-
-    files = entrySubdirectories.reduce(
-      (acc, entrySubdirectory) => acc.concat(entrySubdirectory.children || []),
-      files,
-    );
-  }
 
   // Get the database's entry serializer
   const serializer = EntrySerializersRegistry.get(database.entrySerializer);
 
-  // Resolve the entry files' paths relative to their database
-  const paths = files
-    .map((file) => Fs.relativePath(databasePath, file.path))
-    .filter((path) => isEntryFilePath(path, database));
+  // List the database's entry files
+  const paths = await readEntryFilePaths(database, { workspacePath });
 
   // Read the entries, skipping the deserialization of those whose
   // contents match their indexed hash.

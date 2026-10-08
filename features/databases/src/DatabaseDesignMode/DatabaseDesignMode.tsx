@@ -121,7 +121,7 @@ export const DatabaseDesignMode: React.FC<DatabaseDesignModeProps> = ({
   const values = useMemo(
     () =>
       previewEntry
-        ? DatabaseEntries.propertyValues(previewEntry, properties)
+        ? DatabaseEntries.resolvePropertyValues(previewEntry, properties)
         : undefined,
     [previewEntry, properties],
   );

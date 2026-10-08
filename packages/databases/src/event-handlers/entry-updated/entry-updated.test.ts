@@ -1,21 +1,36 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Fs } from '@minddrop/file-system';
 import { History } from '@minddrop/history';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
+import { EntriesStore } from '../../EntriesStore';
+import { initializeDatabaseEventHandlers } from '../../initializeDatabaseEventHandlers';
 import {
   sqlGetEntriesFull,
   sqlUpsertDatabase,
   sqlUpsertEntries,
+  syncEntryFiles,
 } from '../../sql';
 import {
+  MockFs,
   cleanup,
   cleanupTestSqlDatabase,
+  createEntryFileChange,
+  entryFilePath,
+  getRecordByPath,
+  indexAtCurrentContents,
   objectDatabase,
   objectEntry1,
   objectEntry1SqlRecord,
+  resolveRecordPropertyValue,
+  seedSqlDatabases,
   setup,
   setupTestSqlDatabase,
 } from '../../test-utils';
+import { updateEntry } from '../../updateEntry';
 import { resolveEntryHistorySubject } from '../../utils';
 import { onUpdateEntry } from './entry-updated';
+
+const { workspace_1 } = WorkspaceFixtures;
 
 // The entry with an updated title and property value
 const updatedEntry = {
@@ -26,6 +41,9 @@ const updatedEntry = {
     Content: 'Updated content',
   },
 };
+
+// The Content value an in-app edit gives the entry
+const editedContent = 'Edited in the app';
 
 describe('onUpdateEntry', () => {
   beforeEach(() => {
@@ -108,6 +126,56 @@ describe('onUpdateEntry', () => {
     ]);
   });
 
+  it('writes and indexes an entry edited in the app', async () => {
+    const originalContents = await editEntryInApp();
+
+    // The edit should have reached both the file and the index
+    expect(MockFs.readTextFile(entryFilePath(objectEntry1))).not.toBe(
+      originalContents,
+    );
+    expect(
+      resolveRecordPropertyValue(
+        getRecordByPath(
+          sqlGetEntriesFull({ entryIds: [objectEntry1.id] }),
+          objectEntry1.path,
+        ),
+        'Content',
+      ),
+    ).toBe(editedContent);
+  });
+
+  // Pins Issue 48: In-app entry writes never update the indexed contentHash.
+  // Remove .fails once fixed.
+  it.fails(
+    're-indexes an external revert of an entry edited in the app',
+    async () => {
+      const originalContents = await editEntryInApp();
+
+      // Restore the file's original contents outside the app
+      MockFs.writeTextFile(entryFilePath(objectEntry1), originalContents);
+
+      // Sync the changed entry file
+      await syncEntryFiles(
+        workspace_1.id,
+        workspace_1.path,
+        [objectDatabase],
+        [createEntryFileChange(objectDatabase.id, objectEntry1.path)],
+      );
+
+      // Expect the index to have the restored contents. An index left at the
+      // edit would overwrite the file on the next edit.
+      expect(
+        resolveRecordPropertyValue(
+          getRecordByPath(
+            sqlGetEntriesFull({ entryIds: [objectEntry1.id] }),
+            objectEntry1.path,
+          ),
+          'Content',
+        ),
+      ).toBe(objectEntry1.properties.Content);
+    },
+  );
+
   it('records nothing when the update changed no property', async () => {
     await onUpdateEntry({ original: objectEntry1, updated: objectEntry1 });
 
@@ -118,3 +186,30 @@ describe('onUpdateEntry', () => {
     ).toEqual([]);
   });
 });
+
+/**
+ * Indexes the entries at their contents on disk, then edits objectEntry1
+ * in the app with the app's handlers registered.
+ *
+ * @returns The entry file's contents before the edit.
+ */
+async function editEntryInApp(): Promise<string> {
+  // Read the entry file's original contents
+  const originalContents = MockFs.readTextFile(entryFilePath(objectEntry1));
+
+  // Index the entries at their contents on disk, as reading them does
+  EntriesStore.update(objectEntry1.id, {
+    contentHash: Fs.hashContents(originalContents),
+  });
+  seedSqlDatabases();
+  indexAtCurrentContents();
+
+  // Register the app's handlers, then edit the entry in the app
+  initializeDatabaseEventHandlers();
+  await updateEntry(objectEntry1.id, {
+    properties: { Content: editedContent },
+  });
+  await Fs.tests.awaitAllOperations();
+
+  return originalContents;
+}

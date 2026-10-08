@@ -4,8 +4,16 @@ import { ItemReferences } from '@minddrop/item-references';
 import { storeItem } from '@minddrop/stores/test-utils';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { CollectionsStore } from '../CollectionsStore';
+import { addCollectionItems } from '../addCollectionItems';
 import { CollectionsLoadedEvent } from '../events';
-import { MockFs, cleanup, collections, setup } from '../test-utils';
+import {
+  MockFs,
+  cleanup,
+  collection_3,
+  collections,
+  setup,
+} from '../test-utils';
+import { Collection } from '../types';
 import { resolveCollectionFilePath, resolveCollectionsDirPath } from '../utils';
 import { loadWorkspaceCollections } from './loadWorkspaceCollections';
 
@@ -98,4 +106,42 @@ describe('loadWorkspaceCollections', () => {
       firstCollection.items.map((id) => `${workspace_1.id}:${id}`),
     );
   });
+
+  // Pins Issue 28: Collections permanently drop member references whose
+  // item is not loaded when the collections load. Remove .fails once
+  // fixed.
+  it.fails(
+    'keeps a member whose item is not yet loaded when the collection is next written',
+    async () => {
+      const [collection] = collections;
+      const [loadedItemId, pendingItemId] = collection.items;
+      // The item IDs that resolve. The pending item is not loaded yet.
+      const loadedEntryIds = new Set([loadedItemId]);
+
+      // Resolve references only to loaded items. Others match as valid
+      // addresses with no item yet.
+      ItemReferences.registerAdapter({
+        type: 'database-entry',
+        serialize: (id) => id,
+        match: (reference) => ({
+          type: 'database-entry',
+          id: loadedEntryIds.has(reference) ? reference : null,
+        }),
+      });
+
+      await loadWorkspaceCollections(workspace_1);
+
+      // Load the pending item after the collections
+      loadedEntryIds.add(pendingItemId);
+
+      // Write the collection by adding an unrelated item to it
+      await addCollectionItems(collection.id, [collection_3.items[0]]);
+
+      const written = MockFs.readJsonFile<Collection>(
+        resolveCollectionFilePath(collection.id),
+      );
+
+      expect(written.items).toContain(pendingItemId);
+    },
+  );
 });

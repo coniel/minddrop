@@ -1,6 +1,7 @@
 import { Fs, FsEntry } from '@minddrop/file-system';
 import { Paths, entityId, isEntityId } from '@minddrop/utils';
 import { DatabaseConfigFileName, DatabaseEntityType } from '../constants';
+import { readDatabaseConfig } from '../readDatabaseConfig';
 import { Database } from '../types';
 import {
   resolveDatabaseConfigFilePath,
@@ -27,14 +28,15 @@ export async function readWorkspaceDatabases(
   const databasePaths = findDatabasePaths(workspaceFiles);
 
   // Read and parse each database config
-  const configs = await Promise.all(
+  const reads = await Promise.all(
     databasePaths.map((configPath) =>
       readDatabaseConfig(workspacePath, configPath),
     ),
   );
 
-  const databases = configs.filter(
-    (config): config is Database => config !== null,
+  // Gather the configs which could be read
+  const databases = reads.flatMap((read) =>
+    read.status === 'read' ? [read.value] : [],
   );
 
   // Work out which config keeps each claimed ID
@@ -123,36 +125,6 @@ function findDatabasePaths(entries: FsEntry[], inHiddenDir = false): string[] {
 
     return inHiddenDir && name === DatabaseConfigFileName ? [entry.path] : [];
   });
-}
-
-/**
- * Reads a single database config from a database.json file path.
- *
- * @param workspacePath - The absolute path to the workspace directory.
- * @param configPath - The path to the database.json file.
- * @returns The database config, or null if reading fails.
- */
-async function readDatabaseConfig(
-  workspacePath: string,
-  configPath: string,
-): Promise<Database | null> {
-  try {
-    const config = await Fs.readJsonFile<Database>(configPath);
-
-    // The database directory path (strip .minddrop/database.json)
-    const databasePath = configPath.split('/').slice(0, -2).join('/');
-
-    // Derive the name from the directory name
-    const dirName = Fs.fileNameFromPath(databasePath);
-
-    return {
-      ...config,
-      name: dirName,
-      path: Fs.relativePath(workspacePath, databasePath),
-    };
-  } catch {
-    return null;
-  }
 }
 
 /**

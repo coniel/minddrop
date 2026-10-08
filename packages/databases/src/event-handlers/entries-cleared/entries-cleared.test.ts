@@ -1,5 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
+import { History } from '@minddrop/history';
+import { recordEntryHistory } from '../../recordEntryHistory';
 import {
   sqlGetEntrySyncRecords,
   sqlUpsertDatabase,
@@ -12,6 +14,7 @@ import {
   collectionDatabase,
   collectionEntry1,
   collectionEntry1SqlRecord,
+  entry_untitled,
   getRecordedSqlStatements,
   objectDatabase,
   objectEntry1,
@@ -22,7 +25,11 @@ import {
   setup,
   setupRecordingTestSqlDatabase,
 } from '../../test-utils';
-import { virtualCollectionId, virtualCollectionName } from '../../utils';
+import {
+  resolveEntryHistorySubject,
+  virtualCollectionId,
+  virtualCollectionName,
+} from '../../utils';
 import { onClearEntries } from './entries-cleared';
 
 describe('onClearEntries', () => {
@@ -101,6 +108,41 @@ describe('onClearEntries', () => {
     );
 
     expect(deleteStatements).toEqual([]);
+  });
+
+  it('records history for an untitled entry', async () => {
+    await recordEntryHistory(objectDatabase, entry_untitled, {
+      kind: 'created',
+    });
+
+    expect(
+      await History.read(
+        resolveEntryHistorySubject(objectDatabase, entry_untitled),
+      ),
+    ).not.toEqual([]);
+  });
+
+  // Pins Issue 63: clearEntries skips deleteEntry's bookkeeping. Untitled
+  // entries' history is not deleted. Remove .fails once fixed.
+  it.fails("deletes a cleared untitled entry's history", async () => {
+    // Record history for the untitled entry
+    await recordEntryHistory(objectDatabase, entry_untitled, {
+      kind: 'created',
+    });
+
+    // Clear the entry
+    await onClearEntries({
+      databaseId: objectDatabase.id,
+      entries: [entry_untitled],
+    });
+
+    // Expect the history to be deleted. The next new untitled entry would
+    // otherwise inherit it.
+    expect(
+      await History.read(
+        resolveEntryHistorySubject(objectDatabase, entry_untitled),
+      ),
+    ).toEqual([]);
   });
 
   it('deletes the cleared entries from SQL in a single batch', async () => {

@@ -1,6 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Fs } from '@minddrop/file-system';
+import {
+  MockReadDirInterception,
+  interceptMockReadDir,
+} from '@minddrop/file-system/test-utils';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
+import { moveEntryMetadataFile } from '../../moveEntryMetadataFile';
 import { readEntryMetadata } from '../../readEntryMetadata';
 import {
   MockFs,
@@ -15,25 +20,26 @@ import {
   databaseDirPath,
   entryFilePath,
   entrySqlRecords,
+  getRecordByPath,
   indexAtCurrentContents,
   parentDir,
-  propertyValue,
-  recordByPath,
-  recordedDeletedEntryIds,
   referenceEntry1,
   relatedEntry1,
   relatedEntry2,
+  resolveRecordPropertyValue,
+  resolveRecordedDeletedEntryIds,
+  resolveUpsertedEntryPaths,
   seedSqlDatabases,
   seedSqlEntries,
   setup,
   setupRecordingTestSqlDatabase,
   timestampDatabase,
   timestampEntry1,
-  upsertedEntryPaths,
 } from '../../test-utils';
-import { EntryMetadata } from '../../types';
+import { BackgroundSyncChangeset, EntryMetadata } from '../../types';
 import {
   resolveDatabaseConfigFilePath,
+  resolveDatabaseMetadataDirPath,
   resolveEntryMetadataFilePath,
 } from '../../utils';
 import { writeEntryMetadata } from '../../writeEntryMetadata';
@@ -50,6 +56,14 @@ const statDate = new Date('2026-02-02T00:00:00.000Z');
 // The entry's real creation date, as held by its sidecar
 const sidecarDate = new Date('2020-03-03T00:00:00.000Z');
 
+// The path collectionEntry1 is renamed to in the app during a sync
+const renamedEntryPath = 'Renamed Entry.md';
+// The path of collectionEntry1's sidecar once renamed
+const renamedSidecarPath = resolveEntryMetadataFilePath(
+  databaseDirPath(collectionDatabase),
+  renamedEntryPath,
+);
+
 describe('backgroundSyncDatabases', () => {
   beforeEach(() => {
     setup();
@@ -60,8 +74,8 @@ describe('backgroundSyncDatabases', () => {
     // Seed each fixture database's SQL record
     seedSqlDatabases();
 
-    // Seed the fixture entries as existing records with a hash no
-    // file contents produce, so every entry appears modified.
+    // Seed the fixture entries as existing records with a hash no file
+    // contents produce. Every entry then appears modified.
     seedSqlEntries((record) => ({
       ...record,
       lastModified: 0,
@@ -80,18 +94,18 @@ describe('backgroundSyncDatabases', () => {
   it('resolves references to the existing entry IDs', async () => {
     await backgroundSyncDatabases(workspace_1.id, parentDir);
 
-    const collectionRecord = recordByPath(
+    const collectionRecord = getRecordByPath(
       sqlGetEntriesFull(),
       collectionEntry1.path,
     );
 
     // Members should resolve to the path-matched existing IDs,
-    // including the cross-database reference
-    expect(propertyValue(collectionRecord, 'Related')).toEqual([
+    // including the cross-database reference.
+    expect(resolveRecordPropertyValue(collectionRecord, 'Related')).toEqual([
       relatedEntry1.id,
       relatedEntry2.id,
     ]);
-    expect(propertyValue(collectionRecord, 'References')).toEqual([
+    expect(resolveRecordPropertyValue(collectionRecord, 'References')).toEqual([
       referenceEntry1.id,
     ]);
   });
@@ -131,14 +145,14 @@ describe('backgroundSyncDatabases', () => {
     await backgroundSyncDatabases(workspace_1.id, parentDir);
 
     // Entries at the renamed paths should keep their existing IDs
-    const collectionRecord = recordByPath(
+    const collectionRecord = getRecordByPath(
       sqlGetEntriesFull(),
       collectionEntry1.path,
     );
 
     expect(collectionRecord.id).toBe(collectionEntry1.id);
     // No entries should have been deleted
-    expect(recordedDeletedEntryIds()).toEqual([]);
+    expect(resolveRecordedDeletedEntryIds()).toEqual([]);
   });
 
   it('drops references to entries deleted offline', async () => {
@@ -147,13 +161,13 @@ describe('backgroundSyncDatabases', () => {
 
     await backgroundSyncDatabases(workspace_1.id, parentDir);
 
-    const collectionRecord = recordByPath(
+    const collectionRecord = getRecordByPath(
       sqlGetEntriesFull(),
       collectionEntry1.path,
     );
 
     // The deleted member should be dropped from the references
-    expect(propertyValue(collectionRecord, 'Related')).toEqual([
+    expect(resolveRecordPropertyValue(collectionRecord, 'Related')).toEqual([
       relatedEntry1.id,
     ]);
     // The deleted entry should be removed from SQL
@@ -176,7 +190,7 @@ describe('backgroundSyncDatabases', () => {
     await backgroundSyncDatabases(workspace_1.id, parentDir);
 
     // Metadata is read for changed entries only, after the diff
-    const record = recordByPath(sqlGetEntriesFull(), collectionEntry1.path);
+    const record = getRecordByPath(sqlGetEntriesFull(), collectionEntry1.path);
 
     expect(JSON.parse(record.metadata)).toMatchObject(metadata);
   });
@@ -208,7 +222,7 @@ describe('backgroundSyncDatabases', () => {
       },
     );
 
-    // The rewrite replaced the inode, resetting the file's stat dates
+    // Reset the file's stat dates, as a rewrite replacing the inode does
     MockFs.setFileStats(entryFilePath(collectionEntry1), {
       created: statDate,
       lastModified: statDate,
@@ -216,7 +230,7 @@ describe('backgroundSyncDatabases', () => {
 
     await backgroundSyncDatabases(workspace_1.id, parentDir);
 
-    const record = recordByPath(sqlGetEntriesFull(), collectionEntry1.path);
+    const record = getRecordByPath(sqlGetEntriesFull(), collectionEntry1.path);
 
     expect(record.created).toBe(sidecarDate.getTime());
     expect(record.lastModified).toBe(sidecarDate.getTime());
@@ -225,8 +239,8 @@ describe('backgroundSyncDatabases', () => {
   it('sweeps a sidecar orphaned by an entry deleted outside the app', async () => {
     const deletedEntryPath = `${databaseDirPath(collectionDatabase)}/Gone.md`;
 
-    // A sidecar left behind by an entry file deleted while the app
-    // was closed, so nothing was around to remove it.
+    // Add a sidecar left behind by an entry file deleted while the app
+    // was closed.
     await writeEntryMetadata(
       databaseDirPath(collectionDatabase),
       deletedEntryPath,
@@ -273,21 +287,21 @@ describe('backgroundSyncDatabases', () => {
 
     await backgroundSyncDatabases(workspace_1.id, parentDir);
 
-    expect(upsertedEntryPaths(timestampDatabase.id)).toEqual([]);
+    expect(resolveUpsertedEntryPaths(timestampDatabase.id)).toEqual([]);
   });
 
   it('upserts an entry edited outside the app whose last-modified property did not change', async () => {
     indexAtCurrentContents();
 
-    // Append to the entry's body as an external editor would,
-    // leaving its Last Modified property untouched
+    // Append to the entry's body as an external editor would. Its Last
+    // Modified property stays untouched.
     appendToEntryFile(timestampEntry1);
 
     await backgroundSyncDatabases(workspace_1.id, parentDir);
 
-    // The edit should be detected from the contents rather than the
-    // property, which only the app updates.
-    expect(upsertedEntryPaths(timestampDatabase.id)).toContain(
+    // Expect the edit to be detected from the contents. Only the app
+    // updates the property.
+    expect(resolveUpsertedEntryPaths(timestampDatabase.id)).toContain(
       timestampEntry1.path,
     );
   });
@@ -312,7 +326,7 @@ describe('backgroundSyncDatabases', () => {
     const changeset = await backgroundSyncDatabases(workspace_1.id, parentDir);
 
     // The unchanged entry should be re-indexed against the new schema
-    expect(upsertedEntryPaths(timestampDatabase.id)).toContain(
+    expect(resolveUpsertedEntryPaths(timestampDatabase.id)).toContain(
       timestampEntry1.path,
     );
     expect(changeset.upsertedDatabases.map((database) => database.id)).toEqual([
@@ -328,7 +342,7 @@ describe('backgroundSyncDatabases', () => {
     );
 
     // The next sync should find the new schema already indexed
-    expect(upsertedEntryPaths(timestampDatabase.id)).toEqual([]);
+    expect(resolveUpsertedEntryPaths(timestampDatabase.id)).toEqual([]);
     expect(nextChangeset.upsertedDatabases).toEqual([]);
   });
 
@@ -345,29 +359,24 @@ describe('backgroundSyncDatabases', () => {
 
     await backgroundSyncDatabases(workspace_1.id, parentDir);
 
-    const record = recordByPath(sqlGetEntriesFull(), collectionEntry1.path);
+    const record = getRecordByPath(sqlGetEntriesFull(), collectionEntry1.path);
 
     expect(JSON.parse(record.metadata).color).toBe('red');
   });
 
   it('does not re-index an unchanged entry whose sidecar cannot be read', async () => {
-    // Index the entry at its contents on disk, with the metadata its
-    // sidecar held before it broke.
-    seedSqlEntries((record) => ({
-      ...record,
-      contentHash: Fs.hashContents(
-        MockFs.readTextFile(
-          entryFilePath({ database: record.databaseId, path: record.path }),
-        ),
-      ),
-      metadata:
-        record.id === collectionEntry1.id
-          ? JSON.stringify({ color: 'red' })
-          : record.metadata,
-    }));
-    clearRecordedSqlStatements();
+    // The metadata the entry's sidecar had before it broke
+    const indexedMetadata = JSON.stringify({ color: 'red' });
 
-    // A sidecar broken outside the app, as by a git conflict
+    // Index the entries at their contents on disk, with the entry's
+    // metadata as its sidecar had it.
+    indexAtCurrentContents((record) =>
+      record.id === collectionEntry1.id
+        ? { ...record, metadata: indexedMetadata }
+        : record,
+    );
+
+    // Break the sidecar outside the app, as a git conflict does
     const sidecarPath = resolveEntryMetadataFilePath(
       databaseDirPath(collectionDatabase),
       collectionEntry1.path,
@@ -378,12 +387,15 @@ describe('backgroundSyncDatabases', () => {
 
     await backgroundSyncDatabases(workspace_1.id, parentDir);
 
-    // Re-reading the entry would overwrite the sidecar with timestamps
-    // alone, losing the metadata it holds.
-    expect(upsertedEntryPaths(collectionDatabase.id)).not.toContain(
+    // Expect the entry not to be re-read. Re-reading it would overwrite
+    // the sidecar with timestamps alone, and its metadata would be lost.
+    expect(resolveUpsertedEntryPaths(collectionDatabase.id)).not.toContain(
       collectionEntry1.path,
     );
     expect(MockFs.readTextFile(sidecarPath)).toBe(brokenSidecar);
+    expect(
+      getRecordByPath(sqlGetEntriesFull(), collectionEntry1.path).metadata,
+    ).toBe(indexedMetadata);
   });
 
   it('keeps entries whose contents are unchanged', async () => {
@@ -405,12 +417,12 @@ describe('backgroundSyncDatabases', () => {
 
     await backgroundSyncDatabases(workspace_1.id, parentDir);
 
-    const collectionRecord = recordByPath(
+    const collectionRecord = getRecordByPath(
       sqlGetEntriesFull(),
       collectionEntry1.path,
     );
 
-    expect(propertyValue(collectionRecord, 'Related')).toEqual([
+    expect(resolveRecordPropertyValue(collectionRecord, 'Related')).toEqual([
       relatedEntry1.id,
       relatedEntry2.id,
     ]);
@@ -430,7 +442,7 @@ describe('backgroundSyncDatabases', () => {
     await backgroundSyncDatabases(workspace_1.id, parentDir);
 
     // The entry should be retained rather than re-read
-    expect(upsertedEntryPaths(collectionDatabase.id)).not.toContain(
+    expect(resolveUpsertedEntryPaths(collectionDatabase.id)).not.toContain(
       collectionEntry1.path,
     );
     expect(
@@ -459,7 +471,7 @@ describe('backgroundSyncDatabases', () => {
 
     await backgroundSyncDatabases(workspace_1.id, parentDir);
 
-    expect(upsertedEntryPaths(collectionDatabase.id)).not.toContain(
+    expect(resolveUpsertedEntryPaths(collectionDatabase.id)).not.toContain(
       collectionEntry1.path,
     );
   });
@@ -502,23 +514,186 @@ describe('backgroundSyncDatabases', () => {
 
     await backgroundSyncDatabases(workspace_1.id, parentDir);
 
-    const collectionRecord = recordByPath(
+    const collectionRecord = getRecordByPath(
       sqlGetEntriesFull(),
       collectionEntry1.path,
     );
 
-    expect(propertyValue(collectionRecord, 'Related')).toEqual([
+    expect(resolveRecordPropertyValue(collectionRecord, 'Related')).toEqual([
       relatedEntry1.id,
       relatedEntry2.id,
     ]);
   });
+
+  it("moves an entry's sidecar in the app between the sync's entry listing and its sidecar sweep", async () => {
+    const { ran, sidecarMoved } = await syncRenamingBeforeSidecarSweep();
+
+    expect(ran).toBe(true);
+    expect(sidecarMoved).toBe(true);
+  });
+
+  // Pins Issue 53: Background scan sweeps the sidecar of an entry renamed or
+  // created in the app during the scan. Remove .fails once fixed.
+  it.fails(
+    'keeps the sidecar of an entry renamed in the app during the sync',
+    async () => {
+      await syncRenamingBeforeSidecarSweep();
+
+      // Expect the renamed entry's sidecar to be kept
+      expect(MockFs.exists(renamedSidecarPath)).toBe(true);
+    },
+  );
+
+  it("renames an entry in the app between the sync's index read and its entry listing", async () => {
+    const { ran } = await syncRenamingBeforeEntryListing();
+
+    expect(ran).toBe(true);
+  });
+
+  // Pins Issue 54: An in-app rename during the startup sync is read as a
+  // deletion. The entry is re-keyed. Remove .fails once fixed.
+  it.fails(
+    'keeps the identity of an entry renamed in the app during the sync',
+    async () => {
+      const { changeset } = await syncRenamingBeforeEntryListing();
+
+      // Expect the entry kept under its ID. Reading the rename as a
+      // deletion strips it from the collections and views referencing it.
+      expect(changeset.deletedEntryIds).not.toContain(collectionEntry1.id);
+      expect(getRecordByPath(sqlGetEntriesFull(), renamedEntryPath).id).toBe(
+        collectionEntry1.id,
+      );
+    },
+  );
 });
+
+/**
+ * Gives collectionEntry1 a sidecar, then syncs, renaming the entry in the
+ * app once the sync has listed the database's entries but before it
+ * sweeps the database's sidecars.
+ *
+ * @returns Whether the rename ran, and whether it moved the sidecar.
+ */
+async function syncRenamingBeforeSidecarSweep(): Promise<{
+  ran: boolean;
+  sidecarMoved: boolean;
+}> {
+  // Whether the rename moved the sidecar
+  let sidecarMoved = false;
+
+  // Give the entry a sidecar
+  await writeEntryMetadata(
+    databaseDirPath(collectionDatabase),
+    collectionEntry1.path,
+    { color: 'red' },
+  );
+
+  // Rename the entry before the sidecar sweep
+  const interception = beforeDirectoryRead(
+    resolveDatabaseMetadataDirPath(databaseDirPath(collectionDatabase)),
+    async () => {
+      await renameCollectionEntry1InApp();
+      sidecarMoved = MockFs.exists(renamedSidecarPath);
+    },
+    databaseDirPath(collectionDatabase),
+  );
+
+  // Run the sync, then restore the directory listing
+  try {
+    await backgroundSyncDatabases(workspace_1.id, parentDir);
+  } finally {
+    interception.restore();
+  }
+
+  return { ran: interception.ran, sidecarMoved };
+}
+
+/**
+ * Syncs, renaming collectionEntry1 in the app once the sync has read the
+ * database's records but before it lists the database's entries.
+ *
+ * @returns Whether the rename ran, and the sync's changeset.
+ */
+async function syncRenamingBeforeEntryListing(): Promise<{
+  ran: boolean;
+  changeset: BackgroundSyncChangeset;
+}> {
+  // Rename the entry before the entry listing
+  const interception = beforeDirectoryRead(
+    databaseDirPath(collectionDatabase),
+    renameCollectionEntry1InApp,
+  );
+
+  // Run the sync, then restore the directory listing
+  const changeset = await backgroundSyncDatabases(
+    workspace_1.id,
+    parentDir,
+  ).finally(interception.restore);
+
+  return { ran: interception.ran, changeset };
+}
+
+/**
+ * Runs a callback once, before the file system lists a directory. Stands
+ * in for an in-app change landing mid-sync.
+ *
+ * @param path - The path of the directory.
+ * @param callback - The callback to run.
+ * @param afterPath - The path of a directory whose listing must come
+ *   first. Only a listing following it counts.
+ * @returns The interception.
+ */
+function beforeDirectoryRead(
+  path: string,
+  callback: () => Promise<void>,
+  afterPath?: string,
+): MockReadDirInterception {
+  // Intercept the directory's listing
+  return interceptMockReadDir(MockFs, { path, afterPath, onRead: callback });
+}
+
+/**
+ * Renames collectionEntry1 the way an in-app rename leaves it. The file
+ * and its sidecar are moved. Its record is indexed at the new path under
+ * its existing ID.
+ */
+async function renameCollectionEntry1InApp(): Promise<void> {
+  // Resolve the collection database's directory path
+  const databasePath = databaseDirPath(collectionDatabase);
+
+  // Move the entry file and its sidecar
+  await Fs.rename(
+    entryFilePath(collectionEntry1),
+    `${databasePath}/${renamedEntryPath}`,
+  );
+  await moveEntryMetadataFile(
+    databasePath,
+    collectionEntry1.path,
+    renamedEntryPath,
+  );
+
+  // Index the record at the new path under its existing ID
+  sqlUpsertEntries(
+    collectionDatabase.id,
+    [
+      {
+        ...collectionEntry1SqlRecord,
+        path: renamedEntryPath,
+        title: Fs.removeExtension(renamedEntryPath),
+      },
+    ],
+    { silent: true },
+  );
+}
 
 /**
  * Indexes collectionEntry1 at its current contents with the given
  * metadata, as a previous sync would have left it.
+ *
+ * @param metadata - The metadata to index.
  */
 function indexCollectionEntry1Metadata(metadata: EntryMetadata): void {
+  // Index the entry's record at its current contents
   sqlUpsertEntries(
     collectionDatabase.id,
     [

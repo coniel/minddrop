@@ -244,6 +244,21 @@ describe('RichTextEditor value changes', () => {
     return { ...result, changeValues, debouncedValues, setValue };
   };
 
+  // Renders an editor and types into it, leaving the edit's save
+  // pending.
+  const renderTypedEdit = async () => {
+    const result = renderEditor([paragraphElement1, editorProbeElement]);
+
+    // Type into the editor
+    await actFlush(() => {
+      Transforms.insertText(capturedEditor, 'Typed', {
+        at: { path: [0, 0], offset: 0 },
+      });
+    });
+
+    return result;
+  };
+
   it('replaces the content when the value changes', () => {
     const { getByText, queryByText, setValue } = renderEditor();
 
@@ -346,6 +361,36 @@ describe('RichTextEditor value changes', () => {
     setValue(Ast.fromMarkdown(Ast.toMarkdown(debouncedValues[0])));
 
     expect(getByText(headingElement1PlainText)).toBe(block);
+  });
+
+  // Kept apart from the pin below, which passes on any failure. An
+  // edit which never reaches the debounced save fails this test
+  // instead of passing as the pinned bug.
+  it('saves a typed edit once its debounce has passed', async () => {
+    const { debouncedValues } = await renderTypedEdit();
+
+    // Advance past the save's debounce
+    act(() => {
+      vi.advanceTimersByTime(10000);
+    });
+
+    expect(debouncedValues).toHaveLength(1);
+  });
+
+  // Pins Issue 36: The editor drops the pending debounced save when it
+  // unmounts. Remove .fails once fixed.
+  it.fails('saves a pending edit when the editor unmounts', async () => {
+    const { unmount, debouncedValues } = await renderTypedEdit();
+
+    // Close the editor before the save fires
+    unmount();
+
+    // Advance past the save's debounce
+    act(() => {
+      vi.advanceTimersByTime(10000);
+    });
+
+    expect(debouncedValues).toHaveLength(1);
   });
 });
 

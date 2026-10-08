@@ -1,7 +1,7 @@
-import { FsEntry } from '../../types';
+import { FsEntry, MockFileSystemOptions } from '../../types';
 import { mockAddFileEntry } from '../mockAddFileEntry';
-import { mockExists } from '../mockExists';
 import { mockGetFileEntry } from '../mockGetFileEntry';
+import { resolveRelocatedMockFileEntry } from '../resolveRelocatedMockFileEntry';
 
 /**
  * Creates a copy of a mock file entry.
@@ -9,23 +9,24 @@ import { mockGetFileEntry } from '../mockGetFileEntry';
  * @param root - The file system root file entry.
  * @param path - The path of the file entry to copy.
  * @param copyPath - The path to where to copy the file entry.
+ * @param options - The mock file system's matching options.
+ *
+ * @throws {Error} If the path does not exist.
+ * @throws {Error} If the copy path already exists.
  */
-export async function mockCopyFile(
+export function mockCopyFile(
   root: FsEntry,
   path: string,
   copyPath: string,
-): Promise<void> {
-  // Ensure file entry exists
-  if (!mockExists(root, path)) {
-    throw new Error(
-      `Mock FS error: cannot copy file ${path}, path does not exist`,
-    );
-  }
+  options: MockFileSystemOptions,
+): void {
+  // Get the entry to copy
+  const fileEntry = mockGetFileEntry(root, path, options);
 
-  const fileEntry = mockGetFileEntry(root, path);
-
+  // Add a copy of the entry at the copy path
   mockAddFileEntry(
     root,
-    JSON.parse(JSON.stringify({ ...fileEntry, path: copyPath })),
+    resolveRelocatedMockFileEntry(fileEntry, copyPath),
+    options,
   );
 }

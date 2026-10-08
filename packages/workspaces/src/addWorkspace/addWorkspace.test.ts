@@ -120,6 +120,37 @@ describe('addWorkspace', () => {
     expect(ActiveWorkspaceStore).toHaveStoredValue('id', workspace_1.id);
   });
 
+  // Pins Issue 58: Adding a copied workspace folder replaces the
+  // original workspace. Remove .fails once fixed.
+  it.fails(
+    'keeps the original workspace when adding a copy of its folder',
+    async () => {
+      const copyPath = `${workspace_1.path} copy`;
+
+      // List the original workspace
+      WorkspacesStore.set(workspace_1);
+
+      // Copy the original's folder, workspace config and ID included
+      MockFs.addFiles([
+        {
+          path: resolveWorkspaceConfigFilePath(copyPath),
+          textContent: JSON.stringify(omitPath(workspace_1)),
+        },
+      ]);
+
+      await addWorkspace(copyPath);
+
+      const config = MockFs.readJsonFile<WorkspacesConfig>(
+        resolveWorkspacesConfigFilePath(),
+      );
+
+      expect(
+        WorkspacesStore.getAllArray().map((workspace) => workspace.path),
+      ).toContain(workspace_1.path);
+      expect(config.paths).toEqual([workspace_1.path, copyPath]);
+    },
+  );
+
   it('dispatches a workspaces loaded event', async () =>
     new Promise<void>((done) => {
       Events.addListener(WorkspacesLoadedEvent, 'test', (payload) => {

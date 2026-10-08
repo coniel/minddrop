@@ -7,18 +7,31 @@ import type { SqlEntryPropertyRecord, SqlEntryRecord } from '../../types';
 // limit on query parameters.
 const MaxIdsPerQuery = 10000;
 
+export interface SqlGetEntriesFullOptions {
+  /**
+   * The IDs of the entries to retrieve. Defaults to all entries.
+   */
+  entryIds?: string[];
+
+  /**
+   * The ID of the workspace whose database to target. Defaults to
+   * the active workspace.
+   */
+  workspaceId?: string;
+}
+
 /**
  * Retrieves entries from SQL with their full property data and
  * metadata.
  *
- * @param entryIds - The IDs of the entries to retrieve. Defaults to all entries.
- * @param workspaceId - The ID of the workspace whose database to target. Defaults to the active workspace.
+ * @param options - Retrieval options.
  * @returns The entries' full SQL records.
  */
 export function sqlGetEntriesFull(
-  entryIds?: string[],
-  workspaceId?: string,
+  options: SqlGetEntriesFullOptions = {},
 ): SqlEntryRecord[] {
+  const { entryIds, workspaceId } = options;
+
   // Resolve the target workspace
   const targetWorkspaceId = workspaceId ?? Workspaces.getActive().id;
 
@@ -31,8 +44,14 @@ export function sqlGetEntriesFull(
   // Split ID lists too long to bind to one query
   if (entryIds && entryIds.length > MaxIdsPerQuery) {
     return [
-      ...sqlGetEntriesFull(entryIds.slice(0, MaxIdsPerQuery), workspaceId),
-      ...sqlGetEntriesFull(entryIds.slice(MaxIdsPerQuery), workspaceId),
+      ...sqlGetEntriesFull({
+        entryIds: entryIds.slice(0, MaxIdsPerQuery),
+        workspaceId,
+      }),
+      ...sqlGetEntriesFull({
+        entryIds: entryIds.slice(MaxIdsPerQuery),
+        workspaceId,
+      }),
     ];
   }
 

@@ -60,6 +60,18 @@ export interface MockFileSystem {
   printWatchers(): void;
 }
 
+/**
+ * Options for how the mock file system matches paths.
+ */
+export interface MockFileSystemOptions {
+  /**
+   * Whether paths differing only in case or Unicode normalisation form
+   * are different files, as on Linux. By default they are the same
+   * file, as on macOS and Windows.
+   */
+  caseSensitive?: boolean;
+}
+
 export type MockFsRoot = Record<string, FsEntry>;
 
 /**

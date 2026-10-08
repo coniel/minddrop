@@ -65,6 +65,15 @@ export const objectEntry1SqlRecord: SqlEntryRecord = {
   ],
 };
 
+// An object database entry still holding the default title, not loaded
+// into the store or onto disk by setup.
+export const entry_untitled: Entry = {
+  ...objectEntry1,
+  id: 'database-entry_untitled',
+  title: 'Untitled',
+  path: 'Untitled.md',
+};
+
 /******************************************************************************
  * YAML object database entries
  *****************************************************************************/

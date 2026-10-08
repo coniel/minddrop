@@ -6,7 +6,10 @@ import { createDataTransfer } from '@minddrop/utils/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { initializeDropAndPaste } from './initializeDropAndPaste';
 
-const { objectDatabase, entries } = DatabaseFixtures;
+const { objectDatabase, urlDatabase, entries } = DatabaseFixtures;
+
+// The URL of an image dragged from a browser
+const droppedImageUrl = 'https://example.com/image.png';
 
 /**
  * Creates a dragover, drop or paste event transferring plain text.
@@ -181,4 +184,86 @@ describe('initializeDropAndPaste', () => {
 
     expect(DatabaseEntries.Store).toHaveItems(entries);
   });
+
+  // The two tests below check the setup of the pin after them, which
+  // passes on any failure.
+  it('adds a dropped URL to its default database', async () => {
+    // Set a URL default
+    Databases.setContentDefault('url', urlDatabase.id);
+
+    // Drop the URL alone
+    document.body.dispatchEvent(createImageDropEvent({ url: droppedImageUrl }));
+
+    // Wait for an entry with the URL in the URL database
+    await waitFor(() => {
+      expect(DatabaseEntries.Store.getAllArray()).toContainEqual(
+        expect.objectContaining({
+          database: urlDatabase.id,
+          properties: expect.objectContaining({
+            [urlDatabase.properties[0].name]: droppedImageUrl,
+          }),
+        }),
+      );
+    });
+  });
+
+  it('adds nothing for a dropped image no database holds', async () => {
+    // Drop the image alone
+    document.body.dispatchEvent(createImageDropEvent({ file: true }));
+
+    await settle();
+
+    expect(DatabaseEntries.Store).toHaveItems(entries);
+  });
+
+  // Pins Issue 69: File-bearing drops never fall back to their URL.
+  // Remove .fails once fixed.
+  it.fails(
+    'adds a dropped URL to its default database when no database holds the dropped file',
+    async () => {
+      // Set a URL default but no database for images
+      Databases.setContentDefault('url', urlDatabase.id);
+
+      // Drop an image dragged from a browser, with its URL
+      document.body.dispatchEvent(
+        createImageDropEvent({ url: droppedImageUrl, file: true }),
+      );
+
+      // Wait for an entry with the URL in the URL database
+      await waitFor(() => {
+        expect(DatabaseEntries.Store.getAllArray()).toContainEqual(
+          expect.objectContaining({
+            database: urlDatabase.id,
+            properties: expect.objectContaining({
+              [urlDatabase.properties[0].name]: droppedImageUrl,
+            }),
+          }),
+        );
+      });
+    },
+  );
 });
+
+/**
+ * Creates a drop event for an image dragged from a browser.
+ *
+ * @param options.url - The image URL the event transfers, if any.
+ * @param options.file - Whether the event transfers the image file.
+ * @returns The event.
+ */
+function createImageDropEvent(options: {
+  url?: string;
+  file?: boolean;
+}): Event {
+  // Create the event and its transfer data
+  const event = new Event('drop', { bubbles: true, cancelable: true });
+  const dataTransfer = createDataTransfer(
+    options.url ? { 'text/uri-list': options.url } : {},
+    options.file ? [new File([''], 'image.png')] : [],
+  );
+
+  // Attach the transfer data
+  Object.defineProperty(event, 'dataTransfer', { value: dataTransfer });
+
+  return event;
+}

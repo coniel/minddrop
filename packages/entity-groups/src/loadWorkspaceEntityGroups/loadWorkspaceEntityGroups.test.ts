@@ -7,6 +7,7 @@ import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { EntityGroupTypesRegistry } from '../EntityGroupTypesRegistry';
 import { EntityGroupsStore } from '../EntityGroupsStore';
 import { EntityGroupsDirName } from '../constants';
+import { createEntityGroup } from '../createEntityGroup';
 import { EntityGroupsLoadedEvent } from '../events';
 import { getAllEntityGroups } from '../getAllEntityGroups';
 import { getEntityGroup } from '../getEntityGroup';
@@ -176,4 +177,23 @@ describe('loadWorkspaceEntityGroups', () => {
 
     expect(EntityGroupsStore).toHaveItemCount(0);
   });
+
+  // Pins Issue 37: An unreadable entity groups file loads as no groups.
+  // The next group edit overwrites it. Remove .fails once fixed.
+  it.fails(
+    'leaves an unreadable groups file intact when a group is next created',
+    async () => {
+      // Write a groups file truncated mid-write. It does not parse.
+      const unreadable = JSON.stringify([entityGroup_exclusive_1]).slice(0, -2);
+      MockFs.writeTextFile(groupsFilePath(type), unreadable);
+
+      await loadWorkspaceEntityGroups(workspace_1);
+
+      // Create a group, ignoring any error. This writes the type's
+      // groups file. Only the file contents are pinned.
+      await createEntityGroup(type, 'New group').catch(() => undefined);
+
+      expect(MockFs.readTextFile(groupsFilePath(type))).toBe(unreadable);
+    },
+  );
 });

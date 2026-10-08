@@ -1,11 +1,8 @@
-import {
-  ContentViews,
-  StoredContentView,
-  VirtualContentViewData,
-} from '@minddrop/content-views';
-import { Fs } from '@minddrop/file-system';
+import { ContentViews } from '@minddrop/content-views';
 import { Workspace } from '@minddrop/workspaces';
 import { normalizeDatabaseConfigIds } from '../normalizeDatabaseConfigIds';
+import { readDatabaseResourceFiles } from '../readDatabaseResourceFiles';
+import { readDatabaseView } from '../readDatabaseView';
 import type { Database } from '../types';
 import {
   resolveDatabaseContentViewsDirPath,
@@ -14,9 +11,9 @@ import {
 
 /**
  * Loads database views from the databases' view directories into
- * the workspace's content views store record as virtual views,
- * normalizing each database config's view ID list against the
- * view files found.
+ * the workspace's content views store record as virtual views.
+ * Normalizes each database config's view ID list against the view
+ * files found.
  *
  * @param databases - The databases whose views to load.
  * @param workspace - The workspace the databases belong to.
@@ -26,83 +23,37 @@ export async function loadDatabaseViews(
   workspace: Workspace,
 ): Promise<void> {
   // Read each database's stored views from disk
-  const viewData = (
-    await Promise.all(
-      databases.map((database) => readDatabaseViews(database, workspace)),
-    )
-  ).flat();
+  const reads = await Promise.all(
+    databases.map((database) =>
+      readDatabaseResourceFiles(
+        resolveDatabaseContentViewsDirPath(
+          resolveDatabasePath(database, workspace.path),
+        ),
+        (path) => readDatabaseView(path, database.id, workspace.id),
+        'json',
+      ),
+    ),
+  );
 
-  if (viewData.length === 0) {
+  // Normalize each config's view ID list against the views found. The
+  // IDs of views which could not be read are kept.
+  databases.forEach((database, index) => {
+    normalizeDatabaseConfigIds(
+      database.id,
+      'views',
+      reads[index].resources,
+      workspace.id,
+      reads[index].unreadableIds,
+    );
+  });
+
+  // Gather the views read
+  const views = reads.flatMap((read) => read.resources);
+
+  if (views.length === 0) {
     return;
   }
 
   // Load the views as virtual views
-  ContentViews.loadVirtual(viewData, workspace.id);
-}
-
-/**
- * Reads a database's stored views from its views directory and
- * normalizes the config's view ID list against them.
- *
- * @param database - The database whose views to read.
- * @param workspace - The workspace the database belongs to.
- * @returns The database's views as virtual content view data.
- */
-async function readDatabaseViews(
-  database: Database,
-  workspace: Workspace,
-): Promise<VirtualContentViewData[]> {
-  // Path to the database's views directory
-  const dirPath = resolveDatabaseContentViewsDirPath(
-    resolveDatabasePath(database, workspace.path),
-  );
-
-  // The stored views read from the views directory, empty for
-  // databases without one.
-  let storedViews: StoredContentView[] = [];
-
-  if (await Fs.exists(dirPath)) {
-    // List the view files
-    const viewFiles = await Fs.readDir(dirPath);
-
-    // Read and parse each view file, dropping unreadable ones
-    storedViews = (
-      await Promise.all(
-        viewFiles
-          .filter((file) => file.path.endsWith('.json'))
-          .map((file) => readStoredView(file, workspace.id)),
-      )
-    ).filter((storedView): storedView is StoredContentView => !!storedView);
-  }
-
-  // Normalize the config's view ID list against the views found
-  normalizeDatabaseConfigIds(database.id, 'views', storedViews, workspace.id);
-
-  return storedViews.map((storedView) => ({
-    ...storedView,
-    dataSource: { type: 'database' as const, id: database.id },
-    // The database owning the view is responsible for persisting it
-    owner: database.id,
-  }));
-}
-
-/**
- * Reads a single stored view from a view file.
- *
- * @param file - The view file's directory entry.
- * @param workspaceId - The workspace the view belongs to.
- * @returns The deserialized stored view, or null if reading fails.
- */
-async function readStoredView(
-  file: { path: string },
-  workspaceId: string,
-): Promise<StoredContentView | null> {
-  try {
-    const storedView = await Fs.readJsonFile<StoredContentView>(file.path);
-
-    // Restore the view's dates and resolve its config references
-    return ContentViews.deserialize(storedView, workspaceId);
-  } catch {
-    return null;
-  }
+  ContentViews.loadVirtual(views, workspace.id);
 }

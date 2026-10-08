@@ -121,6 +121,7 @@ export type { DatabaseBackendAdapter } from './DatabaseBackendAdapter';
 export { initializeDatabasesBackend as initializeBackend } from './sql';
 export { backgroundSyncDatabases as backgroundSync } from './sql';
 export { syncEntryFiles } from './sql';
+export { syncDatabaseConfigs } from './sql';
 export { handleBackgroundSyncResult } from './handleBackgroundSyncResult';
 export { DatabasesStore as Store } from './DatabasesStore';
 export { DatabaseSettingsStore as SettingsStore } from './DatabaseSettingsStore';

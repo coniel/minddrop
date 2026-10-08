@@ -9,11 +9,11 @@ import { readWorkspaceDatabases } from '../../readWorkspaceDatabases';
 import type { Database, Entry, SqlEntryRecord } from '../../types';
 import {
   convertEntryToSqlRecord,
-  entryMetadataKey,
   mergeEntryMetadata,
   resolveCollectionProperties,
   resolveDatabasePath,
   resolveEntryAddressKey,
+  resolveEntryMetadataKey,
 } from '../../utils';
 import { writeEntryMetadata } from '../../writeEntryMetadata';
 import { SCHEMA_SQL, SCHEMA_VERSION } from '../schema';
@@ -109,7 +109,7 @@ export async function initializeDatabasesBackend(
   }
 
   // Query all entries with full property data and metadata
-  const entries = sqlGetEntriesFull(undefined, workspaceId);
+  const entries = sqlGetEntriesFull({ workspaceId });
 
   return {
     databases,
@@ -166,7 +166,7 @@ async function rebuildSqlFromFilesystem(
       const { entry, sidecarOutdated } = mergeEntryMetadata(
         rawEntry,
         database.properties,
-        metadataMap[entryMetadataKey(rawEntry.path)],
+        metadataMap[resolveEntryMetadataKey(rawEntry.path)],
       );
 
       // Collect entries whose sidecar has no timestamps yet, or whose

@@ -83,4 +83,27 @@ describe('readEntryMetadata', () => {
 
     expect(metadata).toEqual({});
   });
+
+  // Pins Issue 32: An unparseable entry sidecar is read as no metadata. Remove
+  // .fails once fixed.
+  it.fails(
+    'rejects rather than reading an unparseable sidecar as no metadata',
+    async () => {
+      // Write a sidecar left with git conflict markers
+      MockFs.addFiles([
+        {
+          path: sidecarPath,
+          textContent:
+            '<<<<<<< HEAD\n{"color":"red"}\n=======\n{"color":"blue"}\n>>>>>>> theirs',
+        },
+      ]);
+
+      await expect(
+        readEntryMetadata(
+          databaseDirPath(objectDatabase),
+          entryFilePath(objectEntry1),
+        ),
+      ).rejects.toThrow();
+    },
+  );
 });

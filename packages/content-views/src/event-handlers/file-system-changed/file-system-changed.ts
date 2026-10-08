@@ -1,43 +1,47 @@
-import { FileSystemChangedEventData } from '@minddrop/file-system';
+import { FileSystemChangedEventData, Fs } from '@minddrop/file-system';
 import { Workspaces } from '@minddrop/workspaces';
 import { ContentViewsStore } from '../../ContentViewsStore';
 import { loadContentView } from '../../loadContentView';
+import { unloadContentView } from '../../unloadContentView';
 import { resolveContentViewId } from '../../utils/resolveContentViewId';
 
 /**
  * Applies a change made to a content view file outside of the app to
- * the store record of the workspace the change is in, ignoring
- * changes to any other file.
+ * its workspace's store record. Ignores changes to any other file.
  *
  * @param change - The file system change.
  */
 export async function onFileSystemChanged(
   change: FileSystemChangedEventData,
 ): Promise<void> {
+  // Get the change's workspace
   const workspace = Workspaces.get(change.workspaceId);
+  // Get the ID of the content view the changed file holds
   const id = resolveContentViewId(change.path, workspace.path);
 
-  // Not a content view file
+  // Ignore files which are not content view files
   if (!id) {
     return;
   }
 
-  const store = ContentViewsStore.in(workspace.id);
-
-  // Remove content views whose file is gone
-  if (change.kind === 'deleted') {
-    store.remove(id);
+  // Check if the file is gone, whatever the change's kind. If so,
+  // remove the content view. An atomic save reports a deleted file
+  // which still exists.
+  if (!(await Fs.exists(change.path))) {
+    unloadContentView(id, workspace.id);
 
     return;
   }
 
+  // Read the content view as it is on disk
   const view = await loadContentView(change.path, workspace.id);
 
-  // The file is missing or is not a valid content view
+  // Leave the store as it is if the existing file is not a valid
+  // content view. An unreadable file is not a deleted one.
   if (!view) {
     return;
   }
 
   // Update the store with the content view as it is on disk
-  store.set(view);
+  ContentViewsStore.in(workspace.id).set(view);
 }

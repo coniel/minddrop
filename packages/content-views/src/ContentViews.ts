@@ -30,6 +30,7 @@ export { loadWorkspaceContentViews as loadWorkspace } from './loadWorkspaceConte
 export { createContentView as create } from './createContentView';
 export { createVirtualContentView as createVirtual } from './createVirtualContentView';
 export { loadVirtualContentViews as loadVirtual } from './loadVirtualContentViews';
+export { unloadContentView as unload } from './unloadContentView';
 export { deleteContentView as delete } from './deleteContentView';
 export { getContentView as get } from './getContentView';
 export { getDataSourceContentViews as getByDataSource } from './getDataSourceContentViews';
@@ -41,6 +42,7 @@ export { readContentView as read } from './readContentView';
 export {
   searchContentViews as search,
   resolveContentViewFilePath as resolveFilePath,
+  isStoredContentView as isStored,
 } from './utils';
 export { serializeContentView as serialize } from './serializeContentView';
 export { deserializeContentView as deserialize } from './deserializeContentView';

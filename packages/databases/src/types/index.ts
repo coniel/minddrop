@@ -20,5 +20,6 @@ export * from './SqlEntryReferenceRow.types';
 export * from './EntrySyncRecord.types';
 export * from './BackgroundSyncChangeset.types';
 export * from './EntryFileChange.types';
+export * from './DatabaseFileReadResult.types';
 export * from './EntryFocusRequest.types';
 export * from './EntryPropertyFile.types';

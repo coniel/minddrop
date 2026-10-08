@@ -59,7 +59,6 @@ export async function deleteEntry(id: string): Promise<void> {
     }
   }
 
-  // Remove the entry's metadata sidecar. It would otherwise be
-  // orphaned in the metadata directory.
+  // Remove the entry's metadata sidecar
   await removeEntryMetadataFile(databasePath, entryPath);
 }

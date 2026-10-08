@@ -4,15 +4,21 @@ import { getActiveWorkspaceScope } from '@minddrop/stores';
 import { ActiveWorkspaceStore } from '../ActiveWorkspaceStore';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { WorkspacesLoadedEvent } from '../events';
+import { reorderWorkspaces } from '../reorderWorkspaces';
 import {
   MockFs,
   cleanup,
   setup,
   workspace_1,
   workspace_2,
+  workspace_3,
   workspaces,
 } from '../test-utils';
-import { resolveWorkspacesConfigFilePath } from '../utils';
+import { WorkspacesConfig } from '../types';
+import {
+  resolveWorkspaceConfigFilePath,
+  resolveWorkspacesConfigFilePath,
+} from '../utils';
 import { initializeWorkspaces } from './initializeWorkspaces';
 
 describe('initializeWorkspaces', () => {
@@ -77,4 +83,29 @@ describe('initializeWorkspaces', () => {
 
       initializeWorkspaces();
     }));
+
+  // Pins Issue 59: A workspace whose directory is not found at startup
+  // is dropped from workspaces.json on the next rewrite. Remove .fails
+  // once fixed.
+  it.fails(
+    'keeps a workspace whose directory is missing at startup listed and active',
+    async () => {
+      // Make the second workspace active and remove its config, as when
+      // its drive is not mounted yet.
+      ActiveWorkspaceStore.set('id', workspace_2.id);
+      MockFs.removeFile(resolveWorkspaceConfigFilePath(workspace_2.path));
+
+      await initializeWorkspaces();
+
+      // Rewrite the workspaces config by reordering the others
+      await reorderWorkspaces([workspace_3.id, workspace_1.id]);
+
+      const config = MockFs.readJsonFile<WorkspacesConfig>(
+        resolveWorkspacesConfigFilePath(),
+      );
+
+      expect(config.paths).toContain(workspace_2.path);
+      expect(ActiveWorkspaceStore).toHaveStoredValue('id', workspace_2.id);
+    },
+  );
 });

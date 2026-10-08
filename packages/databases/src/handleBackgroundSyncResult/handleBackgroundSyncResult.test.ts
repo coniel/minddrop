@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { ContentViews } from '@minddrop/content-views';
 import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
 import { Events } from '@minddrop/events';
+import { Fs } from '@minddrop/file-system';
 import { History, Ledgers } from '@minddrop/history';
 import {
   ItemAddressesChangedEventData,
@@ -11,19 +12,23 @@ import { storeItem } from '@minddrop/stores/test-utils';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { EntriesStore } from '../EntriesStore';
+import { recordEntryHistory } from '../recordEntryHistory';
 import { recordWorkspaceDatabaseLedger } from '../recordWorkspaceDatabaseLedger';
-import { DatabaseFixtures, cleanup, setup } from '../test-utils';
+import { DatabaseFixtures, MockFs, cleanup, setup } from '../test-utils';
 import { BackgroundSyncChangeset } from '../types';
 import {
   convertEntryToSqlRecord,
-  entryAddress,
   resolveDatabaseHistorySubject,
+  resolveEntryAddress,
+  resolveEntryHistorySubject,
   resolveWorkspaceDatabaseLedger,
 } from '../utils';
 import { handleBackgroundSyncResult } from './handleBackgroundSyncResult';
 
-const { collectionDatabase, objectDatabase, relatedEntry1 } = DatabaseFixtures;
-const { contentViewType_referencing } = ContentViewFixtures;
+const { collectionDatabase, entry_untitled, objectDatabase, relatedEntry1 } =
+  DatabaseFixtures;
+const { contentView_gallery_1, contentViewType_referencing } =
+  ContentViewFixtures;
 const { workspace_1, workspace_2 } = WorkspaceFixtures;
 
 // A changeset without any changes, spread into per-test variants
@@ -140,6 +145,47 @@ describe('handleBackgroundSyncResult', () => {
     ]);
   });
 
+  it('sets up a workspace view file sourcing a database', () => {
+    addWorkspaceViewSourcingDatabase();
+
+    expect(
+      MockFs.exists(
+        ContentViews.resolveFilePath(
+          contentView_gallery_1.id,
+          workspace_1.path,
+        ),
+      ),
+    ).toBe(true);
+  });
+
+  // Pins Issue 31: Background sync deletes workspace content view files of a
+  // database reported deleted. Remove .fails once fixed.
+  it.fails(
+    'keeps the files of workspace views sourcing a database the sync reports deleted',
+    async () => {
+      addWorkspaceViewSourcingDatabase();
+
+      // Report the database deleted, as happens when its config cannot be
+      // parsed.
+      await handleBackgroundSyncResult({
+        ...emptyChangeset,
+        deletedDatabaseIds: [objectDatabase.id],
+      });
+      await Fs.tests.awaitAllOperations();
+
+      // Expect the view file to be kept. It belongs to the workspace, so it
+      // would not come back with the database.
+      expect(
+        MockFs.exists(
+          ContentViews.resolveFilePath(
+            contentView_gallery_1.id,
+            workspace_1.path,
+          ),
+        ),
+      ).toBe(true);
+    },
+  );
+
   it('dispatches address changes for entries that were renamed', async () => {
     const renamed = {
       ...relatedEntry1,
@@ -174,8 +220,8 @@ describe('handleBackgroundSyncResult', () => {
       changes: [
         {
           id: relatedEntry1.id,
-          oldReference: entryAddress(relatedEntry1, collectionDatabase),
-          newReference: entryAddress(renamed, collectionDatabase),
+          oldReference: resolveEntryAddress(relatedEntry1, collectionDatabase),
+          newReference: resolveEntryAddress(renamed, collectionDatabase),
         },
       ],
     });
@@ -213,8 +259,8 @@ describe('handleBackgroundSyncResult', () => {
       changes: [
         {
           id: relatedEntry1.id,
-          oldReference: entryAddress(relatedEntry1, collectionDatabase),
-          newReference: entryAddress(relatedEntry1, objectDatabase),
+          oldReference: resolveEntryAddress(relatedEntry1, collectionDatabase),
+          newReference: resolveEntryAddress(relatedEntry1, objectDatabase),
         },
       ],
     });
@@ -287,6 +333,47 @@ describe('handleBackgroundSyncResult', () => {
     );
   });
 
+  it('records history for an untitled entry', async () => {
+    EntriesStore.set(entry_untitled);
+    await recordEntryHistory(objectDatabase, entry_untitled, {
+      kind: 'created',
+    });
+
+    expect(
+      await History.read(
+        resolveEntryHistorySubject(objectDatabase, entry_untitled),
+      ),
+    ).not.toEqual([]);
+  });
+
+  // Pins Issue 64: Entries deleted by background or targeted sync skip
+  // onDeleteEntry's cleanup. Remove .fails once fixed.
+  it.fails(
+    'deletes the history of an untitled entry deleted outside the app',
+    async () => {
+      // Add an untitled entry with recorded history
+      EntriesStore.set(entry_untitled);
+      await recordEntryHistory(objectDatabase, entry_untitled, {
+        kind: 'created',
+      });
+
+      // Report the entry deleted, as when its file is deleted outside the
+      // app.
+      await handleBackgroundSyncResult({
+        ...emptyChangeset,
+        deletedEntryIds: [entry_untitled.id],
+      });
+
+      // Expect the history to be deleted. The next new untitled entry would
+      // otherwise inherit it.
+      expect(
+        await History.read(
+          resolveEntryHistorySubject(objectDatabase, entry_untitled),
+        ),
+      ).toEqual([]);
+    },
+  );
+
   it("applies the cascades to the changeset's workspace", async () => {
     // A view referencing the deleted entry, held by the second
     // workspace only.
@@ -317,3 +404,13 @@ describe('handleBackgroundSyncResult', () => {
     ).toEqual({ items: [] });
   });
 });
+
+/**
+ * Points a fixture workspace view at the object database.
+ */
+function addWorkspaceViewSourcingDatabase(): void {
+  ContentViews.Store.set({
+    ...contentView_gallery_1,
+    dataSource: { type: 'database', id: objectDatabase.id },
+  });
+}

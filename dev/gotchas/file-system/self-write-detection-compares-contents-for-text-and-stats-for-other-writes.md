@@ -16,6 +16,10 @@ The watcher stays quiet about the app's own writes by comparing a changed file a
 - **Text writes** (`writeTextFile`, `writeTextFiles`, `writeJsonFile`, `writeYamlFile`) record a hash of the contents. The watcher reads the file back and compares.
 - **Binary writes, copies and downloads** (`writeBinaryFile`, `copyFile`, `downloadFile`) record the file's size and modification time, read with a `stat` after the write completes. The watcher stats the file and compares, so a large media file costs no read. An external write landing between the app's write and that `stat` is taken for the app's own, a window of one `stat` call.
 
+A write into a base directory (`baseDir` set) is recorded under its absolute path, the base directory's resolved path joined with the given one, since that is the path a watcher reports. Base directory paths resolve asynchronously when the adapter is registered, so a write landing before then is not recorded.
+
+The registry is per process. In a multi-window setup each window has its own, so one window's writes reach the other windows as external changes, which is what lets them pick up a change another window made.
+
 Not recorded, so dispatched as external changes:
 
 - **Renames and moves.** The new path arrives as a creation, the old one as a deletion.

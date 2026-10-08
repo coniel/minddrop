@@ -4,10 +4,11 @@ import { sqlGetAllDatabases } from '../sqlGetAllDatabases';
 import { sqlGetEntrySyncRecords } from '../sqlGetEntrySyncRecords';
 
 /**
- * Indexes the IDs of every indexed entry in a workspace by their
+ * Returns the IDs of every indexed entry in a workspace, keyed by
  * address key.
  *
- * @param workspaceId - The ID of the workspace whose database to target. Defaults to the active workspace.
+ * @param workspaceId - The ID of the workspace whose database to target.
+ *   Defaults to the active workspace.
  * @returns The entry IDs, keyed by address key.
  */
 export function sqlGetEntryIdsByAddress(

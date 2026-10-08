@@ -1,5 +1,5 @@
 import { EntryEntityType, EntryTransferDataTypes } from './constants';
-import { EntryFileUnreadableError, EntryNotFoundError } from './errors';
+import { EntryFileUnparseableError, EntryNotFoundError } from './errors';
 import {
   EntriesClearedEvent,
   EntryCreatedEvent,
@@ -31,7 +31,7 @@ export const constants = {
 
 export const errors = {
   NotFound: EntryNotFoundError,
-  FileUnreadable: EntryFileUnreadableError,
+  FileUnparseable: EntryFileUnparseableError,
 };
 
 export { createEntry as create } from './createEntry';
@@ -72,7 +72,7 @@ export { findEntryByReference as findByReference } from './utils';
 export { findEntryPropertyFileOwner as findPropertyFileOwner } from './utils';
 export { validateEntryTitle as validateTitle } from './validateEntryTitle';
 export { readEntries as readFiles } from './readEntries';
-export { entryPropertyValues as propertyValues } from './utils';
+export { resolveEntryPropertyValues as resolvePropertyValues } from './utils';
 export { getAllEntries as getAll } from './getAllEntries';
 export { getTaggedEntries as getTagged } from './getTaggedEntries';
 export { getNewestEntries as getNewest } from './utils';

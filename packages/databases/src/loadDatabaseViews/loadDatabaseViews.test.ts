@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { ContentViews } from '@minddrop/content-views';
 import { ContentViewFixtures } from '@minddrop/content-views/test-utils';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { getDatabase } from '../getDatabase';
@@ -80,6 +81,51 @@ describe('loadDatabaseViews', () => {
     expect(getDatabase(objectDatabase.id).views).toEqual([storedView1.id]);
   });
 
+  it("keeps the ID of a view whose file cannot be read in the config's view ID list", async () => {
+    // List the view in the config
+    DatabasesStore.update(objectDatabase.id, { views: [storedView1.id] });
+
+    // Add a view file which cannot be parsed
+    MockFs.addFiles([
+      {
+        path: resolveDatabaseViewFilePath(
+          databaseDirPath(objectDatabase),
+          storedView1.id,
+        ),
+        textContent: 'not json',
+      },
+    ]);
+
+    await loadDatabaseViews([objectDatabase], workspace_1);
+
+    expect(getDatabase(objectDatabase.id).views).toEqual([storedView1.id]);
+  });
+
+  it("loads the original database's views when its directory has a copy", async () => {
+    await loadOriginalBesideCopy();
+
+    expect(storeItem(ContentViews.Store, storedView1.id).dataSource.id).toBe(
+      objectDatabase.id,
+    );
+  });
+
+  // Pins Issue 51: Database directory copy keeps the original's view IDs. The
+  // copy takes over the original's views. Remove .fails once fixed.
+  it.fails(
+    "keeps the original database's views when a copy of its directory is loaded",
+    async () => {
+      const databaseCopy = await loadOriginalBesideCopy();
+
+      // Load the copy as a later scan finds it
+      await loadDatabaseViews([databaseCopy], workspace_1);
+
+      // Expect the view to still source the original
+      expect(storeItem(ContentViews.Store, storedView1.id).dataSource.id).toBe(
+        objectDatabase.id,
+      );
+    },
+  );
+
   it('does nothing when databases have no views', async () => {
     // Load databases without stored view files
     await loadDatabaseViews([objectDatabase], workspace_1);
@@ -137,3 +183,37 @@ describe('loadDatabaseViews', () => {
     expect(viewB!.dataSource.id).toBe('database_db-2');
   });
 });
+
+/**
+ * Adds a copy of the object database's directory, holding the same view
+ * file, then loads the original database's views.
+ *
+ * @returns The database copy, its views not yet loaded.
+ */
+async function loadOriginalBesideCopy(): Promise<Database> {
+  // A copy of the database's directory, given a fresh ID on load
+  const databaseCopy: Database = {
+    ...objectDatabase,
+    id: 'database_objects-copy',
+    path: `${objectDatabase.path} copy`,
+  };
+
+  // Load the copy into the store
+  DatabasesStore.load([databaseCopy]);
+
+  // Add the same view file to both directories
+  MockFs.addFiles(
+    [objectDatabase, databaseCopy].map((database) => ({
+      path: resolveDatabaseViewFilePath(
+        resolveDatabasePath(database),
+        storedView1.id,
+      ),
+      textContent: JSON.stringify(storedView1),
+    })),
+  );
+
+  // Load the original
+  await loadDatabaseViews([objectDatabase], workspace_1);
+
+  return databaseCopy;
+}

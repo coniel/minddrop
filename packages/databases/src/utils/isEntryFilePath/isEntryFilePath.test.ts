@@ -4,6 +4,7 @@ import {
   entryStorageDatabase,
   objectDatabase,
   setup,
+  yamlObjectDatabase,
 } from '../../test-utils';
 import { isEntryFilePath } from './isEntryFilePath';
 
@@ -14,6 +15,11 @@ describe('isEntryFilePath', () => {
 
   it("accepts a file with the serializer's extension at the database root", () => {
     expect(isEntryFilePath('Dune.md', objectDatabase)).toBe(true);
+  });
+
+  it("accepts a file with a YAML serializer's extension and rejects markdown", () => {
+    expect(isEntryFilePath('Dune.yaml', yamlObjectDatabase)).toBe(true);
+    expect(isEntryFilePath('Dune.md', yamlObjectDatabase)).toBe(false);
   });
 
   it('rejects a file of another type', () => {
@@ -33,6 +39,17 @@ describe('isEntryFilePath', () => {
       false,
     );
   });
+
+  // Pins Issue 34: Files with the entry extension inside an entry's own
+  // directory are indexed as entries. Remove .fails once fixed.
+  it.fails(
+    "rejects a file in an entry's directory which is not named after the directory",
+    () => {
+      expect(isEntryFilePath('Dune/notes.md', entryStorageDatabase)).toBe(
+        false,
+      );
+    },
+  );
 
   it('rejects hidden files and files in hidden directories', () => {
     expect(isEntryFilePath('.Dune.md', objectDatabase)).toBe(false);

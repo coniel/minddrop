@@ -25,7 +25,7 @@ describe('normalizeDatabaseConfigIds', () => {
 
   afterEach(cleanup);
 
-  it('reconciles the config list against the found items', () => {
+  it('reconciles the config list against the found resources', () => {
     // Seed a list with a stale ID
     DatabasesStore.update(objectDatabase.id, { views: ['stale', 'kept'] });
 
@@ -64,7 +64,7 @@ describe('normalizeDatabaseConfigIds', () => {
     expect(getDatabase(objectDatabase.id).views).toEqual(objectDatabase.views);
   });
 
-  it('appends missing items sorted by creation date, oldest first', () => {
+  it('appends missing resources sorted by creation date, oldest first', () => {
     normalizeDatabaseConfigIds(
       objectDatabase.id,
       'views',
@@ -78,9 +78,30 @@ describe('normalizeDatabaseConfigIds', () => {
     expect(getDatabase(objectDatabase.id).views).toEqual(['older', 'newer']);
   });
 
+  it('keeps the listed IDs of retained resources in their positions', () => {
+    // Seed a list with a resource which could not be read
+    DatabasesStore.update(objectDatabase.id, {
+      views: ['unreadable', 'kept', 'stale'],
+    });
+
+    normalizeDatabaseConfigIds(
+      objectDatabase.id,
+      'views',
+      [{ id: 'kept', created: new Date('2024-01-01T00:00:00.000Z') }],
+      workspace_1.id,
+      ['unreadable'],
+    );
+
+    // The retained ID should stay where it was listed
+    expect(getDatabase(objectDatabase.id).views).toEqual([
+      'unreadable',
+      'kept',
+    ]);
+  });
+
   it('never writes the config file', () => {
     // Remove the config file so a write would be detectable. The
-    // found items may be mid-sync, so a write here would conflict
+    // found resources may be mid-sync, so a write here would conflict
     // with the incoming config.
     MockFs.removeFile(configPath);
 

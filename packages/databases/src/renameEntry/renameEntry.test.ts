@@ -1,13 +1,17 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { EntriesStore } from '../EntriesStore';
 import { DatabaseHistoryCauses } from '../constants';
 import { EntryRenamedEvent } from '../events';
 import {
   MockFs,
   cleanup,
+  databaseDirPath,
   entryFilePath,
+  entryStorageDatabase,
+  entryStorageEntry1,
   objectEntry1,
   setup,
 } from '../test-utils';
@@ -51,6 +55,49 @@ describe('renameEntry', () => {
     expect(MockFs.exists(newFilePath)).toBe(true);
     expect(MockFs.exists(entryFilePath(objectEntry1))).toBe(false);
   });
+
+  // Pins Issue 29: renameEntry renames the entry file's parent directory. This
+  // can be the database directory. Remove .fails once fixed.
+  it.fails(
+    'leaves the database directory in place when renaming an entry file at the root of an entry-directory database',
+    async () => {
+      // A file dropped at the database root, indexed as an entry
+      const rootLevelEntry = {
+        ...entryStorageEntry1,
+        id: 'database-entry_root-level' as const,
+        title: 'Dropped',
+        path: 'Dropped.md',
+      };
+
+      // Add the entry and its file
+      EntriesStore.set(rootLevelEntry);
+      MockFs.addFiles([entryFilePath(rootLevelEntry)]);
+
+      // Rename the entry, ignoring a rejection. Refusing the rename is
+      // acceptable. Moving the database directory is not.
+      await renameEntry(rootLevelEntry.id, 'Renamed Entry').catch(() => null);
+
+      // The database directory and the entries inside it stay where they are
+      expect(MockFs.exists(databaseDirPath(entryStorageDatabase))).toBe(true);
+      expect(MockFs.exists(entryFilePath(entryStorageEntry1))).toBe(true);
+    },
+  );
+
+  // Pins Issue 65: Case-only title changes are silently discarded on
+  // case-insensitive file systems. Remove .fails once fixed.
+  it.fails(
+    'renames an entry to a title differing only in case on a case-insensitive file system',
+    async () => {
+      // Uppercase the entry's title
+      const newTitle = objectEntry1.title.toUpperCase();
+
+      // Rename the entry on the case-insensitive mock file system
+      await renameEntry(objectEntry1.id, newTitle);
+
+      // Expect the store to have the new title
+      expect(storeItem(EntriesStore, objectEntry1.id).title).toBe(newTitle);
+    },
+  );
 
   it('updates the entry title, path, and last modified date, keeping its ID', async () => {
     const renamedEntry = await renameEntry(objectEntry1.id, 'Renamed Entry');

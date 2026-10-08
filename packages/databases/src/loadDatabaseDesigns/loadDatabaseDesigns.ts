@@ -1,7 +1,8 @@
-import { Design, Designs } from '@minddrop/designs-next';
-import { Fs } from '@minddrop/file-system';
+import { Designs } from '@minddrop/designs-next';
 import { Workspace } from '@minddrop/workspaces';
 import { normalizeDatabaseConfigIds } from '../normalizeDatabaseConfigIds';
+import { readDatabaseDesign } from '../readDatabaseDesign';
+import { readDatabaseResourceFiles } from '../readDatabaseResourceFiles';
 import type { Database } from '../types';
 import { resolveDatabaseDesignsDirPath, resolveDatabasePath } from '../utils';
 
@@ -18,11 +19,32 @@ export async function loadDatabaseDesigns(
   workspace: Workspace,
 ): Promise<void> {
   // Read each database's stored designs from disk
-  const designs = (
-    await Promise.all(
-      databases.map((database) => readDatabaseDesigns(database, workspace)),
-    )
-  ).flat();
+  const reads = await Promise.all(
+    databases.map((database) =>
+      readDatabaseResourceFiles(
+        resolveDatabaseDesignsDirPath(
+          resolveDatabasePath(database, workspace.path),
+        ),
+        (path) => readDatabaseDesign(path, database.id),
+        'json',
+      ),
+    ),
+  );
+
+  // Normalize each config's design ID list against the designs found,
+  // keeping the IDs of designs which could not be read.
+  databases.forEach((database, index) => {
+    normalizeDatabaseConfigIds(
+      database.id,
+      'designs',
+      reads[index].resources,
+      workspace.id,
+      reads[index].unreadableIds,
+    );
+  });
+
+  // Gather the designs read
+  const designs = reads.flatMap((read) => read.resources);
 
   if (designs.length === 0) {
     return;
@@ -30,54 +52,4 @@ export async function loadDatabaseDesigns(
 
   // Load the designs into the workspace's designs store record
   Designs.load(designs, workspace.id);
-}
-
-/**
- * Reads a database's stored designs from its designs directory and
- * normalizes the config's design ID list against them.
- *
- * @param database - The database whose designs to read.
- * @param workspace - The workspace the database belongs to.
- * @returns The database's designs with the database attached as owner.
- */
-async function readDatabaseDesigns(
-  database: Database,
-  workspace: Workspace,
-): Promise<Design[]> {
-  // Path to the database's designs directory
-  const dirPath = resolveDatabaseDesignsDirPath(
-    resolveDatabasePath(database, workspace.path),
-  );
-
-  // The stored designs read from the designs directory, empty for
-  // databases without one.
-  let storedDesigns: Design[] = [];
-
-  if (await Fs.exists(dirPath)) {
-    // List the design files
-    const designFiles = await Fs.readDir(dirPath);
-
-    // Read and deserialize each design file, dropping invalid ones
-    storedDesigns = (
-      await Promise.all(
-        designFiles
-          .filter((file) => file.path.endsWith('.json'))
-          .map((file) => Designs.read(file.path)),
-      )
-    ).filter((storedDesign): storedDesign is Design => !!storedDesign);
-  }
-
-  // Normalize the config's design ID list against the designs found
-  normalizeDatabaseConfigIds(
-    database.id,
-    'designs',
-    storedDesigns,
-    workspace.id,
-  );
-
-  // Attach the database as the owner of its designs
-  return storedDesigns.map((storedDesign) => ({
-    ...storedDesign,
-    owner: database.id,
-  }));
 }

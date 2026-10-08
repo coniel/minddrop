@@ -23,6 +23,13 @@ export const MockFs = initializeMockFileSystem();
 export const testWorkspaceId = workspace_1.id;
 
 /**
+ * A database record as the SQL database stores it.
+ */
+export type SqlDatabaseSeed = Parameters<
+  typeof Databases.sql.upsertDatabase
+>[0];
+
+/**
  * A minimal entry description for seeding the in-memory SQL
  * database in tests.
  */
@@ -81,22 +88,26 @@ export async function cleanup(): Promise<void> {
  * without dispatching sync events.
  *
  * @param database - The database record to seed.
+ * @returns The seeded record.
  */
 export function seedDatabase(database: {
   id: string;
   name: string;
   icon?: string;
-}): void {
-  Databases.sql.upsertDatabase(
-    {
-      id: database.id,
-      name: database.name,
-      path: `/databases/${database.id}`,
-      icon: database.icon ?? '',
-    },
-    { silent: true },
-    testWorkspaceId,
-  );
+}): SqlDatabaseSeed {
+  // Build the SQL record
+  const record = {
+    id: database.id,
+    name: database.name,
+    path: `/databases/${database.id}`,
+    icon: database.icon ?? '',
+    properties: [],
+  };
+
+  // Upsert the record without dispatching sync events
+  Databases.sql.upsertDatabase(record, { silent: true }, testWorkspaceId);
+
+  return record;
 }
 
 /**

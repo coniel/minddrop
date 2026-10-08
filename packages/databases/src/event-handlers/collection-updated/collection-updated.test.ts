@@ -9,8 +9,8 @@ import {
   cleanupTestSqlDatabase,
   collectionDatabase,
   collectionEntry1,
-  propertyValue,
-  recordByPath,
+  getRecordByPath,
+  resolveRecordPropertyValue,
   seedSqlDatabases,
   setup,
   setupTestSqlDatabase,
@@ -87,6 +87,24 @@ describe('onUpdateCollection', () => {
     expect(entry.properties.Related).toEqual(updatedEntries);
   });
 
+  // Pins Issue 62: Collection-property edits skip updateEntry's last-modified
+  // bump, sidecar write and property history. Remove .fails once fixed.
+  it.fails(
+    "updates the entry's last modified date when its collection property changes",
+    async () => {
+      await onUpdateCollection({
+        original: relatedCollection,
+        updated: { ...relatedCollection, items: ['new-entry-1'] },
+      });
+
+      const entry = storeItem(EntriesStore, collectionEntry1.id);
+
+      expect(entry.lastModified.getTime()).toBeGreaterThan(
+        collectionEntry1.lastModified.getTime(),
+      );
+    },
+  );
+
   it('upserts the SQL record with the new membership', async () => {
     const updatedEntries = ['new-entry-1'];
 
@@ -97,10 +115,12 @@ describe('onUpdateCollection', () => {
     });
 
     // The record should carry the new membership
-    const record = recordByPath(sqlGetEntriesFull(), collectionEntry1.path);
+    const record = getRecordByPath(sqlGetEntriesFull(), collectionEntry1.path);
 
     expect(record.databaseId).toBe(collectionDatabase.id);
-    expect(propertyValue(record, 'Related')).toEqual(updatedEntries);
+    expect(resolveRecordPropertyValue(record, 'Related')).toEqual(
+      updatedEntries,
+    );
   });
 
   it('does nothing if the entry does not exist', async () => {

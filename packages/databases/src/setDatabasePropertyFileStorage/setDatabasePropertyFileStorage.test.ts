@@ -12,6 +12,7 @@ import {
   cleanup,
   commonStorageDatabase,
   databaseDirPath,
+  entryFilePath,
   entryStorageDatabase,
   entryStorageEntry1,
   propertyStorageDatabase,
@@ -186,6 +187,22 @@ describe('setDatabasePropertyFileStorage', () => {
     // The wrapper directory is removed
     expect(await Fs.exists(`${path}/${entryTitle}`)).toBe(false);
   });
+
+  // Pins Issue 66: Switching property storage from 'entry' to a flat mode
+  // trashes each entry's whole directory. Remove .fails once fixed.
+  it.fails(
+    "leaves files no property names in place when unwrapping an entry's directory",
+    async () => {
+      // A file the user keeps beside the entry, named by no property value
+      const notesPath = `${Fs.parentDirPath(entryFilePath(entryStorageEntry1))}/notes.txt`;
+
+      MockFs.addFiles([notesPath]);
+
+      await setDatabasePropertyFileStorage(entryStorageDatabase.id, 'root');
+
+      expect(MockFs.exists(notesPath)).toBe(true);
+    },
+  );
 
   it('increments colliding file names when collapsing to a shared dir', async () => {
     // A second entry whose image file shares the first entry's file name

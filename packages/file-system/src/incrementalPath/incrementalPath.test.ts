@@ -78,4 +78,22 @@ describe('incrementalFilename', () => {
       increment: 2,
     });
   });
+
+  // Pins Issue 38: incrementalPath compares names case-sensitively.
+  // Remove .fails once fixed.
+  it.fails(
+    'increments past a file whose name differs only in case',
+    async () => {
+      // Add a file whose name differs from the target only in case
+      setFiles(['Documents/Meeting notes.md']);
+
+      // Get incremental path
+      const result = await incrementalPath(
+        MockFs,
+        'Documents/meeting notes.md',
+      );
+
+      expect(result.path).toBe('Documents/meeting notes 1.md');
+    },
+  );
 });

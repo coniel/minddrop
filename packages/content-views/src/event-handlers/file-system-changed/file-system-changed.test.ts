@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { FileSystemChange, Fs } from '@minddrop/file-system';
+import { Fs } from '@minddrop/file-system';
+import { createFileSystemChange } from '@minddrop/file-system/test-utils';
 import { Paths } from '@minddrop/utils';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { ContentViewsStore } from '../../ContentViewsStore';
@@ -27,7 +28,9 @@ describe('onFileSystemChanged', () => {
     const modified = { ...contentView_gallery_1, name: 'Renamed view' };
     MockFs.writeTextFile(viewPath, JSON.stringify(modified));
 
-    await onFileSystemChanged(change(viewPath, 'modified'));
+    await onFileSystemChanged(
+      createFileSystemChange(viewPath, 'modified', workspace_1.id),
+    );
 
     expect(ContentViewsStore).toHaveItem(contentView_gallery_1.id, {
       ...modified,
@@ -40,7 +43,13 @@ describe('onFileSystemChanged', () => {
     const created = { ...contentView_gallery_1, id: 'content-view_gallery_9' };
     MockFs.writeTextFile(resolveViewPath(created.id), JSON.stringify(created));
 
-    await onFileSystemChanged(change(resolveViewPath(created.id), 'created'));
+    await onFileSystemChanged(
+      createFileSystemChange(
+        resolveViewPath(created.id),
+        'created',
+        workspace_1.id,
+      ),
+    );
 
     expect(ContentViewsStore).toHaveItem(created.id, {
       ...created,
@@ -49,9 +58,40 @@ describe('onFileSystemChanged', () => {
   });
 
   it('removes an externally deleted view from the store', async () => {
-    await onFileSystemChanged(change(viewPath, 'deleted'));
+    // Delete the view file outside of the app
+    MockFs.removeFile(viewPath);
+
+    await onFileSystemChanged(
+      createFileSystemChange(viewPath, 'deleted', workspace_1.id),
+    );
 
     expect(ContentViewsStore).not.toHaveItem(contentView_gallery_1.id);
+  });
+
+  it('removes a view whose file is gone on a modified change', async () => {
+    // Delete the view file outside of the app
+    MockFs.removeFile(viewPath);
+
+    await onFileSystemChanged(
+      createFileSystemChange(viewPath, 'modified', workspace_1.id),
+    );
+
+    expect(ContentViewsStore).not.toHaveItem(contentView_gallery_1.id);
+  });
+
+  it('updates a view whose file still exists on a deleted change, as after an atomic save', async () => {
+    // Replace the view file outside of the app
+    const modified = { ...contentView_gallery_1, name: 'Renamed view' };
+    MockFs.writeTextFile(viewPath, JSON.stringify(modified));
+
+    await onFileSystemChanged(
+      createFileSystemChange(viewPath, 'deleted', workspace_1.id),
+    );
+
+    expect(ContentViewsStore).toHaveItem(contentView_gallery_1.id, {
+      ...modified,
+      references: [],
+    });
   });
 
   it("applies the change to the change's workspace", async () => {
@@ -66,7 +106,9 @@ describe('onFileSystemChanged', () => {
       { path: otherPath, textContent: JSON.stringify(contentView_gallery_1) },
     ]);
 
-    await onFileSystemChanged(change(otherPath, 'created', workspace_2.id));
+    await onFileSystemChanged(
+      createFileSystemChange(otherPath, 'created', workspace_2.id),
+    );
 
     // Should add the view to the second workspace's record only
     expect(
@@ -76,7 +118,11 @@ describe('onFileSystemChanged', () => {
 
   it('ignores files which are not views', async () => {
     await onFileSystemChanged(
-      change(`${contentViewsRootPath}/notes.md`, 'deleted'),
+      createFileSystemChange(
+        `${contentViewsRootPath}/${contentView_gallery_1.id}.md`,
+        'deleted',
+        workspace_1.id,
+      ),
     );
 
     expect(ContentViewsStore).toHaveItem(contentView_gallery_1.id);
@@ -84,17 +130,23 @@ describe('onFileSystemChanged', () => {
 
   it('ignores files outside the views directory', async () => {
     await onFileSystemChanged(
-      change(`workspace/${contentView_gallery_1.id}.json`, 'deleted'),
+      createFileSystemChange(
+        `workspace/${contentView_gallery_1.id}.json`,
+        'deleted',
+        workspace_1.id,
+      ),
     );
 
     expect(ContentViewsStore).toHaveItem(contentView_gallery_1.id);
   });
 
-  it('ignores changes to files which are not valid views', async () => {
+  it('leaves the view as it is when its file is not valid JSON', async () => {
     // Make the view file invalid outside of the app
     MockFs.writeTextFile(viewPath, 'not json');
 
-    await onFileSystemChanged(change(viewPath, 'modified'));
+    await onFileSystemChanged(
+      createFileSystemChange(viewPath, 'modified', workspace_1.id),
+    );
 
     expect(ContentViewsStore).toHaveItem(
       contentView_gallery_1.id,
@@ -108,15 +160,4 @@ describe('onFileSystemChanged', () => {
  */
 function resolveViewPath(id: string): string {
   return `${contentViewsRootPath}/${id}.json`;
-}
-
-/**
- * Creates a file system change for the given path.
- */
-function change(
-  path: string,
-  kind: FileSystemChange['kind'],
-  workspaceId: string = workspace_1.id,
-): FileSystemChange {
-  return { workspaceId, path, kind };
 }

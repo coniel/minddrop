@@ -3,7 +3,7 @@ import { Fs } from '@minddrop/file-system';
 import { PropertiesSchema } from '@minddrop/properties';
 import { Workspaces } from '@minddrop/workspaces';
 import { EntrySerializersRegistry } from '../EntrySerializersRegistry';
-import { EntryFileUnreadableError } from '../errors';
+import { EntryFileUnparseableError } from '../errors';
 import { EntryWrittenEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getEntry } from '../getEntry';
@@ -33,7 +33,8 @@ export interface WriteEntryOptions {
  * @throws {EntryNotFoundError} If the entry does not exist.
  * @throws {DatabaseNotFoundError} If the entry database does not exist.
  * @throws {NotRegisteredError} If the entry serializer is not registered.
- * @throws {EntryFileUnreadableError} If the entry's existing file cannot be deserialized.
+ * @throws {EntryFileUnparseableError} If the entry's existing file cannot
+ *   be deserialized.
  *
  * @dispatches databases:entry:written
  */
@@ -49,7 +50,7 @@ export async function writeEntry(
   // Get the parent database
   const database = getDatabase(entry.database, true, workspaceId);
 
-  // Path to the entry's primary file
+  // Resolve the path to the entry's primary file
   const entryPath = resolveEntryPath(
     entry,
     database,
@@ -78,12 +79,16 @@ export async function writeEntry(
   // Get the database's entry serializer
   const serializer = EntrySerializersRegistry.get(database.entrySerializer);
 
-  // Check the existing file can be deserialized. If not, it holds
-  // edits the store does not have, which a write would destroy.
+  // Check the existing file can be deserialized. If not, it has edits
+  // the store does not. A write would destroy them.
   if (previousContents !== undefined) {
-    assertDeserializable(entryPath, () =>
-      serializer.deserialize(database.properties, previousContents),
-    );
+    try {
+      // Deserialize the existing file
+      serializer.deserialize(database.properties, previousContents);
+    } catch {
+      // Reject the write of an unparseable file
+      throw new EntryFileUnparseableError(entryPath);
+    }
   }
 
   // Declare the cleared properties alongside the schema. A declared
@@ -93,7 +98,7 @@ export async function writeEntry(
   // Serialize the entry's properties
   const contents = serializer.serialize(schema, properties, previousContents);
 
-  // Check whether the file already holds what would be written. If so,
+  // Check whether the file already has what would be written. If so,
   // record it as the app's own contents anyway, or a file the app has
   // just moved is taken for an external change by the watcher.
   if (contents === previousContents) {
@@ -105,26 +110,11 @@ export async function writeEntry(
   // Write the entry file
   await Fs.writeTextFile(entryPath, contents);
 
+  // Dispatch an entry written event
   Events.dispatch(EntryWrittenEvent, {
     entry,
     database,
     previousContents,
     contents,
   });
-}
-
-/**
- * Throws if an entry file's contents cannot be deserialized.
- *
- * @param path - The entry file's path.
- * @param deserialize - Deserializes the contents.
- *
- * @throws {EntryFileUnreadableError} If deserializing the contents throws.
- */
-function assertDeserializable(path: string, deserialize: () => unknown): void {
-  try {
-    deserialize();
-  } catch {
-    throw new EntryFileUnreadableError(path);
-  }
 }

@@ -181,3 +181,10 @@ export const DefaultDesignId = 'default';
  * The name of the SQL index file inside a workspace's data directory.
  */
 export const SqlDatabaseFileName = 'data.db';
+
+/**
+ * How long the file system changed handler waits for changes to stop
+ * arriving before syncing them. A burst of changes then costs one
+ * sync.
+ */
+export const FileSystemChangeSyncDebounceMs = 500;

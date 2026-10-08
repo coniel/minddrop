@@ -22,7 +22,8 @@
       "cache": false
     },
     "test": {
-      "dependsOn": ["transit"]
+      "dependsOn": ["transit"],
+      "env": ["MINDDROP_CRASH_TESTS"]
     },
     "test:watch": {
       "cache": false

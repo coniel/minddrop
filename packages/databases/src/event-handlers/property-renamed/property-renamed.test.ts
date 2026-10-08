@@ -20,6 +20,7 @@ import {
 } from '../../sql';
 import {
   MockFs,
+  breakEntryFile,
   cleanup,
   cleanupTestSqlDatabase,
   collectionDatabase,
@@ -28,9 +29,11 @@ import {
   databaseDirPath,
   entryTemplate1,
   entryTemplatesDatabase,
+  imagePropertyName,
   objectDatabase,
   objectEntry1,
   propertyStorageDatabase,
+  propertyStorageEntry1,
   setup,
   setupTestSqlDatabase,
 } from '../../test-utils';
@@ -47,6 +50,11 @@ const { ownedCardDesign_1 } = DesignFixtures;
 const { titleDesignElement } = DesignElementFixtures;
 
 const { workspace_1 } = WorkspaceFixtures;
+
+// The name of the image file propertyStorageEntry1 holds
+const imageFileName = String(
+  propertyStorageEntry1.properties[imagePropertyName],
+);
 
 // The action performing the rename
 const action = History.createAction(DatabaseHistoryCauses.PropertyRenamed);
@@ -194,10 +202,44 @@ describe('onRenameProperty', () => {
     // The property's files should have moved to the new directory
     expect(
       MockFs.exists(
-        `${databaseDirPath(propertyStorageDatabase)}/Cover/image.png`,
+        `${databaseDirPath(propertyStorageDatabase)}/Cover/${imageFileName}`,
       ),
     ).toBe(true);
   });
+
+  // Pins Issue 50: An entry with unparseable frontmatter makes writeEntry
+  // throw. This aborts the property rename before the file directory moves.
+  // Remove .fails once fixed.
+  it.fails(
+    "renames the property's file directory when one entry's file is unreadable",
+    async () => {
+      // A second entry with the property. Its file was broken outside the
+      // app.
+      const brokenEntry = {
+        ...propertyStorageEntry1,
+        id: 'database-entry_property-storage-broken' as const,
+        title: 'Broken Entry',
+        path: 'Broken Entry.md',
+      };
+
+      // Add the entry and break its file
+      EntriesStore.set(brokenEntry);
+      breakEntryFile(brokenEntry);
+
+      // Rename the property, ignoring any error. Reporting the unreadable
+      // entry is acceptable. Abandoning the rest of the rename is not.
+      await renameProperty(propertyStorageDatabase, 'Image', 'Cover').catch(
+        () => null,
+      );
+
+      // Expect the property's files to have moved to the new directory
+      expect(
+        MockFs.exists(
+          `${databaseDirPath(propertyStorageDatabase)}/Cover/${imageFileName}`,
+        ),
+      ).toBe(true);
+    },
+  );
 
   it('does nothing if the renamed property is not a collection type', async () => {
     // Rename a non-collection property

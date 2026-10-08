@@ -6,12 +6,13 @@ import { DatabasesStore } from '../DatabasesStore';
 import { EntriesStore } from '../EntriesStore';
 import {
   DatabaseNotFoundError,
-  EntryFileUnreadableError,
+  EntryFileUnparseableError,
   EntryNotFoundError,
 } from '../errors';
 import { EntryWrittenEvent, EntryWrittenEventData } from '../events';
 import {
   MockFs,
+  breakEntryFile,
   cleanup,
   collectionDatabase,
   collectionEntry1,
@@ -24,7 +25,11 @@ import {
   setup,
   yamlObjectEntry1,
 } from '../test-utils';
-import { entryAddress, resolveDatabasePath, resolveEntryPath } from '../utils';
+import {
+  resolveDatabasePath,
+  resolveEntryAddress,
+  resolveEntryPath,
+} from '../utils';
 import { writeEntry } from './writeEntry';
 
 const { workspace_2 } = WorkspaceFixtures;
@@ -126,16 +131,34 @@ describe('writeEntry', () => {
     expect(MockFs.readTextFile(entryFilePath(objectEntry1))).toBe(contents);
   });
 
-  it('does not overwrite an entry file which cannot be deserialized', async () => {
-    // An entry file broken outside the app since the entry was read
-    const brokenContents = 'Title: Test Entry\nIcon: Nested: mapping\n';
+  it('does not overwrite a YAML entry file which cannot be deserialized', async () => {
+    // Break the entry file outside the app since the entry was read
+    breakEntryFile(yamlObjectEntry1);
 
-    MockFs.writeTextFile(entryFilePath(yamlObjectEntry1), brokenContents);
+    // Read the broken contents
+    const brokenContents = MockFs.readTextFile(entryFilePath(yamlObjectEntry1));
 
+    // Expect the write to be rejected and the file left unchanged
     await expect(writeEntry(yamlObjectEntry1.id)).rejects.toThrow(
-      EntryFileUnreadableError,
+      EntryFileUnparseableError,
     );
     expect(MockFs.readTextFile(entryFilePath(yamlObjectEntry1))).toBe(
+      brokenContents,
+    );
+  });
+
+  it('does not overwrite a markdown entry file which cannot be deserialized', async () => {
+    // Break the entry file outside the app since the entry was read
+    breakEntryFile(objectEntry1);
+
+    // Read the broken contents
+    const brokenContents = MockFs.readTextFile(entryFilePath(objectEntry1));
+
+    // Expect the write to be rejected and the file left unchanged
+    await expect(writeEntry(objectEntry1.id)).rejects.toThrow(
+      EntryFileUnparseableError,
+    );
+    expect(MockFs.readTextFile(entryFilePath(objectEntry1))).toBe(
       brokenContents,
     );
   });
@@ -172,8 +195,8 @@ describe('writeEntry', () => {
 
     // Member references should be written as durable addresses rather
     // than entry IDs.
-    expect(contents).toContain(entryAddress(relatedEntry1));
-    expect(contents).toContain(entryAddress(relatedEntry2));
+    expect(contents).toContain(resolveEntryAddress(relatedEntry1));
+    expect(contents).toContain(resolveEntryAddress(relatedEntry2));
     expect(contents).not.toContain(relatedEntry1.id);
   });
 
@@ -283,6 +306,8 @@ describe('writeEntry', () => {
 
     // The file is written under the second workspace, with its
     // references serialized from that workspace's entries.
-    expect(contents).toContain(entryAddress(relatedEntry1, collectionDatabase));
+    expect(contents).toContain(
+      resolveEntryAddress(relatedEntry1, collectionDatabase),
+    );
   });
 });

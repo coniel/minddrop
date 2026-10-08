@@ -1,6 +1,13 @@
 import { Fs } from '@minddrop/file-system';
 import { Paths } from '@minddrop/utils';
-import { DatabaseConfigFileName, MetadataDirName } from '../../constants';
+import {
+  DatabaseConfigFileName,
+  DatabaseContentViewsDirName,
+  DatabaseDesignsDirName,
+  EntryTemplateConfigFileName,
+  EntryTemplatesDirName,
+  MetadataDirName,
+} from '../../constants';
 import { Database } from '../../types';
 import { isEntryFilePath } from '../isEntryFilePath';
 import { resolveDatabasePath } from '../resolveDatabasePath';
@@ -10,9 +17,17 @@ export type DatabaseFilePathKind =
   | { kind: 'entry'; entryPath: string }
   // An entry's metadata sidecar, by its metadata key
   | { kind: 'metadata'; metadataKey: string }
-  // The database directory itself, its hidden directory, or its config
+  // The database directory itself, or its hidden directory
   | { kind: 'database' }
-  // Other app state in the hidden directory (views, designs, history)
+  // The database's config file
+  | { kind: 'config' }
+  // A database-owned view's file, by the view's ID
+  | { kind: 'view'; viewId: string }
+  // A database-owned design's file, by the design's ID
+  | { kind: 'design'; designId: string }
+  // An entry template's directory or config file, by the template's ID
+  | { kind: 'entry-template'; templateId: string }
+  // Other app state in the hidden directory, such as history
   | { kind: 'app-state' }
   // Anything else in the database directory, such as property files
   | { kind: 'other' };
@@ -62,19 +77,61 @@ export function resolveDatabaseFilePathKind(
  * @returns What the path holds.
  */
 function classifyHiddenPath(segments: string[]): DatabaseFilePathKind {
-  // Classify the hidden directory and the database config as the
-  // database.
-  if (!segments.length || segments.join('/') === DatabaseConfigFileName) {
+  // Classify the hidden directory itself as the database
+  if (!segments.length) {
     return { kind: 'database' };
   }
 
+  // Path relative to the hidden directory
+  const hiddenPath = segments.join('/');
+
+  // Classify the database config
+  if (hiddenPath === DatabaseConfigFileName) {
+    return { kind: 'config' };
+  }
+
   // Classify a metadata sidecar by its key
+  const metadataKey = Fs.resolveFileIdInDir(
+    hiddenPath,
+    MetadataDirName,
+    'json',
+  );
+
+  if (metadataKey) {
+    return { kind: 'metadata', metadataKey };
+  }
+
+  // Classify a view file by its view's ID
+  const viewId = Fs.resolveFileIdInDir(
+    hiddenPath,
+    DatabaseContentViewsDirName,
+    'json',
+  );
+
+  if (viewId) {
+    return { kind: 'view', viewId };
+  }
+
+  // Classify a design file by its design's ID
+  const designId = Fs.resolveFileIdInDir(
+    hiddenPath,
+    DatabaseDesignsDirName,
+    'json',
+  );
+
+  if (designId) {
+    return { kind: 'design', designId };
+  }
+
+  // Classify an entry template's directory or config file by the
+  // template's ID. The template's other files hold property values
+  // the store does not have.
   if (
-    segments.length === 2 &&
-    segments[0] === MetadataDirName &&
-    segments[1].endsWith('.json')
+    segments[0] === EntryTemplatesDirName &&
+    (segments.length === 2 ||
+      (segments.length === 3 && segments[2] === EntryTemplateConfigFileName))
   ) {
-    return { kind: 'metadata', metadataKey: Fs.removeExtension(segments[1]) };
+    return { kind: 'entry-template', templateId: segments[1] };
   }
 
   // Classify anything else in the hidden directory as app state

@@ -21,5 +21,12 @@ export function registerDatabasesBackendAdapterRpc(
         databases,
         changes,
       }),
+    syncDatabaseConfigs: (workspaceId, workspacePath, databases, databaseIds) =>
+      rpc.request.databasesSyncDatabaseConfigs({
+        workspaceId,
+        workspacePath,
+        databases,
+        databaseIds,
+      }),
   });
 }

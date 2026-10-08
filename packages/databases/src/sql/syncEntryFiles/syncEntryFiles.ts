@@ -13,11 +13,11 @@ import type {
 } from '../../types';
 import {
   convertEntryToSqlRecord,
-  mergeEntryFileChanges,
   mergeEntryMetadata,
   resolveCollectionProperties,
   resolveDatabasePath,
   resolveEntryAddressKey,
+  resolveEntryChanges,
   resolveEntryPath,
 } from '../../utils';
 import { writeEntryMetadata } from '../../writeEntryMetadata';
@@ -28,9 +28,8 @@ import { sqlGetEntrySyncRecords } from '../sqlGetEntrySyncRecords';
 import { sqlUpsertEntries } from '../sqlUpsertEntries';
 
 /**
- * Re-indexes the entries whose files changed outside of the app,
- * reading only those entries' files. Returns the changeset of
- * upserted and deleted entries.
+ * Re-indexes the entries whose files changed outside of the app. Reads
+ * only those entries' files.
  *
  * @param workspaceId - The ID of the workspace the entries belong to.
  * @param workspacePath - The absolute path to the workspace root.
@@ -53,8 +52,8 @@ export async function syncEntryFiles(
   const deletedIds: string[] = [];
 
   for (const database of databases) {
-    // Merge the database's changes into one per entry
-    const databaseChanges = mergeEntryFileChanges(
+    // Resolve the database's changes to one per entry
+    const databaseChanges = resolveEntryChanges(
       changes.filter((change) => change.databaseId === database.id),
     );
 
@@ -201,7 +200,7 @@ export async function syncEntryFiles(
     hasChanges: upsertedIds.length > 0 || deletedIds.length > 0,
     upsertedDatabases: [],
     deletedDatabaseIds: [],
-    upsertedEntries: sqlGetEntriesFull(upsertedIds, workspaceId),
+    upsertedEntries: sqlGetEntriesFull({ entryIds: upsertedIds, workspaceId }),
     deletedEntryIds: deletedIds,
   };
 }

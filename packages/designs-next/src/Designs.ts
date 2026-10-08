@@ -96,6 +96,7 @@ export { getOwnedDesigns as getByOwner } from './getOwnedDesigns';
 export { initializeDesigns as initialize } from './initializeDesigns';
 export { loadWorkspaceDesigns as loadWorkspace } from './loadWorkspaceDesigns';
 export { loadDesigns as load } from './loadDesigns';
+export { unloadDesign as unload } from './unloadDesign';
 export { readDesign as read } from './readDesign';
 export { serializeDesign as serialize } from './serializeDesign';
 export { setDesignContentWidth as setContentWidth } from './setDesignContentWidth';

@@ -12,6 +12,10 @@ import { writeEntryMetadata } from '../writeEntryMetadata';
 import { removeEntryMetadataFile } from './removeEntryMetadataFile';
 
 const databasePath = databaseDirPath(objectDatabase);
+const sidecarPath = resolveEntryMetadataFilePath(
+  databasePath,
+  objectEntry1.path,
+);
 
 describe('removeEntryMetadataFile', () => {
   beforeEach(setup);
@@ -23,13 +27,12 @@ describe('removeEntryMetadataFile', () => {
       color: 'red',
     });
 
+    // The sidecar should exist before it is removed
+    expect(MockFs.exists(sidecarPath)).toBe(true);
+
     await removeEntryMetadataFile(databasePath, objectEntry1.path);
 
-    expect(
-      MockFs.exists(
-        resolveEntryMetadataFilePath(databasePath, objectEntry1.path),
-      ),
-    ).toBe(false);
+    expect(MockFs.exists(sidecarPath)).toBe(false);
   });
 
   it('does nothing for an entry without a sidecar', async () => {

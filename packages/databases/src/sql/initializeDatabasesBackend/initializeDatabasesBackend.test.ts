@@ -10,10 +10,12 @@ import {
   databaseDirPath,
   databases,
   entryFilePath,
+  getRecordByPath,
   parentDir,
   referenceEntry1,
   relatedEntry1,
   relatedEntry2,
+  resolveRecordPropertyValue,
   rootStorageDatabase,
   setup,
   setupTestSqlDatabase,
@@ -22,6 +24,7 @@ import { SqlEntryRecord } from '../../types';
 import { writeEntryMetadata } from '../../writeEntryMetadata';
 import { sqlGetAllDatabases } from '../sqlGetAllDatabases';
 import { sqlGetEntriesFull } from '../sqlGetEntriesFull';
+import { sqlGetVersion } from '../sqlGetVersion';
 import { initializeDatabasesBackend } from './initializeDatabasesBackend';
 
 const { workspace_1 } = WorkspaceFixtures;
@@ -75,8 +78,8 @@ describe('initializeDatabasesBackend', () => {
     // Launch again onto the index the first launch left behind
     const result = await initializeDatabasesBackend(workspace_1.id, parentDir);
 
-    // The index is served as is rather than rebuilt from the
-    // file system, which would have dropped the database anyway.
+    // Expect the index to be served as is. A rebuild from the file
+    // system would have dropped the database anyway.
     expect(result.schemaChanged).toBe(false);
 
     // The deleted database is gone from the index
@@ -84,7 +87,8 @@ describe('initializeDatabasesBackend', () => {
       collectionDatabase.id,
     );
 
-    // As are its entries, which have no database to resolve against
+    // Expect its entries to be gone too. They have no database to
+    // resolve against.
     expect(indexedRecords(collectionDatabase.id)).toEqual([]);
     expect(
       result.entries.filter(
@@ -93,17 +97,41 @@ describe('initializeDatabasesBackend', () => {
     ).toEqual([]);
   });
 
+  // Pins Issue 55: A database removed on disk while the app is closed leaves
+  // the index version unchanged. Remove .fails once fixed.
+  it.fails(
+    'advances the index version when it drops databases deleted since the last session',
+    async () => {
+      // Index the workspace, as a first launch does
+      await initializeDatabasesBackend(workspace_1.id, parentDir);
+
+      // Read the index version at the end of the session
+      const persistedVersion = sqlGetVersion();
+
+      // Delete the database directory while the app is closed
+      MockFs.removeDir(databaseDirPath(collectionDatabase), {
+        recursive: true,
+      });
+
+      // Launch again onto the index the first launch left behind
+      await initializeDatabasesBackend(workspace_1.id, parentDir);
+
+      // Expect the index version to advance when databases are dropped
+      expect(sqlGetVersion()).not.toBe(persistedVersion);
+    },
+  );
+
   it('resolves collection property addresses to the minted entry IDs', async () => {
     await initializeDatabasesBackend(workspace_1.id, parentDir);
 
     // Look up the indexed records by path
     const records = indexedRecords(collectionDatabase.id);
-    const collectionRecord = recordByPath(records, collectionEntry1.path);
-    const related1Record = recordByPath(records, relatedEntry1.path);
-    const related2Record = recordByPath(records, relatedEntry2.path);
+    const collectionRecord = getRecordByPath(records, collectionEntry1.path);
+    const related1Record = getRecordByPath(records, relatedEntry1.path);
+    const related2Record = getRecordByPath(records, relatedEntry2.path);
 
     // The Related members should reference the minted IDs
-    expect(propertyValue(collectionRecord, 'Related')).toEqual([
+    expect(resolveRecordPropertyValue(collectionRecord, 'Related')).toEqual([
       related1Record.id,
       related2Record.id,
     ]);
@@ -112,18 +140,18 @@ describe('initializeDatabasesBackend', () => {
   it('resolves references across databases', async () => {
     await initializeDatabasesBackend(workspace_1.id, parentDir);
 
-    const collectionRecord = recordByPath(
+    const collectionRecord = getRecordByPath(
       indexedRecords(collectionDatabase.id),
       collectionEntry1.path,
     );
-    const referenceRecord = recordByPath(
+    const referenceRecord = getRecordByPath(
       indexedRecords(rootStorageDatabase.id),
       referenceEntry1.path,
     );
 
     // The References member should reference the minted ID from
     // the other database's batch.
-    expect(propertyValue(collectionRecord, 'References')).toEqual([
+    expect(resolveRecordPropertyValue(collectionRecord, 'References')).toEqual([
       referenceRecord.id,
     ]);
   });
@@ -142,14 +170,16 @@ References: []
 
     await initializeDatabasesBackend(workspace_1.id, parentDir);
 
-    const collectionRecord = recordByPath(
+    const collectionRecord = getRecordByPath(
       indexedRecords(collectionDatabase.id),
       collectionEntry1.path,
     );
 
     // An emptied multi-value property stores no rows, so the
     // dropped member leaves the property absent from the record.
-    expect(propertyValue(collectionRecord, 'Related')).toBeUndefined();
+    expect(
+      resolveRecordPropertyValue(collectionRecord, 'Related'),
+    ).toBeUndefined();
   });
 
   it('seeds an entry sidecar with its stat derived timestamps', async () => {
@@ -188,7 +218,7 @@ References: []
     await initializeDatabasesBackend(workspace_1.id, parentDir);
 
     // The indexed entry keeps the sidecar's timestamps
-    const record = recordByPath(
+    const record = getRecordByPath(
       indexedRecords(collectionDatabase.id),
       collectionEntry1.path,
     );
@@ -213,18 +243,4 @@ function indexedRecords(databaseId: string): SqlEntryRecord[] {
   return sqlGetEntriesFull().filter(
     (record) => record.databaseId === databaseId,
   );
-}
-
-/**
- * Returns the record with the given path.
- */
-function recordByPath(records: SqlEntryRecord[], path: string): SqlEntryRecord {
-  return records.find((record) => record.path === path)!;
-}
-
-/**
- * Returns the value of the named property on a record.
- */
-function propertyValue(record: SqlEntryRecord, name: string) {
-  return record.properties.find((property) => property.name === name)?.value;
 }

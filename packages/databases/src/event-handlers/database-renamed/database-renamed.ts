@@ -7,7 +7,7 @@ import { getAllEntries } from '../../getAllEntries';
 import { recordDatabaseRename } from '../../recordDatabaseRename';
 import { sqlUpsertDatabase } from '../../sql';
 import {
-  entryAddress,
+  resolveEntryAddress,
   virtualCollectionId,
   virtualCollectionName,
 } from '../../utils';
@@ -80,8 +80,8 @@ export async function onRenameDatabase(
       workspaceId: Workspaces.getActive().id,
       changes: entries.map((entry) => ({
         id: entry.id,
-        oldReference: entryAddress(entry, original),
-        newReference: entryAddress(entry, updated),
+        oldReference: resolveEntryAddress(entry, original),
+        newReference: resolveEntryAddress(entry, updated),
       })),
       action,
     });

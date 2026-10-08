@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { Fs } from '../FileSystem';
+import { FileSystemWatcherDebounceMs } from '../constants';
 import { FileSystemChangedEvent } from '../events';
 import { initializeMockFileSystem } from '../mock';
 import { FileSystemChange } from '../types';
@@ -246,5 +247,5 @@ describe('startFileSystemWatcher', () => {
  * promises it awaits resolve.
  */
 async function flushDebounce(): Promise<void> {
-  await vi.advanceTimersByTimeAsync(300);
+  await vi.advanceTimersByTimeAsync(FileSystemWatcherDebounceMs);
 }

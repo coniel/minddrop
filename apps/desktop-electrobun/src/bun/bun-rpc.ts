@@ -4,6 +4,7 @@ import { backEndUtilsRpcHandlers } from './backEndUtilsRpc';
 import {
   handleDatabasesBackgroundSync,
   handleDatabasesInitialize,
+  handleDatabasesSyncDatabaseConfigs,
   handleDatabasesSyncEntryFiles,
   setSyncChangesetSender,
 } from './databases';
@@ -61,6 +62,7 @@ export function createWebviewRPC() {
         databasesInitialize: handleDatabasesInitialize,
         databasesBackgroundSync: handleDatabasesBackgroundSync,
         databasesSyncEntryFiles: handleDatabasesSyncEntryFiles,
+        databasesSyncDatabaseConfigs: handleDatabasesSyncDatabaseConfigs,
         // Search RPC handlers
         searchInitialize: handleSearchInitialize,
         searchUnload: handleSearchUnload,

@@ -65,6 +65,31 @@ describe('deleteEntry', () => {
     expect(MockFs.existsInTrash(entryDirPath)).toBe(true);
   });
 
+  // Pins Issue 29: deleteEntry treats the entry file's parent directory as the
+  // entry's own. Remove .fails once fixed.
+  it.fails(
+    "leaves the directory's own entry in place when deleting a second file indexed from it",
+    async () => {
+      // A sync client's conflict copy indexed from the entry's directory
+      const conflictedCopy = {
+        ...entryStorageEntry1,
+        id: 'database-entry_conflicted-copy' as const,
+        title: `${entryStorageEntry1.title} (conflicted copy)`,
+        path: `${Fs.parentDirPath(entryStorageEntry1.path)}/${entryStorageEntry1.title} (conflicted copy).md`,
+      };
+
+      EntriesStore.set(conflictedCopy);
+      MockFs.addFiles([entryFilePath(conflictedCopy)]);
+
+      await deleteEntry(conflictedCopy.id);
+
+      // The conflict copy should be gone, and the directory's own entry
+      // file should survive the delete.
+      expect(MockFs.exists(entryFilePath(conflictedCopy))).toBe(false);
+      expect(MockFs.exists(entryFilePath(entryStorageEntry1))).toBe(true);
+    },
+  );
+
   it('removes the entry from the store', async () => {
     await deleteEntry(objectEntry1.id);
 
@@ -107,7 +132,7 @@ describe('deleteEntry', () => {
 
     await deleteEntry(objectEntry1.id);
 
-    // The sidecar would otherwise be orphaned in the metadata directory
+    // Should remove the entry's metadata sidecar
     expect(MockFs.exists(sidecarPath)).toBe(false);
   });
 });

@@ -13,6 +13,8 @@
     "eslint": "^9.16.0",
     "@minddrop/eslint-config": "workspace:*",
     "@minddrop/vitest-config": "workspace:*",
+    "@minddrop/stores": "workspace:*",
+    "@minddrop/test-utils": "workspace:*",
     "@minddrop/ui-icons": "workspace:*",
     "tsconfig": "workspace:*",
     "typescript": "^5.7.2"

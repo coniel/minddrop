@@ -4,7 +4,6 @@ import {
   MockFs,
   breakEntryFile,
   cleanup,
-  databaseDirPath,
   entries,
   entryFilePath,
   entryStorageDatabase,
@@ -47,18 +46,6 @@ describe('readEntries', () => {
       id: expect.any(String),
       contentHash: expect.any(String),
     });
-  });
-
-  it('filters out non-matching file extensions', async () => {
-    // Add a YAML file into the markdown-serialized database directory
-    MockFs.addFiles([`${databaseDirPath(objectDatabase)}/Stray Entry.yaml`]);
-
-    // Read entries from the markdown database
-    const { entries: result } = await readEntries(objectDatabase);
-
-    // Should not include the YAML file
-    expect(result.every((entry) => entry.path.endsWith('.md'))).toBe(true);
-    expect(result.some((entry) => entry.path.endsWith('.yaml'))).toBe(false);
   });
 
   it('returns an empty array when the database directory has no entries', async () => {

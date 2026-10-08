@@ -1,6 +1,6 @@
 import { getAllEntries } from '../../getAllEntries';
 import { Entry } from '../../types';
-import { entryMetadataKey } from '../entryMetadataKey';
+import { resolveEntryMetadataKey } from '../resolveEntryMetadataKey';
 
 /**
  * Finds the entry of a database whose metadata sidecar is keyed by
@@ -18,7 +18,7 @@ export function findEntryByMetadataKey(
 ): Entry | null {
   return (
     getAllEntries(databaseId, workspaceId).find(
-      (entry) => entryMetadataKey(entry.path) === metadataKey,
+      (entry) => resolveEntryMetadataKey(entry.path) === metadataKey,
     ) ?? null
   );
 }

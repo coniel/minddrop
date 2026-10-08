@@ -1,10 +1,9 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { hasPendingOperations } from '../PendingOperationsStore';
 import { initializeMockFileSystem } from '../mock';
 import { BaseDirectory } from '../types';
 import {
   clearWriteRegistry,
-  findRecordedWriteKind,
   matchesWrittenContents,
   matchesWrittenStats,
 } from '../writeRegistry';
@@ -74,6 +73,53 @@ describe('Fs.writeJsonFile', () => {
   });
 });
 
+describe('Fs.writeTextFile', () => {
+  afterEach(clearWriteRegistry);
+
+  it('records a write into a base directory under its absolute path', async () => {
+    initializeMockFileSystem();
+
+    await Fs.writeTextFile('config.json', '{}', {
+      baseDir: BaseDirectory.AppData,
+    });
+
+    expect(
+      matchesWrittenContents(resolveAppDataPath('config.json'), '{}'),
+    ).toBe(true);
+  });
+});
+
+describe('Fs.writeTextFile before the base directory paths resolve', () => {
+  it('writes into a base directory without recording the write', async () => {
+    const { Fs, matchesWrittenContents } = await registerUnresolvedFileSystem();
+
+    await expect(
+      Fs.writeTextFile('config.json', '{}', { baseDir: BaseDirectory.AppData }),
+    ).resolves.toBeUndefined();
+
+    // The mock adapter resolves a base directory's path to its name
+    expect(
+      matchesWrittenContents(`${BaseDirectory.AppData}/config.json`, '{}'),
+    ).toBe(false);
+    expect(matchesWrittenContents('config.json', '{}')).toBe(false);
+  });
+
+  it('records a write under its absolute path once the paths resolve', async () => {
+    const { Fs, matchesWrittenContents, resolveBaseDirPaths } =
+      await registerUnresolvedFileSystem();
+
+    await resolveBaseDirPaths();
+    await Fs.writeTextFile('config.json', '{}', {
+      baseDir: BaseDirectory.AppData,
+    });
+
+    // The mock adapter resolves a base directory's path to its name
+    expect(
+      matchesWrittenContents(`${BaseDirectory.AppData}/config.json`, '{}'),
+    ).toBe(true);
+  });
+});
+
 describe('Fs.writeYamlFile', () => {
   afterEach(clearWriteRegistry);
 
@@ -101,14 +147,18 @@ describe('Fs.writeBinaryFile', () => {
     );
   });
 
-  it('does not record a write into a base directory', async () => {
+  it('records a write into a base directory under its absolute path', async () => {
     initializeMockFileSystem();
 
     await Fs.writeBinaryFile('base-dir-binary.png', new Blob(['bytes']), {
       baseDir: BaseDirectory.AppData,
     });
 
-    expect(findRecordedWriteKind('base-dir-binary.png')).toBeNull();
+    const absolutePath = resolveAppDataPath('base-dir-binary.png');
+
+    expect(matchesWrittenStats(absolutePath, await Fs.stat(absolutePath))).toBe(
+      true,
+    );
   });
 });
 
@@ -125,14 +175,18 @@ describe('Fs.copyFile', () => {
     );
   });
 
-  it('does not record a copy into a base directory', async () => {
+  it('records a copy into a base directory under its absolute path', async () => {
     initializeMockFileSystem([{ path: 'source.png', textContent: 'bytes' }]);
 
     await Fs.copyFile('source.png', 'base-dir-copy.png', {
       toPathBaseDir: BaseDirectory.AppData,
     });
 
-    expect(findRecordedWriteKind('base-dir-copy.png')).toBeNull();
+    const absolutePath = resolveAppDataPath('base-dir-copy.png');
+
+    expect(matchesWrittenStats(absolutePath, await Fs.stat(absolutePath))).toBe(
+      true,
+    );
   });
 });
 
@@ -149,7 +203,7 @@ describe('Fs.downloadFile', () => {
     ).toBe(true);
   });
 
-  it('does not record a download into a base directory', async () => {
+  it('records a download into a base directory under its absolute path', async () => {
     initializeMockFileSystem();
 
     await Fs.downloadFile(
@@ -158,7 +212,11 @@ describe('Fs.downloadFile', () => {
       { baseDir: BaseDirectory.AppData },
     );
 
-    expect(findRecordedWriteKind('base-dir-download.png')).toBeNull();
+    const absolutePath = resolveAppDataPath('base-dir-download.png');
+
+    expect(matchesWrittenStats(absolutePath, await Fs.stat(absolutePath))).toBe(
+      true,
+    );
   });
 });
 
@@ -198,3 +256,54 @@ describe('Fs.stat on the mock file system', () => {
     expect(stats.size).toBe(1000);
   });
 });
+
+/**
+ * Resolves a path within the app data base directory to the absolute
+ * path the mock file system holds it at.
+ *
+ * @param path - The path within the app data directory.
+ * @returns The absolute path.
+ */
+function resolveAppDataPath(path: string): string {
+  return Fs.concatPath(Fs.resolveBaseDirPath(BaseDirectory.AppData), path);
+}
+
+/**
+ * Loads a fresh copy of the file system module, whose base directory
+ * paths have never resolved, and registers a mock adapter on it whose
+ * base directory paths resolve only when told to.
+ *
+ * @returns The fresh `Fs`, its write registry matcher, and a function resolving the base directory paths.
+ */
+async function registerUnresolvedFileSystem() {
+  // Create a mock adapter on the current module
+  const { MockFs } = initializeMockFileSystem();
+  // The pending base directory path resolutions
+  const resolvers: VoidFunction[] = [];
+
+  // Load fresh copies of the file system and write registry modules
+  vi.resetModules();
+  const fresh = await import('./FileSystem');
+  const registry = await import('../writeRegistry');
+
+  // Register the mock adapter, holding back its base directory paths
+  fresh.Fs.registerAdapter(
+    {
+      ...MockFs,
+      resolveBaseDirPath: (baseDir) =>
+        new Promise((resolve) => resolvers.push(() => resolve(baseDir))),
+    },
+    { skipQueue: true },
+  );
+
+  return {
+    Fs: fresh.Fs,
+    matchesWrittenContents: registry.matchesWrittenContents,
+    resolveBaseDirPaths: async () => {
+      resolvers.forEach((resolve) => resolve());
+
+      // Let the resolved paths be stored
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    },
+  };
+}

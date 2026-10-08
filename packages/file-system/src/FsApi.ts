@@ -2,6 +2,8 @@ export { concatPath } from './concatPath';
 export { fileNameFromPath } from './fileNameFromPath';
 export { parentDirPath } from './parentDirPath';
 export { relativePath } from './relativePath';
+export { isAtOrUnder } from './isAtOrUnder';
+export { resolveFileIdInDir } from './resolveFileIdInDir';
 export { getFileExtension as getExtension } from './getFileExtension';
 export { removeFileExtension as removeExtension } from './removeFileExtension';
 export { getFileExtension } from './getFileExtension';

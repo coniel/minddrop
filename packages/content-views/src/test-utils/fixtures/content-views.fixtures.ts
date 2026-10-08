@@ -78,6 +78,15 @@ export const contentView_board_3 = generateViewFixture(
   3,
 );
 
+export const contentView_table_1 = generateViewFixture(
+  'table',
+  {
+    type: 'database',
+    id: 'database-1',
+  },
+  1,
+);
+
 function generateVirtualViewFixture(
   type: string,
   dataSource: ViewDataSource,
@@ -107,6 +116,7 @@ export const contentViews = [
   contentView_board_1,
   contentView_board_2,
   contentView_board_3,
+  contentView_table_1,
 ];
 
 // All content views including virtual ones

@@ -3,8 +3,12 @@ import { databases } from './fixtures';
 
 /**
  * Indexes every fixture database in SQL.
+ *
+ * @param workspaceId - The workspace to index them into. Omit for the
+ *   active workspace.
  */
-export function seedSqlDatabases(): void {
+export function seedSqlDatabases(workspaceId?: string): void {
+  // Upsert each fixture database
   databases.forEach((database) => {
     sqlUpsertDatabase(
       {
@@ -15,6 +19,7 @@ export function seedSqlDatabases(): void {
         properties: database.properties,
       },
       { silent: true },
+      workspaceId,
     );
   });
 }

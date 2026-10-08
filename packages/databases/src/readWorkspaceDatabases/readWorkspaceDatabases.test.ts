@@ -28,17 +28,6 @@ describe('readWorkspaceDatabases', () => {
     expect(result).toHaveLength(databases.length);
   });
 
-  it('sets the database path to the root database directory', async () => {
-    // Read databases from the workspace
-    const result = await readWorkspaceDatabases(workspace_1.path);
-
-    // Each database path should not contain .minddrop or database.json
-    for (const database of result) {
-      expect(database.path).not.toContain(Paths.hiddenDirName);
-      expect(database.path).not.toContain(DatabaseConfigFileName);
-    }
-  });
-
   it('returns an empty array for a workspace with no databases', async () => {
     // Use workspace_2 path which has no databases in the mock FS
     const result = await readWorkspaceDatabases(

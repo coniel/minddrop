@@ -5,13 +5,16 @@ import { DatabasesStore } from '../DatabasesStore';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntryTemplate } from '../getDatabaseEntryTemplate';
 import {
+  MockFs,
   cleanup,
+  databaseDirPath,
   entryTemplate1,
   entryTemplate2,
   entryTemplatesDatabase,
   objectDatabase,
   setup,
 } from '../test-utils';
+import { resolveEntryTemplateConfigFilePath } from '../utils';
 import { loadDatabaseEntryTemplates } from './loadDatabaseEntryTemplates';
 
 const { workspace_1 } = WorkspaceFixtures;
@@ -48,6 +51,24 @@ describe('loadDatabaseEntryTemplates', () => {
     expect(getDatabase(entryTemplatesDatabase.id).entryTemplates).toEqual([
       entryTemplate2.id,
       entryTemplate1.id,
+    ]);
+  });
+
+  it("keeps the ID of a template whose config file cannot be read in the config's template ID list", async () => {
+    // Make the first template's config file unparseable
+    MockFs.writeTextFile(
+      resolveEntryTemplateConfigFilePath(
+        databaseDirPath(entryTemplatesDatabase),
+        entryTemplate1.id,
+      ),
+      'not json',
+    );
+
+    await loadDatabaseEntryTemplates([entryTemplatesDatabase], workspace_1);
+
+    expect(getDatabase(entryTemplatesDatabase.id).entryTemplates).toEqual([
+      entryTemplate1.id,
+      entryTemplate2.id,
     ]);
   });
 

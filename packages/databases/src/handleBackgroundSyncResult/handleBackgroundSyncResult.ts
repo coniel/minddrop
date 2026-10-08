@@ -16,7 +16,7 @@ import { recordSyncedDatabaseDeletion } from '../recordSyncedDatabaseDeletion';
 import { recordSyncedDatabaseRename } from '../recordSyncedDatabaseRename';
 import { removeEntriesFromCollections } from '../removeEntriesFromCollections';
 import type { BackgroundSyncChangeset, Database } from '../types';
-import { convertSqlRecordToEntry, entryAddress } from '../utils';
+import { convertSqlRecordToEntry, resolveEntryAddress } from '../utils';
 
 /**
  * Applies a background sync changeset to the synced workspace's
@@ -138,8 +138,8 @@ export async function handleBackgroundSyncResult(
       (existing.title !== entry.title || existing.database !== entry.database);
 
     if (addressChanged) {
-      const oldReference = entryAddress(existing);
-      const newReference = entryAddress(entry);
+      const oldReference = resolveEntryAddress(existing);
+      const newReference = resolveEntryAddress(entry);
 
       // The entry must be nameable either side of the change
       if (oldReference && newReference) {

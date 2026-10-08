@@ -1,6 +1,8 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '../FileSystem';
+import { FileSystemWatcherDebounceMs } from '../constants';
 import { FileSystemChangedEvent } from '../events';
+import { isAtOrUnder } from '../isAtOrUnder';
 import {
   FileSystemChangeKind,
   FileSystemWatchRoot,
@@ -11,10 +13,6 @@ import {
   matchesWrittenContents,
   matchesWrittenStats,
 } from '../writeRegistry';
-
-// How long to wait for a path to stop changing before dispatching
-// an event for it. Editors write a file several times per save.
-const DebounceMs = 200;
 
 // File names which never carry app state
 const IgnoredFileNames = ['.DS_Store', 'Thumbs.db'];
@@ -106,7 +104,7 @@ function queueChange(
     pending.kinds.add(kind);
     pending.timer = setTimeout(
       () => flushChange(pendingChanges, path),
-      DebounceMs,
+      FileSystemWatcherDebounceMs,
     );
 
     return;
@@ -116,7 +114,10 @@ function queueChange(
   pendingChanges.set(path, {
     workspaceId,
     kinds: new Set([kind]),
-    timer: setTimeout(() => flushChange(pendingChanges, path), DebounceMs),
+    timer: setTimeout(
+      () => flushChange(pendingChanges, path),
+      FileSystemWatcherDebounceMs,
+    ),
   });
 }
 
@@ -176,8 +177,8 @@ async function isSelfWrite(path: string): Promise<boolean> {
   // Get how the app's last write to the path was recorded
   const recordedKind = findRecordedWriteKind(path);
 
-  // Check the app has written to the path. If not, the change is
-  // external, and the common case costs no read.
+  // Treat the change as external if the app has not written to the
+  // path. The file is not read.
   if (!recordedKind) {
     return false;
   }
@@ -222,10 +223,7 @@ function resolveWorkspaceId(
   roots: FileSystemWatchRoot[],
   path: string,
 ): string | null {
-  const root = roots.find(
-    (candidate) =>
-      path === candidate.path || path.startsWith(`${candidate.path}/`),
-  );
+  const root = roots.find((candidate) => isAtOrUnder(path, candidate.path));
 
   return root ? root.workspaceId : null;
 }

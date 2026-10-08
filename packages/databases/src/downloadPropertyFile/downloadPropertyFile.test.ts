@@ -14,7 +14,10 @@ import { downloadPropertyFile } from './downloadPropertyFile';
 
 const url = 'https://example.com/image.png';
 // The file name derived from the URL's title and extension
-const fileName = 'example.com_image.png';
+const fileNameBase = 'example.com_image';
+const fileName = `${fileNameBase}.png`;
+// The file name incremented past an existing file of the same name
+const incrementedFileName = `${fileNameBase} 1.png`;
 
 describe('downloadPropertyFile', () => {
   beforeEach(setup);
@@ -59,11 +62,31 @@ describe('downloadPropertyFile', () => {
       MockFs.exists(
         Fs.concatPath(
           databaseDirPath(rootStorageDatabase),
-          'example.com_image 1.png',
+          incrementedFileName,
         ),
       ),
     ).toBe(true);
   });
+
+  // Pins Issue 47: downloadPropertyFile returns the un-incremented file name.
+  // Remove .fails once fixed.
+  it.fails(
+    'returns the incremented file name when the file already exists',
+    async () => {
+      // Add a file which collides with the downloaded file's name
+      MockFs.addFiles([
+        Fs.concatPath(databaseDirPath(rootStorageDatabase), fileName),
+      ]);
+
+      const result = await downloadPropertyFile(
+        rootStorageEntry1.id,
+        imagePropertyName,
+        url,
+      );
+
+      expect(result).toBe(incrementedFileName);
+    },
+  );
 
   it('returns false if the download fails', async () => {
     const originalDownloadFile = Fs.downloadFile;

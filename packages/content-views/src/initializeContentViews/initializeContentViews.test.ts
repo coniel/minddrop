@@ -2,12 +2,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { EntityGroups } from '@minddrop/entity-groups';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
+import { createFileSystemChange } from '@minddrop/file-system/test-utils';
 import { i18n } from '@minddrop/i18n';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { ContentViewsStore } from '../ContentViewsStore';
 import { ContentViewEntityType, ContentViewGroupsType } from '../constants';
 import { ContentViewDeletedEvent } from '../events';
-import { cleanup, contentView_gallery_1, setup } from '../test-utils';
+import { MockFs, cleanup, contentView_gallery_1, setup } from '../test-utils';
 import { resolveContentViewFilePath } from '../utils';
 import { initializeContentViews } from './initializeContentViews';
 
@@ -21,11 +22,14 @@ describe('initializeContentViews', () => {
   it('applies content view file changes made outside of the app', async () => {
     initializeContentViews();
 
-    Events.dispatch(Fs.events.Changed, {
-      workspaceId: workspace_1.id,
-      path: resolveContentViewFilePath(contentView_gallery_1.id),
-      kind: 'deleted',
-    });
+    // Delete the view file outside of the app
+    const viewPath = resolveContentViewFilePath(contentView_gallery_1.id);
+    MockFs.removeFile(viewPath);
+
+    Events.dispatch(
+      Fs.events.Changed,
+      createFileSystemChange(viewPath, 'deleted', workspace_1.id),
+    );
 
     await vi.advanceTimersByTimeAsync(0);
 

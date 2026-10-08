@@ -1,6 +1,8 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { Events } from '@minddrop/events';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { createKeyValueStore } from '../createKeyValueStore';
+import { StoreHydrateEvent } from '../events';
 import { registerStoreListeners } from './registerStoreListeners';
 
 // Mock file system backing the persist and hydrate paths
@@ -43,12 +45,21 @@ describe('registerStoreListeners', () => {
   // The cleanup function returned by the registration under test
   let removeListeners: VoidFunction = () => {};
 
-  afterEach(() => {
+  afterEach(async () => {
+    vi.useRealTimers();
+
     // Remove the listeners registered during the test
     removeListeners();
 
-    // Restore the test stores to their default values
-    appLevelStore.load({ value: 'default' });
+    // Restore the app level store to its default values through a
+    // hydration, which also settles a hydrate() a test left pending.
+    Events.dispatch(StoreHydrateEvent, {
+      namespace: 'test-app-level',
+      data: { value: 'default' },
+    });
+    await Events.tests.awaitAllListeners();
+
+    // Restore the workspace level store to its default values
     workspaceLevelStore.load({ value: 'default' });
 
     // Clear all files from the mock file system
@@ -114,6 +125,29 @@ describe('registerStoreListeners', () => {
     // Should leave the store with its default values
     expect(appLevelStore.get('value')).toBe('default');
   });
+
+  // Kept apart from the pin below, which passes on any failure. A
+  // timeout which never fires fails this test instead of passing as
+  // the pinned bug.
+  it('reports a hydration no listener answers as hung', async () => {
+    expect(await raceHydration()).toBe('hung');
+  });
+
+  // Pins Issue 68: A corrupt or truncated store JSON file makes
+  // hydrate() hang forever. Remove .fails once fixed.
+  it.fails(
+    'settles hydration of a store whose persisted file is truncated',
+    async () => {
+      // Write a store file truncated mid-write. It does not parse.
+      MockFs.createDir('stores');
+      MockFs.writeTextFile('stores/test-app-level.json', '{"value": "persis');
+
+      // Register the store listeners
+      removeListeners = registerStoreListeners(config);
+
+      expect(await raceHydration()).toBe('settled');
+    },
+  );
 
   it('removes the listeners when the cleanup function is called', async () => {
     // Register the store listeners
@@ -188,3 +222,30 @@ describe('registerStoreListeners with workspace scoped stores', () => {
     expect(scopedStore.in('workspace-2').get('value')).toBe('persisted');
   });
 });
+
+/**
+ * Hydrates the app level store, racing the hydration against a timeout
+ * which stands in for a hang. A rejection counts as settled.
+ *
+ * @returns 'settled' if the hydration settles first, 'hung' if the
+ *   timeout fires first.
+ */
+async function raceHydration(): Promise<string> {
+  vi.useFakeTimers();
+
+  // Race the hydration against the timeout
+  const outcome = Promise.race([
+    appLevelStore.hydrate().then(
+      () => 'settled',
+      () => 'settled',
+    ),
+    new Promise<string>((resolve) => {
+      setTimeout(() => resolve('hung'), 100);
+    }),
+  ]);
+
+  // Let the hydration run, then reach the timeout
+  await vi.advanceTimersByTimeAsync(100);
+
+  return outcome;
+}

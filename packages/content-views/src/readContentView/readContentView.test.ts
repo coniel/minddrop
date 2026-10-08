@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { cleanup, contentView_gallery_1, setup } from '../test-utils';
+import { MockFs, cleanup, contentView_gallery_1, setup } from '../test-utils';
 import { resolveContentViewFilePath } from '../utils';
 import { readContentView } from './readContentView';
 
@@ -20,5 +20,21 @@ describe('readContentView', () => {
     const view = await readContentView('missing-view');
 
     expect(view).toBeNull();
+  });
+
+  it('returns null if the file is not valid JSON', async () => {
+    const path = resolveContentViewFilePath('content-view_invalid');
+
+    MockFs.addFiles([{ path, textContent: 'not JSON' }]);
+
+    expect(await readContentView(path)).toBeNull();
+  });
+
+  it('returns null if the file is not a view', async () => {
+    const path = resolveContentViewFilePath('content-view_invalid');
+
+    MockFs.addFiles([{ path, textContent: '{}' }]);
+
+    expect(await readContentView(path)).toBeNull();
   });
 });

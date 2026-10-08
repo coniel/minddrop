@@ -17,6 +17,7 @@ export { sqlGetAllDatabases } from './sqlGetAllDatabases';
 export { sqlGetEntrySyncRecords } from './sqlGetEntrySyncRecords';
 export { sqlGetEntryPropertyValues } from './sqlGetEntryPropertyValues';
 export { sqlGetEntriesFull } from './sqlGetEntriesFull';
+export type { SqlGetEntriesFullOptions } from './sqlGetEntriesFull';
 export { sqlQueryEntries } from './sqlQueryEntries';
 export type { SqlQueryEntriesOptions } from './sqlQueryEntries';
 export { sqlQueryScopedEntries } from './sqlQueryScopedEntries';
@@ -28,6 +29,7 @@ export { initializeDatabasesBackend } from './initializeDatabasesBackend';
 export type { InitializeBackendResult } from './initializeDatabasesBackend';
 export { backgroundSyncDatabases } from './backgroundSyncDatabases';
 export { syncEntryFiles } from './syncEntryFiles';
+export { syncDatabaseConfigs } from './syncDatabaseConfigs';
 export { sqlGetEntryIdsByAddress } from './sqlGetEntryIdsByAddress';
 // Schema
 export { SCHEMA_SQL, SCHEMA_VERSION } from './schema';

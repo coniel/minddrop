@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { FileSystemChange } from '@minddrop/file-system';
+import { createFileSystemChange } from '@minddrop/file-system/test-utils';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { QueriesStore } from '../../QueriesStore';
 import { MockFs, cleanup, query_1, setup } from '../../test-utils';
@@ -20,7 +20,9 @@ describe('onFileSystemChanged', () => {
     const modified = { ...query_1, name: 'Renamed query' };
     MockFs.writeTextFile(queryPath, JSON.stringify(modified));
 
-    await onFileSystemChanged(change(queryPath, 'modified'));
+    await onFileSystemChanged(
+      createFileSystemChange(queryPath, 'modified', workspace_1.id),
+    );
 
     expect(QueriesStore).toHaveItem(query_1.id, modified);
   });
@@ -34,14 +36,20 @@ describe('onFileSystemChanged', () => {
     );
 
     await onFileSystemChanged(
-      change(resolveQueryFilePath(created.id), 'created'),
+      createFileSystemChange(
+        resolveQueryFilePath(created.id),
+        'created',
+        workspace_1.id,
+      ),
     );
 
     expect(QueriesStore).toHaveItem(created.id, created);
   });
 
   it('removes an externally deleted query from the store', async () => {
-    await onFileSystemChanged(change(queryPath, 'deleted'));
+    await onFileSystemChanged(
+      createFileSystemChange(queryPath, 'deleted', workspace_1.id),
+    );
 
     expect(QueriesStore).not.toHaveItem(query_1.id);
   });
@@ -53,7 +61,9 @@ describe('onFileSystemChanged', () => {
       { path: otherPath, textContent: JSON.stringify(query_1) },
     ]);
 
-    await onFileSystemChanged(change(otherPath, 'created', workspace_2.id));
+    await onFileSystemChanged(
+      createFileSystemChange(otherPath, 'created', workspace_2.id),
+    );
 
     // Should add the query to the second workspace's record only
     expect(QueriesStore.in(workspace_2.id).get(query_1.id)).toEqual(query_1);
@@ -62,14 +72,20 @@ describe('onFileSystemChanged', () => {
   it('ignores files which are not queries', async () => {
     const otherPath = `${resolveQueriesDirPath()}/notes.md`;
 
-    await onFileSystemChanged(change(otherPath, 'deleted'));
+    await onFileSystemChanged(
+      createFileSystemChange(otherPath, 'deleted', workspace_1.id),
+    );
 
     expect(QueriesStore).toHaveItemCount(3);
   });
 
   it('ignores files outside the queries directory', async () => {
     await onFileSystemChanged(
-      change(`workspace/${query_1.id}.json`, 'deleted'),
+      createFileSystemChange(
+        `workspace/${query_1.id}.json`,
+        'deleted',
+        workspace_1.id,
+      ),
     );
 
     expect(QueriesStore).toHaveItem(query_1.id);
@@ -79,19 +95,10 @@ describe('onFileSystemChanged', () => {
     // Make the query file invalid outside of the app
     MockFs.writeTextFile(queryPath, 'not json');
 
-    await onFileSystemChanged(change(queryPath, 'modified'));
+    await onFileSystemChanged(
+      createFileSystemChange(queryPath, 'modified', workspace_1.id),
+    );
 
     expect(QueriesStore).toHaveItem(query_1.id, query_1);
   });
 });
-
-/**
- * Creates a file system change for the given path.
- */
-function change(
-  path: string,
-  kind: FileSystemChange['kind'],
-  workspaceId: string = workspace_1.id,
-): FileSystemChange {
-  return { workspaceId, path, kind };
-}

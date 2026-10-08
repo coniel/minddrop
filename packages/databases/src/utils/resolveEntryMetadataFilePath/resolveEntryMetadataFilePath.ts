@@ -1,5 +1,5 @@
-import { entryMetadataKey } from '../entryMetadataKey';
 import { resolveDatabaseMetadataDirPath } from '../resolveDatabaseMetadataDirPath';
+import { resolveEntryMetadataKey } from '../resolveEntryMetadataKey';
 
 /**
  * Returns the path to an entry's metadata sidecar.
@@ -14,5 +14,5 @@ export function resolveEntryMetadataFilePath(
 ): string {
   const dirPath = resolveDatabaseMetadataDirPath(databasePath);
 
-  return `${dirPath}/${entryMetadataKey(entryPath)}.json`;
+  return `${dirPath}/${resolveEntryMetadataKey(entryPath)}.json`;
 }

@@ -9,7 +9,6 @@ import { readWorkspaceDatabases } from '../../readWorkspaceDatabases';
 import type { BackgroundSyncChangeset, Database, Entry } from '../../types';
 import {
   convertEntryToSqlRecord,
-  entryMetadataKey,
   hashDatabaseProperties,
   matchEntriesToSqlRecords,
   mergeEntryMetadata,
@@ -17,6 +16,7 @@ import {
   resolveDatabaseMetadataDirPath,
   resolveDatabasePath,
   resolveEntryAddressKey,
+  resolveEntryMetadataKey,
 } from '../../utils';
 import { writeEntryMetadata } from '../../writeEntryMetadata';
 import { sqlDeleteDatabase } from '../sqlDeleteDatabase';
@@ -154,8 +154,8 @@ export async function backgroundSyncDatabases(
       resolveDatabasePath(database, workspacePath),
     );
 
-    // List the sidecars on disk, including those which could not be
-    // read, to tell an unreadable sidecar from a missing one.
+    // List the sidecar keys on disk, unreadable sidecars included. An
+    // unreadable sidecar can then be told apart from a missing one.
     const sidecarKeys = new Set(
       await listEntryMetadataKeys(resolveDatabasePath(database, workspacePath)),
     );
@@ -167,9 +167,11 @@ export async function backgroundSyncDatabases(
     const indexedHashes = new Map(
       existingRecords
         .filter((record) => {
-          const key = entryMetadataKey(record.path);
+          // Resolve the record's sidecar key
+          const key = resolveEntryMetadataKey(record.path);
 
-          // Leave an entry with an unreadable sidecar to its content hash
+          // Check if the sidecar exists but could not be read. If so, keep
+          // the entry's content hash.
           if (sidecarKeys.has(key) && !(key in sidecars)) {
             return true;
           }
@@ -345,10 +347,10 @@ export async function backgroundSyncDatabases(
   }
 
   // Query updated entries from SQL with full property data
-  const upsertedEntries = sqlGetEntriesFull(
-    [...allUpsertedEntryIds],
+  const upsertedEntries = sqlGetEntriesFull({
+    entryIds: [...allUpsertedEntryIds],
     workspaceId,
-  );
+  });
 
   return {
     workspaceId,
@@ -375,7 +377,9 @@ async function sweepOrphanedMetadata(
   const metadataKeys = await listEntryMetadataKeys(databasePath);
 
   // Sidecars are keyed by the entry's database-relative path
-  const entryKeys = new Set(entryPaths.map((path) => entryMetadataKey(path)));
+  const entryKeys = new Set(
+    entryPaths.map((path) => resolveEntryMetadataKey(path)),
+  );
 
   const orphanedKeys = metadataKeys.filter((key) => !entryKeys.has(key));
 

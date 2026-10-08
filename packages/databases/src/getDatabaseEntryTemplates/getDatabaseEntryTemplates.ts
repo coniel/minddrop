@@ -8,19 +8,21 @@ import { sortDatabaseEntryTemplates } from '../utils';
  * template ID list.
  *
  * @param databaseId - The ID of the database whose templates to retrieve.
+ * @param workspaceId - The workspace the database belongs to. Omit for the active workspace.
  * @returns An array of the database's entry templates.
  */
 export function getDatabaseEntryTemplates(
   databaseId: string,
+  workspaceId?: string,
 ): DatabaseEntryTemplate[] {
-  // Filter the store to the database's templates
-  const templates = DatabaseEntryTemplatesStore.getAllArray().filter(
-    (template) => template.database === databaseId,
-  );
+  // Filter the workspace's store record to the database's templates
+  const templates = DatabaseEntryTemplatesStore.in(workspaceId)
+    .getAllArray()
+    .filter((template) => template.database === databaseId);
 
   // Sort by the config's template ID list
   return sortDatabaseEntryTemplates(
     templates,
-    getDatabase(databaseId, false)?.entryTemplates,
+    getDatabase(databaseId, false, workspaceId)?.entryTemplates,
   );
 }
