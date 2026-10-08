@@ -1298,6 +1298,16 @@ declare module 'i18next' {
             box: {
               label: string;
             };
+            chips: {
+              label: string;
+              placeholder: string;
+              size: {
+                label: string;
+                sm: string;
+                md: string;
+                lg: string;
+              };
+            };
             editor: {
               label: string;
             };

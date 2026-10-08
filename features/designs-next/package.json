@@ -26,9 +26,12 @@
     "@minddrop/feature-markdown-editor": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/properties": "workspace:*",
+    "@minddrop/tags": "workspace:*",
     "@minddrop/ui-designs-next": "workspace:*",
     "@minddrop/ui-icons": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
+    "@minddrop/ui-theme": "workspace:*",
+    "@minddrop/utils": "workspace:*",
     "@minddrop/views": "workspace:*"
   }
 }

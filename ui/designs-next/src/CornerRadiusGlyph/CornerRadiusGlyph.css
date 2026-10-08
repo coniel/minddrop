@@ -1,0 +1,5 @@
+/* Sized by the icon rules of the control it sits in, and kept from
+   shrinking beside text */
+.design-element-corner-radius-glyph {
+  flex-shrink: 0;
+}

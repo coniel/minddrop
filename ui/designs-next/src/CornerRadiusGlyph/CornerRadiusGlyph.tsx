@@ -1,4 +1,5 @@
 import { ElementCornerRadius } from '@minddrop/designs-next';
+import './CornerRadiusGlyph.css';
 
 export interface CornerRadiusGlyphProps {
   /**
@@ -23,16 +24,14 @@ const GlyphCurves: Record<ElementCornerRadius, number> = {
 };
 
 /**
- * Draws a corner radius as the corner itself: two edges meeting at
- * the top left, rounded by the radius, standing in for the icon no
- * such value has.
+ * Renders a corner radius as a drawn corner.
  */
 export const CornerRadiusGlyph: React.FC<CornerRadiusGlyphProps> = ({
   radius,
 }) => (
   <svg
     viewBox={`0 0 ${GlyphSize} ${GlyphSize}`}
-    className="design-element-corner-radius-glyph"
+    className="icon design-element-corner-radius-glyph"
     aria-hidden="true"
   >
     <path
@@ -53,13 +52,16 @@ export const CornerRadiusGlyph: React.FC<CornerRadiusGlyphProps> = ({
  * @returns The path data.
  */
 function resolveCornerPath(curve: number): string {
+  // The corner's near and far edges
   const near = GlyphInset;
   const far = GlyphSize - GlyphInset;
 
+  // Draw a square corner when there is no curve
   if (!curve) {
     return `M${near} ${far} V${near} H${far}`;
   }
 
+  // Draw the curved corner
   return `M${near} ${far} V${near + curve} A${curve} ${curve} 0 0 1 ${
     near + curve
   } ${near} H${far}`;

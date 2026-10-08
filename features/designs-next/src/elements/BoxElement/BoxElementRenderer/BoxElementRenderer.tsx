@@ -1,6 +1,7 @@
 import {
   DesignElementProps,
   DesignElementSettings,
+  Designs,
 } from '@minddrop/designs-next';
 import { resolveElementStyle } from '@minddrop/ui-designs-next';
 import { BoxElement } from '../BoxElement.types';
@@ -9,7 +10,7 @@ import './BoxElementRenderer.css';
 // The surface a box is drawn on without settings of its own
 const BoxDefaults: DesignElementSettings = {
   background: 'subtle',
-  cornerRadius: 'sm',
+  cornerRadius: Designs.constants.DefaultCornerRadius,
 };
 
 /**

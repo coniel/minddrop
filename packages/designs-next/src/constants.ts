@@ -6,6 +6,7 @@ import {
   DesignType,
   ElementColor,
   ElementContentFit,
+  ElementCornerRadius,
   ElementHeightMode,
   ElementPadding,
   ElementWidthMode,
@@ -212,6 +213,12 @@ export const FontSizes: number[] = [
  * The size text is set at until one is picked, in pixels.
  */
 export const DefaultFontSize = 14;
+
+/**
+ * The corner radius an element taking one is drawn with until one
+ * is picked.
+ */
+export const DefaultCornerRadius: ElementCornerRadius = 'sm';
 
 /**
  * The smallest and largest sizes text can be set at, in pixels.

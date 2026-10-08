@@ -49,6 +49,12 @@ export interface RadioToggleGroupProps<Value extends string = string> {
    */
   children: React.ReactNode;
 
+  /**
+   * Accessible name of the group, for a group without a visible
+   * label tied to it.
+   */
+  'aria-label'?: string;
+
   /*
    * Ref forwarded to the root element.
    */
@@ -65,6 +71,7 @@ export function RadioToggleGroup<Value extends string>({
   className,
   style,
   children,
+  'aria-label': ariaLabel,
 }: RadioToggleGroupProps<Value>) {
   // Base UI ToggleGroup uses Value[]. We unwrap to/from single
   // value; pressing the active toggle reports an empty selection,
@@ -95,6 +102,7 @@ export function RadioToggleGroup<Value extends string>({
       disabled={disabled}
       className={propsToClass('radio-toggle-group', { size, className })}
       style={style}
+      aria-label={ariaLabel}
     >
       {children}
     </ToggleGroupPrimitive>

@@ -1,4 +1,5 @@
 export * from './BoxElement';
+export * from './ChipsElement';
 export * from './EditorElement';
 export * from './EditorTitleElement';
 export * from './HeadingElement';

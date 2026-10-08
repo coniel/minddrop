@@ -1,6 +1,16 @@
 {
   "designsNext": {
     "elements": {
+      "chips": {
+        "label": "Chips",
+        "placeholder": "Chip",
+        "size": {
+          "label": "Size",
+          "sm": "Small",
+          "md": "Medium",
+          "lg": "Large"
+        }
+      },
       "editor": {
         "label": "Editor"
       },

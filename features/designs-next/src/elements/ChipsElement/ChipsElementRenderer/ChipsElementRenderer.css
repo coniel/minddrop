@@ -1,0 +1,9 @@
+/* The block's box. Chips wrap onto lines from its top edge. Lines
+   past the box are clipped when the content fit fixes the block's
+   height. */
+.design-chips-element {
+  flex: 1;
+  min-width: 0;
+  align-content: flex-start;
+  overflow: hidden;
+}

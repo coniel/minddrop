@@ -1,3 +1,4 @@
+export * from './CornerRadiusToggleGroup';
 export * from './DesignBlockEditor';
 export * from './DesignEditor';
 export * from './DesignEditorPane';
@@ -12,5 +13,6 @@ export * from './TextContentControls';
 export * from './useElementProperty';
 export * from './useElementValue';
 export * from './useHasMappedMarkdownEditor';
+export * from './utils/resolveCornerRadius';
 export * from './utils/resolveElementColor';
 export * from './utils/resolveElementStyle';

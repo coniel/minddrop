@@ -2,11 +2,11 @@ import {
   DesignElement,
   DesignElementSettings,
   ElementBackground,
-  ElementCornerRadius,
   ElementPadding,
   FontFamily,
   VerticalAlign,
 } from '@minddrop/designs-next';
+import { resolveCornerRadius } from '../resolveCornerRadius';
 import { resolveElementColor } from '../resolveElementColor';
 
 // The theme's content font stack for each family
@@ -21,15 +21,6 @@ const BackgroundValues: Record<ElementBackground, string> = {
   subtle: 'var(--surface-subtle)',
   accent: 'var(--surface-accent)',
   'solid-accent': 'var(--surface-solid-accent)',
-};
-
-// The theme's radius token for each corner radius
-const CornerRadiusValues: Record<ElementCornerRadius, string> = {
-  none: '0',
-  sm: 'var(--radius-sm)',
-  md: 'var(--radius-md)',
-  lg: 'var(--radius-lg)',
-  full: 'var(--radius-full)',
 };
 
 // Where a column's content sits for each vertical alignment
@@ -72,7 +63,7 @@ export function resolveElementStyle(
     justifyContent: verticalAlign && VerticalAlignValues[verticalAlign],
     color: resolveElementColor(element.textColor ?? defaults.textColor),
     backgroundColor: background && BackgroundValues[background],
-    borderRadius: cornerRadius && CornerRadiusValues[cornerRadius],
+    borderRadius: cornerRadius && resolveCornerRadius(cornerRadius),
     padding: resolvePadding(element.padding),
     ...custom,
   };

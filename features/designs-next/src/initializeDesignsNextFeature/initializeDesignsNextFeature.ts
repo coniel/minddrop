@@ -2,6 +2,7 @@ import { DesignElementConfigs } from '@minddrop/designs-next';
 import { I18n } from '@minddrop/i18n';
 import {
   BoxElementConfig,
+  ChipsElementConfig,
   EditorElementConfig,
   EditorTitleElementConfig,
   HeadingElementConfig,
@@ -12,8 +13,7 @@ import {
 import { locales } from '../locales';
 
 /**
- * Initializes the designs feature: registers the feature's
- * translations and the built-in design elements.
+ * Initializes the designs feature.
  */
 export function initializeDesignsNextFeature(): void {
   // Register the feature's translations
@@ -21,6 +21,7 @@ export function initializeDesignsNextFeature(): void {
 
   // Register the built-in element configs
   DesignElementConfigs.register(BoxElementConfig);
+  DesignElementConfigs.register(ChipsElementConfig);
   DesignElementConfigs.register(EditorElementConfig);
   DesignElementConfigs.register(EditorTitleElementConfig);
   DesignElementConfigs.register(HeadingElementConfig);
