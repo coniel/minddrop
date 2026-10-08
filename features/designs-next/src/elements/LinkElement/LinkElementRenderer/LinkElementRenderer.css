@@ -1,0 +1,11 @@
+/* The block's box. Fills the block for the text inside it. Drops
+   the anchor's own underline, leaving it to the underline setting. */
+.design-link-element {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  color: inherit;
+  text-decoration: none;
+  text-underline-offset: var(--space-0-5);
+  cursor: pointer;
+}

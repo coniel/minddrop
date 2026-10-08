@@ -1335,6 +1335,18 @@ declare module 'i18next' {
               label: string;
               placeholder: string;
             };
+            link: {
+              label: string;
+              placeholder: string;
+              parts: {
+                label: string;
+                protocol: string;
+                subdomain: string;
+                domain: string;
+                tld: string;
+                path: string;
+              };
+            };
             number: {
               label: string;
               decimals: string;

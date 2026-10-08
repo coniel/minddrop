@@ -18,6 +18,7 @@ export * from './formatDateInMode';
 export * from './formatIsoDate';
 export * from './formatNumber';
 export * from './formatRelativeDate';
+export * from './formatUrl';
 export * from './fuzzySearch';
 export * from './fuzzySearchBy';
 export * from './getFileExtensionFromUrl';

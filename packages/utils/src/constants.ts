@@ -1,3 +1,5 @@
+import type { UrlPart } from './formatUrl';
+
 /**
  * Key prefix for data entries in DataTransfer objects.
  */
@@ -13,3 +15,14 @@ export const IMAGE_WIDTH_BRACKET = 200;
  * Above this, the original image is served.
  */
 export const MAX_IMAGE_RESIZE_WIDTH = 2400;
+
+/**
+ * The parts of a URL in the order they are written.
+ */
+export const UrlParts: UrlPart[] = [
+  'protocol',
+  'subdomain',
+  'domain',
+  'tld',
+  'path',
+];

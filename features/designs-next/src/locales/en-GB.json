@@ -38,6 +38,18 @@
         "label": "Label",
         "placeholder": "Label"
       },
+      "link": {
+        "label": "Link",
+        "placeholder": "Link",
+        "parts": {
+          "label": "Address parts",
+          "protocol": "Protocol",
+          "subdomain": "Subdomain",
+          "domain": "Domain",
+          "tld": "Top-level domain",
+          "path": "Path"
+        }
+      },
       "number": {
         "label": "Number",
         "decimals": "Decimal places",

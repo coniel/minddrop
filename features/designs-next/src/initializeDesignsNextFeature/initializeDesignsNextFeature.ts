@@ -9,6 +9,7 @@ import {
   HeadingElementConfig,
   IconElementConfig,
   LabelElementConfig,
+  LinkElementConfig,
   NumberElementConfig,
   TextElementConfig,
 } from '../elements';
@@ -30,6 +31,7 @@ export function initializeDesignsNextFeature(): void {
   DesignElementConfigs.register(HeadingElementConfig);
   DesignElementConfigs.register(IconElementConfig);
   DesignElementConfigs.register(LabelElementConfig);
+  DesignElementConfigs.register(LinkElementConfig);
   DesignElementConfigs.register(NumberElementConfig);
   DesignElementConfigs.register(TextElementConfig);
 }

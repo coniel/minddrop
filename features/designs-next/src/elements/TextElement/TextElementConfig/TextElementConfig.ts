@@ -1,8 +1,10 @@
 import { DesignElementConfig, Designs } from '@minddrop/designs-next';
-import { i18n } from '@minddrop/i18n';
 import { Properties } from '@minddrop/properties';
 import { TextContentControls } from '@minddrop/ui-designs-next';
-import { resolveElementLineRowSpan } from '../../../utils';
+import {
+  resolveElementLineRowSpan,
+  resolvePlaceholderContent,
+} from '../../../utils';
 import { TextElement } from '../TextElement.types';
 import { TextElementRenderer } from '../TextElementRenderer';
 
@@ -29,7 +31,8 @@ export const TextElementConfig: DesignElementConfig<TextElement> = {
     Designs.resolveTextLineRowSpan(Designs.constants.DefaultFontSize) *
     DefaultLines,
   defaultContentFit: 'grow',
-  resolveDefaults: resolvePlaceholderText,
+  resolveDefaults: () =>
+    resolvePlaceholderContent('designsNext.elements.text.placeholder'),
   settingControls: [
     'font',
     'font-size',
@@ -41,13 +44,3 @@ export const TextElementConfig: DesignElementConfig<TextElement> = {
   ],
   resolveMinRowSpan: resolveElementLineRowSpan,
 };
-
-/**
- * Resolves the placeholder text a new text element starts with, so
- * it renders visibly.
- *
- * @returns The starter fields.
- */
-function resolvePlaceholderText(): Partial<TextElement> {
-  return { content: i18n.t('designsNext.elements.text.placeholder') };
-}
