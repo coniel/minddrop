@@ -1,6 +1,7 @@
 export * from './Paths';
 export * from './applyNullableChanges';
 export * from './back-end-utils';
+export * from './toEmbedUrl';
 export * from './bracketImageWidth';
 export * from './canScrollBy';
 export * from './clamp';

@@ -12,6 +12,15 @@ export const config = mergeConfig(
   defineConfig({
     test: {
       environment: 'happy-dom',
+      environmentOptions: {
+        happyDOM: {
+          settings: {
+            // Never load an iframe's page, so a test rendering one
+            // makes no network request.
+            disableIframePageLoading: true,
+          },
+        },
+      },
     },
   }),
 );

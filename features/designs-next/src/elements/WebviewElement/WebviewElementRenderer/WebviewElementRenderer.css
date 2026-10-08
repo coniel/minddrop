@@ -1,0 +1,40 @@
+/* The block's box. The frame and the notice are positioned over it. */
+.design-webview-element {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* The box with no address, marked with the globe icon */
+.design-webview-element-placeholder {
+  background-color: var(--surface-subtle);
+  color: var(--text-muted);
+}
+
+/* The notice behind the frame. Fades in after a second, so a slow
+   page does not flash it. */
+.design-webview-element-blocked {
+  position: absolute;
+  inset: 0;
+  color: var(--text-muted);
+  animation: design-webview-element-blocked-fade-in 0.3s ease 1s both;
+}
+
+/* The frame, covering the box and the notice behind it */
+.design-webview-element-frame {
+  position: absolute;
+  inset: 0;
+}
+
+/* The notice's fade in */
+@keyframes design-webview-element-blocked-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

@@ -1393,6 +1393,10 @@ declare module 'i18next' {
               label: string;
               placeholder: string;
             };
+            webview: {
+              label: string;
+              blocked: string;
+            };
           };
           property: {
             label: string;

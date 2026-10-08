@@ -11,3 +11,4 @@ export * from './LabelElement';
 export * from './LinkElement';
 export * from './NumberElement';
 export * from './TextElement';
+export * from './WebviewElement';

@@ -14,6 +14,7 @@ import {
   LinkElementConfig,
   NumberElementConfig,
   TextElementConfig,
+  WebviewElementConfig,
 } from '../elements';
 import { locales } from '../locales';
 
@@ -38,4 +39,5 @@ export function initializeDesignsNextFeature(): void {
   DesignElementConfigs.register(LinkElementConfig);
   DesignElementConfigs.register(NumberElementConfig);
   DesignElementConfigs.register(TextElementConfig);
+  DesignElementConfigs.register(WebviewElementConfig);
 }
