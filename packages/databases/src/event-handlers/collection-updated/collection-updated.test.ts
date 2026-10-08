@@ -3,17 +3,18 @@ import { Collections } from '@minddrop/collections';
 import { CollectionFixtures } from '@minddrop/collections/test-utils';
 import { storeItem } from '@minddrop/stores/test-utils';
 import { EntriesStore } from '../../EntriesStore';
-import { sqlGetAllEntriesFull, sqlUpsertDatabase } from '../../sql';
+import { sqlGetEntriesFull } from '../../sql';
 import {
   cleanup,
   cleanupTestSqlDatabase,
   collectionDatabase,
   collectionEntry1,
-  databases,
+  propertyValue,
+  recordByPath,
+  seedSqlDatabases,
   setup,
   setupTestSqlDatabase,
 } from '../../test-utils';
-import { SqlEntryRecord } from '../../types';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
 import { onUpdateCollection } from './collection-updated';
 
@@ -96,7 +97,7 @@ describe('onUpdateCollection', () => {
     });
 
     // The record should carry the new membership
-    const record = recordById(sqlGetAllEntriesFull(), collectionEntry1.id);
+    const record = recordByPath(sqlGetEntriesFull(), collectionEntry1.path);
 
     expect(record.databaseId).toBe(collectionDatabase.id);
     expect(propertyValue(record, 'Related')).toEqual(updatedEntries);
@@ -116,34 +117,3 @@ describe('onUpdateCollection', () => {
     });
   });
 });
-
-/**
- * Seeds each fixture database's SQL record.
- */
-function seedSqlDatabases(): void {
-  databases.forEach((database) => {
-    sqlUpsertDatabase(
-      {
-        id: database.id,
-        name: database.name,
-        path: database.path,
-        icon: database.icon,
-      },
-      { silent: true },
-    );
-  });
-}
-
-/**
- * Returns the record with the given ID.
- */
-function recordById(records: SqlEntryRecord[], id: string): SqlEntryRecord {
-  return records.find((record) => record.id === id)!;
-}
-
-/**
- * Returns the value of the named property on a record.
- */
-function propertyValue(record: SqlEntryRecord, name: string) {
-  return record.properties.find((property) => property.name === name)?.value;
-}

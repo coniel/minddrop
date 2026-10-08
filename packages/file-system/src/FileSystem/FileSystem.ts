@@ -202,8 +202,7 @@ async function cleanupFileSystem(): Promise<void> {
 }
 
 /**
- * Writes a text file, recording its contents so that the resulting
- * file system change event can be recognised as the app's own write.
+ * Writes a text file, recording its contents as the app's own write.
  *
  * @param path - The file path.
  * @param contents - The file contents.
@@ -214,14 +213,15 @@ async function writeTextFile(
   contents: string,
   options?: FsWriteFileOptions,
 ): Promise<void> {
-  recordWrite(path, contents, options);
+  // Record the file's contents as the app's own write
+  recordContentsWrite(path, contents, options?.baseDir);
 
+  // Write the file
   await FsAdapter.writeTextFile(path, contents, options);
 }
 
 /**
- * Writes multiple text files, recording their contents so that the
- * resulting file system change events can be recognised as the app's
+ * Writes multiple text files, recording their contents as the app's
  * own writes.
  *
  * @param entries - The files to write, each with a path and contents.
@@ -231,15 +231,17 @@ async function writeTextFiles(
   entries: { path: string; contents: string }[],
   options?: FsWriteFileOptions,
 ): Promise<void> {
-  entries.forEach((entry) => recordWrite(entry.path, entry.contents, options));
+  // Record the files' contents as the app's own writes
+  entries.forEach((entry) =>
+    recordContentsWrite(entry.path, entry.contents, options?.baseDir),
+  );
 
+  // Write the files
   await FsAdapter.writeTextFiles(entries, options);
 }
 
 /**
- * Writes a binary file, recording the file's resulting stats so that
- * the resulting file system change event can be recognised as the
- * app's own write.
+ * Writes a binary file, recording its stats as the app's own write.
  *
  * @param path - The file path.
  * @param file - The file contents.
@@ -250,14 +252,15 @@ async function writeBinaryFile(
   file: Blob,
   options?: FsWriteFileOptions,
 ): Promise<void> {
+  // Write the file
   await FsAdapter.writeBinaryFile(path, file, options);
 
-  await recordWriteStats(path, options?.baseDir);
+  // Record the file's stats as the app's own write
+  await recordStatsWrite(path, options?.baseDir);
 }
 
 /**
- * Copies a file, recording the copy's stats so that the resulting
- * file system change event can be recognised as the app's own write.
+ * Copies a file, recording the copy's stats as the app's own write.
  *
  * @param source - The path of the file to copy.
  * @param destination - The path to copy the file to.
@@ -268,15 +271,15 @@ async function copyFile(
   destination: string,
   options?: CopyFileOptions,
 ): Promise<void> {
+  // Copy the file
   await FsAdapter.copyFile(source, destination, options);
 
-  await recordWriteStats(destination, options?.toPathBaseDir);
+  // Record the copy's stats as the app's own write
+  await recordStatsWrite(destination, options?.toPathBaseDir);
 }
 
 /**
- * Downloads a file, recording the downloaded file's stats so that the
- * resulting file system change event can be recognised as the app's
- * own write.
+ * Downloads a file, recording its stats as the app's own write.
  *
  * @param url - The URL of the file to download.
  * @param path - The path to save the file to.
@@ -287,41 +290,54 @@ async function downloadFile(
   path: string,
   options?: DownlodFileOptions,
 ): Promise<void> {
+  // Download the file
   await FsAdapter.downloadFile(url, path, options);
 
-  await recordWriteStats(path, options?.baseDir);
+  // Record the file's stats as the app's own write
+  await recordStatsWrite(path, options?.baseDir);
 }
 
 /**
  * Records a written file's stats in the write registry, skipping
  * writes into a base directory. Those target the app's own config
- * directories, which are never watched.
+ * directories. These are never watched.
+ *
+ * @param path - The path written to.
+ * @param baseDir - The base directory written into, if any.
  */
-async function recordWriteStats(
+async function recordStatsWrite(
   path: string,
   baseDir?: BaseDirectory,
 ): Promise<void> {
+  // Skip writes into a base directory
   if (baseDir) {
     return;
   }
 
+  // Record the file's stats
   recordWrittenStats(path, await FsAdapter.stat(path));
 }
 
 /**
  * Records written contents in the write registry, skipping writes
  * into a base directory. Those target the app's own config
- * directories, which are never watched.
+ * directories. These are never watched.
+ *
+ * @param path - The path written to.
+ * @param contents - The contents written.
+ * @param baseDir - The base directory written into, if any.
  */
-function recordWrite(
+function recordContentsWrite(
   path: string,
   contents: string,
-  options?: FsWriteFileOptions,
+  baseDir?: BaseDirectory,
 ): void {
-  if (options?.baseDir) {
+  // Skip writes into a base directory
+  if (baseDir) {
     return;
   }
 
+  // Record the contents
   recordWrittenContents(path, contents);
 }
 
@@ -420,8 +436,10 @@ async function writeJsonFile(
   pretty?: boolean,
   options?: FsOptions,
 ): Promise<void> {
+  // Serialize the JSON
   const contents = JSON.stringify(jsonContent, null, pretty ? 2 : 0);
 
+  // Write the file
   await writeTextFile(path, contents, options);
 }
 
@@ -460,7 +478,9 @@ async function writeYamlFile(
   values: Record<string, unknown>,
   options?: FsOptions,
 ): Promise<void> {
+  // Serialize the values to YAML
   const text = YAML.stringify(values);
 
+  // Write the file
   await writeTextFile(path, text, options);
 }

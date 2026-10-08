@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
-  sqlGetAllEntriesFull,
+  sqlGetEntriesFull,
   sqlUpsertDatabase,
   sqlUpsertEntries,
 } from '../../sql';
@@ -38,6 +38,7 @@ describe('onUpdateEntryMetadata', () => {
         name: objectDatabase.name,
         path: objectDatabase.path,
         icon: objectDatabase.icon,
+        properties: objectDatabase.properties,
       },
       { silent: true },
     );
@@ -47,6 +48,7 @@ describe('onUpdateEntryMetadata', () => {
         name: urlDatabase.name,
         path: urlDatabase.path,
         icon: urlDatabase.icon,
+        properties: urlDatabase.properties,
       },
       { silent: true },
     );
@@ -70,7 +72,7 @@ describe('onUpdateEntryMetadata', () => {
     });
 
     // The SQL record's metadata column should carry the update
-    const record = sqlGetAllEntriesFull().find(
+    const record = sqlGetEntriesFull().find(
       (entry) => entry.id === objectEntry1.id,
     );
 
@@ -86,7 +88,7 @@ describe('onUpdateEntryMetadata', () => {
     });
 
     // The other entry's metadata should be unchanged
-    const record = sqlGetAllEntriesFull().find(
+    const record = sqlGetEntriesFull().find(
       (entry) => entry.id === urlEntry1.id,
     );
 

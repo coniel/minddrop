@@ -98,6 +98,7 @@ describe('sqlQueryEntries', () => {
         name: objectDatabase.name,
         path: objectDatabase.path,
         icon: '',
+        properties: objectDatabase.properties,
       },
       { silent: true },
     );
@@ -107,6 +108,7 @@ describe('sqlQueryEntries', () => {
         name: urlDatabase.name,
         path: urlDatabase.path,
         icon: '',
+        properties: urlDatabase.properties,
       },
       { silent: true },
     );

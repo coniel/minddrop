@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { History } from '@minddrop/history';
 import {
-  sqlGetAllEntriesFull,
+  sqlGetEntriesFull,
   sqlUpsertDatabase,
   sqlUpsertEntries,
 } from '../../sql';
@@ -41,6 +41,7 @@ describe('onUpdateEntry', () => {
         name: objectDatabase.name,
         path: objectDatabase.path,
         icon: objectDatabase.icon,
+        properties: objectDatabase.properties,
       },
       { silent: true },
     );
@@ -59,7 +60,7 @@ describe('onUpdateEntry', () => {
     await onUpdateEntry({ original: objectEntry1, updated: updatedEntry });
 
     // The SQL record should carry the updated title
-    const record = sqlGetAllEntriesFull().find(
+    const record = sqlGetEntriesFull().find(
       (entry) => entry.id === objectEntry1.id,
     );
 
@@ -71,7 +72,7 @@ describe('onUpdateEntry', () => {
     await onUpdateEntry({ original: objectEntry1, updated: updatedEntry });
 
     // The SQL record's property should carry the updated value
-    const record = sqlGetAllEntriesFull().find(
+    const record = sqlGetEntriesFull().find(
       (entry) => entry.id === objectEntry1.id,
     );
     const contentProperty = record?.properties.find(

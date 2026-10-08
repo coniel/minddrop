@@ -53,6 +53,7 @@ describe('onDeleteDatabase', () => {
         name: collectionDatabase.name,
         path: collectionDatabase.path,
         icon: collectionDatabase.icon,
+        properties: collectionDatabase.properties,
       },
       { silent: true },
     );

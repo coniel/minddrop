@@ -1,6 +1,7 @@
 /**
  * Checks whether two values are the same. Dates compare by their
  * time, lists by their members in order, anything else by identity.
+ * Use `isDeepEqual` for nested values.
  *
  * @param a - The first value.
  * @param b - The second value.

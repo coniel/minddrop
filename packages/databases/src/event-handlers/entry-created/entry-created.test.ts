@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { History } from '@minddrop/history';
-import { sqlGetAllEntriesFull, sqlUpsertDatabase } from '../../sql';
+import { sqlGetEntriesFull, sqlUpsertDatabase } from '../../sql';
 import {
   cleanup,
   cleanupTestSqlDatabase,
@@ -36,6 +36,7 @@ describe('onCreateEntry', () => {
           name: database.name,
           path: database.path,
           icon: database.icon,
+          properties: database.properties,
         },
         { silent: true },
       );
@@ -61,7 +62,7 @@ describe('onCreateEntry', () => {
     await onCreateEntry(objectEntry1);
 
     // The entry record and its properties should be in SQL
-    expect(sqlGetAllEntriesFull()).toContainEqual(objectEntry1SqlRecord);
+    expect(sqlGetEntriesFull()).toContainEqual(objectEntry1SqlRecord);
   });
 
   it('upserts collection property values into SQL', async () => {
@@ -69,7 +70,7 @@ describe('onCreateEntry', () => {
     await onCreateEntry(collectionEntry1);
 
     // The record should carry the collection membership values
-    expect(sqlGetAllEntriesFull()).toContainEqual(collectionEntry1SqlRecord);
+    expect(sqlGetEntriesFull()).toContainEqual(collectionEntry1SqlRecord);
   });
 
   it('creates a virtual collection for each collection property', async () => {

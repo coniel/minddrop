@@ -40,6 +40,7 @@ export async function onRenameDatabase(
     name: updated.name,
     path: updated.path,
     icon: updated.icon,
+    properties: updated.properties,
   });
 
   // Find collection properties in the database schema

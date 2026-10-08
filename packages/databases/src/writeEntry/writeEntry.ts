@@ -3,6 +3,7 @@ import { Fs } from '@minddrop/file-system';
 import { PropertiesSchema } from '@minddrop/properties';
 import { Workspaces } from '@minddrop/workspaces';
 import { EntrySerializersRegistry } from '../EntrySerializersRegistry';
+import { EntryFileUnreadableError } from '../errors';
 import { EntryWrittenEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getEntry } from '../getEntry';
@@ -32,6 +33,7 @@ export interface WriteEntryOptions {
  * @throws {EntryNotFoundError} If the entry does not exist.
  * @throws {DatabaseNotFoundError} If the entry database does not exist.
  * @throws {NotRegisteredError} If the entry serializer is not registered.
+ * @throws {EntryFileUnreadableError} If the entry's existing file cannot be deserialized.
  *
  * @dispatches databases:entry:written
  */
@@ -73,12 +75,22 @@ export async function writeEntry(
     ? await Fs.readTextFile(entryPath)
     : undefined;
 
+  // Get the database's entry serializer
+  const serializer = EntrySerializersRegistry.get(database.entrySerializer);
+
+  // Check the existing file can be deserialized. If not, it holds
+  // edits the store does not have, which a write would destroy.
+  if (previousContents !== undefined) {
+    assertDeserializable(entryPath, () =>
+      serializer.deserialize(database.properties, previousContents),
+    );
+  }
+
   // Declare the cleared properties alongside the schema. A declared
   // property with no value is how the serializer removes it.
   const schema = [...database.properties, ...clearedProperties];
 
   // Serialize the entry's properties
-  const serializer = EntrySerializersRegistry.get(database.entrySerializer);
   const contents = serializer.serialize(schema, properties, previousContents);
 
   // Check whether the file already holds what would be written. If so,
@@ -99,4 +111,20 @@ export async function writeEntry(
     previousContents,
     contents,
   });
+}
+
+/**
+ * Throws if an entry file's contents cannot be deserialized.
+ *
+ * @param path - The entry file's path.
+ * @param deserialize - Deserializes the contents.
+ *
+ * @throws {EntryFileUnreadableError} If deserializing the contents throws.
+ */
+function assertDeserializable(path: string, deserialize: () => unknown): void {
+  try {
+    deserialize();
+  } catch {
+    throw new EntryFileUnreadableError(path);
+  }
 }

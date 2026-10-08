@@ -14,5 +14,12 @@ export function registerDatabasesBackendAdapterRpc(
       rpc.request.databasesInitialize({ workspaceId, workspacePath }),
     backgroundSync: (workspaceId, workspacePath) =>
       rpc.request.databasesBackgroundSync({ workspaceId, workspacePath }),
+    syncEntryFiles: (workspaceId, workspacePath, databases, changes) =>
+      rpc.request.databasesSyncEntryFiles({
+        workspaceId,
+        workspacePath,
+        databases,
+        changes,
+      }),
   });
 }

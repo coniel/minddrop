@@ -9,17 +9,17 @@ import { readWorkspaceDatabases } from '../../readWorkspaceDatabases';
 import type { Database, Entry, SqlEntryRecord } from '../../types';
 import {
   convertEntryToSqlRecord,
-  entryAddress,
   entryMetadataKey,
   mergeEntryMetadata,
   resolveCollectionProperties,
   resolveDatabasePath,
+  resolveEntryAddressKey,
 } from '../../utils';
 import { writeEntryMetadata } from '../../writeEntryMetadata';
 import { SCHEMA_SQL, SCHEMA_VERSION } from '../schema';
 import { sqlDeleteDatabase } from '../sqlDeleteDatabase';
 import { sqlGetAllDatabases } from '../sqlGetAllDatabases';
-import { sqlGetAllEntriesFull } from '../sqlGetAllEntriesFull';
+import { sqlGetEntriesFull } from '../sqlGetEntriesFull';
 import { sqlUpsertDatabase } from '../sqlUpsertDatabase';
 import { sqlUpsertEntries } from '../sqlUpsertEntries';
 
@@ -109,7 +109,7 @@ export async function initializeDatabasesBackend(
   }
 
   // Query all entries with full property data and metadata
-  const entries = sqlGetAllEntriesFull(workspaceId);
+  const entries = sqlGetEntriesFull(undefined, workspaceId);
 
   return {
     databases,
@@ -148,6 +148,7 @@ async function rebuildSqlFromFilesystem(
         name: database.name,
         path: database.path,
         icon: database.icon,
+        properties: database.properties,
       },
       { silent: true },
       workspaceId,
@@ -155,7 +156,7 @@ async function rebuildSqlFromFilesystem(
 
     // Read entries and metadata from disk in parallel
     const [{ entries: rawEntries }, metadataMap] = await Promise.all([
-      readEntries(database, workspacePath),
+      readEntries(database, { workspacePath }),
       readAllEntryMetadata(resolveDatabasePath(database, workspacePath)),
     ]);
 
@@ -179,10 +180,7 @@ async function rebuildSqlFromFilesystem(
 
     // Index the entries by address
     entriesWithMetadata.forEach((entry) => {
-      entryIdByAddress.set(
-        entryAddress(entry, database).toLowerCase(),
-        entry.id,
-      );
+      entryIdByAddress.set(resolveEntryAddressKey(entry, database), entry.id);
     });
 
     // Stage the read results for the resolution pass

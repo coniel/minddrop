@@ -82,6 +82,7 @@ describe('sqlQueryScopedEntries', () => {
         name: objectDatabase.name,
         path: objectDatabase.path,
         icon: '',
+        properties: objectDatabase.properties,
       },
       { silent: true },
     );
@@ -91,6 +92,7 @@ describe('sqlQueryScopedEntries', () => {
         name: urlDatabase.name,
         path: urlDatabase.path,
         icon: '',
+        properties: urlDatabase.properties,
       },
       { silent: true },
     );

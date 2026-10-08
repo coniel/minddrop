@@ -10,20 +10,21 @@ import { Database, Entry } from '../../types';
  * @returns The entry address, or null if the entry's database does not exist.
  */
 export function entryAddress(
-  entry: Pick<Entry, 'title' | 'database'>,
-  database: Database,
+  entry: Pick<Entry, 'title'>,
+  database: Pick<Database, 'name'>,
 ): string;
 export function entryAddress(
   entry: Pick<Entry, 'title' | 'database'>,
 ): string | null;
 export function entryAddress(
-  entry: Pick<Entry, 'title' | 'database'>,
-  database?: Database,
+  entry: Pick<Entry, 'title'> & Partial<Pick<Entry, 'database'>>,
+  database?: Pick<Database, 'name'>,
 ): string | null {
   // Fall back to the entry's stored database
-  const entryDatabase = database ?? getDatabase(entry.database, false);
+  const entryDatabase =
+    database ?? (entry.database ? getDatabase(entry.database, false) : null);
 
-  // Entries whose database is gone cannot be addressed
+  // Entries whose database is unknown or gone cannot be addressed
   if (!entryDatabase) {
     return null;
   }

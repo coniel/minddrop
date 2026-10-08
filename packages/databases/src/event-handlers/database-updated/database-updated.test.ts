@@ -16,14 +16,17 @@ import {
   setupTestSqlDatabase,
   urlDatabase,
 } from '../../test-utils';
+import { Database } from '../../types';
+import { hashDatabaseProperties } from '../../utils';
 import { onUpdateDatabase } from './database-updated';
 
-// The database with updated metadata
-const updatedDatabase = {
+// The database with updated metadata and property schema
+const updatedDatabase: Database = {
   ...objectDatabase,
   name: 'Renamed Objects',
   path: `${parentDir}/Renamed Objects`,
   icon: 'lucide:star:red',
+  properties: [...objectDatabase.properties, { type: 'text', name: 'Added' }],
 };
 
 describe('onUpdateDatabase', () => {
@@ -40,6 +43,7 @@ describe('onUpdateDatabase', () => {
         name: objectDatabase.name,
         path: objectDatabase.path,
         icon: objectDatabase.icon,
+        properties: objectDatabase.properties,
       },
       { silent: true },
     );
@@ -61,6 +65,7 @@ describe('onUpdateDatabase', () => {
         name: updatedDatabase.name,
         path: updatedDatabase.path,
         icon: updatedDatabase.icon,
+        propertiesHash: hashDatabaseProperties(updatedDatabase.properties),
       },
     ]);
   });
@@ -115,6 +120,7 @@ describe('onUpdateDatabase', () => {
         name: urlDatabase.name,
         path: urlDatabase.path,
         icon: urlDatabase.icon,
+        properties: urlDatabase.properties,
       },
       { silent: true },
     );
@@ -128,6 +134,7 @@ describe('onUpdateDatabase', () => {
       name: urlDatabase.name,
       path: urlDatabase.path,
       icon: urlDatabase.icon,
+      propertiesHash: hashDatabaseProperties(urlDatabase.properties),
     });
   });
 });

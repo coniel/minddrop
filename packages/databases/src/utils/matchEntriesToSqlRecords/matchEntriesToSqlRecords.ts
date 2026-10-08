@@ -25,7 +25,7 @@ export interface MatchEntriesToSqlRecordsResult<
  *
  * @param freshRecords - The entry records read from the filesystem.
  * @param existingRecords - The existing SQL entry sync records.
- * @param retainedPaths - Paths of entry files which exist but were not read fresh, whose existing records are kept.
+ * @param retainedPaths - Paths of entry files which exist but were not read. Their existing records are kept.
  * @returns The ID-resolved records and deleted entry IDs.
  */
 export function matchEntriesToSqlRecords<
@@ -57,7 +57,7 @@ export function matchEntriesToSqlRecords<
     ...(retainedPaths ?? []),
   ]);
 
-  // Existing records with no file at their path have been deleted
+  // Collect the IDs of the existing records with no file at their path
   const deletedIds = existingRecords
     .filter((record) => !presentPaths.has(record.path))
     .map((record) => record.id);

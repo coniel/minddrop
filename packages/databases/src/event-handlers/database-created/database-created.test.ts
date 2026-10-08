@@ -9,6 +9,7 @@ import {
   setup,
   setupTestSqlDatabase,
 } from '../../test-utils';
+import { hashDatabaseProperties } from '../../utils';
 import { resolveDatabaseHistorySubject } from '../../utils';
 import { onCreateDatabase } from './database-created';
 
@@ -35,6 +36,7 @@ describe('onCreateDatabase', () => {
       name: objectDatabase.name,
       path: objectDatabase.path,
       icon: objectDatabase.icon,
+      propertiesHash: hashDatabaseProperties(objectDatabase.properties),
     });
   });
 

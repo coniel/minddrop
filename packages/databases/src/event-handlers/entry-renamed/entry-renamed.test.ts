@@ -5,7 +5,7 @@ import { History, Ledgers } from '@minddrop/history';
 import { ItemReferences } from '@minddrop/item-references';
 import { EntriesStore } from '../../EntriesStore';
 import { recordEntryHistory } from '../../recordEntryHistory';
-import { sqlGetAllEntriesFull, sqlUpsertDatabase } from '../../sql';
+import { sqlGetEntriesFull, sqlUpsertDatabase } from '../../sql';
 import {
   MockFs,
   cleanup,
@@ -69,6 +69,7 @@ describe('onRenameEntry', () => {
           name: database.name,
           path: database.path,
           icon: database.icon,
+          properties: database.properties,
         },
         { silent: true },
       );
@@ -114,7 +115,7 @@ describe('onRenameEntry', () => {
     });
 
     // The record carries the new title
-    expect(sqlGetAllEntriesFull()).toContainEqual(
+    expect(sqlGetEntriesFull()).toContainEqual(
       expect.objectContaining({
         id: collectionEntry1.id,
         title: renamedEntry.title,
@@ -187,7 +188,7 @@ describe('onRenameEntry', () => {
     });
 
     // The SQL record should carry the new title under the same ID
-    expect(sqlGetAllEntriesFull()).toContainEqual(
+    expect(sqlGetEntriesFull()).toContainEqual(
       expect.objectContaining({
         id: objectEntry1.id,
         databaseId: objectEntry1.database,

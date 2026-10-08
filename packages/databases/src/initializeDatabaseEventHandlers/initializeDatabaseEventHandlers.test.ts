@@ -28,6 +28,7 @@ describe('initializeDatabaseEventHandlers', () => {
         name: objectDatabase.name,
         path: objectDatabase.path,
         icon: objectDatabase.icon,
+        properties: objectDatabase.properties,
       },
       { silent: true },
     );

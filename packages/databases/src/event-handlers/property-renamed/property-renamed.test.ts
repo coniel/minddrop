@@ -14,7 +14,7 @@ import { DatabasesStore } from '../../DatabasesStore';
 import { EntriesStore } from '../../EntriesStore';
 import { DatabaseHistoryCauses } from '../../constants';
 import {
-  sqlGetAllEntriesFull,
+  sqlGetEntriesFull,
   sqlUpsertDatabase,
   sqlUpsertEntries,
 } from '../../sql';
@@ -101,6 +101,7 @@ describe('onRenameProperty', () => {
         name: collectionDatabase.name,
         path: collectionDatabase.path,
         icon: collectionDatabase.icon,
+        properties: collectionDatabase.properties,
       },
       { silent: true },
     );
@@ -145,7 +146,7 @@ describe('onRenameProperty', () => {
     await renameProperty(collectionDatabase, 'Related', 'Links');
 
     // Find the entry's SQL record
-    const record = sqlGetAllEntriesFull().find(
+    const record = sqlGetEntriesFull().find(
       (entryRecord) => entryRecord.id === collectionEntry1.id,
     )!;
 

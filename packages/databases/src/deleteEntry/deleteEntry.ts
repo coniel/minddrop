@@ -4,9 +4,9 @@ import { EntriesStore } from '../EntriesStore';
 import { EntryDeletedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getEntry } from '../getEntry';
+import { removeEntryMetadataFile } from '../removeEntryMetadataFile';
 import {
   resolveDatabasePath,
-  resolveEntryMetadataFilePath,
   resolveEntryPath,
   resolveEntryPropertyFilePaths,
 } from '../utils';
@@ -59,14 +59,7 @@ export async function deleteEntry(id: string): Promise<void> {
     }
   }
 
-  // Remove the entry's metadata sidecar, which would otherwise be
+  // Remove the entry's metadata sidecar. It would otherwise be
   // orphaned in the metadata directory.
-  const metadataFilePath = resolveEntryMetadataFilePath(
-    databasePath,
-    entryPath,
-  );
-
-  if (await Fs.exists(metadataFilePath)) {
-    await Fs.removeFile(metadataFilePath);
-  }
+  await removeEntryMetadataFile(databasePath, entryPath);
 }

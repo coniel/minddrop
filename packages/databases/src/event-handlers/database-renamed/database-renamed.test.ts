@@ -28,6 +28,7 @@ import {
   setup,
   setupRecordingTestSqlDatabase,
 } from '../../test-utils';
+import { hashDatabaseProperties } from '../../utils';
 import {
   resolveDatabaseHistorySubject,
   resolveDatabasePath,
@@ -204,6 +205,7 @@ describe('onRenameDatabase', () => {
       name: renamedDatabase.name,
       path: renamedDatabase.path,
       icon: renamedDatabase.icon,
+      propertiesHash: hashDatabaseProperties(renamedDatabase.properties),
     });
   });
 

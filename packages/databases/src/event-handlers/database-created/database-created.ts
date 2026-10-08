@@ -27,6 +27,7 @@ export async function onCreateDatabase(
     name: data.name,
     path: data.path,
     icon: data.icon,
+    properties: data.properties,
   });
 
   // Open the database's history

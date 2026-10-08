@@ -1,5 +1,7 @@
 import type {
   BackgroundSyncChangeset,
+  Database,
+  EntryFileChange,
   InitializeBackendResult,
 } from '@minddrop/databases';
 import { Databases } from '@minddrop/databases';
@@ -37,12 +39,49 @@ export async function handleDatabasesBackgroundSync(params: {
   workspaceId: string;
   workspacePath: string;
 }): Promise<void> {
+  // Run the background sync
   const changeset = await Databases.backgroundSync(
     params.workspaceId,
     params.workspacePath,
   );
 
-  // Only send if there were changes
+  // Send the changeset to the webview
+  sendSyncChangeset(changeset);
+}
+
+/**
+ * RPC handler for re-indexing the entries whose files changed
+ * outside of the app. Sends a changeset message to the webview when
+ * done.
+ *
+ * @param params - The workspace, and the databases and entry files
+ *   which changed in it.
+ */
+export async function handleDatabasesSyncEntryFiles(params: {
+  workspaceId: string;
+  workspacePath: string;
+  databases: Database[];
+  changes: EntryFileChange[];
+}): Promise<void> {
+  // Re-index the changed entry files
+  const changeset = await Databases.syncEntryFiles(
+    params.workspaceId,
+    params.workspacePath,
+    params.databases,
+    params.changes,
+  );
+
+  // Send the changeset to the webview
+  sendSyncChangeset(changeset);
+}
+
+/**
+ * Sends a sync changeset to the webview, if it has any changes.
+ *
+ * @param changeset - The sync changeset to send.
+ */
+function sendSyncChangeset(changeset: BackgroundSyncChangeset): void {
+  // Check the changeset has changes and a sender is registered
   if (changeset.hasChanges && syncChangesetSender) {
     syncChangesetSender(changeset);
   }

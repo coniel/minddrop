@@ -6,7 +6,7 @@ import { InvalidParameterError, isUntitledTitle } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { EntriesStore } from '../EntriesStore';
 import { onUpdateCollection } from '../event-handlers/collection-updated';
-import { sqlGetAllEntriesFull, sqlUpsertDatabase } from '../sql';
+import { sqlGetEntriesFull, sqlUpsertDatabase } from '../sql';
 import {
   cleanup,
   cleanupTestSqlDatabase,
@@ -38,6 +38,7 @@ describe('updateEntryProperty', () => {
         name: collectionDatabase.name,
         path: collectionDatabase.path,
         icon: collectionDatabase.icon,
+        properties: collectionDatabase.properties,
       },
       { silent: true },
     );
@@ -96,7 +97,7 @@ describe('updateEntryProperty', () => {
       // The collection write-back lands as an unawaited event side
       // effect, so poll for the re-upserted SQL record.
       await vi.waitFor(() => {
-        const record = sqlGetAllEntriesFull().find(
+        const record = sqlGetEntriesFull().find(
           (entryRecord) => entryRecord.id === collectionEntry1.id,
         )!;
 

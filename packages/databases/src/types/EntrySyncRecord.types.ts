@@ -1,3 +1,5 @@
+import type { EntryId } from './Entry.types';
+
 /**
  * The subset of a SQL entry record used to diff entries
  * during background sync.
@@ -6,7 +8,7 @@ export interface EntrySyncRecord {
   /**
    * The unique entry ID.
    */
-  id: string;
+  id: EntryId;
 
   /**
    * Path to the entry's primary file, relative to its database
@@ -23,4 +25,9 @@ export interface EntrySyncRecord {
    * Hash of the entry file's contents as of the last index.
    */
   contentHash: string;
+
+  /**
+   * The entry's metadata as of the last index, as a JSON string.
+   */
+  metadata: string;
 }

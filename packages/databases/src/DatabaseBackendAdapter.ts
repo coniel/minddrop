@@ -1,4 +1,5 @@
 import type { InitializeBackendResult } from './sql';
+import type { Database, EntryFileChange } from './types';
 
 export interface DatabaseBackendAdapter {
   /**
@@ -17,6 +18,18 @@ export interface DatabaseBackendAdapter {
    * Results are delivered via a message callback.
    */
   backgroundSync(workspaceId: string, workspacePath: string): Promise<void>;
+
+  /**
+   * Re-indexes the entries whose files changed outside of the app,
+   * reading only those entries' files. Results are delivered via
+   * the same message callback as a background sync.
+   */
+  syncEntryFiles(
+    workspaceId: string,
+    workspacePath: string,
+    databases: Database[],
+    changes: EntryFileChange[],
+  ): Promise<void>;
 }
 
 let adapter: DatabaseBackendAdapter | null = null;

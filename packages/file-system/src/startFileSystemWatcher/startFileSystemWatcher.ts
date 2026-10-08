@@ -7,7 +7,7 @@ import {
   FsWatchEventKind,
 } from '../types';
 import {
-  getRecordedWriteKind,
+  findRecordedWriteKind,
   matchesWrittenContents,
   matchesWrittenStats,
 } from '../writeRegistry';
@@ -168,27 +168,33 @@ async function flushChange(
 /**
  * Checks whether a path's current state is the one the app's last
  * write left it in.
+ *
+ * @param path - The changed path.
+ * @returns Whether the change is the app's own write.
  */
 async function isSelfWrite(path: string): Promise<boolean> {
-  const recordedKind = getRecordedWriteKind(path);
+  // Get how the app's last write to the path was recorded
+  const recordedKind = findRecordedWriteKind(path);
 
-  // Paths the app has never written to are external by definition,
-  // so the common case costs no read
+  // Check the app has written to the path. If not, the change is
+  // external, and the common case costs no read.
   if (!recordedKind) {
     return false;
   }
 
   try {
-    // Compare the file's stats where the write recorded them, which
+    // Compare the file's stats where the write recorded them. This
     // costs no read of its contents.
     if (recordedKind === 'stats') {
       return matchesWrittenStats(path, await Fs.stat(path));
     }
 
+    // Otherwise compare the file's contents
     return matchesWrittenContents(path, await Fs.readTextFile(path));
   } catch {
-    // Deleted mid-flight, or a recorded text file no longer readable
-    // as text. Reporting the change is the recoverable direction.
+    // Treat the change as external if the file was deleted mid-flight,
+    // or is no longer readable as text. Reporting the change is the
+    // recoverable direction.
     return false;
   }
 }

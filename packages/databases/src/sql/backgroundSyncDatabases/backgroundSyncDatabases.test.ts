@@ -4,29 +4,40 @@ import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { readEntryMetadata } from '../../readEntryMetadata';
 import {
   MockFs,
+  appendToEntryFile,
+  breakEntryFile,
   cleanup,
   cleanupRecordingTestSqlDatabase,
   clearRecordedSqlStatements,
   collectionDatabase,
   collectionEntry1,
+  collectionEntry1SqlRecord,
   databaseDirPath,
-  databases,
   entryFilePath,
   entrySqlRecords,
-  getRecordedSqlStatements,
+  indexAtCurrentContents,
   parentDir,
+  propertyValue,
+  recordByPath,
+  recordedDeletedEntryIds,
   referenceEntry1,
   relatedEntry1,
   relatedEntry2,
+  seedSqlDatabases,
+  seedSqlEntries,
   setup,
   setupRecordingTestSqlDatabase,
   timestampDatabase,
   timestampEntry1,
+  upsertedEntryPaths,
 } from '../../test-utils';
-import { Entry, EntryMetadata, SqlEntryRecord } from '../../types';
-import { resolveEntryMetadataFilePath } from '../../utils';
+import { EntryMetadata } from '../../types';
+import {
+  resolveDatabaseConfigFilePath,
+  resolveEntryMetadataFilePath,
+} from '../../utils';
 import { writeEntryMetadata } from '../../writeEntryMetadata';
-import { sqlGetAllEntriesFull } from '../sqlGetAllEntriesFull';
+import { sqlGetEntriesFull } from '../sqlGetEntriesFull';
 import { sqlGetEntrySyncRecords } from '../sqlGetEntrySyncRecords';
 import { sqlUpsertDatabase } from '../sqlUpsertDatabase';
 import { sqlUpsertEntries } from '../sqlUpsertEntries';
@@ -47,17 +58,7 @@ describe('backgroundSyncDatabases', () => {
     setupRecordingTestSqlDatabase();
 
     // Seed each fixture database's SQL record
-    databases.forEach((database) => {
-      sqlUpsertDatabase(
-        {
-          id: database.id,
-          name: database.name,
-          path: database.path,
-          icon: database.icon,
-        },
-        { silent: true },
-      );
-    });
+    seedSqlDatabases();
 
     // Seed the fixture entries as existing records with a hash no
     // file contents produce, so every entry appears modified.
@@ -80,7 +81,7 @@ describe('backgroundSyncDatabases', () => {
     await backgroundSyncDatabases(workspace_1.id, parentDir);
 
     const collectionRecord = recordByPath(
-      sqlGetAllEntriesFull(),
+      sqlGetEntriesFull(),
       collectionEntry1.path,
     );
 
@@ -105,6 +106,7 @@ describe('backgroundSyncDatabases', () => {
         name: collectionDatabase.name,
         path: oldDatabasePath,
         icon: collectionDatabase.icon,
+        properties: collectionDatabase.properties,
       },
       { silent: true },
     );
@@ -130,13 +132,13 @@ describe('backgroundSyncDatabases', () => {
 
     // Entries at the renamed paths should keep their existing IDs
     const collectionRecord = recordByPath(
-      sqlGetAllEntriesFull(),
+      sqlGetEntriesFull(),
       collectionEntry1.path,
     );
 
     expect(collectionRecord.id).toBe(collectionEntry1.id);
     // No entries should have been deleted
-    expect(deletedEntryIds()).toEqual([]);
+    expect(recordedDeletedEntryIds()).toEqual([]);
   });
 
   it('drops references to entries deleted offline', async () => {
@@ -146,7 +148,7 @@ describe('backgroundSyncDatabases', () => {
     await backgroundSyncDatabases(workspace_1.id, parentDir);
 
     const collectionRecord = recordByPath(
-      sqlGetAllEntriesFull(),
+      sqlGetEntriesFull(),
       collectionEntry1.path,
     );
 
@@ -174,7 +176,7 @@ describe('backgroundSyncDatabases', () => {
     await backgroundSyncDatabases(workspace_1.id, parentDir);
 
     // Metadata is read for changed entries only, after the diff
-    const record = recordByPath(sqlGetAllEntriesFull(), collectionEntry1.path);
+    const record = recordByPath(sqlGetEntriesFull(), collectionEntry1.path);
 
     expect(JSON.parse(record.metadata)).toMatchObject(metadata);
   });
@@ -214,7 +216,7 @@ describe('backgroundSyncDatabases', () => {
 
     await backgroundSyncDatabases(workspace_1.id, parentDir);
 
-    const record = recordByPath(sqlGetAllEntriesFull(), collectionEntry1.path);
+    const record = recordByPath(sqlGetEntriesFull(), collectionEntry1.path);
 
     expect(record.created).toBe(sidecarDate.getTime());
     expect(record.lastModified).toBe(sidecarDate.getTime());
@@ -279,10 +281,7 @@ describe('backgroundSyncDatabases', () => {
 
     // Append to the entry's body as an external editor would,
     // leaving its Last Modified property untouched
-    MockFs.writeTextFile(
-      entryFilePath(timestampEntry1),
-      `${MockFs.readTextFile(entryFilePath(timestampEntry1))}\n\nAdded externally`,
-    );
+    appendToEntryFile(timestampEntry1);
 
     await backgroundSyncDatabases(workspace_1.id, parentDir);
 
@@ -291,6 +290,100 @@ describe('backgroundSyncDatabases', () => {
     expect(upsertedEntryPaths(timestampDatabase.id)).toContain(
       timestampEntry1.path,
     );
+  });
+
+  it('re-indexes every entry of a database whose properties changed', async () => {
+    indexAtCurrentContents();
+
+    // Add a property to the database's config outside of the app
+    const configPath = resolveDatabaseConfigFilePath(
+      databaseDirPath(timestampDatabase),
+    );
+    const config = JSON.parse(MockFs.readTextFile(configPath));
+
+    MockFs.writeTextFile(
+      configPath,
+      JSON.stringify({
+        ...config,
+        properties: [...config.properties, { name: 'Added', type: 'text' }],
+      }),
+    );
+
+    const changeset = await backgroundSyncDatabases(workspace_1.id, parentDir);
+
+    // The unchanged entry should be re-indexed against the new schema
+    expect(upsertedEntryPaths(timestampDatabase.id)).toContain(
+      timestampEntry1.path,
+    );
+    expect(changeset.upsertedDatabases.map((database) => database.id)).toEqual([
+      timestampDatabase.id,
+    ]);
+
+    // Drop the first sync's statements from the log
+    clearRecordedSqlStatements();
+
+    const nextChangeset = await backgroundSyncDatabases(
+      workspace_1.id,
+      parentDir,
+    );
+
+    // The next sync should find the new schema already indexed
+    expect(upsertedEntryPaths(timestampDatabase.id)).toEqual([]);
+    expect(nextChangeset.upsertedDatabases).toEqual([]);
+  });
+
+  it('re-indexes an entry whose sidecar changed while its file did not', async () => {
+    indexAtCurrentContents();
+
+    // Change only the entry's sidecar, as another device syncing a
+    // colour change would.
+    await writeEntryMetadata(
+      databaseDirPath(collectionDatabase),
+      collectionEntry1.path,
+      { color: 'red' },
+    );
+
+    await backgroundSyncDatabases(workspace_1.id, parentDir);
+
+    const record = recordByPath(sqlGetEntriesFull(), collectionEntry1.path);
+
+    expect(JSON.parse(record.metadata).color).toBe('red');
+  });
+
+  it('does not re-index an unchanged entry whose sidecar cannot be read', async () => {
+    // Index the entry at its contents on disk, with the metadata its
+    // sidecar held before it broke.
+    seedSqlEntries((record) => ({
+      ...record,
+      contentHash: Fs.hashContents(
+        MockFs.readTextFile(
+          entryFilePath({ database: record.databaseId, path: record.path }),
+        ),
+      ),
+      metadata:
+        record.id === collectionEntry1.id
+          ? JSON.stringify({ color: 'red' })
+          : record.metadata,
+    }));
+    clearRecordedSqlStatements();
+
+    // A sidecar broken outside the app, as by a git conflict
+    const sidecarPath = resolveEntryMetadataFilePath(
+      databaseDirPath(collectionDatabase),
+      collectionEntry1.path,
+    );
+    const brokenSidecar = '<<<<<<< HEAD\n{"color":"red"}';
+
+    MockFs.addFiles([{ path: sidecarPath, textContent: brokenSidecar }]);
+
+    await backgroundSyncDatabases(workspace_1.id, parentDir);
+
+    // Re-reading the entry would overwrite the sidecar with timestamps
+    // alone, losing the metadata it holds.
+    expect(upsertedEntryPaths(collectionDatabase.id)).not.toContain(
+      collectionEntry1.path,
+    );
+    expect(MockFs.readTextFile(sidecarPath)).toBe(brokenSidecar);
   });
 
   it('keeps entries whose contents are unchanged', async () => {
@@ -308,15 +401,12 @@ describe('backgroundSyncDatabases', () => {
     indexAtCurrentContents();
 
     // Change only the referencing entry
-    MockFs.writeTextFile(
-      entryFilePath(collectionEntry1),
-      `${MockFs.readTextFile(entryFilePath(collectionEntry1))}\n\nAdded externally`,
-    );
+    appendToEntryFile(collectionEntry1);
 
     await backgroundSyncDatabases(workspace_1.id, parentDir);
 
     const collectionRecord = recordByPath(
-      sqlGetAllEntriesFull(),
+      sqlGetEntriesFull(),
       collectionEntry1.path,
     );
 
@@ -327,25 +417,51 @@ describe('backgroundSyncDatabases', () => {
   });
 
   it('keeps the sidecar of an entry whose contents are unchanged', async () => {
-    indexAtCurrentContents();
+    const metadata: EntryMetadata = { color: 'red' };
+
     await writeEntryMetadata(
       databaseDirPath(collectionDatabase),
-      entryFilePath(collectionEntry1),
-      {
-        color: 'red',
-      },
+      collectionEntry1.path,
+      metadata,
     );
+    indexAtCurrentContents();
+    indexCollectionEntry1Metadata(metadata);
 
     await backgroundSyncDatabases(workspace_1.id, parentDir);
 
+    // The entry should be retained rather than re-read
+    expect(upsertedEntryPaths(collectionDatabase.id)).not.toContain(
+      collectionEntry1.path,
+    );
     expect(
       MockFs.exists(
         resolveEntryMetadataFilePath(
           databaseDirPath(collectionDatabase),
-          entryFilePath(collectionEntry1),
+          collectionEntry1.path,
         ),
       ),
     ).toBe(true);
+  });
+
+  it('does not re-index an entry whose sidecar dates match its indexed metadata', async () => {
+    const metadata: EntryMetadata = {
+      created: sidecarDate,
+      lastModified: sidecarDate,
+    };
+
+    await writeEntryMetadata(
+      databaseDirPath(collectionDatabase),
+      collectionEntry1.path,
+      metadata,
+    );
+    indexAtCurrentContents();
+    indexCollectionEntry1Metadata(metadata);
+
+    await backgroundSyncDatabases(workspace_1.id, parentDir);
+
+    expect(upsertedEntryPaths(collectionDatabase.id)).not.toContain(
+      collectionEntry1.path,
+    );
   });
 
   it('keeps an entry whose file cannot be parsed', async () => {
@@ -387,7 +503,7 @@ describe('backgroundSyncDatabases', () => {
     await backgroundSyncDatabases(workspace_1.id, parentDir);
 
     const collectionRecord = recordByPath(
-      sqlGetAllEntriesFull(),
+      sqlGetEntriesFull(),
       collectionEntry1.path,
     );
 
@@ -399,94 +515,24 @@ describe('backgroundSyncDatabases', () => {
 });
 
 /**
- * Replaces an entry's file contents with frontmatter which is not
- * valid YAML.
+ * Indexes collectionEntry1 at its current contents with the given
+ * metadata, as a previous sync would have left it.
  */
-function breakEntryFile(entry: Entry): void {
-  MockFs.writeTextFile(
-    entryFilePath(entry),
-    '---\nSummary: Nested: mapping\n---\n',
+function indexCollectionEntry1Metadata(metadata: EntryMetadata): void {
+  sqlUpsertEntries(
+    collectionDatabase.id,
+    [
+      {
+        ...collectionEntry1SqlRecord,
+        contentHash: Fs.hashContents(
+          MockFs.readTextFile(entryFilePath(collectionEntry1)),
+        ),
+        metadata: JSON.stringify(metadata),
+      },
+    ],
+    { silent: true },
   );
-}
 
-/**
- * Returns the file system path of the entry a SQL record indexes.
- */
-function entryFilePathFor(record: SqlEntryRecord): string {
-  const database = databases.find(({ id }) => id === record.databaseId)!;
-
-  return `${databaseDirPath(database)}/${record.path}`;
-}
-
-/**
- * Reseeds every fixture entry's SQL record via the given transform,
- * grouped by database.
- */
-function seedSqlEntries(
-  transform: (record: SqlEntryRecord) => SqlEntryRecord,
-): void {
-  databases.forEach((database) => {
-    // Collect the database's transformed entry records
-    const records = entrySqlRecords
-      .filter((record) => record.databaseId === database.id)
-      .map(transform);
-
-    // Skip databases without entries
-    if (records.length > 0) {
-      sqlUpsertEntries(database.id, records, { silent: true });
-    }
-  });
-}
-
-/**
- * Indexes every fixture entry at the contents currently on disk, so
- * that nothing appears changed until a file is edited.
- */
-function indexAtCurrentContents(): void {
-  // Reseed the records with the current on-disk content hashes
-  seedSqlEntries((record) => ({
-    ...record,
-    contentHash: Fs.hashContents(MockFs.readTextFile(entryFilePathFor(record))),
-  }));
-
-  // Drop the reseeding statements from the log
+  // Drop the indexing statements from the log
   clearRecordedSqlStatements();
-}
-
-/**
- * Returns the paths of the entries upserted into the given database,
- * read from the recorded SQL statements.
- */
-function upsertedEntryPaths(databaseId: string): string[] {
-  return getRecordedSqlStatements()
-    .filter(
-      (statement) =>
-        statement.sql.includes('INSERT OR REPLACE INTO entries') &&
-        statement.params[1] === databaseId,
-    )
-    .map((statement) => statement.params[2] as string);
-}
-
-/**
- * Returns the IDs of the entries deleted from SQL, read from the
- * recorded SQL statements.
- */
-function deletedEntryIds(): string[] {
-  return getRecordedSqlStatements()
-    .filter((statement) => statement.sql === 'DELETE FROM entries WHERE id = ?')
-    .map((statement) => statement.params[0] as string);
-}
-
-/**
- * Returns the record with the given path.
- */
-function recordByPath(records: SqlEntryRecord[], path: string): SqlEntryRecord {
-  return records.find((record) => record.path === path)!;
-}
-
-/**
- * Returns the value of the named property on a record.
- */
-function propertyValue(record: SqlEntryRecord, name: string) {
-  return record.properties.find((property) => property.name === name)?.value;
 }

@@ -36,9 +36,9 @@ import {
   sqlDeleteEntries,
   sqlGetAllDatabases,
   sqlGetAllEntries,
-  sqlGetAllEntriesFull,
   sqlGetDatabaseIcon,
   sqlGetDatabaseName,
+  sqlGetEntriesFull,
   sqlGetEntryPropertyValues,
   sqlGetEntrySyncRecords,
   sqlGetEntryTextContent,
@@ -105,7 +105,7 @@ export const sql = {
   getDatabaseIcon: sqlGetDatabaseIcon,
   getVersion: sqlGetVersion,
   getAllEntries: sqlGetAllEntries,
-  getAllEntriesFull: sqlGetAllEntriesFull,
+  getEntriesFull: sqlGetEntriesFull,
   getEntryTextContent: sqlGetEntryTextContent,
   getAllDatabases: sqlGetAllDatabases,
   getEntrySyncRecords: sqlGetEntrySyncRecords,
@@ -120,6 +120,7 @@ export { registerDatabaseBackendAdapter as registerBackendAdapter } from './Data
 export type { DatabaseBackendAdapter } from './DatabaseBackendAdapter';
 export { initializeDatabasesBackend as initializeBackend } from './sql';
 export { backgroundSyncDatabases as backgroundSync } from './sql';
+export { syncEntryFiles } from './sql';
 export { handleBackgroundSyncResult } from './handleBackgroundSyncResult';
 export { DatabasesStore as Store } from './DatabasesStore';
 export { DatabaseSettingsStore as SettingsStore } from './DatabaseSettingsStore';

@@ -12,7 +12,7 @@ import { DatabaseEntryTemplatesStore } from '../../DatabaseEntryTemplatesStore';
 import { EntriesStore } from '../../EntriesStore';
 import { DatabaseHistoryCauses } from '../../constants';
 import {
-  sqlGetAllEntriesFull,
+  sqlGetEntriesFull,
   sqlGetEntrySyncRecords,
   sqlUpsertDatabase,
 } from '../../sql';
@@ -81,6 +81,7 @@ describe('onRemoveProperty', () => {
           name: database.name,
           path: database.path,
           icon: database.icon,
+          properties: database.properties,
         },
         { silent: true },
       );
@@ -138,7 +139,7 @@ describe('onRemoveProperty', () => {
     expect(recordIds).toContain(relatedEntry2.id);
 
     // The re-indexed records should no longer carry the removed property
-    const record = sqlGetAllEntriesFull().find(
+    const record = sqlGetEntriesFull().find(
       (entryRecord) => entryRecord.id === collectionEntry1.id,
     )!;
     const propertyNames = record.properties.map(

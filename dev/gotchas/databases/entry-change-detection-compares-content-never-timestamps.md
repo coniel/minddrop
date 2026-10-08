@@ -4,6 +4,8 @@ package: packages/databases
 summary: 'Background sync must diff entries by content_hash; never by lastModified or mtime, which miss or over-report edits'
 paths:
   - 'packages/databases/src/sql/backgroundSyncDatabases/**'
+  - 'packages/databases/src/sql/syncEntryFiles/**'
+  - 'packages/databases/src/readEntryIfChanged/**'
   - 'packages/databases/src/sql/sqlGetEntrySyncRecords.ts'
   - 'packages/databases/src/sql/sqlUpsertEntries.ts'
 tags: [sql, sync, change-detection, timestamps]
@@ -11,6 +13,6 @@ tags: [sql, sync, change-detection, timestamps]
 
 # Entry change detection compares content, never timestamps
 
-`backgroundSyncDatabases` diffs entries on `content_hash`. An earlier version compared `lastModified`, which silently missed every external edit in a database defining a `last-modified` property, since that property is only updated by the app. Renames and deletes were unaffected, being detected by path, which made the gap easy to miss.
+`backgroundSyncDatabases` and `syncEntryFiles` diff entries on `content_hash`, through `readEntryIfChanged`, which skips deserializing a file whose hash matches. A sidecar is diffed by comparing it with the entry's indexed metadata, so a sidecar-only change re-reads the entry despite its unchanged hash. An earlier version compared `lastModified`, which silently missed every external edit in a database defining a `last-modified` property, since that property is only updated by the app. Renames and deletes were unaffected, being detected by path, which made the gap easy to miss.
 
 Do not reintroduce a timestamp comparison here. mtime is also unsuitable, on top of the reasons above, because a restore or checkout moves it without the content changing, which would re-index the whole workspace.

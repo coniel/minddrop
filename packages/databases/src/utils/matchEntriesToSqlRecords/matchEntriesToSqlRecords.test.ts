@@ -1,14 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { objectEntry1SqlRecord } from '../../test-utils';
+import { objectEntry1, objectEntry1SqlRecord } from '../../test-utils';
 import { EntrySyncRecord } from '../../types';
 import { matchEntriesToSqlRecords } from './matchEntriesToSqlRecords';
 
 // An existing SQL record matching the fixture record
 const existingRecord: EntrySyncRecord = {
-  id: objectEntry1SqlRecord.id,
+  id: objectEntry1.id,
   path: objectEntry1SqlRecord.path,
   lastModified: objectEntry1SqlRecord.lastModified,
   contentHash: objectEntry1SqlRecord.contentHash,
+  metadata: objectEntry1SqlRecord.metadata,
 };
 
 describe('matchEntriesToSqlRecords', () => {

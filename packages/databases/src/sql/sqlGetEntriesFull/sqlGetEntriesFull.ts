@@ -1,20 +1,48 @@
 import type { PropertyType } from '@minddrop/properties';
 import { Sql } from '@minddrop/sql';
 import { Workspaces } from '@minddrop/workspaces';
-import type { SqlEntryPropertyRecord, SqlEntryRecord } from '../types';
+import type { SqlEntryPropertyRecord, SqlEntryRecord } from '../../types';
+
+// The most entry IDs bound to one query, kept well under SQLite's
+// limit on query parameters.
+const MaxIdsPerQuery = 10000;
 
 /**
- * Retrieves all entries from SQL with their full property data
- * and metadata. Uses three bulk queries (entries, scalar properties,
- * multi-value properties) regardless of entry count, then groups
- * properties by entry ID.
+ * Retrieves entries from SQL with their full property data and
+ * metadata.
  *
+ * @param entryIds - The IDs of the entries to retrieve. Defaults to all entries.
  * @param workspaceId - The ID of the workspace whose database to target. Defaults to the active workspace.
+ * @returns The entries' full SQL records.
  */
-export function sqlGetAllEntriesFull(workspaceId?: string): SqlEntryRecord[] {
+export function sqlGetEntriesFull(
+  entryIds?: string[],
+  workspaceId?: string,
+): SqlEntryRecord[] {
+  // Resolve the target workspace
   const targetWorkspaceId = workspaceId ?? Workspaces.getActive().id;
 
-  // Query all entry rows
+  // Return no entries for an empty ID list, rather than querying an
+  // empty IN list.
+  if (entryIds?.length === 0) {
+    return [];
+  }
+
+  // Split ID lists too long to bind to one query
+  if (entryIds && entryIds.length > MaxIdsPerQuery) {
+    return [
+      ...sqlGetEntriesFull(entryIds.slice(0, MaxIdsPerQuery), workspaceId),
+      ...sqlGetEntriesFull(entryIds.slice(MaxIdsPerQuery), workspaceId),
+    ];
+  }
+
+  // Restrict each query to the given entries, if any
+  const placeholders = entryIds?.map(() => '?').join(', ');
+  const entryFilter = entryIds ? ` WHERE id IN (${placeholders})` : '';
+  const propertyFilter = entryIds ? ` WHERE entry_id IN (${placeholders})` : '';
+  const params = entryIds ?? [];
+
+  // Query the entry rows
   const entryRows = Sql.all<{
     id: string;
     database_id: string;
@@ -26,10 +54,11 @@ export function sqlGetAllEntriesFull(workspaceId?: string): SqlEntryRecord[] {
     metadata: string;
   }>(
     targetWorkspaceId,
-    'SELECT id, database_id, path, title, created, last_modified, content_hash, metadata FROM entries',
+    `SELECT id, database_id, path, title, created, last_modified, content_hash, metadata FROM entries${entryFilter}`,
+    ...params,
   );
 
-  // Query all scalar properties
+  // Query the scalar properties
   const scalarRows = Sql.all<{
     entry_id: string;
     property_name: string;
@@ -39,10 +68,11 @@ export function sqlGetAllEntriesFull(workspaceId?: string): SqlEntryRecord[] {
     value_integer: number | null;
   }>(
     targetWorkspaceId,
-    'SELECT entry_id, property_name, property_type, value_text, value_number, value_integer FROM entry_properties',
+    `SELECT entry_id, property_name, property_type, value_text, value_number, value_integer FROM entry_properties${propertyFilter}`,
+    ...params,
   );
 
-  // Query all multi-value properties (select, collection)
+  // Query the multi-value properties (select, collection)
   const multiValueRows = Sql.all<{
     entry_id: string;
     property_name: string;
@@ -50,41 +80,49 @@ export function sqlGetAllEntriesFull(workspaceId?: string): SqlEntryRecord[] {
     value_text: string;
   }>(
     targetWorkspaceId,
-    'SELECT entry_id, property_name, property_type, value_text FROM entry_property_values',
+    `SELECT entry_id, property_name, property_type, value_text FROM entry_property_values${propertyFilter}`,
+    ...params,
   );
 
   // Group scalar properties by entry ID
   const scalarsByEntry = new Map<string, SqlEntryPropertyRecord[]>();
 
   for (const row of scalarRows) {
+    // Get the entry's properties grouped so far
     const properties = scalarsByEntry.get(row.entry_id) ?? [];
 
+    // Add the property
     properties.push({
       name: row.property_name,
       type: row.property_type,
       value: resolveScalarValue(row),
     });
 
+    // Store the entry's properties
     scalarsByEntry.set(row.entry_id, properties);
   }
 
-  // Group multi-value properties by entry ID + property name,
-  // collecting individual values into arrays
+  // Group multi-value properties by entry ID and property name. Each
+  // property's values are collected into an array.
   const multiValuesByEntry = new Map<
     string,
     Map<string, SqlEntryPropertyRecord>
   >();
 
   for (const row of multiValueRows) {
+    // Get the entry's properties grouped so far
     const entryMap =
       multiValuesByEntry.get(row.entry_id) ??
       new Map<string, SqlEntryPropertyRecord>();
 
+    // Get the property's record, if one was started
     const existing = entryMap.get(row.property_name);
 
     if (existing && Array.isArray(existing.value)) {
+      // Add the value to the property's existing values
       existing.value.push(row.value_text);
     } else {
+      // Start the property's record with the value
       entryMap.set(row.property_name, {
         name: row.property_name,
         type: row.property_type,
@@ -92,6 +130,7 @@ export function sqlGetAllEntriesFull(workspaceId?: string): SqlEntryRecord[] {
       });
     }
 
+    // Store the entry's properties
     multiValuesByEntry.set(row.entry_id, entryMap);
   }
 

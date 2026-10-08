@@ -1,6 +1,8 @@
 import { RPCSchema } from 'electrobun';
 import type {
   BackgroundSyncChangeset,
+  Database,
+  EntryFileChange,
   InitializeBackendResult,
 } from '@minddrop/databases';
 import { BaseDirectory } from '@minddrop/file-system';
@@ -208,6 +210,15 @@ export type WebviewRPC = {
         params: {
           workspaceId: string;
           workspacePath: string;
+        };
+        response: void;
+      };
+      databasesSyncEntryFiles: {
+        params: {
+          workspaceId: string;
+          workspacePath: string;
+          databases: Database[];
+          changes: EntryFileChange[];
         };
         response: void;
       };

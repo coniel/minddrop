@@ -1,7 +1,13 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { hasPendingOperations } from '../PendingOperationsStore';
 import { initializeMockFileSystem } from '../mock';
-import { matchesWrittenContents, matchesWrittenStats } from '../writeRegistry';
+import { BaseDirectory } from '../types';
+import {
+  clearWriteRegistry,
+  findRecordedWriteKind,
+  matchesWrittenContents,
+  matchesWrittenStats,
+} from '../writeRegistry';
 import { Fs } from './FileSystem';
 
 describe('Fs.removeDir', () => {
@@ -55,6 +61,8 @@ describe('Fs.tests.cleanup', () => {
 });
 
 describe('Fs.writeJsonFile', () => {
+  afterEach(clearWriteRegistry);
+
   it('records the written contents as a self-write', async () => {
     initializeMockFileSystem();
 
@@ -67,6 +75,8 @@ describe('Fs.writeJsonFile', () => {
 });
 
 describe('Fs.writeYamlFile', () => {
+  afterEach(clearWriteRegistry);
+
   it('records the written contents as a self-write', async () => {
     initializeMockFileSystem();
 
@@ -79,18 +89,32 @@ describe('Fs.writeYamlFile', () => {
 });
 
 describe('Fs.writeBinaryFile', () => {
+  afterEach(clearWriteRegistry);
+
   it('records the written file stats as a self-write', async () => {
     initializeMockFileSystem();
 
-    await Fs.writeBinaryFile('image.png', new Blob(['bytes']));
+    await Fs.writeBinaryFile('binary.png', new Blob(['bytes']));
 
-    expect(matchesWrittenStats('image.png', await Fs.stat('image.png'))).toBe(
+    expect(matchesWrittenStats('binary.png', await Fs.stat('binary.png'))).toBe(
       true,
     );
+  });
+
+  it('does not record a write into a base directory', async () => {
+    initializeMockFileSystem();
+
+    await Fs.writeBinaryFile('base-dir-binary.png', new Blob(['bytes']), {
+      baseDir: BaseDirectory.AppData,
+    });
+
+    expect(findRecordedWriteKind('base-dir-binary.png')).toBeNull();
   });
 });
 
 describe('Fs.copyFile', () => {
+  afterEach(clearWriteRegistry);
+
   it('records the copy stats as a self-write', async () => {
     initializeMockFileSystem([{ path: 'source.png', textContent: 'bytes' }]);
 
@@ -100,16 +124,77 @@ describe('Fs.copyFile', () => {
       true,
     );
   });
+
+  it('does not record a copy into a base directory', async () => {
+    initializeMockFileSystem([{ path: 'source.png', textContent: 'bytes' }]);
+
+    await Fs.copyFile('source.png', 'base-dir-copy.png', {
+      toPathBaseDir: BaseDirectory.AppData,
+    });
+
+    expect(findRecordedWriteKind('base-dir-copy.png')).toBeNull();
+  });
 });
 
 describe('Fs.downloadFile', () => {
+  afterEach(clearWriteRegistry);
+
   it('records the downloaded file stats as a self-write', async () => {
     initializeMockFileSystem();
 
-    await Fs.downloadFile('https://example.com/image.png', 'image.png');
+    await Fs.downloadFile('https://example.com/image.png', 'download.png');
 
-    expect(matchesWrittenStats('image.png', await Fs.stat('image.png'))).toBe(
-      true,
+    expect(
+      matchesWrittenStats('download.png', await Fs.stat('download.png')),
+    ).toBe(true);
+  });
+
+  it('does not record a download into a base directory', async () => {
+    initializeMockFileSystem();
+
+    await Fs.downloadFile(
+      'https://example.com/image.png',
+      'base-dir-download.png',
+      { baseDir: BaseDirectory.AppData },
     );
+
+    expect(findRecordedWriteKind('base-dir-download.png')).toBeNull();
+  });
+});
+
+describe('Fs.stat on the mock file system', () => {
+  it("reports the byte size of a text file's contents", async () => {
+    // Two and three bytes in UTF-8
+    initializeMockFileSystem([{ path: 'text.txt', textContent: 'é€' }]);
+
+    const stats = await Fs.stat('text.txt');
+
+    expect(stats.size).toBe(5);
+  });
+
+  it("reports a binary file's size", async () => {
+    initializeMockFileSystem();
+
+    await Fs.writeBinaryFile('binary.png', new Blob(['bytes']));
+
+    const stats = await Fs.stat('binary.png');
+
+    expect(stats.size).toBe(5);
+  });
+
+  it("keeps a configured size over the contents' size", async () => {
+    const mockFileSystem = initializeMockFileSystem([
+      { path: 'text.txt', textContent: 'contents' },
+    ]);
+
+    mockFileSystem.setFileStats('text.txt', {
+      created: new Date('2026-01-01T00:00:00.000Z'),
+      lastModified: new Date('2026-01-01T00:00:00.000Z'),
+      size: 1000,
+    });
+
+    const stats = await Fs.stat('text.txt');
+
+    expect(stats.size).toBe(1000);
   });
 });

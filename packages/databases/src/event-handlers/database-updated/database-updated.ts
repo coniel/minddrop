@@ -16,6 +16,7 @@ export function onUpdateDatabase(data: DatabaseUpdatedEventData): void {
     name: updated.name,
     path: updated.path,
     icon: updated.icon,
+    properties: updated.properties,
   });
 
   // The serializer sets the entry files' extension, and entry storage

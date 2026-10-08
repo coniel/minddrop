@@ -56,10 +56,12 @@ export function initializeMockFileSystem(
 
   // Returns the size in bytes of a mock file's contents
   const mockContentsSize = (path: string): number => {
+    // Measure a text file's encoded contents
     if (path in textFileContents) {
       return new TextEncoder().encode(textFileContents[path]).length;
     }
 
+    // Otherwise use the binary file's size, if any
     return binaryFiles[path]?.size ?? 0;
   };
 
@@ -246,13 +248,14 @@ export function initializeMockFileSystem(
       // Ensure file entry exists
       mockGetFileEntry(root, fullPath);
 
-      // Return configured stats or default dates, with the size of
-      // the file's contents unless one was configured.
+      // Get the configured stats or default dates
       const stats = fileStats[fullPath] ?? {
         created: new Date('2024-01-01T00:00:00.000Z'),
         lastModified: new Date('2024-01-01T00:00:00.000Z'),
       };
 
+      // Fill in the size of the file's contents unless one was
+      // configured.
       return {
         ...stats,
         size: stats.size ?? mockContentsSize(fullPath),

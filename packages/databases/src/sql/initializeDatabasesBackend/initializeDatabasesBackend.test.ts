@@ -21,7 +21,7 @@ import {
 import { SqlEntryRecord } from '../../types';
 import { writeEntryMetadata } from '../../writeEntryMetadata';
 import { sqlGetAllDatabases } from '../sqlGetAllDatabases';
-import { sqlGetAllEntriesFull } from '../sqlGetAllEntriesFull';
+import { sqlGetEntriesFull } from '../sqlGetEntriesFull';
 import { initializeDatabasesBackend } from './initializeDatabasesBackend';
 
 const { workspace_1 } = WorkspaceFixtures;
@@ -59,7 +59,7 @@ describe('initializeDatabasesBackend', () => {
     ).toEqual(databases.map((database) => database.id).sort());
 
     // The returned entries should be the indexed SQL records
-    expect(result.entries).toEqual(sqlGetAllEntriesFull());
+    expect(result.entries).toEqual(sqlGetEntriesFull());
     expect(result.entries.length).toBeGreaterThan(0);
   });
 
@@ -210,7 +210,7 @@ References: []
  * Returns all records indexed in SQL for the given database.
  */
 function indexedRecords(databaseId: string): SqlEntryRecord[] {
-  return sqlGetAllEntriesFull().filter(
+  return sqlGetEntriesFull().filter(
     (record) => record.databaseId === databaseId,
   );
 }

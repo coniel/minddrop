@@ -1,6 +1,5 @@
-import { getAllDatabases } from '../../getAllDatabases';
 import { getAllEntries } from '../../getAllEntries';
-import { resolveDatabasePath } from '../resolveDatabasePath';
+import { findPathDatabase } from '../findPathDatabase';
 import { resolveEntryPropertyFiles } from '../resolveEntryPropertyFiles';
 
 export interface EntryPropertyFileOwner {
@@ -31,9 +30,7 @@ export function findEntryPropertyFileOwner(
   workspacePath?: string,
 ): EntryPropertyFileOwner | null {
   // Find the database whose directory holds the file
-  const database = getAllDatabases().find((candidate) =>
-    path.startsWith(`${resolveDatabasePath(candidate, workspacePath)}/`),
-  );
+  const database = findPathDatabase(path, workspacePath);
 
   // Check if the file is in a database. If not, no entry holds it.
   if (!database) {

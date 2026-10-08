@@ -50,6 +50,7 @@ describe('setEntrySerializer', () => {
             name: database.name,
             path: database.path,
             icon: database.icon,
+            properties: database.properties,
           },
           { silent: true },
         );

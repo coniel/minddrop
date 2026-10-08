@@ -555,13 +555,25 @@ export const entrySqlRecords: SqlEntryRecord[] = [
 /**
  * Returns the file system path of a fixture entry's primary file, for
  * the mock file system and the assertions made against it.
+ *
+ * @param entry - The entry's database ID and database-relative path.
+ * @returns The absolute path of the entry's primary file.
+ *
+ * @throws Error if the entry's database is not a fixture database.
  */
-export function entryFilePath(entry: Entry): string {
+export function entryFilePath(entry: {
+  database: string;
+  path: string;
+}): string {
   const database = [...databases, database_pdf].find(
     ({ id }) => id === entry.database,
   );
 
-  return `${databaseDirPath(database!)}/${entry.path}`;
+  if (!database) {
+    throw new Error(`No fixture database has the ID "${entry.database}".`);
+  }
+
+  return `${databaseDirPath(database)}/${entry.path}`;
 }
 
 /******************************************************************************

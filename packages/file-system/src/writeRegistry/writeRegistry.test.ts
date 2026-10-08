@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import {
   clearWriteRegistry,
-  getRecordedWriteKind,
+  findRecordedWriteKind,
   matchesWrittenContents,
   matchesWrittenStats,
   recordWrittenContents,
@@ -18,21 +18,21 @@ describe('writeRegistry', () => {
     clearWriteRegistry();
   });
 
-  describe('getRecordedWriteKind', () => {
+  describe('findRecordedWriteKind', () => {
     it('is null for paths the app has not written', () => {
-      expect(getRecordedWriteKind(path)).toBeNull();
+      expect(findRecordedWriteKind(path)).toBeNull();
     });
 
     it('is contents for paths whose written contents were recorded', () => {
       recordWrittenContents(path, 'contents');
 
-      expect(getRecordedWriteKind(path)).toBe('contents');
+      expect(findRecordedWriteKind(path)).toBe('contents');
     });
 
     it('is stats for paths whose written stats were recorded', () => {
       recordWrittenStats(path, stats);
 
-      expect(getRecordedWriteKind(path)).toBe('stats');
+      expect(findRecordedWriteKind(path)).toBe('stats');
     });
   });
 
@@ -99,7 +99,7 @@ describe('writeRegistry', () => {
 
       clearWriteRegistry();
 
-      expect(getRecordedWriteKind(path)).toBeNull();
+      expect(findRecordedWriteKind(path)).toBeNull();
     });
   });
 });

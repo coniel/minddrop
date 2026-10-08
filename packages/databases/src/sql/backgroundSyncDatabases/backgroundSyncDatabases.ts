@@ -1,26 +1,28 @@
 import { Fs } from '@minddrop/file-system';
-import { titleFromPath } from '@minddrop/utils';
+import { isDeepEqual, restoreDates, titleFromPath } from '@minddrop/utils';
 import { loadCoreSerializers } from '../../EntrySerializers';
 import { listEntryMetadataKeys } from '../../listEntryMetadataKeys';
+import { readAllEntryMetadata } from '../../readAllEntryMetadata';
 import { readEntries } from '../../readEntries';
 import { readEntryMetadata } from '../../readEntryMetadata';
 import { readWorkspaceDatabases } from '../../readWorkspaceDatabases';
 import type { BackgroundSyncChangeset, Database, Entry } from '../../types';
 import {
   convertEntryToSqlRecord,
-  entryAddress,
   entryMetadataKey,
+  hashDatabaseProperties,
   matchEntriesToSqlRecords,
   mergeEntryMetadata,
   resolveCollectionProperties,
   resolveDatabaseMetadataDirPath,
   resolveDatabasePath,
+  resolveEntryAddressKey,
 } from '../../utils';
 import { writeEntryMetadata } from '../../writeEntryMetadata';
 import { sqlDeleteDatabase } from '../sqlDeleteDatabase';
 import { sqlDeleteEntries } from '../sqlDeleteEntries';
 import { sqlGetAllDatabases } from '../sqlGetAllDatabases';
-import { sqlGetAllEntriesFull } from '../sqlGetAllEntriesFull';
+import { sqlGetEntriesFull } from '../sqlGetEntriesFull';
 import { sqlGetEntrySyncRecords } from '../sqlGetEntrySyncRecords';
 import { sqlUpsertDatabase } from '../sqlUpsertDatabase';
 import { sqlUpsertEntries } from '../sqlUpsertEntries';
@@ -36,6 +38,7 @@ import { sqlUpsertEntries } from '../sqlUpsertEntries';
  *
  * @param workspaceId - The ID of the workspace to sync.
  * @param workspacePath - The absolute path to the workspace root.
+ * @returns The changeset of upserted and deleted databases and entries.
  */
 export async function backgroundSyncDatabases(
   workspaceId: string,
@@ -59,6 +62,10 @@ export async function backgroundSyncDatabases(
   // Detect new or updated databases
   const upsertedDatabases: Database[] = [];
 
+  // IDs of the databases whose property schema changed since they
+  // were indexed. Their entries are all re-indexed.
+  const schemaChangedIds = new Set<string>();
+
   for (const database of fileSystemDatabases) {
     const existing = sqlDatabases.find(
       (sqlDatabase) => sqlDatabase.id === database.id,
@@ -66,11 +73,20 @@ export async function backgroundSyncDatabases(
 
     // New database or metadata changed
     const isNew = !existing;
+    const schemaChanged =
+      existing &&
+      existing.propertiesHash !== hashDatabaseProperties(database.properties);
     const metadataChanged =
       existing &&
       (existing.name !== database.name ||
         existing.icon !== database.icon ||
-        existing.path !== database.path);
+        existing.path !== database.path ||
+        schemaChanged);
+
+    // Track the database if its schema changed
+    if (schemaChanged) {
+      schemaChangedIds.add(database.id);
+    }
 
     if (isNew || metadataChanged) {
       // Upsert to SQL
@@ -80,6 +96,7 @@ export async function backgroundSyncDatabases(
           name: database.name,
           path: database.path,
           icon: database.icon,
+          properties: database.properties,
         },
         { silent: true },
         workspaceId,
@@ -132,25 +149,58 @@ export async function backgroundSyncDatabases(
     // was closed still matches and its entries keep their identities.
     const existingRecords = sqlGetEntrySyncRecords(database.id, workspaceId);
 
+    // Read the database's sidecars
+    const sidecars = await readAllEntryMetadata(
+      resolveDatabasePath(database, workspacePath),
+    );
+
+    // List the sidecars on disk, including those which could not be
+    // read, to tell an unreadable sidecar from a missing one.
+    const sidecarKeys = new Set(
+      await listEntryMetadataKeys(resolveDatabasePath(database, workspacePath)),
+    );
+
+    // Collect the indexed content hashes of the entries whose sidecar
+    // matches their indexed metadata. Only these may be skipped, so an
+    // entry whose sidecar changed is re-read. An unreadable sidecar is
+    // left alone, since re-reading its entry would overwrite it.
+    const indexedHashes = new Map(
+      existingRecords
+        .filter((record) => {
+          const key = entryMetadataKey(record.path);
+
+          // Leave an entry with an unreadable sidecar to its content hash
+          if (sidecarKeys.has(key) && !(key in sidecars)) {
+            return true;
+          }
+
+          // Compare the sidecar with the indexed metadata
+          return isDeepEqual(
+            sidecars[key] ?? {},
+            restoreDates(JSON.parse(record.metadata)),
+          );
+        })
+        .map((record) => [record.path, record.contentHash]),
+    );
+
     // Read the new and modified entries from disk. Changes are detected
-    // by content hash rather than timestamp, since an entry's
-    // 'last-modified' property is only updated by the app, leaving
-    // external edits undetected in databases which define one. Their
-    // metadata is read after the diff, for the changed entries only.
+    // by content hash, since an entry's 'last-modified' property is
+    // only updated by the app. A database whose schema changed has
+    // every entry read, as the schema shapes how unchanged files are
+    // indexed.
     const {
       entries: rawEntries,
       unchangedPaths,
       unreadablePaths,
-    } = await readEntries(
-      database,
+    } = await readEntries(database, {
       workspacePath,
-      new Map(
-        existingRecords.map((record) => [record.path, record.contentHash]),
-      ),
-    );
+      indexedHashes: schemaChangedIds.has(database.id)
+        ? undefined
+        : indexedHashes,
+    });
 
-    // Unchanged entries keep their indexed state, as do entries whose
-    // file could not be read, since the file is still there.
+    // Retain the unchanged and unreadable entries. An unreadable file
+    // is still there, so its entry is kept.
     const retainedPaths = [...unchangedPaths, ...unreadablePaths];
 
     // Match fresh entries to existing entries by path so they
@@ -165,24 +215,22 @@ export async function backgroundSyncDatabases(
     // indexed, since an address names an entry by title rather than by
     // the location it last occupied.
     entries.forEach((entry) => {
-      entryIdByAddress.set(
-        entryAddress(entry, database).toLowerCase(),
-        entry.id,
-      );
+      entryIdByAddress.set(resolveEntryAddressKey(entry, database), entry.id);
     });
 
-    // Index the retained entries by their indexed IDs, so that
-    // references to them resolve.
+    // Collect the retained paths for lookup
     const retained = new Set(retainedPaths);
 
+    // Index the retained entries' addresses to their indexed IDs.
+    // References to them then resolve.
     existingRecords
       .filter((record) => retained.has(record.path))
       .forEach((record) => {
         entryIdByAddress.set(
-          entryAddress(
-            { title: titleFromPath(record.path), database: database.id },
+          resolveEntryAddressKey(
+            { title: titleFromPath(record.path) },
             database,
-          ).toLowerCase(),
+          ),
           record.id,
         );
       });
@@ -198,7 +246,7 @@ export async function backgroundSyncDatabases(
   // Pass 2: resolve entry references, diff, and update SQL
   for (const { database, entries, deletedIds, retainedPaths } of staged) {
     // Resolve collection property addresses to entry IDs. Every read
-    // entry is new or modified, the rest having been retained.
+    // entry is new or modified. The rest were retained.
     const changedEntries = entries.map((entry) => ({
       ...entry,
       properties: resolveCollectionProperties(
@@ -208,9 +256,7 @@ export async function backgroundSyncDatabases(
       ),
     }));
 
-    // Read the sidecars of the changed entries only. Sidecars hold
-    // app-managed state written alongside the entry, so one changing
-    // on its own is not a case worth scanning every entry for.
+    // Merge the changed entries' sidecars into them
     const merged = await Promise.all(
       changedEntries.map(async (entry) =>
         mergeEntryMetadata(
@@ -299,9 +345,9 @@ export async function backgroundSyncDatabases(
   }
 
   // Query updated entries from SQL with full property data
-  const allEntries = sqlGetAllEntriesFull(workspaceId);
-  const upsertedEntries = allEntries.filter((entry) =>
-    allUpsertedEntryIds.has(entry.id),
+  const upsertedEntries = sqlGetEntriesFull(
+    [...allUpsertedEntryIds],
+    workspaceId,
   );
 
   return {

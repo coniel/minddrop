@@ -1,17 +1,20 @@
 // Increment this when the schema or indexing logic changes.
 // On startup, if the stored schema version does not match,
 // the SQL database is dropped and rebuilt from scratch.
-export const SCHEMA_VERSION = 13;
+export const SCHEMA_VERSION = 14;
 
 // SQL schema for creating tables
 export const SCHEMA_SQL = `
   -- Paths are workspace relative, so moving the workspace does not
   -- invalidate the index.
   CREATE TABLE IF NOT EXISTS databases (
-    id   TEXT PRIMARY KEY,
-    name TEXT NOT NULL,
-    path TEXT NOT NULL,
-    icon TEXT NOT NULL DEFAULT ''
+    id              TEXT PRIMARY KEY,
+    name            TEXT NOT NULL,
+    path            TEXT NOT NULL,
+    icon            TEXT NOT NULL DEFAULT '',
+    -- Hash of the database's property schema. Used to detect a schema
+    -- changed while the app was closed.
+    properties_hash TEXT NOT NULL DEFAULT ''
   );
 
   CREATE TABLE IF NOT EXISTS entries (

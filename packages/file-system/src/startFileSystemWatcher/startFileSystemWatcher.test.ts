@@ -131,7 +131,7 @@ describe('startFileSystemWatcher', () => {
     ]);
   });
 
-  it('does not dispatch a change for the app own write', async () => {
+  it("does not dispatch a change for the app's own write", async () => {
     // Write the file through the app
     await Fs.writeTextFile(QueryPath, '{ "id": "query_1", "v": 2 }');
     MockFileSystem.dispatchWatchEvent('modify', [QueryPath]);
@@ -157,7 +157,7 @@ describe('startFileSystemWatcher', () => {
     ]);
   });
 
-  it('does not dispatch a change for the app own binary write', async () => {
+  it("does not dispatch a change for the app's own binary write", async () => {
     await Fs.writeBinaryFile(ImagePath, new Blob(['bytes']));
     MockFileSystem.dispatchWatchEvent('modify', [ImagePath]);
 
@@ -167,9 +167,12 @@ describe('startFileSystemWatcher', () => {
   });
 
   it('dispatches a change to an app written binary file whose stats differ', async () => {
-    // Write the file through the app, then replace it outside of the
-    // app, which gives it a new modification time.
+    // Write the file through the app
     await Fs.writeBinaryFile(ImagePath, new Blob(['bytes']));
+
+    // Replace the file outside of the app. The mock file system keeps
+    // fixed stat dates, so the replacement's new modification time is
+    // set by hand.
     MockFileSystem.setFileStats(ImagePath, {
       created: new Date('2026-01-01T00:00:00.000Z'),
       lastModified: new Date('2026-02-02T00:00:00.000Z'),

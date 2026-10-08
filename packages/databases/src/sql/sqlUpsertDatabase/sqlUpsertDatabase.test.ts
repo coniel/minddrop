@@ -9,7 +9,9 @@ import {
   objectDatabase,
   objectEntry1SqlRecord,
   setupTestSqlDatabase,
+  withoutDatabaseProperty,
 } from '../../test-utils';
+import { hashDatabaseProperties } from '../../utils';
 import { sqlGetAllDatabases } from '../sqlGetAllDatabases';
 import { sqlGetEntrySyncRecords } from '../sqlGetEntrySyncRecords';
 import { sqlUpsertEntries } from '../sqlUpsertEntries';
@@ -33,6 +35,7 @@ describe('sqlUpsertDatabase', () => {
         name: objectDatabase.name,
         path: objectDatabase.path,
         icon: '',
+        properties: objectDatabase.properties,
       },
       { silent: true },
     );
@@ -55,6 +58,7 @@ describe('sqlUpsertDatabase', () => {
         name: objectDatabase.name,
         path: objectDatabase.path,
         icon: '',
+        propertiesHash: hashDatabaseProperties(objectDatabase.properties),
       },
     ]);
   });
@@ -67,6 +71,7 @@ describe('sqlUpsertDatabase', () => {
         name: 'Renamed',
         path: '/workspace/Renamed',
         icon: 'icon',
+        properties: objectDatabase.properties,
       },
       { silent: true },
     );
@@ -77,8 +82,32 @@ describe('sqlUpsertDatabase', () => {
         name: 'Renamed',
         path: '/workspace/Renamed',
         icon: 'icon',
+        propertiesHash: hashDatabaseProperties(objectDatabase.properties),
       },
     ]);
+  });
+
+  it('stores the hash of updated properties', () => {
+    const properties = withoutDatabaseProperty(
+      objectDatabase,
+      objectDatabase.properties[0].name,
+    ).properties;
+
+    // Upsert the database again with a changed property schema
+    sqlUpsertDatabase(
+      {
+        id: objectDatabase.id,
+        name: objectDatabase.name,
+        path: objectDatabase.path,
+        icon: '',
+        properties,
+      },
+      { silent: true },
+    );
+
+    expect(sqlGetAllDatabases()[0].propertiesHash).toBe(
+      hashDatabaseProperties(properties),
+    );
   });
 
   it('preserves the database entries', () => {
@@ -89,6 +118,7 @@ describe('sqlUpsertDatabase', () => {
         name: objectDatabase.name,
         path: objectDatabase.path,
         icon: 'icon',
+        properties: objectDatabase.properties,
       },
       { silent: true },
     );

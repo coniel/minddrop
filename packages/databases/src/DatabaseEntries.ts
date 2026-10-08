@@ -1,5 +1,5 @@
 import { EntryEntityType, EntryTransferDataTypes } from './constants';
-import { EntryNotFoundError } from './errors';
+import { EntryFileUnreadableError, EntryNotFoundError } from './errors';
 import {
   EntriesClearedEvent,
   EntryCreatedEvent,
@@ -31,6 +31,7 @@ export const constants = {
 
 export const errors = {
   NotFound: EntryNotFoundError,
+  FileUnreadable: EntryFileUnreadableError,
 };
 
 export { createEntry as create } from './createEntry';

@@ -4,7 +4,11 @@ import { NotRegisteredError } from '@minddrop/stores';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { EntriesStore } from '../EntriesStore';
-import { DatabaseNotFoundError, EntryNotFoundError } from '../errors';
+import {
+  DatabaseNotFoundError,
+  EntryFileUnreadableError,
+  EntryNotFoundError,
+} from '../errors';
 import { EntryWrittenEvent, EntryWrittenEventData } from '../events';
 import {
   MockFs,
@@ -120,6 +124,20 @@ describe('writeEntry', () => {
 
     expect(dispatched).toBe(false);
     expect(MockFs.readTextFile(entryFilePath(objectEntry1))).toBe(contents);
+  });
+
+  it('does not overwrite an entry file which cannot be deserialized', async () => {
+    // An entry file broken outside the app since the entry was read
+    const brokenContents = 'Title: Test Entry\nIcon: Nested: mapping\n';
+
+    MockFs.writeTextFile(entryFilePath(yamlObjectEntry1), brokenContents);
+
+    await expect(writeEntry(yamlObjectEntry1.id)).rejects.toThrow(
+      EntryFileUnreadableError,
+    );
+    expect(MockFs.readTextFile(entryFilePath(yamlObjectEntry1))).toBe(
+      brokenContents,
+    );
   });
 
   it('ensures the entry subdirectory exists if the database uses entry based storage', async () => {

@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { History } from '@minddrop/history';
 import { PropertySchema } from '@minddrop/properties';
-import { sqlGetAllEntriesFull, sqlUpsertDatabase } from '../../sql';
+import { sqlGetEntriesFull, sqlUpsertDatabase } from '../../sql';
 import {
   DatabaseFixtures,
   cleanup,
@@ -63,6 +63,7 @@ describe('onAddProperty', () => {
         name: objectDatabase.name,
         path: objectDatabase.path,
         icon: objectDatabase.icon,
+        properties: objectDatabase.properties,
       },
       { silent: true },
     );
@@ -88,7 +89,7 @@ describe('onAddProperty', () => {
     await addProperty({ type: 'text', name: 'Notes' });
 
     // The database's entries should be re-upserted into SQL
-    expect(sqlGetAllEntriesFull()).toContainEqual(objectEntry1SqlRecord);
+    expect(sqlGetEntriesFull()).toContainEqual(objectEntry1SqlRecord);
   });
 
   it('creates virtual collections for all existing entries', async () => {

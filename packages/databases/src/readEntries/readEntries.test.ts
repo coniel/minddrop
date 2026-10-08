@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Fs } from '@minddrop/file-system';
 import {
   MockFs,
+  breakEntryFile,
   cleanup,
   databaseDirPath,
   entries,
@@ -78,10 +79,7 @@ describe('readEntries', () => {
 
   it('reports entry files which cannot be parsed as unreadable', async () => {
     // Give the entry frontmatter which is not valid YAML
-    MockFs.writeTextFile(
-      entryFilePath(objectEntry1),
-      '---\nSummary: Nested: mapping\n---\n',
-    );
+    breakEntryFile(objectEntry1);
 
     const result = await readEntries(objectDatabase);
 
@@ -99,7 +97,7 @@ describe('readEntries', () => {
       ],
     ]);
 
-    const result = await readEntries(objectDatabase, undefined, indexedHashes);
+    const result = await readEntries(objectDatabase, { indexedHashes });
 
     expect(result.unchangedPaths).toEqual([objectEntry1.path]);
     expect(
@@ -110,7 +108,7 @@ describe('readEntries', () => {
   it('reads entries whose contents differ from their indexed hash', async () => {
     const indexedHashes = new Map([[objectEntry1.path, 'outdated-hash']]);
 
-    const result = await readEntries(objectDatabase, undefined, indexedHashes);
+    const result = await readEntries(objectDatabase, { indexedHashes });
 
     expect(result.unchangedPaths).toEqual([]);
     expect(
