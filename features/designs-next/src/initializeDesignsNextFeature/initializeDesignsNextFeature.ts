@@ -9,6 +9,7 @@ import {
   HeadingElementConfig,
   IconElementConfig,
   LabelElementConfig,
+  NumberElementConfig,
   TextElementConfig,
 } from '../elements';
 import { locales } from '../locales';
@@ -29,5 +30,6 @@ export function initializeDesignsNextFeature(): void {
   DesignElementConfigs.register(HeadingElementConfig);
   DesignElementConfigs.register(IconElementConfig);
   DesignElementConfigs.register(LabelElementConfig);
+  DesignElementConfigs.register(NumberElementConfig);
   DesignElementConfigs.register(TextElementConfig);
 }

@@ -38,6 +38,27 @@
         "label": "Label",
         "placeholder": "Label"
       },
+      "number": {
+        "label": "Number",
+        "decimals": "Decimal places",
+        "decimalsAsIs": "As is",
+        "separator": {
+          "label": "Thousands separator",
+          "none": "None",
+          "comma": "Comma",
+          "period": "Period",
+          "space": "Space"
+        },
+        "signDisplay": {
+          "label": "Sign",
+          "auto": "Auto",
+          "always": "Always",
+          "never": "Never"
+        },
+        "compact": "Compact",
+        "prefix": "Prefix",
+        "suffix": "Suffix"
+      },
       "text": {
         "label": "Text",
         "placeholder": "Text"

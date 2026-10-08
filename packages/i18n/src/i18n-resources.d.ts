@@ -1335,6 +1335,27 @@ declare module 'i18next' {
               label: string;
               placeholder: string;
             };
+            number: {
+              label: string;
+              decimals: string;
+              decimalsAsIs: string;
+              separator: {
+                label: string;
+                none: string;
+                comma: string;
+                period: string;
+                space: string;
+              };
+              signDisplay: {
+                label: string;
+                auto: string;
+                always: string;
+                never: string;
+              };
+              compact: string;
+              prefix: string;
+              suffix: string;
+            };
             text: {
               label: string;
               placeholder: string;

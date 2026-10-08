@@ -6,4 +6,5 @@ export * from './EditorTitleElement';
 export * from './HeadingElement';
 export * from './IconElement';
 export * from './LabelElement';
+export * from './NumberElement';
 export * from './TextElement';
