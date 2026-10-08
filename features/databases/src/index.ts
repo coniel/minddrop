@@ -7,7 +7,6 @@ export * from './DatabaseMenuItem';
 export * from './DatabasesFeature';
 export * from './events';
 export * from './initializeDatabasesFeature';
-export * from './initializeEntryPdfs';
 export * from './registerDatabaseViews';
 export * from './utils/hasTransferredAddContentCard';
 export * from './utils/resolveTransferredNewEntryDatabaseIds';

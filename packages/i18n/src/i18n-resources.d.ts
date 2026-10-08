@@ -2575,6 +2575,14 @@ declare module 'i18next' {
               };
             };
           };
+          elements: {
+            collection: {
+              label: string;
+              viewType: {
+                label: string;
+              };
+            };
+          };
         };
         entityGroups: {
           labels: {

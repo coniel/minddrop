@@ -1,0 +1,7 @@
+/* The block's box. The embedded view fills it and scrolls inside it. */
+.database-collection-element {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}

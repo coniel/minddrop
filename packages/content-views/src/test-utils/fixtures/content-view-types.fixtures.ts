@@ -31,6 +31,13 @@ export const contentViewType_board: ContentViewType = {
   supportedDataSources: ['collection'],
 };
 
+// A view type supporting the database data source alone. The setup
+// does not register it.
+export const contentViewType_databaseOnly: ContentViewType = {
+  ...generateViewTypeFixture('database-only'),
+  supportedDataSources: ['database'],
+};
+
 // A view type whose data references items via an `items` list
 export const contentViewType_referencing: ContentViewType = {
   ...generateViewTypeFixture('referencing'),

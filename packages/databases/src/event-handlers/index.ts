@@ -26,3 +26,4 @@ export * from './property-renamed';
 export * from './tag-deleted';
 export * from './tag-group-deleted';
 export * from './tag-renamed';
+export * from './content-view-updated';

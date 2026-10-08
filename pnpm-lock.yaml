@@ -2080,12 +2080,18 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../test-utils
       '@minddrop/vitest-config':
         specifier: workspace:*
         version: link:../vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
+      happy-dom:
+        specifier: ^20.6.3
+        version: 20.6.3
       tsconfig:
         specifier: workspace:*
         version: link:../tsconfig

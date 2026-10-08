@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import { FC } from 'react';
 import { ContentViewTypes, ViewDataSourceType } from '@minddrop/content-views';
 import { Icons } from '@minddrop/ui-icons';
 import {
@@ -35,22 +35,9 @@ export const AddContentViewMenu: FC<AddContentViewMenuProps> = ({
   onSelectViewType,
   ...rest
 }) => {
-  const viewTypes = ContentViewTypes.useAll();
-
-  // Filter to view types supporting at least one of the data
-  // sources, or all view types when no data sources are given.
-  const supportedViewTypes = useMemo(() => {
-    // No filter, all view types are valid
-    if (!dataSources) {
-      return viewTypes;
-    }
-
-    return viewTypes.filter((viewType) =>
-      dataSources.some((dataSource) =>
-        viewType.supportedDataSources.includes(dataSource),
-      ),
-    );
-  }, [viewTypes, dataSources]);
+  // Read the view types supporting one of the data sources, or every
+  // view type when no data sources are given.
+  const supportedViewTypes = ContentViewTypes.useForDataSources(dataSources);
 
   return (
     <DropdownMenu

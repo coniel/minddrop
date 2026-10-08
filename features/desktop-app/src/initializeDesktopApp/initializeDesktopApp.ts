@@ -11,10 +11,7 @@ import {
 import { EntityGroups } from '@minddrop/entity-groups';
 import { initializeCollectionsFeature } from '@minddrop/feature-collections';
 import { initializeContentViewsFeature } from '@minddrop/feature-content-views';
-import {
-  initializeDatabasesFeature,
-  initializeEntryPdfs,
-} from '@minddrop/feature-databases';
+import { initializeDatabasesFeature } from '@minddrop/feature-databases';
 import { initializeDesignsFeature } from '@minddrop/feature-designs';
 import { initializeDesignsNextFeature } from '@minddrop/feature-designs-next';
 import { initializeDevToolsFeature } from '@minddrop/feature-dev-tools';
@@ -134,12 +131,11 @@ async function runInitialization(): Promise<void> {
   initializeDesignsNextFeature();
   initializeMarkdownEditorFeature();
   initializePdfFeature();
-  initializeEntryPdfs();
+  initializeDatabasesFeature();
   initializeQueriesFeature();
   initializeSettingsFeature();
   initializeTagsFeature();
   initializeWorkspacesFeature();
-  initializeDatabasesFeature();
   initializePropertiesFeature();
   initializeEditor();
   initializeCanvasUi();

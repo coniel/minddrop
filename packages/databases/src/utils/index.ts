@@ -43,6 +43,8 @@ export * from './resolveEntryColor';
 export * from './parseVirtualCollectionId';
 export * from './virtualCollectionId';
 export * from './virtualCollectionName';
+export * from './virtualViewId';
+export * from './embeddedViewConfigKey';
 export * from './convertEntryToSqlRecord';
 export * from './matchEntriesToSqlRecords';
 export * from './convertSqlRecordToEntry';

@@ -30,6 +30,7 @@ import {
   onTagGroupDeleted,
   onTagRenamed,
   onUpdateCollection,
+  onUpdateContentView,
   onUpdateDatabase,
   onUpdateEntry,
   onUpdateEntryMetadata,
@@ -81,6 +82,7 @@ export function initializeDatabaseEventHandlers() {
     [Tags.events.Renamed]: onTagRenamed,
     [Tags.events.Deleted]: onTagDeleted,
     [TagGroups.events.Deleted]: onTagGroupDeleted,
+    [ContentViews.events.Updated]: onUpdateContentView,
     [Fs.events.Changed]: onFileSystemChanged,
   });
 

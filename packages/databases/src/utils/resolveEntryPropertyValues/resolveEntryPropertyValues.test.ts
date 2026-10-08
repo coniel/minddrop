@@ -3,6 +3,7 @@ import { initializeI18n } from '@minddrop/i18n';
 import { DatabasesStore } from '../../DatabasesStore';
 import { EntriesStore } from '../../EntriesStore';
 import { DatabaseFixtures, cleanup, setup } from '../../test-utils';
+import { virtualCollectionId } from '../virtualCollectionId';
 import { resolveEntryPropertyValues } from './resolveEntryPropertyValues';
 
 // Initialize translations used for the implicit property names
@@ -19,6 +20,9 @@ const {
   pdfPropertyName,
   validPdfPropertyFile,
   genericFilePropertyName,
+  collectionDatabase,
+  collectionEntry1,
+  relatedPropertyName,
 } = DatabaseFixtures;
 
 describe('resolveEntryPropertyValues', () => {
@@ -80,6 +84,17 @@ describe('resolveEntryPropertyValues', () => {
 
     expect(values[pdfPropertyName]).toBe(
       `${databaseDirPath(database_pdf)}/${pdfPropertyName}/${validPdfPropertyFile.name}`,
+    );
+  });
+
+  it("resolves a collection value to its virtual collection's ID", () => {
+    const values = resolveEntryPropertyValues(
+      collectionEntry1,
+      collectionDatabase.properties,
+    );
+
+    expect(values[relatedPropertyName]).toBe(
+      virtualCollectionId(collectionEntry1.id, relatedPropertyName),
     );
   });
 

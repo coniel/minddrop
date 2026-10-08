@@ -1,3 +1,4 @@
+import { ContentViewConfig } from '@minddrop/content-views';
 import { PropertyMap } from '@minddrop/properties';
 import { ContentColor } from '@minddrop/ui-theme';
 import { EntityId } from '@minddrop/utils';
@@ -91,6 +92,12 @@ export interface EntryMetadata {
    * The date the entry was last modified by the app.
    */
   lastModified?: Date;
+
+  /**
+   * The configs of the views design elements embed for the entry's
+   * collection properties. Keyed by design element ID and view type.
+   */
+  embeddedViewConfigs?: Record<string, ContentViewConfig>;
 
   /**
    * The entry's color, i.e. the value of the meta Color property.

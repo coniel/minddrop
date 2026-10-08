@@ -26,3 +26,4 @@ export const {
 } = ContentViewTypesRegistry;
 
 export { registerContentViewType as register } from './registerContentViewType';
+export { useContentViewTypesForDataSources as useForDataSources } from './useContentViewTypesForDataSources';

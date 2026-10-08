@@ -313,6 +313,14 @@
           }
         }
       }
+    },
+    "elements": {
+      "collection": {
+        "label": "Collection",
+        "viewType": {
+          "label": "View type"
+        }
+      }
     }
   }
 }

@@ -73,6 +73,8 @@ export { findEntryPropertyFileOwner as findPropertyFileOwner } from './utils';
 export { validateEntryTitle as validateTitle } from './validateEntryTitle';
 export { readEntries as readFiles } from './readEntries';
 export { resolveEntryPropertyValues as resolvePropertyValues } from './utils';
+export { virtualViewId } from './utils';
+export { ensureEntryVirtualView as ensureVirtualView } from './ensureEntryVirtualView';
 export { getAllEntries as getAll } from './getAllEntries';
 export { getTaggedEntries as getTagged } from './getTaggedEntries';
 export { getNewestEntries as getNewest } from './utils';
