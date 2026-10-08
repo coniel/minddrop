@@ -706,16 +706,26 @@ export const RichTextEditor: React.FC<EditorProps> = ({
   // value coming back around, is the editor's own and leaves it be.
   // Unsaved edits are dropped: the value is the source of truth.
   useEffect(() => {
+    // Check the value is the one seeded. If so, there is nothing to
+    // follow.
     if (initialValue === seededValueRef.current) {
       return;
     }
 
+    // Serialize the value and the one seeded
+    const markdown = Ast.toMarkdown(initialValue);
+    const seededMarkdown = Ast.toMarkdown(seededValueRef.current);
+
     // Record the value as seeded, whether or not it resets the document
     seededValueRef.current = initialValue;
 
-    // Serialize the value and the current document, excluding the
-    // title node.
-    const markdown = Ast.toMarkdown(initialValue);
+    // Check the value's content has changed since it was seeded. If
+    // not, leave the document and its unsaved edits be.
+    if (markdown === seededMarkdown) {
+      return;
+    }
+
+    // Serialize the current document, excluding the title node
     const content = hasTitle
       ? editorWithPlugins.children.slice(1)
       : editorWithPlugins.children;

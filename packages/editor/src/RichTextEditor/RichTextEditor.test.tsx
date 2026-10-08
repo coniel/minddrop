@@ -311,6 +311,30 @@ describe('RichTextEditor value changes', () => {
     expect(changeValues).toHaveLength(0);
   });
 
+  it('keeps unsaved edits when the unchanged value is passed in afresh', async () => {
+    const editorRef = React.createRef<Editor>();
+    const renderWith = (value: Element[]) => (
+      <RichTextEditor
+        initialValue={value}
+        onChangeDebounced={() => {}}
+        editorRef={editorRef}
+      />
+    );
+    const { getByText, rerender } = render(renderWith([paragraphElement1]));
+
+    // Edit the document, leaving the edit unsaved
+    await actFlush(() => {
+      Transforms.insertText(editorRef.current!, 'Edited ', {
+        at: { path: [0, 0], offset: 0 },
+      });
+    });
+
+    // The unchanged value parsed afresh, as a consumer does
+    rerender(renderWith([{ ...paragraphElement1 }]));
+
+    expect(getByText(`Edited ${paragraphElement1PlainText}`)).not.toBeNull();
+  });
+
   it('drops a pending save when the value changes', async () => {
     const {
       getByText,
