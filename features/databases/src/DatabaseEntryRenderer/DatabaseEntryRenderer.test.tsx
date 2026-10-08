@@ -24,7 +24,11 @@ import { DatabaseEntryRenderer } from './DatabaseEntryRenderer';
 const { objectEntry1, objectDatabase, databaseDirPath } = DatabaseFixtures;
 const { ownedCardDesign_1 } = DesignNextFixtures;
 const { titleDesignElement } = DesignElementFixtures;
-const { elementConfig_value, elementConfig_edit } = StandInElementFixtures;
+const {
+  elementConfig_value,
+  elementConfig_edit,
+  elementConfig_autoFocusProbe,
+} = StandInElementFixtures;
 
 // A database with a text property. Only a design renders the
 // property's value. The title-only fallback does not show it.
@@ -111,6 +115,15 @@ const ownedBodyMappedDesign = {
   owner: designDatabase.id,
 };
 
+// A card design whose only element renders whether it takes the
+// editor focus.
+const autoFocusProbeDesign = {
+  ...ownedCardDesign_1,
+  elements: [
+    { ...titleDesignElement, type: elementConfig_autoFocusProbe.type },
+  ],
+};
+
 describe('<DatabaseEntryRenderer />', () => {
   beforeEach(() => {
     setup();
@@ -121,6 +134,7 @@ describe('<DatabaseEntryRenderer />', () => {
     // Register the element types the designs render
     DesignElementConfigs.register(elementConfig_value);
     DesignElementConfigs.register(elementConfig_edit);
+    DesignElementConfigs.register(elementConfig_autoFocusProbe);
   });
 
   afterEach(async () => {
@@ -156,6 +170,37 @@ describe('<DatabaseEntryRenderer />', () => {
     );
 
     screen.getByText(designEntry.properties.Body);
+  });
+
+  it("grants a focus requested entry's editor the focus", () => {
+    Databases.Store.load([designDatabase]);
+    DatabaseEntries.Store.load([designEntry]);
+    DatabaseEntries.requestFocus(designEntry.id);
+
+    render(
+      <DatabaseEntryRenderer
+        entryId={designEntry.id}
+        layoutContext="card"
+        design={autoFocusProbeDesign}
+      />,
+    );
+
+    expect(screen.getByText('auto focus')).toBeInTheDocument();
+  });
+
+  it('grants no editor the focus without a focus request', () => {
+    Databases.Store.load([designDatabase]);
+    DatabaseEntries.Store.load([designEntry]);
+
+    render(
+      <DatabaseEntryRenderer
+        entryId={designEntry.id}
+        layoutContext="card"
+        design={autoFocusProbeDesign}
+      />,
+    );
+
+    expect(screen.getByText('no auto focus')).toBeInTheDocument();
   });
 
   it('renders the entry title alone when given no design', () => {

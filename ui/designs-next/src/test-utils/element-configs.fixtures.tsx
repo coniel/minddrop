@@ -2,6 +2,7 @@ import {
   DesignElementComponent,
   DesignElementConfig,
 } from '@minddrop/designs-next';
+import { useEditorAutoFocus } from '../useEditorAutoFocus';
 import { useElementProperty } from '../useElementProperty';
 import { useElementValue } from '../useElementValue';
 import { useHasMappedMarkdownEditor } from '../useHasMappedMarkdownEditor';
@@ -44,6 +45,14 @@ const MarkdownEditorProbeElement: DesignElementComponent = () => (
   </div>
 );
 
+/**
+ * Renders whether the element takes the editor focus. 'auto focus'
+ * when it does, 'no auto focus' otherwise.
+ */
+const AutoFocusProbeElement: DesignElementComponent = () => (
+  <div>{useEditorAutoFocus() ? 'auto focus' : 'no auto focus'}</div>
+);
+
 // An element type rendering the value of the property it maps to.
 // Stands in for the content elements.
 export const elementConfig_value: DesignElementConfig = {
@@ -70,4 +79,12 @@ export const elementConfig_markdownEditorProbe: DesignElementConfig = {
   ...elementConfig_value,
   type: 'markdown-editor-probe',
   component: MarkdownEditorProbeElement,
+};
+
+// An element type rendering whether it takes the editor focus.
+// Stands in for the editor element.
+export const elementConfig_autoFocusProbe: DesignElementConfig = {
+  ...elementConfig_value,
+  type: 'auto-focus-probe',
+  component: AutoFocusProbeElement,
 };

@@ -1,11 +1,16 @@
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import {
   DesignPropertiesContext,
   DesignPropertiesContextValue,
 } from './DesignPropertiesContext';
 
 export interface DesignPropertiesProviderProps
-  extends Partial<DesignPropertiesContextValue> {
+  extends Partial<Omit<DesignPropertiesContextValue, 'claimEditorAutoFocus'>> {
+  /**
+   * Whether the first editor to mount takes the focus.
+   */
+  autoFocusEditor?: boolean;
+
   /**
    * The design render the properties apply to.
    */
@@ -24,8 +29,12 @@ export const DesignPropertiesProvider: React.FC<
   onValueChange,
   validateValue,
   hasMappedMarkdownEditor,
+  autoFocusEditor = false,
   children,
 }) => {
+  // Whether an editor has claimed the focus
+  const claimedRef = useRef(false);
+
   // Build the context value
   const value = useMemo(
     () => ({
@@ -34,8 +43,27 @@ export const DesignPropertiesProvider: React.FC<
       onValueChange,
       validateValue,
       hasMappedMarkdownEditor,
+      claimEditorAutoFocus: () => {
+        // Reject the claim when the flag is unset or the focus is
+        // already claimed.
+        if (!autoFocusEditor || claimedRef.current) {
+          return false;
+        }
+
+        // Record the claim
+        claimedRef.current = true;
+
+        return true;
+      },
     }),
-    [properties, values, onValueChange, validateValue, hasMappedMarkdownEditor],
+    [
+      properties,
+      values,
+      onValueChange,
+      validateValue,
+      hasMappedMarkdownEditor,
+      autoFocusEditor,
+    ],
   );
 
   return (

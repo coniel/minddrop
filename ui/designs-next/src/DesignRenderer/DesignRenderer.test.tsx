@@ -40,6 +40,7 @@ const {
   elementConfig_value,
   elementConfig_edit,
   elementConfig_markdownEditorProbe,
+  elementConfig_autoFocusProbe,
 } = StandInElementFixtures;
 
 const titleProperties: PropertiesSchema = [{ type: 'title', name: 'Title' }];
@@ -63,6 +64,15 @@ const markdownEditorDesign: Design = {
       type: elementConfig_value.type,
       property: 'Content',
     },
+  ],
+};
+
+// A design whose only element renders whether it takes the editor
+// focus.
+const autoFocusProbeDesign: Design = {
+  ...design_heading,
+  elements: [
+    { ...designElement_heading, type: elementConfig_autoFocusProbe.type },
   ],
 };
 
@@ -480,5 +490,21 @@ describe('DesignRenderer', () => {
     expect(band.style.flexBasis).toBe(
       `${bodyDesignElement.rowSpan * Designs.constants.UnitPixelSize}px`,
     );
+  });
+
+  it('grants its first editor the focus when auto focus is on', () => {
+    DesignElementConfigs.register(elementConfig_autoFocusProbe);
+
+    render(<DesignRenderer design={autoFocusProbeDesign} autoFocusEditor />);
+
+    expect(screen.getByText('auto focus')).toBeInTheDocument();
+  });
+
+  it('grants no editor the focus when auto focus is off', () => {
+    DesignElementConfigs.register(elementConfig_autoFocusProbe);
+
+    render(<DesignRenderer design={autoFocusProbeDesign} />);
+
+    expect(screen.getByText('no auto focus')).toBeInTheDocument();
   });
 });

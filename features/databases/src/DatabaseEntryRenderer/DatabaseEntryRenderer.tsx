@@ -266,6 +266,7 @@ const EntryWithDesign: React.FC<EntryWithDesignProps> = ({
           values={designValues}
           onValueChange={onUpdatePropertyValue}
           validateValue={onValidatePropertyValue}
+          autoFocusEditor={focusRequested}
         />
       );
     }

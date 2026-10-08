@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { bodyDesignElement } from '@minddrop/designs-next/test-utils';
 import { PropertiesSchema } from '@minddrop/properties';
-import { render, screen } from '@minddrop/test-utils';
+import { act, render, screen, waitFor } from '@minddrop/test-utils';
 import { DesignPropertiesProvider } from '@minddrop/ui-designs-next';
 import { cleanup } from '../../../test-utils';
 import { EditorTitleElement } from '../../EditorTitleElement';
@@ -45,6 +45,45 @@ describe('EditorElementRenderer', () => {
     );
 
     expect(screen.getByText('The entry document.')).toBeInTheDocument();
+  });
+
+  it('focuses the document when auto focus is on', async () => {
+    const { container } = render(
+      <DesignPropertiesProvider
+        properties={properties}
+        values={{ Notes: 'The entry document.' }}
+        onValueChange={() => {}}
+        autoFocusEditor
+      >
+        <EditorElementRenderer element={editorElement} />
+      </DesignPropertiesProvider>,
+    );
+
+    // Wait for the focus. The editor applies it on a timer.
+    await waitFor(() => {
+      expect(container.querySelector('[contenteditable="true"]')).toBe(
+        document.activeElement,
+      );
+    });
+  });
+
+  it('leaves the document unfocused when auto focus is off', async () => {
+    const { container } = render(
+      <DesignPropertiesProvider
+        properties={properties}
+        values={{ Notes: 'The entry document.' }}
+        onValueChange={() => {}}
+      >
+        <EditorElementRenderer element={editorElement} />
+      </DesignPropertiesProvider>,
+    );
+
+    // Let the editor's focus timer elapse
+    await act(() => new Promise((resolve) => setTimeout(resolve, 20)));
+
+    expect(container.querySelector('[contenteditable="true"]')).not.toBe(
+      document.activeElement,
+    );
   });
 
   // Typing into the document and committing the title run on Slate's

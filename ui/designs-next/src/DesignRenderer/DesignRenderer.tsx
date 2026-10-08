@@ -41,6 +41,11 @@ export interface DesignRendererProps {
    * invalid.
    */
   validateValue?: (name: string, value: PropertyValue) => string | undefined;
+
+  /**
+   * Whether the first editor in the design takes the focus.
+   */
+  autoFocusEditor?: boolean;
 }
 
 /**
@@ -53,6 +58,7 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
   values,
   onValueChange,
   validateValue,
+  autoFocusEditor,
 }) => {
   // Compile the design once per design
   const tree = useMemo(() => Designs.resolveLayoutTree(design), [design]);
@@ -71,6 +77,7 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
       onValueChange={onValueChange}
       validateValue={validateValue}
       hasMappedMarkdownEditor={hasMappedMarkdownEditor}
+      autoFocusEditor={autoFocusEditor}
     >
       <div className="design-renderer" style={resolveDesignStyle(design)}>
         <LayoutBoxRenderer box={tree} design={design} axis={null} />

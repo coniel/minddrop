@@ -34,6 +34,13 @@ export interface DesignPropertiesContextValue {
    * accepting changes.
    */
   hasMappedMarkdownEditor?: boolean;
+
+  /**
+   * Claims the focus for an editor. Returns true on the first call
+   * while the first editor to mount takes the focus, false on every
+   * call after it. Absent outside a provider.
+   */
+  claimEditorAutoFocus?: () => boolean;
 }
 
 /**

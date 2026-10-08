@@ -6,6 +6,7 @@ import {
 import { MarkdownEditor } from '@minddrop/feature-markdown-editor';
 import {
   resolveElementStyle,
+  useEditorAutoFocus,
   useElementProperty,
   useElementValue,
 } from '@minddrop/ui-designs-next';
@@ -42,6 +43,9 @@ export const EditorElementRenderer: React.FC<
 
   // Read the title's property for the callbacks updating it
   const titleProperty = useElementProperty(titleElement);
+
+  // Claim the focus for the first editor to mount
+  const autoFocus = useEditorAutoFocus();
 
   // Read the document from the mapped content property
   const markdown =
@@ -89,6 +93,7 @@ export const EditorElementRenderer: React.FC<
         title={titleElement && (titleValue ?? '')}
         titleStyle={titleElement && resolveElementStyle(titleElement)}
         readOnly={!property?.updateValue}
+        autoFocus={autoFocus}
         onDebouncedChange={property?.updateValue}
         onTitleChange={titleProperty?.updateValue}
         validateTitle={titleProperty?.validateValue}
