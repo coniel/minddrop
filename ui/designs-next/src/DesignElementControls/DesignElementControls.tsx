@@ -283,8 +283,11 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
   const siblings = Designs.resolveChildElements(elements, element.parent);
 
   // A square element keeps its unit size on both axes, so it takes
-  // a pin on each and fits its content on neither.
+  // a pin on each and fits its content on neither. A fixed-size
+  // element's block follows its settings, so it does the same.
   const square = config?.square ?? false;
+  const fixedSize = Boolean(config?.resolveFixedSize);
+  const sized = square || fixedSize;
 
   // Whether the element takes padding
   const paddable = config?.paddable ?? false;
@@ -388,6 +391,11 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
     // The element with the settings applied
     const updated = { ...element, ...settings };
 
+    // The block size a fixed-size element takes from the changed
+    // settings, applied along with them.
+    const size = config?.resolveFixedSize?.(updated);
+    const sizedSettings = { ...settings, ...size };
+
     // An element held in a slot takes its place from the element
     // holding it, so the change applies to it alone. Its block
     // follows its type size, standing in for what the element
@@ -395,8 +403,11 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
     if (!onGrid) {
       onElementsChange(
         Designs.updateElement(elements, element.id, {
-          ...settings,
-          rowSpan: config?.resolveMinRowSpan?.(updated) ?? element.rowSpan,
+          ...sizedSettings,
+          rowSpan:
+            size?.rowSpan ??
+            config?.resolveMinRowSpan?.(updated) ??
+            element.rowSpan,
         }),
       );
 
@@ -408,10 +419,10 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
     const result = Designs.applyElementSettings(
       elements,
       element.id,
-      settings,
+      sizedSettings,
       {
         rows,
-        minRowSpan: config?.resolveMinRowSpan?.(updated),
+        minRowSpan: size?.rowSpan ?? config?.resolveMinRowSpan?.(updated),
         rowSpanStep: config?.resolveRowSpanStep?.(updated),
         previousRowSpanStep: config?.resolveRowSpanStep?.(element),
       },
@@ -458,12 +469,12 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
   }
 
   // Builds an axis' menu options
-  // Drops the fluid mode for a square element, which would stretch
-  // out of square on whichever axis scales with the render width.
+  // Drops the fluid mode for a sized element, which would stretch
+  // out of its size on whichever axis scales with the render width.
   function resolveAvailableModeOptions<Mode extends string>(
     modeOptions: ElementModeOption<Mode>[],
   ): ElementModeOption<Mode>[] {
-    if (!square) {
+    if (!sized) {
       return modeOptions;
     }
 
@@ -538,7 +549,7 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
           onValueChange={handleHeightModeChange}
         />
       )}
-      {onGrid && !aspectLocked && !square && (
+      {onGrid && !aspectLocked && !sized && (
         <RadioToggleHoverMenu<ElementContentFit>
           options={resolveModeOptions(ContentFitOptions)}
           value={element.contentFit ?? 'fixed'}

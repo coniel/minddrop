@@ -224,6 +224,23 @@ describe('applyElementSettings', () => {
     expect(rows).toBe(cardRows - 1);
   });
 
+  it('shrinks to a row span the settings carry', () => {
+    const { elements, rows } = applyElementSettings(
+      [{ ...titleDesignElement, rowSpan: 6 }, bodyDesignElement],
+      titleDesignElement.id,
+      { size: 'sm', rowSpan: 3 },
+      { rows: cardRows, minRowSpan: 3 },
+    );
+
+    // The span follows the settings down to the new minimum
+    expect(elements[0].rowSpan).toBe(3);
+
+    // Title at rows 10-16 shrank by 3 with the body 4 units below
+    // it, so the tight gap holds: the body and rows follow up.
+    expect(elements[1].row).toBe(bodyDesignElement.row - 3);
+    expect(rows).toBe(cardRows - 3);
+  });
+
   it('leaves elements put when shrinking under a large gap', () => {
     const { elements, rows } = applyElementSettings(
       [

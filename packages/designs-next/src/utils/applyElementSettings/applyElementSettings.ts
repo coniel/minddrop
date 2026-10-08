@@ -73,9 +73,11 @@ export function applyElementSettings<TElement extends DesignElement>(
   // Merge the settings into the element
   const updated = { ...target, ...settings };
 
-  // Adjust the span to the new step and minimum
+  // Adjust the span to the new step and minimum. The span starts
+  // from the settings when they carry one, so a settings change
+  // which sizes the element can shrink it.
   updated.rowSpan = quantizeRowSpan(
-    target.rowSpan,
+    updated.rowSpan,
     minRowSpan,
     rowSpanStep,
     previousRowSpanStep,

@@ -72,6 +72,24 @@ describe('createDesignElement', () => {
     expect(element.column).toBe(0);
   });
 
+  it('sizes a fixed-size element by its settings over the defaults', () => {
+    // A type whose block size follows its starter content
+    registerDesignElementConfig({
+      ...testElementConfig,
+      type: 'custom',
+      resolveDefaults: () => ({ content: 'large' }),
+      resolveFixedSize: (element) =>
+        element.content === 'large'
+          ? { columnSpan: 10, rowSpan: 6 }
+          : { columnSpan: 4, rowSpan: 4 },
+    });
+
+    const element = createDesignElement('custom');
+
+    expect(element.columnSpan).toBe(10);
+    expect(element.rowSpan).toBe(6);
+  });
+
   it('throws if the type is not registered', () => {
     expect(() => createDesignElement('unknown')).toThrow(NotRegisteredError);
   });

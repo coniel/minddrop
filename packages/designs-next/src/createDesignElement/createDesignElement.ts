@@ -21,7 +21,7 @@ export function createDesignElement(
   const config = DesignElementConfigsRegistry.get(type);
 
   // The starter fields come first so the base fields always win
-  return {
+  const element: DesignElement = {
     ...config.resolveDefaults?.(),
     id: entityId(DesignElementEntityType),
     type,
@@ -32,4 +32,11 @@ export function createDesignElement(
     widthMode: config.defaultWidthMode ?? 'fluid',
     contentFit: config.defaultContentFit ?? 'fixed',
   };
+
+  // A fixed-size element takes the size its settings resolve to
+  if (config.resolveFixedSize) {
+    return { ...element, ...config.resolveFixedSize(element) };
+  }
+
+  return element;
 }

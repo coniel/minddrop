@@ -663,6 +663,57 @@ describe('DesignElementControls', () => {
     });
   });
 
+  it('sizes a fixed-size element to its changed settings', () => {
+    DesignElementConfigs.register<StubElement>({
+      ...testElementConfig,
+      settingsPanel: StubSettingControl,
+      resolveFixedSize: (element) =>
+        element.framed
+          ? { columnSpan: 10, rowSpan: 6 }
+          : { columnSpan: 4, rowSpan: 4 },
+    });
+    renderControls();
+
+    openMenu('Box settings');
+    fireEvent.click(screen.getByLabelText('Framed'));
+
+    expect(changedElement(iconDesignElement.id)).toMatchObject({
+      framed: true,
+      columnSpan: 10,
+      rowSpan: 6,
+    });
+  });
+
+  it('shrinks a fixed-size element to its changed settings', () => {
+    DesignElementConfigs.register<StubElement>({
+      ...testElementConfig,
+      settingsPanel: StubSettingControl,
+      resolveFixedSize: (element) =>
+        element.framed
+          ? { columnSpan: 2, rowSpan: 2 }
+          : { columnSpan: 6, rowSpan: 6 },
+    });
+    renderControls();
+
+    openMenu('Box settings');
+    fireEvent.click(screen.getByLabelText('Framed'));
+
+    expect(changedElement(iconDesignElement.id)).toMatchObject({
+      columnSpan: 2,
+      rowSpan: 2,
+    });
+  });
+
+  it('drops the content fit for a fixed-size element', () => {
+    DesignElementConfigs.register({
+      ...testElementConfig,
+      resolveFixedSize: () => ({ columnSpan: 4, rowSpan: 4 }),
+    });
+    renderControls();
+
+    expect(screen.queryByLabelText('designsNext.contentFit.label')).toBeNull();
+  });
+
   it('offers no settings panel to a type without one', () => {
     registerSettingControls(['font-size']);
     renderControls();

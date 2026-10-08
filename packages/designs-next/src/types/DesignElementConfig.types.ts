@@ -4,6 +4,7 @@ import type { PropertyType } from '@minddrop/properties';
 import type { UiIconName } from '@minddrop/ui-icons';
 import {
   DesignElement,
+  DesignElementSize,
   ElementContentFit,
   ElementWidthMode,
 } from './DesignElement.types';
@@ -108,6 +109,14 @@ export interface DesignElementConfig<
    * column and row spans equal.
    */
   square?: boolean;
+
+  /**
+   * Resolves the block size in grid units of an element whose size
+   * follows its settings. Such an element is neither resized by drag
+   * nor fits its content, and a new one takes this size over the
+   * default spans. Omitted for resizable elements.
+   */
+  resolveFixedSize?: (element: TElement) => DesignElementSize;
 
   /**
    * Whether the element takes padding, which adds the padding

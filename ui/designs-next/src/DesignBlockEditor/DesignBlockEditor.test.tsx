@@ -232,6 +232,26 @@ describe('DesignBlockEditor', () => {
     );
   });
 
+  it('renders no resize handles on a fixed-size block', () => {
+    // A box config whose block size follows its settings
+    DesignElementConfigs.register({
+      ...testElementConfig,
+      resolveFixedSize: () => ({ columnSpan: 4, rowSpan: 4 }),
+    });
+
+    const container = renderEditor();
+    const icon = container.querySelector(
+      '[data-element-id="element_icon"]',
+    ) as HTMLElement;
+
+    expect(icon.querySelectorAll('.design-block-editor-handle')).toHaveLength(
+      0,
+    );
+
+    // Put the resizable box config back for the tests which follow
+    DesignElementConfigs.register(testElementConfig);
+  });
+
   it('marks the selected block', () => {
     const container = renderEditor(titleDesignElement.id);
     const title = container.querySelector(

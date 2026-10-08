@@ -345,11 +345,13 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
 
     const inserted = types.map((type) => {
       const element = Designs.createElement(type, area);
-      const square = DesignElementConfigs.get(type, false)?.square;
+      const config = DesignElementConfigs.get(type, false);
+      const square = config?.square;
 
       // Take the dragged out area's size, shrinking it to its
-      // smaller side for a square element.
-      if (sized) {
+      // smaller side for a square element. A fixed-size element
+      // keeps its own.
+      if (sized && !config?.resolveFixedSize) {
         const span = Math.min(area.columnSpan, area.rowSpan);
 
         element.columnSpan = square ? span : area.columnSpan;
@@ -751,6 +753,11 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
         // The block's padding, scaled to the editor's unit size
         const padding = resolveScaledPadding(element.padding, unitSize);
 
+        // A fixed-size element's block follows its settings, so it
+        // takes no resize handles.
+        const resizable = !DesignElementConfigs.get(element.type, false)
+          ?.resolveFixedSize;
+
         return (
           <div
             key={element.id}
@@ -799,17 +806,18 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
               />
             ))}
 
-            {ResizeHandles.map((mode) => (
-              <div
-                key={mode}
-                className={`design-block-editor-handle design-block-editor-handle-${mode}`}
-                onPointerDown={(event) =>
-                  handleElementPointerDown(event, element.id, mode)
-                }
-                onPointerMove={handlePointerMove}
-                onPointerUp={handlePointerUp}
-              />
-            ))}
+            {resizable &&
+              ResizeHandles.map((mode) => (
+                <div
+                  key={mode}
+                  className={`design-block-editor-handle design-block-editor-handle-${mode}`}
+                  onPointerDown={(event) =>
+                    handleElementPointerDown(event, element.id, mode)
+                  }
+                  onPointerMove={handlePointerMove}
+                  onPointerUp={handlePointerUp}
+                />
+              ))}
 
             {element.id === resizedElementId && (
               <SizeLabel

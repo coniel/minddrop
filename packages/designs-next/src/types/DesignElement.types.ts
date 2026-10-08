@@ -47,6 +47,11 @@ export interface ElementPadding {
   left?: number;
 }
 
+/**
+ * A block size in grid units.
+ */
+export type DesignElementSize = Pick<DesignElement, 'columnSpan' | 'rowSpan'>;
+
 export interface DesignElement {
   /**
    * A unique identifier for the element.
