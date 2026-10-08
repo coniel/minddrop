@@ -18,6 +18,8 @@ import { startFileSystemWatcher } from '../startFileSystemWatcher';
 import { trackAdapterOperations } from '../trackAdapterOperations';
 import {
   BaseDirectory,
+  CopyFileOptions,
+  DownlodFileOptions,
   FileSystem,
   FileSystemAdapter,
   FsOptions,
@@ -25,7 +27,7 @@ import {
   OpenFilePickerOptions,
 } from '../types';
 import { hashContents } from '../utils/hashContents';
-import { recordWrittenContents } from '../writeRegistry';
+import { recordWrittenContents, recordWrittenStats } from '../writeRegistry';
 
 export type { IncrementedPath } from '../incrementalPath';
 
@@ -99,7 +101,7 @@ export const Fs: Omit<FileSystem, 'openFilePicker'> &
   resolveBaseDirPath: (baseDir) => BaseDirPaths[baseDir],
   convertFileSrc: (...args) => FsAdapter.convertFileSrc(...args),
   isDirectory: (...args) => FsAdapter.isDirectory(...args),
-  copyFile: (...args) => FsAdapter.copyFile(...args),
+  copyFile,
   createDir: (...args) => FsAdapter.createDir(...args),
   exists: (...args) => FsAdapter.exists(...args),
   readDir: (...args) => FsAdapter.readDir(...args),
@@ -110,10 +112,10 @@ export const Fs: Omit<FileSystem, 'openFilePicker'> &
   trashDir: (...args) => FsAdapter.trashDir(...args),
   trashFile: (...args) => FsAdapter.trashFile(...args),
   rename: (...args) => FsAdapter.rename(...args),
-  writeBinaryFile: (...args) => FsAdapter.writeBinaryFile(...args),
+  writeBinaryFile,
   writeTextFile,
   writeTextFiles,
-  downloadFile: (...args) => FsAdapter.downloadFile(...args),
+  downloadFile,
   watch: (...args) => FsAdapter.watch(...args),
   unwatch: (...args) => FsAdapter.unwatch(...args),
   stat: (...args) => FsAdapter.stat(...args),
@@ -235,6 +237,78 @@ async function writeTextFiles(
 }
 
 /**
+ * Writes a binary file, recording the file's resulting stats so that
+ * the resulting file system change event can be recognised as the
+ * app's own write.
+ *
+ * @param path - The file path.
+ * @param file - The file contents.
+ * @param options - Write file options.
+ */
+async function writeBinaryFile(
+  path: string,
+  file: Blob,
+  options?: FsWriteFileOptions,
+): Promise<void> {
+  await FsAdapter.writeBinaryFile(path, file, options);
+
+  await recordWriteStats(path, options?.baseDir);
+}
+
+/**
+ * Copies a file, recording the copy's stats so that the resulting
+ * file system change event can be recognised as the app's own write.
+ *
+ * @param source - The path of the file to copy.
+ * @param destination - The path to copy the file to.
+ * @param options - Copy file options.
+ */
+async function copyFile(
+  source: string,
+  destination: string,
+  options?: CopyFileOptions,
+): Promise<void> {
+  await FsAdapter.copyFile(source, destination, options);
+
+  await recordWriteStats(destination, options?.toPathBaseDir);
+}
+
+/**
+ * Downloads a file, recording the downloaded file's stats so that the
+ * resulting file system change event can be recognised as the app's
+ * own write.
+ *
+ * @param url - The URL of the file to download.
+ * @param path - The path to save the file to.
+ * @param options - Download file options.
+ */
+async function downloadFile(
+  url: string,
+  path: string,
+  options?: DownlodFileOptions,
+): Promise<void> {
+  await FsAdapter.downloadFile(url, path, options);
+
+  await recordWriteStats(path, options?.baseDir);
+}
+
+/**
+ * Records a written file's stats in the write registry, skipping
+ * writes into a base directory. Those target the app's own config
+ * directories, which are never watched.
+ */
+async function recordWriteStats(
+  path: string,
+  baseDir?: BaseDirectory,
+): Promise<void> {
+  if (baseDir) {
+    return;
+  }
+
+  recordWrittenStats(path, await FsAdapter.stat(path));
+}
+
+/**
  * Records written contents in the write registry, skipping writes
  * into a base directory. Those target the app's own config
  * directories, which are never watched.
@@ -332,7 +406,7 @@ async function readJsonFile<TData extends object = object>(
 }
 
 /**
- * Writes a JSON file.
+ * Writes a JSON file, recording its contents as the app's own write.
  *
  * @param path - The file path.
  * @param jsonContent - The JSON content to write.
@@ -348,7 +422,7 @@ async function writeJsonFile(
 ): Promise<void> {
   const contents = JSON.stringify(jsonContent, null, pretty ? 2 : 0);
 
-  await FsAdapter.writeTextFile(path, contents, options);
+  await writeTextFile(path, contents, options);
 }
 
 /**
@@ -374,7 +448,7 @@ async function readYamlFile<TData extends object = object>(
 }
 
 /**
- * Writes a YAML file.
+ * Writes a YAML file, recording its contents as the app's own write.
  *
  * @param path - The file path.
  * @param values - The data to serialize to YAML.
@@ -388,5 +462,5 @@ async function writeYamlFile(
 ): Promise<void> {
   const text = YAML.stringify(values);
 
-  await FsAdapter.writeTextFile(path, text, options);
+  await writeTextFile(path, text, options);
 }

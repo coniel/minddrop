@@ -140,6 +140,7 @@ export const registerFileSystemAdapter = (rpc: WebviewRpcClient) =>
       return {
         created: new Date(stats.created),
         lastModified: new Date(stats.lastModified),
+        size: stats.size,
       };
     },
   });

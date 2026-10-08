@@ -106,7 +106,7 @@ export type WebviewRPC = {
       };
       fsStat: {
         params: { path: string };
-        response: { created: string; lastModified: string };
+        response: { created: string; lastModified: string; size: number };
       };
       fsOpenFilePicker: {
         params: {

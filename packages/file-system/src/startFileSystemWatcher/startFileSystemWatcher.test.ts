@@ -11,6 +11,7 @@ const WorkspaceId = 'workspace-1';
 const WorkspacePath = 'workspace';
 const QueryPath = 'workspace/.minddrop/queries/query_1.json';
 const QueryContents = '{ "id": "query_1" }';
+const ImagePath = 'workspace/image.png';
 
 const MockFileSystem = initializeMockFileSystem([
   WorkspacePath,
@@ -153,6 +154,32 @@ describe('startFileSystemWatcher', () => {
     // the app wrote.
     expect(changes).toEqual([
       { workspaceId: WorkspaceId, path: QueryPath, kind: 'modified' },
+    ]);
+  });
+
+  it('does not dispatch a change for the app own binary write', async () => {
+    await Fs.writeBinaryFile(ImagePath, new Blob(['bytes']));
+    MockFileSystem.dispatchWatchEvent('modify', [ImagePath]);
+
+    await flushDebounce();
+
+    expect(changes).toEqual([]);
+  });
+
+  it('dispatches a change to an app written binary file whose stats differ', async () => {
+    // Write the file through the app, then replace it outside of the
+    // app, which gives it a new modification time.
+    await Fs.writeBinaryFile(ImagePath, new Blob(['bytes']));
+    MockFileSystem.setFileStats(ImagePath, {
+      created: new Date('2026-01-01T00:00:00.000Z'),
+      lastModified: new Date('2026-02-02T00:00:00.000Z'),
+    });
+    MockFileSystem.dispatchWatchEvent('modify', [ImagePath]);
+
+    await flushDebounce();
+
+    expect(changes).toEqual([
+      { workspaceId: WorkspaceId, path: ImagePath, kind: 'modified' },
     ]);
   });
 

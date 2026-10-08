@@ -6,7 +6,11 @@ import {
   FileSystemWatchRoot,
   FsWatchEventKind,
 } from '../types';
-import { hasWrittenContents, matchesWrittenContents } from '../writeRegistry';
+import {
+  getRecordedWriteKind,
+  matchesWrittenContents,
+  matchesWrittenStats,
+} from '../writeRegistry';
 
 // How long to wait for a path to stop changing before dispatching
 // an event for it. Editors write a file several times per save.
@@ -162,23 +166,29 @@ async function flushChange(
 }
 
 /**
- * Checks whether a path's current contents are the ones the app
- * last wrote to it.
+ * Checks whether a path's current state is the one the app's last
+ * write left it in.
  */
 async function isSelfWrite(path: string): Promise<boolean> {
+  const recordedKind = getRecordedWriteKind(path);
+
   // Paths the app has never written to are external by definition,
   // so the common case costs no read
-  if (!hasWrittenContents(path)) {
+  if (!recordedKind) {
     return false;
   }
 
   try {
-    const contents = await Fs.readTextFile(path);
+    // Compare the file's stats where the write recorded them, which
+    // costs no read of its contents.
+    if (recordedKind === 'stats') {
+      return matchesWrittenStats(path, await Fs.stat(path));
+    }
 
-    return matchesWrittenContents(path, contents);
+    return matchesWrittenContents(path, await Fs.readTextFile(path));
   } catch {
-    // Unreadable as text (a binary file, or deleted mid-flight).
-    // Reporting the change is the recoverable direction.
+    // Deleted mid-flight, or a recorded text file no longer readable
+    // as text. Reporting the change is the recoverable direction.
     return false;
   }
 }

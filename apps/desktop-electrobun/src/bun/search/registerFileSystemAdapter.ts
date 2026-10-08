@@ -60,6 +60,7 @@ export function registerBunFileSystemAdapter(): void {
       return {
         created: new Date(stats.created),
         lastModified: new Date(stats.lastModified),
+        size: stats.size,
       };
     },
     // Stub out methods not needed on the Bun side for search

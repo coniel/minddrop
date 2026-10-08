@@ -467,19 +467,20 @@ export const fileSystemRpcHandlers = {
     }
   },
 
-  // Returns a file's creation and modification times
+  // Returns a file's creation and modification times and its size
   fsStat: async ({
     path: filePath,
   }: {
     path: string;
-  }): Promise<{ created: string; lastModified: string }> => {
-    // Stat the file for its timestamps
+  }): Promise<{ created: string; lastModified: string; size: number }> => {
+    // Stat the file for its timestamps and size
     const stat = await fsp.stat(filePath);
 
     // Serialize the dates explicitly, as they cross the RPC as strings
     return {
       created: stat.birthtime.toISOString(),
       lastModified: stat.mtime.toISOString(),
+      size: stat.size,
     };
   },
 

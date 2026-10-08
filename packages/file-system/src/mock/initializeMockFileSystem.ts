@@ -10,10 +10,10 @@ import {
   FsDirOptions,
   FsEntry,
   FsFileOptions,
-  FsFileStats,
   FsReadFileOptions,
   FsWatchEvent,
   MockFileDescriptor,
+  MockFileStats,
   MockFileSystem,
 } from '../types';
 import { mockAddFileEntry } from './mockAddFileEntry';
@@ -44,7 +44,7 @@ export function initializeMockFileSystem(
   // A { path: File } map of binary files
   let binaryFiles: Record<string, any> = init.binaryFiles;
   // A { path: stats } map of file stats
-  let fileStats: Record<string, FsFileStats> = init.fileStats;
+  let fileStats: Record<string, MockFileStats> = init.fileStats;
   // Result of the file picker
   let filePickerResult: string | string[] | null = null;
   // Watch callbacks keyed by watcher ID
@@ -53,6 +53,15 @@ export function initializeMockFileSystem(
     { paths: string[]; callback: (event: FsWatchEvent) => void }
   >();
   let nextWatcherId = 0;
+
+  // Returns the size in bytes of a mock file's contents
+  const mockContentsSize = (path: string): number => {
+    if (path in textFileContents) {
+      return new TextEncoder().encode(textFileContents[path]).length;
+    }
+
+    return binaryFiles[path]?.size ?? 0;
+  };
 
   const MockFs: FileSystemAdapter = {
     resolveBaseDirPath: async (baseDir) => baseDir,
@@ -237,13 +246,17 @@ export function initializeMockFileSystem(
       // Ensure file entry exists
       mockGetFileEntry(root, fullPath);
 
-      // Return configured stats or default dates
-      return (
-        fileStats[fullPath] || {
-          created: new Date('2024-01-01T00:00:00.000Z'),
-          lastModified: new Date('2024-01-01T00:00:00.000Z'),
-        }
-      );
+      // Return configured stats or default dates, with the size of
+      // the file's contents unless one was configured.
+      const stats = fileStats[fullPath] ?? {
+        created: new Date('2024-01-01T00:00:00.000Z'),
+        lastModified: new Date('2024-01-01T00:00:00.000Z'),
+      };
+
+      return {
+        ...stats,
+        size: stats.size ?? mockContentsSize(fullPath),
+      };
     },
   };
 
@@ -488,12 +501,12 @@ function initializeMockFsRoot(
   root: FsEntry;
   textFileContents: Record<string, string>;
   binaryFiles: Record<string, any>;
-  fileStats: Record<string, FsFileStats>;
+  fileStats: Record<string, MockFileStats>;
 } {
   const root: FsEntry = { path: 'root', name: 'root', children: [] };
   const textFileContents: Record<string, string> = {};
   const binaryFiles: Record<string, any> = {};
-  const fileStats: Record<string, FsFileStats> = {};
+  const fileStats: Record<string, MockFileStats> = {};
 
   fileDescriptors.forEach((fileDescriptor) => {
     const path =

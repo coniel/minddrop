@@ -55,17 +55,23 @@ export interface MockFileSystem {
   removeDir(path: string, options?: FsRemoveDirOptions): void;
   downloadFile(url: string, path: string, options?: FsFileOptions): void;
   setFilePickerResult(result: string | string[] | null): void;
-  setFileStats(path: string, stats: FsFileStats): void;
+  setFileStats(path: string, stats: MockFileStats): void;
   dispatchWatchEvent(kind: FsWatchEvent['kind'], paths: string[]): void;
   printWatchers(): void;
 }
 
 export type MockFsRoot = Record<string, FsEntry>;
 
+/**
+ * File stats configured on the mock file system. The size defaults
+ * to that of the file's contents.
+ */
+export type MockFileStats = Omit<FsFileStats, 'size'> & { size?: number };
+
 export type MockFileDescriptor = {
   path: string;
   textContent?: string;
   binaryFile?: any;
-  stats?: FsFileStats;
+  stats?: MockFileStats;
   options?: FsFileOptions;
 };

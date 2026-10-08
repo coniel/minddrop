@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { hasPendingOperations } from '../PendingOperationsStore';
 import { initializeMockFileSystem } from '../mock';
+import { matchesWrittenContents, matchesWrittenStats } from '../writeRegistry';
 import { Fs } from './FileSystem';
 
 describe('Fs.removeDir', () => {
@@ -50,5 +51,65 @@ describe('Fs.tests.cleanup', () => {
     await Fs.tests.cleanup();
 
     await expect(Fs.readTextFile('loaded.txt')).resolves.toBe('kept');
+  });
+});
+
+describe('Fs.writeJsonFile', () => {
+  it('records the written contents as a self-write', async () => {
+    initializeMockFileSystem();
+
+    await Fs.writeJsonFile('file.json', { key: 'value' });
+
+    expect(
+      matchesWrittenContents('file.json', await Fs.readTextFile('file.json')),
+    ).toBe(true);
+  });
+});
+
+describe('Fs.writeYamlFile', () => {
+  it('records the written contents as a self-write', async () => {
+    initializeMockFileSystem();
+
+    await Fs.writeYamlFile('file.yaml', { key: 'value' });
+
+    expect(
+      matchesWrittenContents('file.yaml', await Fs.readTextFile('file.yaml')),
+    ).toBe(true);
+  });
+});
+
+describe('Fs.writeBinaryFile', () => {
+  it('records the written file stats as a self-write', async () => {
+    initializeMockFileSystem();
+
+    await Fs.writeBinaryFile('image.png', new Blob(['bytes']));
+
+    expect(matchesWrittenStats('image.png', await Fs.stat('image.png'))).toBe(
+      true,
+    );
+  });
+});
+
+describe('Fs.copyFile', () => {
+  it('records the copy stats as a self-write', async () => {
+    initializeMockFileSystem([{ path: 'source.png', textContent: 'bytes' }]);
+
+    await Fs.copyFile('source.png', 'copy.png');
+
+    expect(matchesWrittenStats('copy.png', await Fs.stat('copy.png'))).toBe(
+      true,
+    );
+  });
+});
+
+describe('Fs.downloadFile', () => {
+  it('records the downloaded file stats as a self-write', async () => {
+    initializeMockFileSystem();
+
+    await Fs.downloadFile('https://example.com/image.png', 'image.png');
+
+    expect(matchesWrittenStats('image.png', await Fs.stat('image.png'))).toBe(
+      true,
+    );
   });
 });
