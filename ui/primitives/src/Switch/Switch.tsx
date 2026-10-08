@@ -37,6 +37,17 @@ export interface SwitchProps {
   disabled?: boolean;
 
   /*
+   * Prevents changing the checked state, with the switch drawn as
+   * usual.
+   */
+  readOnly?: boolean;
+
+  /*
+   * Accessible label of a switch with no visible label.
+   */
+  'aria-label'?: string;
+
+  /*
    * Class name applied to the root element.
    */
   className?: string;
@@ -50,6 +61,8 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
       defaultChecked,
       onCheckedChange,
       disabled,
+      readOnly,
+      'aria-label': ariaLabel,
       className,
     },
     ref,
@@ -60,6 +73,8 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
       defaultChecked={defaultChecked}
       onCheckedChange={onCheckedChange}
       disabled={disabled}
+      readOnly={readOnly}
+      aria-label={ariaLabel}
       className={propsToClass('switch', { size, className })}
     >
       <SwitchPrimitive.Thumb className="switch-thumb" />

@@ -96,6 +96,28 @@
         "label": "Text",
         "placeholder": "Text"
       },
+      "toggle": {
+        "label": "Toggle",
+        "on": "On",
+        "off": "Off",
+        "style": {
+          "label": "Style",
+          "checkbox": "Checkbox",
+          "switch": "Switch",
+          "icon": "Icon"
+        },
+        "size": {
+          "label": "Size",
+          "sm": "Small",
+          "md": "Medium",
+          "lg": "Large"
+        },
+        "icons": {
+          "label": "Icons",
+          "checked": "Checked icon",
+          "unchecked": "Unchecked icon"
+        }
+      },
       "webview": {
         "label": "Web page",
         "blocked": "This site cannot be embedded"

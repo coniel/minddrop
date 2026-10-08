@@ -28,16 +28,28 @@ function useCheckboxGroup() {
    Use CheckboxField for the full label+checkbox combo.
    ============================================================ */
 
+export type CheckboxSize = 'sm' | 'md' | 'lg';
+
 export interface CheckboxProps extends CheckboxPrimitive.Root.Props {
+  /*
+   * Size of the indicator.
+   * @default 'md'
+   */
+  size?: CheckboxSize;
+
   /*
    * Class name applied to the indicator element.
    */
   className?: string;
 }
 
-export const Checkbox: React.FC<CheckboxProps> = ({ className, ...other }) => (
+export const Checkbox: React.FC<CheckboxProps> = ({
+  size = 'md',
+  className,
+  ...other
+}) => (
   <CheckboxPrimitive.Root
-    className={propsToClass('checkbox-indicator', { className })}
+    className={propsToClass('checkbox-indicator', { size, className })}
     {...other}
   >
     <CheckboxPrimitive.Indicator>

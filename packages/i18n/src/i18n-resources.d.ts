@@ -1393,6 +1393,28 @@ declare module 'i18next' {
               label: string;
               placeholder: string;
             };
+            toggle: {
+              label: string;
+              on: string;
+              off: string;
+              style: {
+                label: string;
+                checkbox: string;
+                switch: string;
+                icon: string;
+              };
+              size: {
+                label: string;
+                sm: string;
+                md: string;
+                lg: string;
+              };
+              icons: {
+                label: string;
+                checked: string;
+                unchecked: string;
+              };
+            };
             webview: {
               label: string;
               blocked: string;
