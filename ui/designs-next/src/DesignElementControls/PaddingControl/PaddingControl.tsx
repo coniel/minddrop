@@ -90,8 +90,9 @@ export const PaddingControl: React.FC<PaddingControlProps> = ({
     <ToolbarHoverPanel
       label={t('designsNext.padding.label')}
       trigger={<Icon name="square-square" />}
+      padded
     >
-      <Stack gap={2} className="design-padding-control-panel">
+      <Stack gap={2}>
         <InputLabel size="xs" label="designsNext.padding.label" />
         <div ref={boxRef} className="design-padding-control-box">
           {Designs.constants.PaddingSides.map((side) => (

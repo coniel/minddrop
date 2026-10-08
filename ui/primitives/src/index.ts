@@ -30,6 +30,7 @@ export * from './IconRenderer';
 export * from './KeyboardShortcut';
 export * from './Layout';
 export * from './Menu';
+export * from './HoverMenuContext';
 export * from './MenuTargetContext';
 export * from './MindDropLogo';
 export * from './SearchableMenu';

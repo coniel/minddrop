@@ -1,16 +1,30 @@
+import { act } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen } from '@minddrop/test-utils';
 import { FloatingToolbar } from '../FloatingToolbar';
 import { IconButton } from '../IconButton';
+import {
+  Popover,
+  PopoverClose,
+  PopoverContent,
+  PopoverPortal,
+  PopoverPositioner,
+  PopoverTrigger,
+} from '../Popover';
+import { Select } from '../Select';
 import { ToolbarHoverPanel } from './ToolbarHoverPanel';
 
 // The attribute the panel marks its host toolbar with
 const SquaredCornersAttribute = 'data-hover-menu-squared';
 
+// Long enough for the hover menu's close delay to elapse
+const PastCloseDelay = 200;
+
 /**
  * Renders the panel in a toolbar and opens it. The panel opens on
  * hover in use, which the hover menu hook has its own tests for;
- * pressing the trigger opens it synchronously.
+ * pressing the trigger opens it synchronously. Its content holds a
+ * popover of its own.
  *
  * @param leadingControl - Whether a control stands before the
  *   panel's trigger in the toolbar.
@@ -21,13 +35,52 @@ function renderPanel(leadingControl = true) {
       {leadingControl && <IconButton icon="pin" label="actions.done" />}
       <ToolbarHoverPanel label="Colour" trigger={<span>swatch</span>}>
         <span>panel content</span>
+        <Popover>
+          <PopoverTrigger>
+            <button type="button">open popover</button>
+          </PopoverTrigger>
+          <PopoverPortal>
+            <PopoverPositioner>
+              <PopoverContent>
+                popover content
+                <PopoverClose>close popover</PopoverClose>
+              </PopoverContent>
+            </PopoverPositioner>
+          </PopoverPortal>
+        </Popover>
       </ToolbarHoverPanel>
+      <span>elsewhere</span>
     </FloatingToolbar>,
   );
 
   fireEvent.click(screen.getByLabelText('Colour'));
 
   return container.querySelector('.floating-toolbar');
+}
+
+/**
+ * Moves the pointer off the open panel to somewhere outside it.
+ */
+function leavePanel() {
+  fireEvent.pointerLeave(screen.getByText('panel content'), {
+    relatedTarget: screen.getByText('elsewhere'),
+  });
+}
+
+/**
+ * Lets the hover menu's close delay elapse.
+ */
+function waitForCloseDelay() {
+  act(() => {
+    vi.advanceTimersByTime(PastCloseDelay);
+  });
+}
+
+/**
+ * Opens the panel's popover, which locks the panel open.
+ */
+function openPopover() {
+  fireEvent.click(screen.getByText('open popover'));
 }
 
 /**
@@ -70,6 +123,7 @@ describe('ToolbarHoverPanel', () => {
   afterEach(() => {
     cleanup();
     vi.restoreAllMocks();
+    vi.useRealTimers();
   });
 
   it('opens the panel', () => {
@@ -164,5 +218,90 @@ describe('ToolbarHoverPanel', () => {
     fireEvent.click(screen.getByLabelText('Colour'));
 
     expect(host).not.toHaveAttribute(SquaredCornersAttribute);
+  });
+
+  // The popup stays mounted through its exit transition, so whether
+  // the panel is open is read off the toolbar it squares while open.
+  it('closes once the pointer leaves it', () => {
+    vi.useFakeTimers();
+    const host = renderPanel();
+
+    leavePanel();
+    waitForCloseDelay();
+
+    expect(host).not.toHaveAttribute(SquaredCornersAttribute);
+  });
+
+  it('locks open while a popover opened from it is open', () => {
+    vi.useFakeTimers();
+    const host = renderPanel();
+
+    openPopover();
+    leavePanel();
+    waitForCloseDelay();
+
+    expect(host).toHaveAttribute(SquaredCornersAttribute);
+  });
+
+  it('stays locked once that popover closes with the pointer away', () => {
+    vi.useFakeTimers();
+    const host = renderPanel();
+
+    openPopover();
+    leavePanel();
+    fireEvent.click(screen.getByText('close popover'));
+    waitForCloseDelay();
+
+    expect(host).toHaveAttribute(SquaredCornersAttribute);
+  });
+
+  it('closes on the next leave once the pointer comes back', () => {
+    vi.useFakeTimers();
+    const host = renderPanel();
+
+    openPopover();
+    fireEvent.pointerEnter(screen.getByText('panel content'));
+    leavePanel();
+    waitForCloseDelay();
+
+    expect(host).not.toHaveAttribute(SquaredCornersAttribute);
+  });
+
+  it('closes on a press outside while locked', () => {
+    vi.useFakeTimers();
+    const host = renderPanel();
+
+    openPopover();
+    leavePanel();
+    fireEvent.pointerDown(screen.getByText('elsewhere'));
+    fireEvent.click(screen.getByText('elsewhere'));
+    waitForCloseDelay();
+
+    expect(host).not.toHaveAttribute(SquaredCornersAttribute);
+  });
+
+  it('locks open while a select opened from it is open', () => {
+    vi.useFakeTimers();
+    const { container } = render(
+      <FloatingToolbar visible>
+        <ToolbarHoverPanel label="Colour" trigger={<span>swatch</span>}>
+          <span>panel content</span>
+          <Select
+            options={[{ value: 'red', stringLabel: 'Red' }]}
+            stringPlaceholder="pick"
+          />
+        </ToolbarHoverPanel>
+        <span>elsewhere</span>
+      </FloatingToolbar>,
+    );
+
+    fireEvent.click(screen.getByLabelText('Colour'));
+    fireEvent.click(screen.getByRole('combobox'));
+    leavePanel();
+    waitForCloseDelay();
+
+    expect(container.querySelector('.floating-toolbar')).toHaveAttribute(
+      SquaredCornersAttribute,
+    );
   });
 });

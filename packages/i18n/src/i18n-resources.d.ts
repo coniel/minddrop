@@ -1163,6 +1163,7 @@ declare module 'i18next' {
             };
           };
           settings: {
+            elementSettings: string;
             fontWeight: {
               label: string;
               default: string;

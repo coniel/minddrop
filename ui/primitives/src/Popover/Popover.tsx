@@ -1,5 +1,6 @@
 import { Popover as PopoverPrimitive } from '@base-ui/react/popover';
 import React from 'react';
+import { useHoverMenuContext } from '../HoverMenuContext';
 import { useMenuTargetContext } from '../MenuTargetContext';
 import { PopupCloseContext } from '../PopupCloseContext';
 import { propsToClass } from '../utils';
@@ -30,7 +31,8 @@ export interface PopoverContentProps extends PopoverPrimitive.Popup.Props {
  *
  * Opened from a menu item or group label's menu, it keeps that
  * target highlighted for as long as it is open, so the popover
- * reads as belonging to the item it was opened from.
+ * reads as belonging to the item it was opened from. Opened from
+ * inside a hover menu, it locks that menu open.
  *
  * Provides the popup close context, so content can close the
  * popover it is rendered in.
@@ -42,10 +44,11 @@ export const Popover: React.FC<PopoverProps> = ({
   ...other
 }) => {
   const actionsRef = React.useRef<PopoverPrimitive.Root.Actions>(null);
-  const menuTarget = useMenuTargetContext();
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(
     Boolean(defaultOpen),
   );
+  const menuTarget = useMenuTargetContext();
+  const hoverMenu = useHoverMenuContext();
 
   // Controlled popovers are opened by their consumer rather than
   // by an interaction, so the open state is tracked rather than
@@ -61,6 +64,13 @@ export const Popover: React.FC<PopoverProps> = ({
 
     return menuTarget?.holdActionsVisible();
   }, [isOpen, menuTarget]);
+
+  // Lock the enclosing hover menu open once the popover opens
+  React.useEffect(() => {
+    if (isOpen) {
+      hoverMenu?.lock();
+    }
+  }, [isOpen, hoverMenu]);
 
   const close = React.useCallback(() => {
     actionsRef.current?.close();

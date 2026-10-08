@@ -54,6 +54,7 @@
       }
     },
     "settings": {
+      "elementSettings": "{{element}} settings",
       "fontWeight": {
         "label": "Font weight",
         "default": "Default",

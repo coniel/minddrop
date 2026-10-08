@@ -646,6 +646,30 @@ describe('DesignElementControls', () => {
     });
   });
 
+  it("shows an element type's own settings behind its icon", () => {
+    DesignElementConfigs.register<StubElement>({
+      ...testElementConfig,
+      settingsPanel: StubSettingControl,
+    });
+    renderControls();
+
+    expect(screen.queryByLabelText('Framed')).toBeNull();
+
+    openMenu('Box settings');
+    fireEvent.click(screen.getByLabelText('Framed'));
+
+    expect(changedElement(iconDesignElement.id)).toMatchObject({
+      framed: true,
+    });
+  });
+
+  it('offers no settings panel to a type without one', () => {
+    registerSettingControls(['font-size']);
+    renderControls();
+
+    expect(screen.queryByLabelText('Box settings')).toBeNull();
+  });
+
   it('renders only the controls the element declares', () => {
     registerSettingControls(['background']);
     renderControls();

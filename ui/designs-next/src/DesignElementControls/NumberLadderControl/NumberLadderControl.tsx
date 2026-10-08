@@ -86,9 +86,9 @@ export const NumberLadderControl: React.FC<NumberLadderControlProps> = ({
           <span className="design-number-ladder-control-value">{value}</span>
         )
       }
+      padded
     >
       <NumberLadder
-        className="design-number-ladder-control-panel"
         label={label}
         options={ladder.map((ladderValue) => ({
           value: ladderValue,

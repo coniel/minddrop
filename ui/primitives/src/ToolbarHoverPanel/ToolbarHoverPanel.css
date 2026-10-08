@@ -234,3 +234,9 @@
 .toolbar-hover-panel-alongside ~ .toolbar-hover-panel-fillet {
   display: none;
 }
+
+/* A panel of stacked controls, padded as a row of controls is by
+   the controls themselves */
+.toolbar-hover-panel-padded {
+  padding: var(--space-2);
+}

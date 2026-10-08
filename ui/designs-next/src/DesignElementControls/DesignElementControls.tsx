@@ -24,6 +24,7 @@ import {
   Icon,
   RadioToggleHoverMenu,
   RadioToggleHoverMenuOption,
+  ToolbarHoverPanel,
   ToolbarSeparator,
 } from '@minddrop/ui-primitives';
 import { DesignPropertyPicker } from '../DesignPropertyPicker';
@@ -37,7 +38,6 @@ import { PaddingControl } from './PaddingControl';
 import { TextAlignMenu } from './TextAlignMenu';
 import { TextColorControl } from './TextColorControl';
 import { VerticalAlignMenu } from './VerticalAlignMenu';
-import './DesignElementControls.css';
 
 export interface DesignElementControlsProps {
   /**
@@ -269,8 +269,9 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  // The element type's settings controls and system setting groups
+  // The element type's own settings panel and its setting controls
   const config = DesignElementConfigs.get(element.type, false);
+  const SettingsPanel = config?.settingsPanel;
   const settingControls = config?.settingControls;
 
   // Whether the element sits on the design's grid rather than being
@@ -299,7 +300,7 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
     propertyTypes || ContentControls || (properties && config?.slots?.length),
   );
   const hasSizing = onGrid || paddable;
-  const hasSettings = Boolean(settingControls?.length);
+  const hasSettings = Boolean(SettingsPanel || settingControls?.length);
 
   // Applies a change to the element
   function updateElement(
@@ -552,6 +553,18 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
         />
       )}
       {(hasContent || hasSizing) && hasSettings && <ToolbarSeparator />}
+      {/** Settings controls, the element type's own first **/}
+      {SettingsPanel && config && (
+        <ToolbarHoverPanel
+          label={t('designsNext.settings.elementSettings', {
+            element: t(config.label),
+          })}
+          trigger={<Icon name={config.icon} />}
+          padded
+        >
+          <SettingsPanel element={element} onChange={handleSettingsChange} />
+        </ToolbarHoverPanel>
+      )}
       {settingControls?.map((control, index) => {
         // A declared name resolves to its system control, anything
         // else is the element type's own.

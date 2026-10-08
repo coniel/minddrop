@@ -1,9 +1,7 @@
-/* The picker is a stack of controls rather than a row, so it sets its
-   own padding inside the panel. Its width is fixed to fit the padding
-   scale's rows rather than sized to the width toggles. */
+/* The picker's width is fixed to fit the padding scale's rows rather
+   than sized to the width toggles. */
 .design-content-width-control-panel {
   width: 240px;
-  padding: var(--space-2);
 }
 
 /* The width toggles share the row equally, overriding the toggle

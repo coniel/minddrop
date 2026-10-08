@@ -1,6 +1,0 @@
-/* The drawn corner glyphs size with the icons they stand among */
-.design-element-corner-radius-glyph {
-  width: var(--icon-size-sm);
-  height: var(--icon-size-sm);
-  flex-shrink: 0;
-}

@@ -88,6 +88,7 @@ export const ContentWidthControl: React.FC<ContentWidthControlProps> = ({
     <ToolbarHoverPanel
       label={t(contentWidthKey('label'))}
       trigger={<Icon name="ruler-dimension-line" />}
+      padded
     >
       <Stack gap={3} className="design-content-width-control-panel">
         {/* Content width toggles */}

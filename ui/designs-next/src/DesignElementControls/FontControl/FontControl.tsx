@@ -60,8 +60,9 @@ export const FontControl: React.FC<
       trigger={
         <span className={`design-font-control-sample-${fontFamily}`}>Ag</span>
       }
+      padded
     >
-      <Stack gap={3} className="design-font-control-panel">
+      <Stack gap={3}>
         <Stack gap={1}>
           <InputLabel size="xs" label="designsNext.settings.fontFamily.label" />
           <RadioToggleGroup<FontFamily>

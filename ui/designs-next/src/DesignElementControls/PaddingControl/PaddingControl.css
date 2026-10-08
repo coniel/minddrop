@@ -1,9 +1,3 @@
-/* The picker holds a stack rather than a row of controls, so it
-   sets its own padding inside the panel. */
-.design-padding-control-panel {
-  padding: var(--space-2);
-}
-
 /* The element's block, drawn as a box: one area per padding side
    around the content area they leave. */
 .design-padding-control-box {

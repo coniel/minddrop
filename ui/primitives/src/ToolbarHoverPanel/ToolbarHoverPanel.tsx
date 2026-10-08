@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { FloatingToolbar } from '../FloatingToolbar';
+import { HoverMenuContext } from '../HoverMenuContext';
 import { IconButtonVariant } from '../IconButton';
 import {
   Popover,
@@ -55,6 +56,12 @@ export interface ToolbarHoverPanelProps {
    * @default 'subtle'
    */
   variant?: IconButtonVariant;
+
+  /**
+   * Whether the panel pads its content, for content which is a
+   * stack of controls rather than a row.
+   */
+  padded?: boolean;
 
   /**
    * Prevents interaction.
@@ -123,6 +130,7 @@ export const ToolbarHoverPanel: React.FC<ToolbarHoverPanelProps> = ({
   side = 'right',
   size = 'md',
   variant = 'subtle',
+  padded = false,
   disabled,
   className,
 }) => {
@@ -131,7 +139,7 @@ export const ToolbarHoverPanel: React.FC<ToolbarHoverPanelProps> = ({
   // after the trigger opens it and is measured once it has.
   const [panel, setPanel] = useState<HTMLDivElement | null>(null);
   const [junction, setJunction] = useState<PanelJunction | null>(null);
-  const { open, setOpen, hoverProps } = useHoverMenu();
+  const { open, setOpen, hoverMenu, hoverProps } = useHoverMenu();
 
   // Until measured, the panel is taken to reach the toolbar's end
   const reachesEnd = junction?.reachesEnd ?? true;
@@ -252,13 +260,16 @@ export const ToolbarHoverPanel: React.FC<ToolbarHoverPanelProps> = ({
               className={joinClasses(
                 'toolbar-hover-panel',
                 `toolbar-hover-panel-side-${side}`,
+                padded ? 'toolbar-hover-panel-padded' : undefined,
                 junction?.flushStart
                   ? 'toolbar-hover-panel-flush-start'
                   : undefined,
                 reachesEnd ? undefined : 'toolbar-hover-panel-alongside',
               )}
             >
-              {children}
+              <HoverMenuContext.Provider value={hoverMenu}>
+                {children}
+              </HoverMenuContext.Provider>
             </FloatingToolbar>
 
             {/* The edge the two meet along, painted over in the

@@ -2,7 +2,6 @@ import { ElementColor } from '@minddrop/designs-next';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { ContentColorSwatch, ToolbarHoverPanel } from '@minddrop/ui-primitives';
 import { ElementColorSelect } from '../ElementColorSelect';
-import './ElementColorControl.css';
 
 export interface ElementColorControlProps {
   /**
@@ -45,10 +44,9 @@ export const ElementColorControl: React.FC<ElementColorControlProps> = ({
           unset={value.color === 'default'}
         />
       }
+      padded
     >
-      <div className="design-element-color-control-panel">
-        <ElementColorSelect value={value} onValueChange={onValueChange} />
-      </div>
+      <ElementColorSelect value={value} onValueChange={onValueChange} />
     </ToolbarHoverPanel>
   );
 };

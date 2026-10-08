@@ -131,6 +131,13 @@ export interface DesignElementConfig<
   resolveDefaults?: () => Partial<TElement>;
 
   /**
+   * The element type's own settings controls, shown as a panel of
+   * their own in its block controls. Omitted for elements with no
+   * settings of their own.
+   */
+  settingsPanel?: DesignElementSettingControlComponent<TElement>;
+
+  /**
    * The controls the block controls show for the element, in
    * display order: the system controls by name, and the element
    * type's own as components of their own. Omitted for elements
