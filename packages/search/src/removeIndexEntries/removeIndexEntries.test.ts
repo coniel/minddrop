@@ -13,7 +13,7 @@ import { removeIndexEntries } from './removeIndexEntries';
 const workspaceId = testWorkspaceId;
 
 describe('removeIndexEntries', () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     setup();
 
     // Seed a database with entries and build the index
@@ -23,7 +23,7 @@ describe('removeIndexEntries', () => {
       { id: 'entry-2', title: 'Dune Messiah' },
     ]);
 
-    await rebuildSearchIndex(workspaceId);
+    rebuildSearchIndex(workspaceId);
   });
 
   afterEach(cleanup);

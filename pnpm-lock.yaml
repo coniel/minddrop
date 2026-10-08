@@ -2877,12 +2877,12 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
-      '@minddrop/file-system':
-        specifier: workspace:*
-        version: link:../file-system
       '@minddrop/sql':
         specifier: workspace:*
         version: link:../sql
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../utils
       '@minddrop/workspaces':
         specifier: workspace:*
         version: link:../workspaces
@@ -2893,6 +2893,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../file-system
       '@minddrop/vitest-config':
         specifier: workspace:*
         version: link:../vitest-config
@@ -3043,6 +3046,9 @@ importers:
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../file-system
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../utils
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*

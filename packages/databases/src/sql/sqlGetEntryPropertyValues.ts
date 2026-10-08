@@ -3,13 +3,12 @@ import { Workspaces } from '@minddrop/workspaces';
 import { EXCLUDED_TYPES_SQL } from '../constants';
 
 /**
- * Retrieves all text-searchable property name-value pairs for
- * an entry. Used for finding which properties matched a search
- * query. Includes text properties, collection values, and
- * select/url/etc. properties.
+ * Retrieves the short text-searchable property name-value pairs
+ * for an entry. Text and content property values are left out.
  *
  * @param entryId - The ID of the entry.
  * @param workspaceId - The ID of the workspace whose database to target. Defaults to the active workspace.
+ * @returns The entry's short property name-value pairs with their types.
  */
 export function sqlGetEntryPropertyValues(
   entryId: string,
@@ -17,15 +16,15 @@ export function sqlGetEntryPropertyValues(
 ): { name: string; value: string; type: string }[] {
   const targetWorkspaceId = workspaceId ?? Workspaces.getActive().id;
 
-  // Get scalar properties (excluded types are not part of
-  // the full-text index)
+  // Get scalar properties other than text and content. Excluded
+  // property types are not part of the full-text index.
   const scalarRows = Sql.all<{
     property_name: string;
     property_type: string;
     value_text: string;
   }>(
     targetWorkspaceId,
-    `SELECT property_name, property_type, value_text FROM entry_properties WHERE entry_id = ? AND value_text IS NOT NULL AND property_type NOT IN (${EXCLUDED_TYPES_SQL})`,
+    `SELECT property_name, property_type, value_text FROM entry_properties WHERE entry_id = ? AND value_text IS NOT NULL AND property_type NOT IN ('text', 'content', ${EXCLUDED_TYPES_SQL})`,
     entryId,
   );
 

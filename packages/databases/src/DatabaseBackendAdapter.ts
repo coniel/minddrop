@@ -48,6 +48,13 @@ export interface DatabaseBackendAdapter {
     databases: Database[],
     databaseIds: string[],
   ): Promise<void>;
+
+  /**
+   * Fills a workspace's entry content index if it is pending.
+   *
+   * @param workspaceId - The ID of the workspace whose index to fill.
+   */
+  fillEntryContentIndex(workspaceId: string): Promise<void>;
 }
 
 let adapter: DatabaseBackendAdapter | null = null;

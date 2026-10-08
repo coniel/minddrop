@@ -2,8 +2,7 @@ import { searchFullTextIndex } from './searchFullTextIndex';
 import type { FullTextSearchResult } from './types';
 
 /**
- * Back-end only. Performs a full-text fuzzy search via
- * MiniSearch.
+ * Back-end only. Performs a full-text search.
  *
  * @param workspaceId - The workspace to search.
  * @param query - The search query string.

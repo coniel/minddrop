@@ -8,12 +8,11 @@ import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { Sql } from '@minddrop/sql';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
-import { cancelDebouncedPersists } from '../debouncedPersist';
 import { searchIndexes } from '../searchIndexStore';
 
 const { workspace_1 } = WorkspaceFixtures;
 
-// Mock file system backing index persistence in tests
+// Mock file system backing the workspace fixtures in tests
 export const MockFs = initializeMockFileSystem();
 
 /**
@@ -72,9 +71,6 @@ export async function cleanup(): Promise<void> {
   // Let in-flight file operations settle and reset the mock file
   // system before clearing the state they may still read.
   await Fs.tests.cleanup();
-
-  // Cancel persists scheduled during the test
-  cancelDebouncedPersists();
 
   // Close the in-memory SQL database
   cleanupTestSqlDatabase();

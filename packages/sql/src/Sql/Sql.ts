@@ -186,6 +186,16 @@ export function connect(workspaceId: string): void {
 }
 
 /**
+ * Checks whether a workspace has an open database connection.
+ *
+ * @param workspaceId - The ID of the workspace to check.
+ * @returns Whether the workspace's connection is open.
+ */
+export function isOpen(workspaceId: string): boolean {
+  return connections.has(workspaceId);
+}
+
+/**
  * Closes a workspace's database connection. Does nothing if the
  * workspace has no open connection.
  *

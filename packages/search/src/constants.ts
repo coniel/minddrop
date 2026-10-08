@@ -12,9 +12,3 @@ export const searchConstants = {
   matchHighlightStart: MATCH_HIGHLIGHT_START,
   matchHighlightEnd: MATCH_HIGHLIGHT_END,
 };
-
-/**
- * The name of the persisted search index file inside a workspace's
- * data directory.
- */
-export const SearchIndexFileName = 'search-index.json';

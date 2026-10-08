@@ -18,6 +18,11 @@ export interface MockBackendAdapter {
   backgroundSyncCalls: { workspaceId: string; workspacePath: string }[];
 
   /**
+   * The workspace IDs passed to `fillEntryContentIndex`, in call order.
+   */
+  fillEntryContentIndexCalls: { workspaceId: string }[];
+
+  /**
    * The entry file changes passed to `syncEntryFiles`, one array per
    * call, in call order.
    */
@@ -105,6 +110,7 @@ export function createMockBackendAdapter(
         await vi.advanceTimersByTimeAsync(0);
       }
     },
+    fillEntryContentIndexCalls: [],
   };
 
   // Fixture based initialization result with overrides applied
@@ -156,6 +162,11 @@ export function createMockBackendAdapter(
       recordedCalls.syncDatabaseConfigsCalls.push(databaseIds);
 
       return runSync();
+    },
+
+    async fillEntryContentIndex(workspaceId) {
+      // Record the call for assertions
+      recordedCalls.fillEntryContentIndexCalls.push({ workspaceId });
     },
   });
 

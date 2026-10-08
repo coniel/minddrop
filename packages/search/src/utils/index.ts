@@ -1,5 +1,5 @@
+export * from './buildDatabaseDocument';
 export * from './buildEntryDocument';
-export * from './extractSnippet';
+export * from './buildEntryDocuments';
 export * from './findMatchedProperties';
 export * from './highlightAllMatches';
-export * from './resolveIndexPath';

@@ -63,7 +63,7 @@ export function registerBunFileSystemAdapter(): void {
         size: stats.size,
       };
     },
-    // Stub out methods not needed on the Bun side for search
+    // Stub out methods not needed on the Bun side
     copyFile: async () => {},
     removeDir: async () => {},
     trashDir: async () => {},

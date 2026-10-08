@@ -231,12 +231,13 @@ export type WebviewRPC = {
         };
         response: void;
       };
+      databasesFillEntryContentIndex: {
+        params: { workspaceId: string };
+        response: void;
+      };
       // Search RPC
       searchInitialize: {
-        params: {
-          workspaceId: string;
-          schemaChanged: boolean;
-        };
+        params: { workspaceId: string };
         response: void;
       };
       searchUnload: {

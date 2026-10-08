@@ -3,12 +3,11 @@ import { Search } from '@minddrop/search';
 
 /**
  * RPC handler for initializing the search index for a workspace.
- * SQL initialization is handled separately by the databases
- * package.
+ *
+ * @param params - The workspace to initialize search for.
  */
 export async function handleSearchInitialize(params: {
   workspaceId: string;
-  schemaChanged: boolean;
 }): Promise<void> {
   await Search.handleSearchInitialize(params);
 }

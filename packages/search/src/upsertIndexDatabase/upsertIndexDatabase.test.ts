@@ -13,14 +13,14 @@ import { upsertIndexDatabase } from './upsertIndexDatabase';
 const workspaceId = testWorkspaceId;
 
 describe('upsertIndexDatabase', () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     setup();
 
     // Seed a database with an entry and build the index
     seedDatabase({ id: 'database-1', name: 'Books' });
     seedEntries('database-1', [{ id: 'entry-1', title: 'Dune' }]);
 
-    await rebuildSearchIndex(workspaceId);
+    rebuildSearchIndex(workspaceId);
   });
 
   afterEach(cleanup);

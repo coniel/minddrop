@@ -2,12 +2,11 @@ import { type Options as MiniSearchOptions } from 'minisearch';
 import type { SearchDocument } from './types';
 
 /**
- * Shared MiniSearch configuration used for both creating new
- * instances and loading persisted ones. The `storeFields` list
- * must match the `StoredSearchFields` type.
+ * The MiniSearch configuration of the workspace search indexes.
+ * The `storeFields` list must match the `StoredSearchFields` type.
  */
 export const MINISEARCH_OPTIONS: MiniSearchOptions<SearchDocument> = {
-  fields: ['title', 'content', 'properties', 'tags'],
+  fields: ['title', 'properties', 'tags'],
   storeFields: ['type', 'databaseId', 'databaseName', 'databaseIcon', 'title'],
   searchOptions: {
     boost: { title: 3, tags: 2, properties: 1.5 },

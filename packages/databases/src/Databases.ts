@@ -29,24 +29,23 @@ import {
 } from './events';
 import { LAYOUT_CONTEXTS, layoutContextBaseType } from './layoutContexts';
 import {
-  SCHEMA_SQL,
-  SCHEMA_VERSION,
   sqlCountScopedEntries,
   sqlDeleteDatabase,
   sqlDeleteEntries,
   sqlGetAllDatabases,
-  sqlGetAllEntries,
   sqlGetDatabaseIcon,
   sqlGetDatabaseName,
   sqlGetEntriesFull,
   sqlGetEntryPropertyValues,
+  sqlGetEntryShortPropertyValues,
+  sqlGetEntrySummaries,
   sqlGetEntrySyncRecords,
-  sqlGetEntryTextContent,
   sqlGetVersion,
   sqlQueryEntries,
   sqlQueryScopedEntries,
   sqlReindexEntries,
   sqlRenameProperty,
+  sqlSearchEntryContent,
   sqlUpdateEntryMetadata,
   sqlUpsertDatabase,
   sqlUpsertEntries,
@@ -104,17 +103,16 @@ export const sql = {
   getDatabaseName: sqlGetDatabaseName,
   getDatabaseIcon: sqlGetDatabaseIcon,
   getVersion: sqlGetVersion,
-  getAllEntries: sqlGetAllEntries,
+  getEntrySummaries: sqlGetEntrySummaries,
   getEntriesFull: sqlGetEntriesFull,
-  getEntryTextContent: sqlGetEntryTextContent,
+  getEntryShortPropertyValues: sqlGetEntryShortPropertyValues,
   getAllDatabases: sqlGetAllDatabases,
   getEntrySyncRecords: sqlGetEntrySyncRecords,
   getEntryPropertyValues: sqlGetEntryPropertyValues,
   queryEntries: sqlQueryEntries,
   queryScopedEntries: sqlQueryScopedEntries,
   countScopedEntries: sqlCountScopedEntries,
-  SCHEMA_SQL,
-  SCHEMA_VERSION,
+  searchEntryContent: sqlSearchEntryContent,
 } as const;
 export { registerDatabaseBackendAdapter as registerBackendAdapter } from './DatabaseBackendAdapter';
 export type { DatabaseBackendAdapter } from './DatabaseBackendAdapter';
@@ -122,6 +120,7 @@ export { initializeDatabasesBackend as initializeBackend } from './sql';
 export { backgroundSyncDatabases as backgroundSync } from './sql';
 export { syncEntryFiles } from './sql';
 export { syncDatabaseConfigs } from './sql';
+export { fillEntryContentIndex } from './sql';
 export { handleBackgroundSyncResult } from './handleBackgroundSyncResult';
 export { DatabasesStore as Store } from './DatabasesStore';
 export { DatabaseSettingsStore as SettingsStore } from './DatabaseSettingsStore';

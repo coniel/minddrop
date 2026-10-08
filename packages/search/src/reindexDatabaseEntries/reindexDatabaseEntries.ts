@@ -1,15 +1,13 @@
 import { Databases } from '@minddrop/databases';
-import { debouncedPersist } from '../debouncedPersist';
 import { discardIndexDocument } from '../discardIndexDocument';
 import { searchIndexes } from '../searchIndexStore';
-import { buildEntryDocument } from '../utils';
+import { buildEntryDocuments } from '../utils';
 
 /**
  * Re-indexes all entries belonging to a database in the
- * MiniSearch index. Used when database metadata changes
- * (name, icon) or when the property schema changes.
+ * MiniSearch index.
  *
- * @param workspaceId - The workspace whose index to update.
+ * @param workspaceId - The ID of the workspace whose index to update.
  * @param databaseId - The ID of the database whose entries to re-index.
  */
 export function reindexDatabaseEntries(
@@ -23,23 +21,18 @@ export function reindexDatabaseEntries(
     return;
   }
 
-  // Get all entries for this database from SQL
-  const entries = Databases.sql
-    .getAllEntries(workspaceId)
-    .filter((entry) => entry.databaseId === databaseId);
+  // Build the database's entry documents with fresh SQL data
+  const documents = buildEntryDocuments(
+    workspaceId,
+    Databases.sql.getEntrySummaries({ databaseId }, workspaceId),
+    Databases.sql.getEntryShortPropertyValues({ databaseId }, workspaceId),
+  );
 
-  // Get fresh database metadata
-  const database = {
-    name: Databases.sql.getDatabaseName(databaseId, workspaceId) ?? '',
-    icon: Databases.sql.getDatabaseIcon(databaseId, workspaceId),
-  };
+  for (const document of documents) {
+    // Remove the existing document
+    discardIndexDocument(miniSearch, document.id);
 
-  // Remove and re-add each entry document
-  for (const entry of entries) {
-    discardIndexDocument(miniSearch, entry.id);
-
-    miniSearch.add(buildEntryDocument(workspaceId, entry, database));
+    // Re-add the document
+    miniSearch.add(document);
   }
-
-  debouncedPersist(workspaceId);
 }

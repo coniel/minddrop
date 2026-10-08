@@ -1,15 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Databases } from '@minddrop/databases';
 import { searchFullTextIndex } from '../searchFullTextIndex';
+import { searchIndexes } from '../searchIndexStore';
 import {
-  MockFs,
   cleanup,
   seedDatabase,
   seedEntries,
   setup,
   testWorkspaceId,
 } from '../test-utils';
-import { resolveIndexPath } from '../utils';
 import { rebuildSearchIndex } from './rebuildSearchIndex';
 
 const workspaceId = testWorkspaceId;
@@ -34,30 +33,31 @@ describe('rebuildSearchIndex', () => {
 
   afterEach(cleanup);
 
-  it('indexes entries by title', async () => {
-    await rebuildSearchIndex(workspaceId);
+  it('indexes entries by title', () => {
+    rebuildSearchIndex(workspaceId);
 
     expect(searchFullTextIndex(workspaceId, 'dune')[0].id).toBe('entry-1');
   });
 
-  it('indexes entry text content', async () => {
-    await rebuildSearchIndex(workspaceId);
+  it('leaves entry text content out of the index', () => {
+    rebuildSearchIndex(workspaceId);
 
-    expect(searchFullTextIndex(workspaceId, 'masterpiece')[0].id).toBe(
-      'entry-1',
-    );
+    const index = searchIndexes.get(workspaceId);
+
+    expect(index).toBeDefined();
+    expect(index!.search('masterpiece')).toEqual([]);
   });
 
-  it('indexes entry property values', async () => {
-    await rebuildSearchIndex(workspaceId);
+  it('indexes entry property values', () => {
+    rebuildSearchIndex(workspaceId);
 
     const results = searchFullTextIndex(workspaceId, 'example.com');
 
     expect(results[0].id).toBe('entry-1');
   });
 
-  it('indexes databases by name', async () => {
-    await rebuildSearchIndex(workspaceId);
+  it('indexes databases by name', () => {
+    rebuildSearchIndex(workspaceId);
 
     const results = searchFullTextIndex(workspaceId, 'books');
 
@@ -65,14 +65,8 @@ describe('rebuildSearchIndex', () => {
     expect(results[0].type).toBe('database');
   });
 
-  it('persists the index to disk', async () => {
-    await rebuildSearchIndex(workspaceId);
-
-    expect(MockFs.exists(resolveIndexPath(workspaceId))).toBe(true);
-  });
-
-  it('replaces a previous index for the workspace', async () => {
-    await rebuildSearchIndex(workspaceId);
+  it('replaces a previous index for the workspace', () => {
+    rebuildSearchIndex(workspaceId);
 
     // Remove the entry from SQL and rebuild
     Databases.sql.deleteEntries(
@@ -81,7 +75,7 @@ describe('rebuildSearchIndex', () => {
       { silent: true },
       workspaceId,
     );
-    await rebuildSearchIndex(workspaceId);
+    rebuildSearchIndex(workspaceId);
 
     // The rebuilt index reflects the fresh SQL state
     expect(searchFullTextIndex(workspaceId, 'dune')).toEqual([]);

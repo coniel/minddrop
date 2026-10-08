@@ -72,7 +72,7 @@ if (await hasWorkspace()) {
 // Register the Bun SQL adapter (bun:sqlite)
 initializeSql();
 
-// Register search platform adapters (file system for index I/O)
+// Register search platform adapters (file system)
 initializeSearch();
 
 // Trim the resized image cache back under its size limit

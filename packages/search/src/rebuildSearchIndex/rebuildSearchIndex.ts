@@ -1,47 +1,35 @@
 import MiniSearch from 'minisearch';
 import { Databases } from '@minddrop/databases';
 import { MINISEARCH_OPTIONS } from '../minisearchOptions';
-import { persistIndex } from '../persistIndex';
 import { searchIndexes } from '../searchIndexStore';
 import type { SearchDocument } from '../types';
-import { buildEntryDocument } from '../utils';
+import { buildDatabaseDocument, buildEntryDocuments } from '../utils';
 
 /**
  * Rebuilds the MiniSearch index from SQL data for the
  * specified workspace.
  *
- * @param workspaceId - The workspace to rebuild the index for.
+ * @param workspaceId - The ID of the workspace to rebuild the index for.
  */
-export async function rebuildSearchIndex(workspaceId: string): Promise<void> {
+export function rebuildSearchIndex(workspaceId: string): void {
+  // Create an empty index
   const miniSearch = new MiniSearch<SearchDocument>(MINISEARCH_OPTIONS);
-  const entries = Databases.sql.getAllEntries(workspaceId);
 
-  // Build entry documents from SQL data
-  const entryDocuments = entries.map((entry) =>
-    buildEntryDocument(workspaceId, entry, {
-      name: Databases.sql.getDatabaseName(entry.databaseId, workspaceId) ?? '',
-      icon: Databases.sql.getDatabaseIcon(entry.databaseId, workspaceId),
-    }),
+  // Build entry documents from every entry's SQL data
+  const entryDocuments = buildEntryDocuments(
+    workspaceId,
+    Databases.sql.getEntrySummaries({}, workspaceId),
+    Databases.sql.getEntryShortPropertyValues({}, workspaceId),
   );
 
   // Build database documents
-  const databases = Databases.sql.getAllDatabases(workspaceId);
-  const databaseDocuments: SearchDocument[] = databases.map((database) => ({
-    id: `db:${database.id}`,
-    type: 'database' as const,
-    title: database.name,
-    databaseId: database.id,
-    databaseName: database.name,
-    databaseIcon: database.icon,
-    content: '',
-    properties: '',
-    tags: '',
-  }));
+  const databaseDocuments = Databases.sql
+    .getAllDatabases(workspaceId)
+    .map(buildDatabaseDocument);
 
-  // Bulk-add all documents
+  // Add all documents
   miniSearch.addAll([...entryDocuments, ...databaseDocuments]);
-  searchIndexes.set(workspaceId, miniSearch);
 
-  // Persist to disk
-  await persistIndex(workspaceId);
+  // Store the workspace's index
+  searchIndexes.set(workspaceId, miniSearch);
 }

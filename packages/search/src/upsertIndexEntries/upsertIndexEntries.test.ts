@@ -1,29 +1,27 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { rebuildSearchIndex } from '../rebuildSearchIndex';
 import { searchFullTextIndex } from '../searchFullTextIndex';
 import { searchIndexes } from '../searchIndexStore';
 import {
-  MockFs,
   cleanup,
   seedDatabase,
   seedEntries,
   setup,
   testWorkspaceId,
 } from '../test-utils';
-import { resolveIndexPath } from '../utils';
 import { upsertIndexEntries } from './upsertIndexEntries';
 
 const workspaceId = testWorkspaceId;
 
 describe('upsertIndexEntries', () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     setup();
 
     // Seed a database with an entry and build the index
     seedDatabase({ id: 'database-1', name: 'Books', icon: 'book' });
     seedEntries('database-1', [{ id: 'entry-1', title: 'Dune' }]);
 
-    await rebuildSearchIndex(workspaceId);
+    rebuildSearchIndex(workspaceId);
   });
 
   afterEach(cleanup);
@@ -37,6 +35,24 @@ describe('upsertIndexEntries', () => {
         { id: 'entry-2', title: 'New', databaseId: 'database-1' },
       ]),
     ).not.toThrow();
+  });
+
+  it("indexes the entries' property values", () => {
+    // Seed the new entry with a property value, then index it
+    seedEntries('database-1', [
+      {
+        id: 'entry-2',
+        title: 'The Hobbit',
+        properties: [{ name: 'Genre', type: 'select', value: ['Spacefaring'] }],
+      },
+    ]);
+    upsertIndexEntries(workspaceId, [
+      { id: 'entry-2', title: 'The Hobbit', databaseId: 'database-1' },
+    ]);
+
+    expect(
+      searchFullTextIndex(workspaceId, 'spacefaring').map(({ id }) => id),
+    ).toEqual(['entry-2']);
   });
 
   it('adds new entries to the index', () => {
@@ -60,27 +76,5 @@ describe('upsertIndexEntries', () => {
 
     expect(results).toHaveLength(1);
     expect(results[0].id).toBe('entry-1');
-  });
-
-  it('persists the index after the debounce delay', async () => {
-    vi.useFakeTimers();
-
-    // Drop the index file written by the initial rebuild
-    MockFs.reset();
-
-    seedEntries('database-1', [{ id: 'entry-2', title: 'The Hobbit' }]);
-    upsertIndexEntries(workspaceId, [
-      { id: 'entry-2', title: 'The Hobbit', databaseId: 'database-1' },
-    ]);
-
-    // Nothing is written until the debounce delay elapses
-    expect(MockFs.exists(resolveIndexPath(workspaceId))).toBe(false);
-
-    // Run the debounce timer and the async persist
-    await vi.runAllTimersAsync();
-
-    expect(MockFs.exists(resolveIndexPath(workspaceId))).toBe(true);
-
-    vi.useRealTimers();
   });
 });

@@ -4,7 +4,7 @@
 export type FullTextSearchResultType = 'entry' | 'database';
 
 /**
- * A result from a full-text fuzzy search via MiniSearch.
+ * A result from a full-text search.
  */
 export interface FullTextSearchResult {
   /**
@@ -41,7 +41,7 @@ export interface FullTextSearchResult {
   title: string;
 
   /**
-   * The relevance score from MiniSearch.
+   * The relevance score. Higher scores are more relevant.
    */
   score: number;
 

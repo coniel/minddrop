@@ -1,4 +1,6 @@
 import type { SearchResult } from 'minisearch';
+import { splitWords } from '@minddrop/utils';
+import { searchContent } from '../searchContent';
 import { searchIndexes } from '../searchIndexStore';
 import type {
   FullTextMatchedProperty,
@@ -8,7 +10,10 @@ import type {
 import { findMatchedProperties, highlightAllMatches } from '../utils';
 
 /**
- * Performs a full-text fuzzy search across the workspace index.
+ * Performs a full-text search across the workspace. Titles,
+ * short property values and tags match fuzzily. Text and
+ * content property values match by word prefix and are listed
+ * below the other matches.
  *
  * Title matches always rank above matches in other fields:
  * summed multi-field scores would otherwise let an entry with
@@ -59,48 +64,68 @@ export function searchFullTextIndex(
   ];
 
   // Lowercase query terms for substring matching
-  const queryTerms = query
-    .toLowerCase()
-    .split(/\s+/)
-    .filter((term) => term.length > 0);
+  const queryTerms = splitWords(query.toLowerCase());
 
-  return results.slice(0, limit).map((result) => {
-    // MiniSearch types stored fields as `any`; narrow them to
-    // the stored-fields shape declared in MINISEARCH_OPTIONS.
-    const stored = result as SearchResult & StoredSearchFields;
-    const documentId: string = result.id;
+  // Build the results of the search index matches
+  const nameResults = results
+    .slice(0, limit)
+    .map((result): FullTextSearchResult => {
+      // Narrow the stored fields to the shape declared in
+      // MINISEARCH_OPTIONS. MiniSearch types them as `any`.
+      const stored = result as SearchResult & StoredSearchFields;
+      // Read the document ID
+      const documentId: string = result.id;
 
-    // Strip the `db:` document ID prefix from database results
-    const entryId =
-      stored.type === 'database' ? documentId.replace(/^db:/, '') : documentId;
+      // Strip the `db:` document ID prefix from database results
+      const entryId =
+        stored.type === 'database'
+          ? documentId.replace(/^db:/, '')
+          : documentId;
 
-    // Find matching properties for entry results
-    let matchedProperties: FullTextMatchedProperty[] = [];
+      // Find matching properties for entry results
+      let matchedProperties: FullTextMatchedProperty[] = [];
 
-    if (stored.type === 'entry') {
-      matchedProperties = findMatchedProperties(
-        workspaceId,
-        documentId,
-        queryTerms,
-      );
-    }
+      if (stored.type === 'entry') {
+        matchedProperties = findMatchedProperties(
+          workspaceId,
+          documentId,
+          queryTerms,
+        );
+      }
 
-    // Add highlight markers to entry titles
-    let title = stored.title;
+      // Add highlight markers to entry titles
+      let title = stored.title;
 
-    if (stored.type === 'entry') {
-      title = highlightAllMatches(title, queryTerms);
-    }
+      if (stored.type === 'entry') {
+        title = highlightAllMatches(title, queryTerms);
+      }
 
-    return {
-      id: entryId,
-      type: stored.type,
-      databaseId: stored.databaseId,
-      databaseName: stored.databaseName,
-      databaseIcon: stored.databaseIcon || '',
-      title,
-      score: result.score,
-      matchedProperties,
-    };
-  });
+      return {
+        id: entryId,
+        type: stored.type,
+        databaseId: stored.databaseId,
+        databaseName: stored.databaseName,
+        databaseIcon: stored.databaseIcon || '',
+        title,
+        score: result.score,
+        matchedProperties,
+      };
+    });
+
+  // Skip the content search when the name matches fill the limit
+  if (nameResults.length >= limit) {
+    return nameResults;
+  }
+
+  // Search the content, leaving out entries already in the name
+  // results.
+  const nameResultIds = new Set(nameResults.map((result) => result.id));
+  const contentResults = searchContent(workspaceId, query, {
+    limit,
+    databaseId,
+  }).filter((result) => !nameResultIds.has(result.id));
+
+  // Append the content results below the name results, within the
+  // limit.
+  return [...nameResults, ...contentResults].slice(0, limit);
 }

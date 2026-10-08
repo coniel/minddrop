@@ -1,6 +1,6 @@
-import { debouncedPersist } from '../debouncedPersist';
 import { discardIndexDocument } from '../discardIndexDocument';
 import { searchIndexes } from '../searchIndexStore';
+import { buildDatabaseDocument } from '../utils';
 
 /**
  * Updates or adds a database document in the MiniSearch index.
@@ -23,23 +23,9 @@ export function upsertIndexDatabase(
     return;
   }
 
-  // Remove existing document if present
-  const documentId = `db:${database.id}`;
-
-  discardIndexDocument(miniSearch, documentId);
+  // Remove the existing document if present
+  discardIndexDocument(miniSearch, `db:${database.id}`);
 
   // Re-add the document with the fresh metadata
-  miniSearch.add({
-    id: documentId,
-    type: 'database',
-    title: database.name,
-    databaseId: database.id,
-    databaseName: database.name,
-    databaseIcon: database.icon || '',
-    content: '',
-    properties: '',
-    tags: '',
-  });
-
-  debouncedPersist(workspaceId);
+  miniSearch.add(buildDatabaseDocument(database));
 }

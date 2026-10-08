@@ -48,7 +48,8 @@ export async function loadWorkspace(workspace: Workspace): Promise<void> {
   // loaded.
   await Tags.loadWorkspace(workspace);
 
-  const { schemaChanged } = await Databases.loadWorkspace(workspace);
+  // Load the workspace's databases and entries
+  await Databases.loadWorkspace(workspace);
 
   // Load persisted content views. Requires entries and the item
   // reference adapters, both loaded by Databases.loadWorkspace.
@@ -69,5 +70,5 @@ export async function loadWorkspace(workspace: Workspace): Promise<void> {
   await EntityGroups.loadWorkspace(workspace);
 
   // Load the workspace's search index
-  await Search.loadWorkspace(workspace, { schemaChanged });
+  await Search.loadWorkspace(workspace);
 }

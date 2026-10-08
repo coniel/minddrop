@@ -150,6 +150,25 @@ describe('loadWorkspaceDatabases', () => {
       }
     },
   );
+
+  it('has the backend fill the content index after a rebuild', async () => {
+    backend = createMockBackendAdapter({ result: { schemaChanged: true } });
+
+    await loadWorkspaceDatabases(workspace_1);
+
+    expect(backend.fillEntryContentIndexCalls).toEqual([
+      { workspaceId: workspace_1.id },
+    ]);
+  });
+
+  it('has the backend fill the content index on a normal launch', async () => {
+    // Load the workspace without a rebuild
+    await loadWorkspaceDatabases(workspace_1);
+
+    expect(backend.fillEntryContentIndexCalls).toEqual([
+      { workspaceId: workspace_1.id },
+    ]);
+  });
 });
 
 /**

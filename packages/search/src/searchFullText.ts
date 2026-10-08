@@ -2,8 +2,8 @@ import { getSearchAdapter } from './SearchAdapter';
 import type { FullTextSearchResult } from './types';
 
 /**
- * Performs a full-text fuzzy search across entries in the
- * given workspace. Optionally scoped to a single database.
+ * Performs a full-text search across entries in the given
+ * workspace. Optionally scoped to a single database.
  *
  * @param workspaceId - The workspace to search.
  * @param query - The search query string.

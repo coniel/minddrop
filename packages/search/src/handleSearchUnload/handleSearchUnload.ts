@@ -1,10 +1,7 @@
-import { cancelDebouncedPersist } from '../debouncedPersist';
 import { searchIndexes } from '../searchIndexStore';
 
 /**
- * Back-end only. Drops a workspace's search index, cancelling
- * any pending persist of it so that nothing writes the index file
- * after the workspace is gone.
+ * Back-end only. Drops a workspace's search index.
  *
  * @param workspaceId - The workspace whose index to drop.
  */
@@ -13,6 +10,6 @@ export function handleSearchUnload({
 }: {
   workspaceId: string;
 }): void {
-  cancelDebouncedPersist(workspaceId);
+  // Drop the index
   searchIndexes.delete(workspaceId);
 }

@@ -263,6 +263,25 @@ describe('Sql', () => {
     });
   });
 
+  describe('isOpen', () => {
+    it('returns true while the workspace has a connection', () => {
+      Sql.connect(WORKSPACE_ID);
+
+      expect(Sql.isOpen(WORKSPACE_ID)).toBe(true);
+    });
+
+    it('returns false once the connection is closed', () => {
+      Sql.connect(WORKSPACE_ID);
+      Sql.close(WORKSPACE_ID);
+
+      expect(Sql.isOpen(WORKSPACE_ID)).toBe(false);
+    });
+
+    it('returns false for a workspace never connected', () => {
+      expect(Sql.isOpen('workspace-other')).toBe(false);
+    });
+  });
+
   describe('close', () => {
     it('closes the workspace connection', async () => {
       // Open a database and close it

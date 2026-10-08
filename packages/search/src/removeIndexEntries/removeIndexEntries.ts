@@ -1,4 +1,3 @@
-import { debouncedPersist } from '../debouncedPersist';
 import { discardIndexDocument } from '../discardIndexDocument';
 import { searchIndexes } from '../searchIndexStore';
 
@@ -23,7 +22,4 @@ export function removeIndexEntries(
   for (const id of entryIds) {
     discardIndexDocument(miniSearch, id);
   }
-
-  // Debounced persist
-  debouncedPersist(workspaceId);
 }

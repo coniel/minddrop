@@ -188,3 +188,8 @@ export const SqlDatabaseFileName = 'data.db';
  * sync.
  */
 export const FileSystemChangeSyncDebounceMs = 500;
+
+/**
+ * The SQL meta key set while the entry content index is unfilled.
+ */
+export const EntryContentPendingMetaKey = 'entry_content_pending';

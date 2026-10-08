@@ -6,8 +6,6 @@ import {
   cleanupWorkspaceFixtures,
   setupWorkspaceFixtures,
 } from '@minddrop/workspaces/test-utils';
-import { cancelDebouncedPersists } from '../debouncedPersist';
-import { initializeSearchIndex } from '../initializeSearchIndex';
 import { rebuildSearchIndex } from '../rebuildSearchIndex';
 import { searchFullTextIndex } from '../searchFullTextIndex';
 import { searchIndexes } from '../searchIndexStore';
@@ -32,7 +30,7 @@ describe('initializeSearchSync', () => {
   // The seeded database's SQL record
   let database: SqlDatabaseSeed;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     // Set up the workspace, the search adapter and the sync listeners
     setup();
     setupWorkspaceFixtures(MockFs);
@@ -45,7 +43,7 @@ describe('initializeSearchSync', () => {
       { id: objectEntry1.id, title: objectEntry1.title },
     ]);
 
-    await rebuildSearchIndex(workspaceId);
+    rebuildSearchIndex(workspaceId);
   });
 
   afterEach(async () => {
@@ -82,24 +80,18 @@ describe('initializeSearchSync', () => {
     ).toContain(database.id);
   });
 
-  // Pins Issue 67: A database rename is lost from the search index if the
-  // app quits before the persist. Remove .fails once fixed.
-  it.fails(
-    'finds a database by the name it was renamed to just before the app quit',
-    async () => {
-      await renameDatabase(database);
+  it('finds a database by the name it was renamed to just before the app quit', async () => {
+    await renameDatabase(database);
 
-      // Quit before the debounced persist runs, then start up again.
-      // Quitting drops the in-memory index.
-      cancelDebouncedPersists();
-      searchIndexes.clear();
-      await initializeSearchIndex(workspaceId);
+    // Quit and start up again. Quitting drops the in-memory index, and
+    // startup builds it from SQL.
+    searchIndexes.clear();
+    rebuildSearchIndex(workspaceId);
 
-      expect(
-        searchFullTextIndex(workspaceId, 'reading').map(({ id }) => id),
-      ).toContain(database.id);
-    },
-  );
+    expect(
+      searchFullTextIndex(workspaceId, 'reading').map(({ id }) => id),
+    ).toContain(database.id);
+  });
 
   // Pins Issue 72: Any database settings change re-indexes every entry of
   // the database in search. Remove .fails once fixed.

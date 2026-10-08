@@ -102,6 +102,18 @@ export async function handleDatabasesSyncDatabaseConfigs(params: {
 }
 
 /**
+ * RPC handler which fills a workspace's entry content index if it is
+ * pending.
+ *
+ * @param params - The workspace whose content index to fill.
+ */
+export async function handleDatabasesFillEntryContentIndex(params: {
+  workspaceId: string;
+}): Promise<void> {
+  await Databases.fillEntryContentIndex(params.workspaceId);
+}
+
+/**
  * Sends a sync changeset to the webview, if it has any changes.
  *
  * @param changeset - The sync changeset to send.

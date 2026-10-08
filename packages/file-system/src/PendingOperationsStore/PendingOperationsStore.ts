@@ -1,3 +1,5 @@
+import { yieldToTaskQueue } from '@minddrop/utils';
+
 // The promises of file system operations which have not yet settled
 const pendingOperations = new Set<Promise<unknown>>();
 
@@ -42,22 +44,4 @@ export async function awaitPendingOperations(): Promise<void> {
     await Promise.allSettled([...pendingOperations]);
     await yieldToTaskQueue();
   } while (pendingOperations.size > 0);
-}
-
-/**
- * Resolves on the next task, once every queued microtask has run.
- * Uses a message channel rather than a timer so it keeps working
- * under fake timers.
- */
-function yieldToTaskQueue(): Promise<void> {
-  return new Promise((resolve) => {
-    const channel = new MessageChannel();
-
-    channel.port1.onmessage = () => {
-      channel.port1.close();
-      resolve();
-    };
-
-    channel.port2.postMessage(undefined);
-  });
 }

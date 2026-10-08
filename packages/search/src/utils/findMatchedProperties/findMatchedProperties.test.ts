@@ -9,10 +9,6 @@ import {
 } from '../../test-utils';
 import { findMatchedProperties } from './findMatchedProperties';
 
-// A text value long enough (over 80 characters) to trigger snippeting
-const longText =
-  'one two three four five six seven eight nine ten spice eleven twelve thirteen fourteen fifteen sixteen';
-
 // Wraps text in the highlight markers for expected values
 function marked(text: string): string {
   return `${MATCH_HIGHLIGHT_START}${text}${MATCH_HIGHLIGHT_END}`;
@@ -22,7 +18,7 @@ describe('findMatchedProperties', () => {
   beforeEach(() => {
     setup();
 
-    // Seed an entry with scalar, multi-value, and long text properties
+    // Seed an entry with scalar, multi-value, and text properties
     seedDatabase({ id: 'database-1', name: 'Books' });
     seedEntries('database-1', [
       {
@@ -31,7 +27,7 @@ describe('findMatchedProperties', () => {
         properties: [
           { name: 'Link', type: 'url', value: 'https://herbert.example.com' },
           { name: 'Tags', type: 'select', value: ['epic tales', 'epic saga'] },
-          { name: 'Review', type: 'text', value: longText },
+          { name: 'Review', type: 'text', value: 'A spice saga' },
         ],
       },
     ]);
@@ -69,15 +65,9 @@ describe('findMatchedProperties', () => {
     );
   });
 
-  it('returns a snippet for long text values', () => {
+  it('ignores text property values', () => {
     expect(
       findMatchedProperties(testWorkspaceId, 'entry-1', ['spice']),
-    ).toEqual([
-      {
-        name: 'Review',
-        type: 'text',
-        value: `six seven eight nine ten ${marked('spice')} eleven twelve thirteen fourteen fifteen`,
-      },
-    ]);
+    ).toEqual([]);
   });
 });

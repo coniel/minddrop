@@ -7,13 +7,13 @@ import { removeIndexDatabase } from './removeIndexDatabase';
 const workspaceId = testWorkspaceId;
 
 describe('removeIndexDatabase', () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     setup();
 
     // Seed a database and build the index
     seedDatabase({ id: 'database-1', name: 'Books' });
 
-    await rebuildSearchIndex(workspaceId);
+    rebuildSearchIndex(workspaceId);
   });
 
   afterEach(cleanup);

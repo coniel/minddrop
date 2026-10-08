@@ -17,6 +17,7 @@ export * from './SerializedDatabaseConfig.types';
 export * from './EntryFilter.types';
 export * from './SqlEntryRecord.types';
 export * from './SqlEntryReferenceRow.types';
+export * from './SqlEntryContentMatch.types';
 export * from './EntrySyncRecord.types';
 export * from './BackgroundSyncChangeset.types';
 export * from './EntryFileChange.types';

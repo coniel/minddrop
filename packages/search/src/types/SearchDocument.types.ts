@@ -39,12 +39,6 @@ export interface SearchDocument {
   databaseIcon: string;
 
   /**
-   * The entry's searchable text content. Empty for
-   * database documents.
-   */
-  content: string;
-
-  /**
    * The entry's searchable property values joined into a
    * single string. Empty for database documents.
    */

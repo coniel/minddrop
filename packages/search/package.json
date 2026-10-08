@@ -11,6 +11,7 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
+    "@minddrop/file-system": "workspace:*",
     "eslint": "^9.39.3",
     "@minddrop/eslint-config": "workspace:*",
     "@minddrop/vitest-config": "workspace:*",
@@ -20,8 +21,8 @@
   "dependencies": {
     "@minddrop/databases": "workspace:*",
     "@minddrop/events": "workspace:*",
-    "@minddrop/file-system": "workspace:*",
     "@minddrop/sql": "workspace:*",
+    "@minddrop/utils": "workspace:*",
     "@minddrop/workspaces": "workspace:*",
     "minisearch": "^7.1.1"
   }

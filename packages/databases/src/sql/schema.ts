@@ -1,7 +1,7 @@
 // Increment this when the schema or indexing logic changes.
 // On startup, if the stored schema version does not match,
 // the SQL database is dropped and rebuilt from scratch.
-export const SCHEMA_VERSION = 14;
+export const SCHEMA_VERSION = 15;
 
 // SQL schema for creating tables
 export const SCHEMA_SQL = `
@@ -81,8 +81,100 @@ export const SCHEMA_SQL = `
   CREATE INDEX IF NOT EXISTS idx_references_target_entry ON entry_references(target_entry_id);
   CREATE INDEX IF NOT EXISTS idx_references_target_key ON entry_references(target_key);
 
+  -- Full-text index of text and content property values. A standalone
+  -- table, not an external-content one. External content needs a rowid
+  -- that survives VACUUM, and entry_properties has a composite primary
+  -- key.
+  CREATE VIRTUAL TABLE IF NOT EXISTS entry_content USING fts5(
+    entry_id UNINDEXED,
+    property_name UNINDEXED,
+    property_type UNINDEXED,
+    value,
+    tokenize = 'unicode61 remove_diacritics 2'
+  );
+
+  -- The entry_content rowid of each indexed value. FTS5 cannot look
+  -- rows up by an UNINDEXED column without scanning the whole table.
+  CREATE TABLE IF NOT EXISTS entry_content_rows (
+    id             INTEGER PRIMARY KEY,
+    entry_id       TEXT NOT NULL,
+    property_name  TEXT NOT NULL,
+    UNIQUE (entry_id, property_name)
+  );
+
   CREATE TABLE IF NOT EXISTS meta (
     key   TEXT PRIMARY KEY,
     value TEXT NOT NULL
   );
+`;
+
+// Triggers that keep entry_content in sync with the text and content
+// values in entry_properties. Separate from SCHEMA_SQL, so the schema
+// can be created without them. Every statement is idempotent.
+export const ENTRY_CONTENT_TRIGGERS_SQL = `
+  -- Index new text and content values
+  CREATE TRIGGER IF NOT EXISTS entry_content_insert
+  AFTER INSERT ON entry_properties
+  WHEN new.property_type IN ('text', 'content') AND new.value_text IS NOT NULL
+  BEGIN
+    -- Add the value's index row
+    INSERT INTO entry_content_rows (entry_id, property_name)
+    VALUES (new.entry_id, new.property_name);
+
+    -- Index the value under its row's ID
+    INSERT INTO entry_content (rowid, entry_id, property_name, property_type, value)
+    SELECT id, new.entry_id, new.property_name, new.property_type, new.value_text
+    FROM entry_content_rows
+    WHERE entry_id = new.entry_id AND property_name = new.property_name;
+  END;
+
+  -- Replace the indexed value when a text or content value changes
+  CREATE TRIGGER IF NOT EXISTS entry_content_update
+  AFTER UPDATE ON entry_properties
+  WHEN old.property_type IN ('text', 'content')
+    OR new.property_type IN ('text', 'content')
+  BEGIN
+    -- Remove the old value from the index
+    DELETE FROM entry_content
+    WHERE rowid IN (
+      SELECT id FROM entry_content_rows
+      WHERE entry_id = old.entry_id AND property_name = old.property_name
+    );
+
+    -- Remove the old value's index row
+    DELETE FROM entry_content_rows
+    WHERE entry_id = old.entry_id AND property_name = old.property_name;
+
+    -- Add an index row for the new value if it is text or content
+    INSERT INTO entry_content_rows (entry_id, property_name)
+    SELECT new.entry_id, new.property_name
+    WHERE new.property_type IN ('text', 'content')
+      AND new.value_text IS NOT NULL;
+
+    -- Index the new value under that row's ID
+    INSERT INTO entry_content (rowid, entry_id, property_name, property_type, value)
+    SELECT id, new.entry_id, new.property_name, new.property_type, new.value_text
+    FROM entry_content_rows
+    WHERE entry_id = new.entry_id
+      AND property_name = new.property_name
+      AND new.property_type IN ('text', 'content')
+      AND new.value_text IS NOT NULL;
+  END;
+
+  -- Remove the indexed value when a text or content value is deleted
+  CREATE TRIGGER IF NOT EXISTS entry_content_delete
+  AFTER DELETE ON entry_properties
+  WHEN old.property_type IN ('text', 'content')
+  BEGIN
+    -- Remove the old value from the index
+    DELETE FROM entry_content
+    WHERE rowid IN (
+      SELECT id FROM entry_content_rows
+      WHERE entry_id = old.entry_id AND property_name = old.property_name
+    );
+
+    -- Remove the old value's index row
+    DELETE FROM entry_content_rows
+    WHERE entry_id = old.entry_id AND property_name = old.property_name;
+  END;
 `;

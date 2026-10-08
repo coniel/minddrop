@@ -1,14 +1,12 @@
 import { Databases } from '@minddrop/databases';
-import { debouncedPersist } from '../debouncedPersist';
 import { discardIndexDocument } from '../discardIndexDocument';
 import { searchIndexes } from '../searchIndexStore';
-import { buildEntryDocument } from '../utils';
+import { buildEntryDocuments } from '../utils';
 
 /**
- * Updates the MiniSearch index after entries are upserted.
- * Removes existing documents and re-adds them with fresh data.
+ * Adds or updates entries in a workspace's MiniSearch index.
  *
- * @param workspaceId - The workspace whose index to update.
+ * @param workspaceId - The ID of the workspace whose index to update.
  * @param entries - The entries to add or update in the index.
  */
 export function upsertIndexEntries(
@@ -26,20 +24,21 @@ export function upsertIndexEntries(
     return;
   }
 
-  for (const entry of entries) {
-    // Remove existing document if present
-    discardIndexDocument(miniSearch, entry.id);
+  // Build the entries' documents with fresh SQL data
+  const documents = buildEntryDocuments(
+    workspaceId,
+    entries,
+    Databases.sql.getEntryShortPropertyValues(
+      { entryIds: entries.map((entry) => entry.id) },
+      workspaceId,
+    ),
+  );
 
-    // Re-add the document with fresh SQL data
-    miniSearch.add(
-      buildEntryDocument(workspaceId, entry, {
-        name:
-          Databases.sql.getDatabaseName(entry.databaseId, workspaceId) ?? '',
-        icon: Databases.sql.getDatabaseIcon(entry.databaseId, workspaceId),
-      }),
-    );
+  for (const document of documents) {
+    // Remove the existing document
+    discardIndexDocument(miniSearch, document.id);
+
+    // Re-add the document
+    miniSearch.add(document);
   }
-
-  // Debounced persist
-  debouncedPersist(workspaceId);
 }

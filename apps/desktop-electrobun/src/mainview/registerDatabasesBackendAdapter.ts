@@ -2,9 +2,8 @@ import { Databases } from '@minddrop/databases';
 import type { WebviewRpcClient } from '../types';
 
 /**
- * Registers a databases backend adapter that forwards
- * initialization and sync operations to the Bun process
- * via RPC.
+ * Registers a databases backend adapter which forwards its
+ * operations to the Bun process via RPC.
  */
 export function registerDatabasesBackendAdapterRpc(
   rpc: WebviewRpcClient,
@@ -28,5 +27,7 @@ export function registerDatabasesBackendAdapterRpc(
         databases,
         databaseIds,
       }),
+    fillEntryContentIndex: (workspaceId) =>
+      rpc.request.databasesFillEntryContentIndex({ workspaceId }),
   });
 }

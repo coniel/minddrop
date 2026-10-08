@@ -2,7 +2,10 @@ import { Fs } from '@minddrop/file-system';
 import { Sql } from '@minddrop/sql';
 import { Workspaces } from '@minddrop/workspaces';
 import { loadCoreSerializers } from '../../EntrySerializers';
-import { SqlDatabaseFileName } from '../../constants';
+import {
+  EntryContentPendingMetaKey,
+  SqlDatabaseFileName,
+} from '../../constants';
 import { readAllEntryMetadata } from '../../readAllEntryMetadata';
 import { readEntries } from '../../readEntries';
 import { readWorkspaceDatabases } from '../../readWorkspaceDatabases';
@@ -16,7 +19,11 @@ import {
   resolveEntryMetadataKey,
 } from '../../utils';
 import { writeEntryMetadata } from '../../writeEntryMetadata';
-import { SCHEMA_SQL, SCHEMA_VERSION } from '../schema';
+import {
+  ENTRY_CONTENT_TRIGGERS_SQL,
+  SCHEMA_SQL,
+  SCHEMA_VERSION,
+} from '../schema';
 import { sqlDeleteDatabase } from '../sqlDeleteDatabase';
 import { sqlGetAllDatabases } from '../sqlGetAllDatabases';
 import { sqlGetEntriesFull } from '../sqlGetEntriesFull';
@@ -105,8 +112,21 @@ export async function initializeDatabasesBackend(
   // SQL from the filesystem. Otherwise trust SQL as the cache
   // and let background sync handle any drift.
   if (schemaChanged) {
+    // Mark the content index as pending. The rebuild loads the rows
+    // before the content triggers exist.
+    Sql.run(
+      workspaceId,
+      "INSERT OR REPLACE INTO meta (key, value) VALUES (?, '1')",
+      EntryContentPendingMetaKey,
+    );
+
+    // Populate SQL from the filesystem
     await rebuildSqlFromFilesystem(workspaceId, databases, workspacePath);
   }
+
+  // Create the content triggers. A fresh database does not have them
+  // yet. Idempotent on an existing one.
+  Sql.exec(workspaceId, ENTRY_CONTENT_TRIGGERS_SQL);
 
   // Query all entries with full property data and metadata
   const entries = sqlGetEntriesFull({ workspaceId });

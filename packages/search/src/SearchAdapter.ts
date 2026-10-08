@@ -2,8 +2,8 @@ import type { FullTextSearchResult } from './types';
 
 export interface SearchAdapter {
   /**
-   * Performs a full-text fuzzy search. Optionally scoped
-   * to a single database.
+   * Performs a full-text search. Optionally scoped to a single
+   * database.
    */
   searchFullText(
     workspaceId: string,
@@ -13,18 +13,12 @@ export interface SearchAdapter {
   ): Promise<FullTextSearchResult[]>;
 
   /**
-   * Initializes the search index for a workspace.
-   * Forces a full rebuild if the SQL schema changed,
-   * otherwise loads from the persisted index.
+   * Builds the search index for a workspace from SQL.
    */
-  searchInitialize(params: {
-    workspaceId: string;
-    schemaChanged: boolean;
-  }): Promise<void>;
+  searchInitialize(params: { workspaceId: string }): Promise<void>;
 
   /**
-   * Drops a workspace's search index on the backend,
-   * cancelling any pending persist of it.
+   * Drops a workspace's search index on the backend.
    */
   searchUnload(params: { workspaceId: string }): Promise<void>;
 

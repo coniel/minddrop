@@ -1,5 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Sql } from '@minddrop/sql';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
+import { EntryContentPendingMetaKey } from '../../constants';
 import { readEntryMetadata } from '../../readEntryMetadata';
 import {
   MockFs,
@@ -11,6 +13,8 @@ import {
   databases,
   entryFilePath,
   getRecordByPath,
+  objectEntry1,
+  objectEntry1SqlRecord,
   parentDir,
   referenceEntry1,
   relatedEntry1,
@@ -22,9 +26,12 @@ import {
 } from '../../test-utils';
 import { SqlEntryRecord } from '../../types';
 import { writeEntryMetadata } from '../../writeEntryMetadata';
+import { fillEntryContentIndex } from '../fillEntryContentIndex';
 import { sqlGetAllDatabases } from '../sqlGetAllDatabases';
 import { sqlGetEntriesFull } from '../sqlGetEntriesFull';
 import { sqlGetVersion } from '../sqlGetVersion';
+import { sqlSearchEntryContent } from '../sqlSearchEntryContent';
+import { sqlUpsertEntries } from '../sqlUpsertEntries';
 import { initializeDatabasesBackend } from './initializeDatabasesBackend';
 
 const { workspace_1 } = WorkspaceFixtures;
@@ -64,6 +71,67 @@ describe('initializeDatabasesBackend', () => {
     // The returned entries should be the indexed SQL records
     expect(result.entries).toEqual(sqlGetEntriesFull());
     expect(result.entries.length).toBeGreaterThan(0);
+  });
+
+  it('leaves the content index unfilled after a rebuild', async () => {
+    await initializeDatabasesBackend(workspace_1.id, parentDir);
+
+    // The rebuild indexes no content itself
+    expect(searchContent(objectEntry1.properties.Content as string)).toEqual(
+      [],
+    );
+
+    // Fill the content index
+    await fillEntryContentIndex(workspace_1.id);
+
+    expect(
+      searchContent(objectEntry1.properties.Content as string).length,
+    ).toBeGreaterThan(0);
+  });
+
+  it('indexes the content of entries saved after startup', async () => {
+    await initializeDatabasesBackend(workspace_1.id, parentDir);
+
+    // Get the ID of an indexed database
+    const indexedDatabaseId = sqlGetAllDatabases()[0].id;
+
+    // Save an entry after startup
+    sqlUpsertEntries(
+      indexedDatabaseId,
+      [
+        {
+          ...objectEntry1SqlRecord,
+          id: 'database-entry_edited',
+          databaseId: indexedDatabaseId,
+          path: 'Edited.md',
+          properties: [
+            { name: 'Content', type: 'content', value: 'Edited body' },
+          ],
+        },
+      ],
+      { silent: true },
+      workspace_1.id,
+    );
+
+    expect(searchContent('Edited body')).toHaveLength(1);
+  });
+
+  it('leaves a filled content index filled on a normal launch', async () => {
+    // Index and fill the workspace, as a first launch does
+    await initializeDatabasesBackend(workspace_1.id, parentDir);
+    await fillEntryContentIndex(workspace_1.id);
+
+    // Launch again onto the index the first launch left behind
+    const result = await initializeDatabasesBackend(workspace_1.id, parentDir);
+
+    expect(result.schemaChanged).toBe(false);
+    expect(
+      Sql.get(
+        workspace_1.id,
+        'SELECT value FROM meta WHERE key = ?',
+        EntryContentPendingMetaKey,
+      ),
+    ).toBeNull();
   });
 
   it('drops databases deleted since the last session from the index', async () => {
@@ -235,6 +303,20 @@ References: []
     expect(metadata.created).toEqual(sidecarDate);
   });
 });
+
+/**
+ * Searches the workspace's content index.
+ *
+ * @param query - The text to search for.
+ * @returns The matching content values.
+ */
+function searchContent(query: string) {
+  return sqlSearchEntryContent(
+    query,
+    { highlightStart: '[', highlightEnd: ']' },
+    workspace_1.id,
+  );
+}
 
 /**
  * Returns all records indexed in SQL for the given database.

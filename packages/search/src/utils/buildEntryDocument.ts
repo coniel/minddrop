@@ -1,26 +1,19 @@
-import { Databases } from '@minddrop/databases';
 import type { SearchDocument } from '../types';
 
 /**
- * Builds the search document for an entry from its SQL text
- * content and the owning database's metadata.
+ * Builds the search document for an entry from its short property
+ * values and the owning database's metadata.
  *
- * @param workspaceId - The workspace the entry belongs to.
  * @param entry - The entry to build the document for.
  * @param database - The owning database's name and icon.
+ * @param propertyValues - The entry's short property values.
  * @returns The entry's search document.
  */
 export function buildEntryDocument(
-  workspaceId: string,
   entry: { id: string; title: string; databaseId: string },
   database: { name: string; icon: string },
+  propertyValues: string[],
 ): SearchDocument {
-  // Pull the entry's searchable text from SQL
-  const { textValues, propertyValues } = Databases.sql.getEntryTextContent(
-    entry.id,
-    workspaceId,
-  );
-
   return {
     id: entry.id,
     type: 'entry',
@@ -28,7 +21,6 @@ export function buildEntryDocument(
     databaseId: entry.databaseId,
     databaseName: database.name,
     databaseIcon: database.icon,
-    content: textValues.join(' '),
     properties: propertyValues.join(' '),
     tags: '',
   };

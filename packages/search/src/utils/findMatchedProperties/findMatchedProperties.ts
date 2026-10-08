@@ -1,20 +1,13 @@
 import { Databases } from '@minddrop/databases';
 import type { FullTextMatchedProperty } from '../../types';
-import { extractSnippet } from '../extractSnippet';
 import { highlightAllMatches } from '../highlightAllMatches';
 
-// Property types that contain long-form text and should
-// be returned as snippets rather than full values.
-const LONG_TEXT_TYPES = new Set(['text', 'content']);
-
-// Maximum value length (in characters) before snippeting kicks in
-const SNIPPET_THRESHOLD = 80;
-
 /**
- * Finds which properties on an entry match the search query
- * terms via case-insensitive substring matching. Returns at
- * most one match per property name. For long text properties,
- * returns a snippet with highlight markers around the match.
+ * Finds which of an entry's short property values match the
+ * search query terms via case-insensitive substring matching.
+ * Returns at most one match per property name, with highlight
+ * markers around the matched terms. Text and content property
+ * values are not checked.
  *
  * @param workspaceId - The workspace the entry belongs to.
  * @param entryId - The ID of the entry whose properties to check.
@@ -26,6 +19,7 @@ export function findMatchedProperties(
   entryId: string,
   queryTerms: string[],
 ): FullTextMatchedProperty[] {
+  // Get the entry's short property values
   const propertyValues = Databases.sql.getEntryPropertyValues(
     entryId,
     workspaceId,
@@ -47,17 +41,8 @@ export function findMatchedProperties(
       continue;
     }
 
-    let value: string;
-
-    // For long text properties, extract a snippet around the first match
-    if (
-      LONG_TEXT_TYPES.has(property.type) &&
-      property.value.length > SNIPPET_THRESHOLD
-    ) {
-      value = extractSnippet(property.value, matchingTerms);
-    } else {
-      value = highlightAllMatches(property.value, matchingTerms);
-    }
+    // Highlight the matched terms
+    const value = highlightAllMatches(property.value, matchingTerms);
 
     // Append to the property's matches, creating them on first match
     const existing = matchesByName.get(property.name);

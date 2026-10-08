@@ -23,6 +23,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@minddrop/file-system": "workspace:*"
+    "@minddrop/file-system": "workspace:*",
+    "@minddrop/utils": "workspace:*"
   }
 }

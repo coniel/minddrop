@@ -61,6 +61,10 @@ export async function loadWorkspaceDatabases(
     backend.backgroundSync(workspace.id, workspace.path);
   }
 
+  // Fill the content index in the background if a rebuild or an
+  // interrupted fill left it pending.
+  backend.fillEntryContentIndex(workspace.id);
+
   return { schemaChanged: result.schemaChanged };
 }
 

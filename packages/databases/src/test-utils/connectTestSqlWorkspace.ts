@@ -1,10 +1,10 @@
 import { Sql } from '@minddrop/sql';
-import { SCHEMA_SQL } from '../sql/schema';
+import { ENTRY_CONTENT_TRIGGERS_SQL, SCHEMA_SQL } from '../sql/schema';
 
 /**
  * Opens a workspace's connection through the registered test SQL
- * adapter and creates the databases schema in it. Each workspace
- * connected this way gets a database of its own.
+ * adapter and creates the databases schema and content triggers in
+ * it. Each workspace connected this way gets a database of its own.
  *
  * @param workspaceId - The ID of the workspace to connect.
  */
@@ -12,6 +12,7 @@ export function connectTestSqlWorkspace(workspaceId: string): void {
   // Open the workspace's connection
   Sql.connect(workspaceId);
 
-  // Create the databases schema
+  // Create the databases schema and content triggers
   Sql.exec(workspaceId, SCHEMA_SQL);
+  Sql.exec(workspaceId, ENTRY_CONTENT_TRIGGERS_SQL);
 }

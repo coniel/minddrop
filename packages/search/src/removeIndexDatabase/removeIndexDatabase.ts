@@ -1,4 +1,3 @@
-import { debouncedPersist } from '../debouncedPersist';
 import { discardIndexDocument } from '../discardIndexDocument';
 import { searchIndexes } from '../searchIndexStore';
 
@@ -21,6 +20,4 @@ export function removeIndexDatabase(
 
   // Remove the database document
   discardIndexDocument(miniSearch, `db:${databaseId}`);
-
-  debouncedPersist(workspaceId);
 }

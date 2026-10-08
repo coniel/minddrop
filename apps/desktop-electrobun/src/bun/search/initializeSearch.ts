@@ -11,7 +11,6 @@ import { registerBunFileSystemAdapter } from './registerFileSystemAdapter';
 export function initializeSearch(): void {
   console.log('[search] Registering search platform adapters');
 
-  // Register a Bun-native file system adapter for search
-  // persistence (MiniSearch index I/O)
+  // Register the Bun-native file system adapter
   registerBunFileSystemAdapter();
 }
