@@ -1331,6 +1331,27 @@ declare module 'i18next' {
             icon: {
               label: string;
             };
+            image: {
+              label: string;
+              fit: {
+                label: string;
+                cover: {
+                  label: string;
+                  description: string;
+                };
+                contain: {
+                  label: string;
+                  description: string;
+                };
+                fill: {
+                  label: string;
+                  description: string;
+                };
+              };
+            };
+            imageViewer: {
+              label: string;
+            };
             label: {
               label: string;
               placeholder: string;

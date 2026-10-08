@@ -1,0 +1,17 @@
+/* The block's box. The viewer fills it. */
+.design-image-viewer-element {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* The viewer while the picture's treatment is still unknown */
+.design-image-viewer-element-pending {
+  visibility: hidden;
+}
+
+/* The box with no picture, marked with the viewer icon */
+.design-image-viewer-element-placeholder {
+  background-color: var(--surface-subtle);
+  color: var(--text-muted);
+}

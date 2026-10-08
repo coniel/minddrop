@@ -34,6 +34,27 @@
       "icon": {
         "label": "Icon"
       },
+      "image": {
+        "label": "Image",
+        "fit": {
+          "label": "Fit",
+          "cover": {
+            "label": "Cover",
+            "description": "Fills the block, cropping what overflows."
+          },
+          "contain": {
+            "label": "Contain",
+            "description": "Fits the whole picture in, leaving gaps."
+          },
+          "fill": {
+            "label": "Fill",
+            "description": "Stretches the picture to the block, distorting it."
+          }
+        }
+      },
+      "imageViewer": {
+        "label": "Image viewer"
+      },
       "label": {
         "label": "Label",
         "placeholder": "Label"

@@ -8,6 +8,8 @@ import {
   EditorTitleElementConfig,
   HeadingElementConfig,
   IconElementConfig,
+  ImageElementConfig,
+  ImageViewerElementConfig,
   LabelElementConfig,
   LinkElementConfig,
   NumberElementConfig,
@@ -30,6 +32,8 @@ export function initializeDesignsNextFeature(): void {
   DesignElementConfigs.register(EditorTitleElementConfig);
   DesignElementConfigs.register(HeadingElementConfig);
   DesignElementConfigs.register(IconElementConfig);
+  DesignElementConfigs.register(ImageElementConfig);
+  DesignElementConfigs.register(ImageViewerElementConfig);
   DesignElementConfigs.register(LabelElementConfig);
   DesignElementConfigs.register(LinkElementConfig);
   DesignElementConfigs.register(NumberElementConfig);

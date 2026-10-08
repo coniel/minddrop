@@ -1,0 +1,34 @@
+/* The block's box. Clips the picture to its corner radius. */
+.design-image-element {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* The picture. Fills the box, fitted to it by the box's fit. */
+.design-image-element-picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* The picture cropped to fill the box */
+.design-image-element-cover .design-image-element-picture {
+  object-fit: cover;
+}
+
+/* The whole picture shown inside the box rather than cropped to it */
+.design-image-element-contain .design-image-element-picture {
+  object-fit: contain;
+}
+
+/* The picture stretched to the box */
+.design-image-element-fill .design-image-element-picture {
+  object-fit: fill;
+}
+
+/* The box with no picture, marked with the image icon */
+.design-image-element-placeholder {
+  background-color: var(--surface-subtle);
+  color: var(--text-muted);
+}

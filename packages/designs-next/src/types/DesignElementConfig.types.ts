@@ -51,7 +51,7 @@ export interface DesignElementConfig<
 
   /**
    * The palette group the element is listed under. Omitted for
-   * element types which only fill a slot, which are not insertable.
+   * element types which are not insertable on a grid.
    */
   group?: DesignElementGroup;
 

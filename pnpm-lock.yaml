@@ -948,6 +948,9 @@ importers:
       '@minddrop/feature-markdown-editor':
         specifier: workspace:*
         version: link:../markdown-editor
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../../packages/file-system
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
@@ -957,6 +960,9 @@ importers:
       '@minddrop/tags':
         specifier: workspace:*
         version: link:../../packages/tags
+      '@minddrop/ui-components':
+        specifier: workspace:*
+        version: link:../../ui/components
       '@minddrop/ui-designs-next':
         specifier: workspace:*
         version: link:../../ui/designs-next

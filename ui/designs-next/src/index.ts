@@ -10,6 +10,7 @@ export * from './DesignPropertyPicker';
 export * from './DesignRenderer';
 export * from './IconContentControls';
 export * from './TextContentControls';
+export * from './useElementFilePath';
 export * from './useElementProperty';
 export * from './useElementValue';
 export * from './useHasMappedMarkdownEditor';
