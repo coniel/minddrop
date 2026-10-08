@@ -10,13 +10,13 @@ const DefaultRowSpan = 100;
 
 /**
  * Config for the PDF element. It renders a pdf property's document
- * in a reader.
+ * in a reader. Not listed on the grid palette: a reader takes a
+ * page's height rather than a block's.
  */
 export const PdfElementConfig: DesignElementConfig<PdfElement> = {
   type: PdfElementType,
   label: 'pdf.element.label',
   icon: 'file-text',
-  group: 'content',
   propertyTypes: ['pdf'],
   suggestedPropertyTypes: ['pdf'],
   component: PdfElementRenderer,
