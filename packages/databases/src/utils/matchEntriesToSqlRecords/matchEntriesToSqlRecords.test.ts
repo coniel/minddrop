@@ -63,4 +63,14 @@ describe('matchEntriesToSqlRecords', () => {
 
     expect(deletedIds).toEqual([]);
   });
+
+  it('does not report records at retained paths as deleted', () => {
+    const { deletedIds } = matchEntriesToSqlRecords(
+      [],
+      [existingRecord],
+      [existingRecord.path],
+    );
+
+    expect(deletedIds).toEqual([]);
+  });
 });

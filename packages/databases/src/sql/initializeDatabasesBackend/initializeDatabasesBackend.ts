@@ -154,7 +154,7 @@ async function rebuildSqlFromFilesystem(
     );
 
     // Read entries and metadata from disk in parallel
-    const [rawEntries, metadataMap] = await Promise.all([
+    const [{ entries: rawEntries }, metadataMap] = await Promise.all([
       readEntries(database, workspacePath),
       readAllEntryMetadata(resolveDatabasePath(database, workspacePath)),
     ]);

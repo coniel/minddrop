@@ -10,7 +10,7 @@ export interface MatchEntriesToSqlRecordsResult<
   records: T[];
 
   /**
-   * The IDs of existing records whose path has no fresh counterpart.
+   * The IDs of existing records whose file is no longer on disk.
    */
   deletedIds: string[];
 }
@@ -20,10 +20,12 @@ export interface MatchEntriesToSqlRecordsResult<
  * by path. Fresh records whose path matches an existing record
  * take over the existing entry ID; records without a path match
  * keep their freshly minted ID. Existing records whose path has
- * no fresh counterpart are reported as deleted.
+ * no fresh counterpart are reported as deleted, unless their path
+ * is retained.
  *
  * @param freshRecords - The entry records read from the filesystem.
  * @param existingRecords - The existing SQL entry sync records.
+ * @param retainedPaths - Paths of entry files which exist but were not read fresh, whose existing records are kept.
  * @returns The ID-resolved records and deleted entry IDs.
  */
 export function matchEntriesToSqlRecords<
@@ -31,6 +33,7 @@ export function matchEntriesToSqlRecords<
 >(
   freshRecords: T[],
   existingRecords: EntrySyncRecord[],
+  retainedPaths?: string[],
 ): MatchEntriesToSqlRecordsResult<T> {
   // Index the existing records by path
   const existingByPath = new Map(
@@ -48,12 +51,15 @@ export function matchEntriesToSqlRecords<
     return { ...record, id: existing.id };
   });
 
-  // Collect the paths present on disk
-  const freshPaths = new Set(freshRecords.map((record) => record.path));
+  // Collect the paths present on disk, read or not
+  const presentPaths = new Set([
+    ...freshRecords.map((record) => record.path),
+    ...(retainedPaths ?? []),
+  ]);
 
   // Existing records with no file at their path have been deleted
   const deletedIds = existingRecords
-    .filter((record) => !freshPaths.has(record.path))
+    .filter((record) => !presentPaths.has(record.path))
     .map((record) => record.id);
 
   return { records, deletedIds };

@@ -23,7 +23,7 @@ import {
   timestampDatabase,
   timestampEntry1,
 } from '../../test-utils';
-import { EntryMetadata, SqlEntryRecord } from '../../types';
+import { Entry, EntryMetadata, SqlEntryRecord } from '../../types';
 import { resolveEntryMetadataFilePath } from '../../utils';
 import { writeEntryMetadata } from '../../writeEntryMetadata';
 import { sqlGetAllEntriesFull } from '../sqlGetAllEntriesFull';
@@ -292,7 +292,122 @@ describe('backgroundSyncDatabases', () => {
       timestampEntry1.path,
     );
   });
+
+  it('keeps entries whose contents are unchanged', async () => {
+    indexAtCurrentContents();
+
+    const changeset = await backgroundSyncDatabases(workspace_1.id, parentDir);
+
+    expect(changeset.deletedEntryIds).toEqual([]);
+    expect(
+      sqlGetEntrySyncRecords(collectionDatabase.id).map((record) => record.id),
+    ).toContain(collectionEntry1.id);
+  });
+
+  it('resolves references to entries whose contents are unchanged', async () => {
+    indexAtCurrentContents();
+
+    // Change only the referencing entry
+    MockFs.writeTextFile(
+      entryFilePath(collectionEntry1),
+      `${MockFs.readTextFile(entryFilePath(collectionEntry1))}\n\nAdded externally`,
+    );
+
+    await backgroundSyncDatabases(workspace_1.id, parentDir);
+
+    const collectionRecord = recordByPath(
+      sqlGetAllEntriesFull(),
+      collectionEntry1.path,
+    );
+
+    expect(propertyValue(collectionRecord, 'Related')).toEqual([
+      relatedEntry1.id,
+      relatedEntry2.id,
+    ]);
+  });
+
+  it('keeps the sidecar of an entry whose contents are unchanged', async () => {
+    indexAtCurrentContents();
+    await writeEntryMetadata(
+      databaseDirPath(collectionDatabase),
+      entryFilePath(collectionEntry1),
+      {
+        color: 'red',
+      },
+    );
+
+    await backgroundSyncDatabases(workspace_1.id, parentDir);
+
+    expect(
+      MockFs.exists(
+        resolveEntryMetadataFilePath(
+          databaseDirPath(collectionDatabase),
+          entryFilePath(collectionEntry1),
+        ),
+      ),
+    ).toBe(true);
+  });
+
+  it('keeps an entry whose file cannot be parsed', async () => {
+    breakEntryFile(collectionEntry1);
+
+    const changeset = await backgroundSyncDatabases(workspace_1.id, parentDir);
+
+    expect(changeset.deletedEntryIds).not.toContain(collectionEntry1.id);
+    expect(
+      sqlGetEntrySyncRecords(collectionDatabase.id).map((record) => record.id),
+    ).toContain(collectionEntry1.id);
+  });
+
+  it('keeps the sidecar of an entry whose file cannot be parsed', async () => {
+    await writeEntryMetadata(
+      databaseDirPath(collectionDatabase),
+      entryFilePath(collectionEntry1),
+      {
+        color: 'red',
+      },
+    );
+    breakEntryFile(collectionEntry1);
+
+    await backgroundSyncDatabases(workspace_1.id, parentDir);
+
+    expect(
+      MockFs.exists(
+        resolveEntryMetadataFilePath(
+          databaseDirPath(collectionDatabase),
+          entryFilePath(collectionEntry1),
+        ),
+      ),
+    ).toBe(true);
+  });
+
+  it('resolves references to an entry whose file cannot be parsed', async () => {
+    breakEntryFile(relatedEntry1);
+
+    await backgroundSyncDatabases(workspace_1.id, parentDir);
+
+    const collectionRecord = recordByPath(
+      sqlGetAllEntriesFull(),
+      collectionEntry1.path,
+    );
+
+    expect(propertyValue(collectionRecord, 'Related')).toEqual([
+      relatedEntry1.id,
+      relatedEntry2.id,
+    ]);
+  });
 });
+
+/**
+ * Replaces an entry's file contents with frontmatter which is not
+ * valid YAML.
+ */
+function breakEntryFile(entry: Entry): void {
+  MockFs.writeTextFile(
+    entryFilePath(entry),
+    '---\nSummary: Nested: mapping\n---\n',
+  );
+}
 
 /**
  * Returns the file system path of the entry a SQL record indexes.

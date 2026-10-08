@@ -2,20 +2,44 @@ import { Fs } from '@minddrop/file-system';
 import { EntrySerializersRegistry } from '../EntrySerializersRegistry';
 import { readEntry } from '../readEntry';
 import { Database, Entry } from '../types';
-import { resolveDatabasePath } from '../utils';
+import { resolveDatabasePath, resolveEntryPath } from '../utils';
+
+export interface ReadEntriesResult {
+  /**
+   * The deserialized entries.
+   */
+  entries: Entry[];
+
+  /**
+   * Paths of the entry files whose contents match their indexed
+   * hash, which are not deserialized, relative to the database
+   * directory.
+   */
+  unchangedPaths: string[];
+
+  /**
+   * Paths of the entry files which could not be read or
+   * deserialized, relative to the database directory.
+   */
+  unreadablePaths: string[];
+}
 
 /**
- * Reads all entry files from a database directory and returns
- * the deserialized Entry objects.
+ * Reads all entry files from a database directory, returning the
+ * deserialized entries and the paths of the files which could not
+ * be read. Files whose contents match their indexed hash are not
+ * deserialized and are reported as unchanged instead.
  *
  * @param database - The database to read entries from.
  * @param workspacePath - The workspace path. Defaults to the active workspace.
- * @returns The database entries, with null entries filtered out.
+ * @param indexedHashes - The indexed content hashes of the database's entries, keyed by entry path.
+ * @returns The changed entries and the paths of the unchanged and unreadable entry files.
  */
 export async function readEntries(
   database: Database,
   workspacePath?: string,
-): Promise<Entry[]> {
+  indexedHashes?: Map<string, string>,
+): Promise<ReadEntriesResult> {
   const hasEntrySubdirs = database.propertyFileStorage === 'entry';
   const databasePath = resolveDatabasePath(database, workspacePath);
 
@@ -48,18 +72,53 @@ export async function readEntries(
     file.path.endsWith(`.${serializer.fileExtension}`),
   );
 
-  // Read and deserialize the database entries, which are addressed
-  // from their database.
-  const entries = await Promise.all(
-    files.map((file) =>
-      readEntry(
-        Fs.relativePath(databasePath, file.path),
-        database,
-        serializer,
-        workspacePath,
-      ),
-    ),
+  // Entry paths are addressed from their database
+  const paths = files.map((file) => Fs.relativePath(databasePath, file.path));
+
+  // Read the entries, skipping the deserialization of those whose
+  // contents match their indexed hash.
+  const results = await Promise.all(
+    paths.map(async (path) => {
+      const indexedHash = indexedHashes?.get(path);
+
+      if (
+        indexedHash !== undefined &&
+        (await hashEntryFile(
+          resolveEntryPath(path, database, workspacePath),
+        )) === indexedHash
+      ) {
+        return 'unchanged';
+      }
+
+      return readEntry(path, database, serializer, workspacePath);
+    }),
   );
 
-  return entries.filter((entry): entry is Entry => entry !== null);
+  const entries: Entry[] = [];
+  const unchangedPaths: string[] = [];
+  const unreadablePaths: string[] = [];
+
+  results.forEach((result, index) => {
+    if (result === 'unchanged') {
+      unchangedPaths.push(paths[index]);
+    } else if (result) {
+      entries.push(result);
+    } else {
+      unreadablePaths.push(paths[index]);
+    }
+  });
+
+  return { entries, unchangedPaths, unreadablePaths };
+}
+
+/**
+ * Returns the hash of an entry file's contents, or null if the file
+ * cannot be read.
+ */
+async function hashEntryFile(filePath: string): Promise<string | null> {
+  try {
+    return Fs.hashContents(await Fs.readTextFile(filePath));
+  } catch {
+    return null;
+  }
 }

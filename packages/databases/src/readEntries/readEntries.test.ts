@@ -1,9 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Fs } from '@minddrop/file-system';
 import {
   MockFs,
   cleanup,
   databaseDirPath,
   entries,
+  entryFilePath,
   entryStorageDatabase,
   entryStorageEntry1,
   objectDatabase,
@@ -20,7 +22,7 @@ describe('readEntries', () => {
 
   it('reads and deserializes entry files from a database', async () => {
     // Read entries from the object database
-    const result = await readEntries(objectDatabase);
+    const { entries: result } = await readEntries(objectDatabase);
 
     // Should contain the expected entry with correct data
     const entry = result.find((entry) => entry.path === objectEntry1.path);
@@ -33,7 +35,7 @@ describe('readEntries', () => {
 
   it('reads entries from an entry-based storage database', async () => {
     // Read entries from a database with entry-based storage
-    const result = await readEntries(entryStorageDatabase);
+    const { entries: result } = await readEntries(entryStorageDatabase);
 
     // Should contain the expected entry
     const entry = result.find(
@@ -51,7 +53,7 @@ describe('readEntries', () => {
     MockFs.addFiles([`${databaseDirPath(objectDatabase)}/Stray Entry.yaml`]);
 
     // Read entries from the markdown database
-    const result = await readEntries(objectDatabase);
+    const { entries: result } = await readEntries(objectDatabase);
 
     // Should not include the YAML file
     expect(result.every((entry) => entry.path.endsWith('.md'))).toBe(true);
@@ -69,8 +71,50 @@ describe('readEntries', () => {
     }
 
     // Read entries from the now-empty database
-    const result = await readEntries(objectDatabase);
+    const { entries: result } = await readEntries(objectDatabase);
 
     expect(result).toEqual([]);
+  });
+
+  it('reports entry files which cannot be parsed as unreadable', async () => {
+    // Give the entry frontmatter which is not valid YAML
+    MockFs.writeTextFile(
+      entryFilePath(objectEntry1),
+      '---\nSummary: Nested: mapping\n---\n',
+    );
+
+    const result = await readEntries(objectDatabase);
+
+    expect(result.unreadablePaths).toEqual([objectEntry1.path]);
+    expect(
+      result.entries.some((entry) => entry.path === objectEntry1.path),
+    ).toBe(false);
+  });
+
+  it('reports entries whose contents match their indexed hash as unchanged', async () => {
+    const indexedHashes = new Map([
+      [
+        objectEntry1.path,
+        Fs.hashContents(MockFs.readTextFile(entryFilePath(objectEntry1))),
+      ],
+    ]);
+
+    const result = await readEntries(objectDatabase, undefined, indexedHashes);
+
+    expect(result.unchangedPaths).toEqual([objectEntry1.path]);
+    expect(
+      result.entries.some((entry) => entry.path === objectEntry1.path),
+    ).toBe(false);
+  });
+
+  it('reads entries whose contents differ from their indexed hash', async () => {
+    const indexedHashes = new Map([[objectEntry1.path, 'outdated-hash']]);
+
+    const result = await readEntries(objectDatabase, undefined, indexedHashes);
+
+    expect(result.unchangedPaths).toEqual([]);
+    expect(
+      result.entries.some((entry) => entry.path === objectEntry1.path),
+    ).toBe(true);
   });
 });

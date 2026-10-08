@@ -1,15 +1,11 @@
 import { Fs } from '@minddrop/file-system';
+import { titleFromPath } from '@minddrop/utils';
 import { loadCoreSerializers } from '../../EntrySerializers';
 import { listEntryMetadataKeys } from '../../listEntryMetadataKeys';
 import { readEntries } from '../../readEntries';
 import { readEntryMetadata } from '../../readEntryMetadata';
 import { readWorkspaceDatabases } from '../../readWorkspaceDatabases';
-import type {
-  BackgroundSyncChangeset,
-  Database,
-  Entry,
-  EntrySyncRecord,
-} from '../../types';
+import type { BackgroundSyncChangeset, Database, Entry } from '../../types';
 import {
   convertEntryToSqlRecord,
   entryAddress,
@@ -124,27 +120,45 @@ export async function backgroundSyncDatabases(
   const staged: {
     database: Database;
     entries: Entry[];
-    existingRecords: EntrySyncRecord[];
     deletedIds: string[];
+    retainedPaths: string[];
   }[] = [];
 
   // Pass 1: read and match all entries so references can resolve
   // across databases.
   for (const database of fileSystemDatabases) {
-    // Read the entries from disk. Their metadata is read after the
-    // diff, for the changed entries only.
-    const rawEntries = await readEntries(database, workspacePath);
-
     // Get existing sync records from SQL. Their paths are addressed
     // from the database, so a database directory renamed while the app
     // was closed still matches and its entries keep their identities.
     const existingRecords = sqlGetEntrySyncRecords(database.id, workspaceId);
+
+    // Read the new and modified entries from disk. Changes are detected
+    // by content hash rather than timestamp, since an entry's
+    // 'last-modified' property is only updated by the app, leaving
+    // external edits undetected in databases which define one. Their
+    // metadata is read after the diff, for the changed entries only.
+    const {
+      entries: rawEntries,
+      unchangedPaths,
+      unreadablePaths,
+    } = await readEntries(
+      database,
+      workspacePath,
+      new Map(
+        existingRecords.map((record) => [record.path, record.contentHash]),
+      ),
+    );
+
+    // Unchanged entries keep their indexed state, as do entries whose
+    // file could not be read, since the file is still there.
+    const retainedPaths = [...unchangedPaths, ...unreadablePaths];
 
     // Match fresh entries to existing entries by path so they
     // take over the existing IDs (disk reads mint fresh ones)
     const { records: entries, deletedIds } = matchEntriesToSqlRecords(
       rawEntries,
       existingRecords,
+      retainedPaths,
     );
 
     // Index the entries by address. Only the entries still on disk are
@@ -157,8 +171,24 @@ export async function backgroundSyncDatabases(
       );
     });
 
+    // Index the retained entries by their indexed IDs, so that
+    // references to them resolve.
+    const retained = new Set(retainedPaths);
+
+    existingRecords
+      .filter((record) => retained.has(record.path))
+      .forEach((record) => {
+        entryIdByAddress.set(
+          entryAddress(
+            { title: titleFromPath(record.path), database: database.id },
+            database,
+          ).toLowerCase(),
+          record.id,
+        );
+      });
+
     // Stage the matched entries for the resolution pass
-    staged.push({ database, entries, existingRecords, deletedIds });
+    staged.push({ database, entries, deletedIds, retainedPaths });
   }
 
   // Entries whose sidecar timestamps need writing, collected during the
@@ -166,9 +196,10 @@ export async function backgroundSyncDatabases(
   const outdatedSidecars: { database: Database; entry: Entry }[] = [];
 
   // Pass 2: resolve entry references, diff, and update SQL
-  for (const { database, entries, existingRecords, deletedIds } of staged) {
-    // Resolve collection property addresses to entry IDs
-    const resolvedEntries = entries.map((entry) => ({
+  for (const { database, entries, deletedIds, retainedPaths } of staged) {
+    // Resolve collection property addresses to entry IDs. Every read
+    // entry is new or modified, the rest having been retained.
+    const changedEntries = entries.map((entry) => ({
       ...entry,
       properties: resolveCollectionProperties(
         entry.properties,
@@ -176,21 +207,6 @@ export async function backgroundSyncDatabases(
         entryIdByAddress,
       ),
     }));
-
-    // Index the existing content hashes by entry ID. Hashes rather
-    // than timestamps, since an entry's 'last-modified' property is
-    // only updated by the app, leaving external edits undetected in
-    // databases which define one.
-    const existingHashes = new Map(
-      existingRecords.map((record) => [record.id, record.contentHash]),
-    );
-
-    // Find new or modified entries
-    const changedEntries = resolvedEntries.filter((entry) => {
-      const existingHash = existingHashes.get(entry.id);
-
-      return existingHash === undefined || existingHash !== entry.contentHash;
-    });
 
     // Read the sidecars of the changed entries only. Sidecars hold
     // app-managed state written alongside the entry, so one changing
@@ -240,7 +256,7 @@ export async function backgroundSyncDatabases(
     // which have no owner to delete them
     await sweepOrphanedMetadata(
       database,
-      entries.map((entry) => entry.path),
+      [...entries.map((entry) => entry.path), ...retainedPaths],
       workspacePath,
     );
 
